@@ -27,10 +27,8 @@ development-jarek:
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
 test-rupert:
-  adapter: mysql
-  database: money_test
-  username: money
-  password: 
+  adapter: sqlite3
+  database: db/test.sq3
   host: localhost
 
 production:

@@ -61,6 +61,3 @@ Rails::Initializer.run do |config|
 end
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)
-  
-gem 'has_finder'
-require 'has_finder'
