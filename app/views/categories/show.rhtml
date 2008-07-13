@@ -1,0 +1,30 @@
+<div>
+  <h1>Transfers from this category</h1>
+  
+  <div style="position : relative; padding-top : 15px;">
+    <b>Name:</b> <%= @category.name %> <span class="to-right"><%= link_to 'Edit category ', :action => 'edit', :id => @category %></span>
+  </div> 
+  
+  <% unless @category.description.empty? %>
+  <p><b>Description:</b> <%= @category.description %>
+  </p>
+  <% end %>
+  
+  <div id="transfer-table-div">
+	  <% unless @transfers_to_show.empty? %>
+	    <%= render :partial => 'transfer_table' %>
+	  <% else %>
+	      <b>There are no transfers in selected period of time.</b>
+	  <% end %>
+  </div>
+  <br />
+  
+  <div id="kind-of-transfer">
+    <%= render :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :quick, :category_id => @category.id}  %>
+  </div>
+  
+  <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
+    <%= render :partial => 'transfers/quick_transfer' , :object => { :category_id => @category.id } %>
+  </div>
+
+</div>

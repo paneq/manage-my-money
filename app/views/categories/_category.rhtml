@@ -1,0 +1,33 @@
+<% size = '20x20' %>
+  
+<div class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>">  
+   
+  <span class="floatLeft category verticalCenter" style="">
+    <a style="padding-left : <%= ( category.depth  + 1 ) * 20 %>px;">
+      <%= image_tag "/images/bg/submenu1.gif", :style => 'align: left;' -%>
+      &nbsp;
+      <%= category.name %>
+    </a>
+  </span>
+
+  <span class="floatRight category verticalCenter" style="">
+    <% category.value.each_pair do |currency, value| %>
+		<%= "#{value} #{currency.symbol}, " -%>
+    <% end %>
+    <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Remove'), {:url => {:action => :remove, :controller => :categories, :id => category.id}},{:title => 'Remove' } %>
+    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Add subcategory'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Add subcategory' } %>
+    <%= link_to image_tag('/images/document-new.png', :size => size , :alt => 'Add new transfer'), {:action => :make , :controller => :transfers , :choosen_category_id => category.id}, {:title => 'Add new transfer' } %>
+    <%= link_to image_tag('/images/x-office-spreadsheet.png' , :size => size , :alt => 'Stats') , {:action => :show , :id => category.id}, {:title => 'Stats' } %>
+  </span>
+  
+  
+</div>
+
+<% if category.child_categories.size > 0 %>
+  
+  <%= render :partial => 'category' , :collection => category.child_categories %>
+  
+<% end %>
+
+
+

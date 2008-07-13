@@ -1,0 +1,8 @@
+<% # %>
+<li>
+<%= link_to category_in_layout.short_name, :action => :show , :controller => :categories , :id => category_in_layout.id -%>
+</li>
+<%= render :partial => '/categories/category_in_layout' , :collection => category_in_layout.child_categories -%>
+<% if category_in_layout.is_top? %>
+  <div style="text-align: center;"> <hr class="hr-line-80prc" /> </div>
+<% end %>

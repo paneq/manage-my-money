@@ -1,0 +1,31 @@
+<tr id="new-exchange" style="">
+  <td colspan="6">
+  		<div  style="background-color: #76FAB3; margin-top: 3px; padding-top: 3px; width: 100%">
+	  		<% form_remote_tag :url =>{ :controller => :exchanges, :action => :create_remote } do %>
+				<div style="background-color: #76FAB3; width: 15%; float: left; padding-bottom: 3px; ">
+				  <%= select 'exchange', 'currency_a', @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+				</div>
+				
+				<div style="background-color: #76FAB3; width: 15%; float: left; padding-bottom: 3px;">
+				  <%= select 'exchange', 'currency_b', @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+				</div>
+				
+				<div style="background-color: #76FAB3; width: 10%; float: left; padding-bottom: 3px; ">
+				  <%= text_field 'exchange', 'left_to_right', :size => 8 %>
+				</div>
+				
+				<div style="background-color: #76FAB3; width: 10%; float: left; padding-bottom: 3px; ">
+				  <%= text_field 'exchange', 'right_to_left', :size => 8 %>
+				</div>
+				
+				<div style="background-color: #76FAB3; width: 30%; float: left; padding-bottom: 3px; ">
+				  &nbsp;<%= date_select 'exchange', 'day'  %>
+				</div>
+				<div style="background-color: #76FAB3; width: 20%; float: left; text-align: center; padding-bottom: 3px; ">
+					<%= submit_tag 'Add new exchange' %>
+				</div>
+	        <% end %>	
+  		</div>
+    	
+  </td>
+</tr>

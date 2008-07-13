@@ -1,0 +1,13 @@
+<table width="500"  style="border-collapse: collapse; border: solid 1px #AAD3DB">
+<tr>
+  <th class="transfer-table-border">
+  Name
+  </td>
+  <th class="transfer-table-border">
+  Value
+  </td>
+</tr>
+<% stats.each do |element| %>
+<%=  render :partial => 'stats_line', :object => element %>
+<% end %>
+</table>

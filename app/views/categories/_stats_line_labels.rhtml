@@ -1,0 +1,24 @@
+<table style="border-collapse: collapse; border: solid 1px #AAD3DB">
+  <tr>
+    <th class="transfer-table-border">
+      Name
+    </th>
+    <% labels.size.times do |nr| %>
+      <th class="transfer-table-border">
+        <%= labels[nr] -%>
+      </th>
+    <% end %>
+  </tr>
+  <% stats.each do |stat| %>
+  <tr class="<%= cycle('line-even', 'line-odd') %>">
+    <td class="transfer-table-border">
+      <%= stat[:name] -%>
+    </td>
+    <% stat[:value].each do |v| %>
+      <td class="transfer-table-border">
+        <%= v.to_s -%>
+      </td>
+    <% end %>
+  </tr>
+<% end %>
+</table>

@@ -1,0 +1,18 @@
+<% # = error_messages_for 'transfer_item' %>
+<% # tranfer_item comes from :locals %>
+
+<td colspan="4" style="height: 20px; ">
+  <% form_remote_tag :url => { :action => 'update_remote', :id => transfer_item } do %>
+  <div>
+  <span style="width: 130px;"> <%= select 'transfer_item' , 'category', @user.categories.collect{|c| [c.name, c.id] }, {:selected => transfer_item.category.id},{ :class => :widthh}%></span>
+  <span style="width: 130px;"><%= text_field 'transfer_item', 'description' -%></span>
+  <span style=""><%= text_field 'transfer_item', 'value' -%></span>
+  <span><%= select 'transfer_item', 'currency', @user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] },{:selected => transfer_item.currency.id},{} %></span>
+  <span> <%= submit_tag 'Save' %> </span>
+  <span><%= link_to_remote 'Discard', :url => {:controller => 'transfer_items', :action => :discard, :id => transfer_item } -%></span>
+  </div>
+  <% end %>
+</td>
+
+<!--[eoform:transfer_item]-->
+

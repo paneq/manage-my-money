@@ -90,23 +90,15 @@ class Category < ActiveRecord::Base
   
   has_many :currencies, :through => :transfer_items, :uniq => :true
   
-  #####################  
-  # @author: Robert Pankowecki
-  # @description: Categories are sorted by their names
   def <=>(category)
     name <=> category.name
   end
 
 
-  #####################  
-  # @author: Robert Pankowecki
   def short_name
     name[0,15]
   end
   
-
-  ############################
-  # @author: Robert Pankowecki
   def tree( with_parent = true)
     this_tree = []
     this_tree << self if with_parent
@@ -115,15 +107,10 @@ class Category < ActiveRecord::Base
   end
   
   
-  ############################
-  # @author: Robert Pankowecki
   def tree_with_parent
     tree
   end
   
-  
-  ############################
-  # @author: Robert Pankowecki
   def tree_without_parent
     tree( false )
   end
@@ -267,7 +254,9 @@ class Category < ActiveRecord::Base
       items = transfer_items
     end 
     tb = {}
-    self.currencies.uniq.each {|c| tb[c] = 0}
+
+    currencies.each {|c| tb[c] = 0}
+
     items.each do |ti|
       tb[ti.currency] += if ti.gender
         ti.value
@@ -335,8 +324,6 @@ class Category < ActiveRecord::Base
   end
   
   
-  ###########################
-  # @author: Jaroslaw Plebanski
   def type=(a_type)
     unless TYPES[a_type]
       raise "Unknown type: " + a_type.to_s
@@ -345,33 +332,25 @@ class Category < ActiveRecord::Base
     end
   end
   
-  ###########################
-  # @author: Jaroslaw Plebanski
   def type
     TYPES.invert[self._type_]
   end
   
-  ###########################
-  # @author: Jaroslaw Plebanski
   def before_validation
     if self.description.nil? or  self.description.empty? 
       self.description = " " #self.type.to_s + " " + self.name  
     end  
   end
   
-  ##########################
-  # @author: Robert Pankowecki
+
   def is_top?
     category_id.nil?
   end
   
   
-  
-  ##########################
-  # @author: Jaroslaw Plebanski
   def depth
     sum = 0;
-	 c = self  
+	  c = self  
 	
     while c!=nil && !c.is_top? 
 	   sum +=1

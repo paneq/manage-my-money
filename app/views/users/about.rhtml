@@ -1,0 +1,13 @@
+<div id="about-us" class="about-us">
+This great application was created by 3P group which is:
+  <ul>
+    <li><span><%= mail_to "robert.pankowecki@gmail.com" , "Robert Pankowecki" -%></span>&nbsp;&nbsp;&nbsp;<span><%=link_to_remote "Show info" , :url => { :action => :about_one , :controller => :user, :who => 'rupert' } -%></span></li>
+    <li><span><%= mail_to "mateusz.pawlik@gmail.com" , "Mateusz Pawlik" -%></span>&nbsp;&nbsp;&nbsp;<span><%=link_to_remote "Show info" , :url => { :action => :about_one , :controller => :user, :who => 'matti' }-%></span></li>
+    <li><span><%= mail_to "jaroslaw.plebanski@gmail.com" , "Jarosław Plebański" -%></span>&nbsp;&nbsp;&nbsp;<span><%=link_to_remote "Show info" , :url => { :action => :about_one , :controller => :user, :who => 'sejtenik' }-%></span></li>
+  </ul>
+</div>
+
+<div id="about-one" class="about-us">
+  <div id="3p-member" class="3p-member">
+  </div>
+</div>

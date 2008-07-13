@@ -1,0 +1,33 @@
+<div class="depot-form">
+
+  <%= error_messages_for 'user' %>
+
+  <fieldset>
+    <legend>Enter User Details</legend>
+
+    <% form_for :user , :url => { :action => :create }do |form| %>
+      <p>
+        <label for="user_name">Name:</label>
+        <%= form.text_field :name, :size => 40 %>
+      </p>
+
+      <p>
+        <label for="user_email">Email:</label>
+        <%= form.text_field :email, :size => 40 %>
+      </p>
+      
+      <p>
+        <label for="user_password">Password:</label>
+        <%= form.password_field :password, :size => 40 %>
+      </p>
+
+      <p>
+        <label for="user_password_confirmation">Confirm:</label>
+        <%= form.password_field :password_confirmation, :size => 40 %>
+      </p>
+
+      <%= submit_tag "Add User", :class => "submit" %>
+    
+    <% end %>  
+  </fieldset>
+</div>

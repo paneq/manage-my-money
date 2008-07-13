@@ -1,0 +1,37 @@
+<h1>Listing exchanges</h1>
+
+<table id="exchanges-list" style="width: 100%" >
+  <tr style="width: 100%" >
+    <th>
+      First currency
+    </th>
+    
+    <th>
+      Second currency
+    </th>
+    
+    <th>
+      Exchange from first to second
+    </th>
+    
+    <th>
+      Exchange from second to first
+    </th>
+    
+    <th>
+      Date
+    </th>
+    
+    <th>
+      Actions
+    </th>
+  </tr>
+  
+  <%= render :partial => 'exchanges/exchange', :collection => @exchanges %>
+  <%= render :partial => 'exchanges/new_exchange' %>
+
+</table>
+
+<br />
+
+<%= link_to 'New exchange', new_exchange_path %>

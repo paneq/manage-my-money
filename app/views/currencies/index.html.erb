@@ -1,0 +1,35 @@
+
+<h1>Listing currencies</h1>
+
+<table id="currencies-list" style="width: 100%">
+  <tr style="width: 100%" >
+  
+    <th style="width:20%">
+      Name
+    </th>
+    
+    <th style="width: 10%">
+      Symbol
+    </th>
+    
+    <th style="width: 40%">
+      Long name
+    </th>
+    
+    <th style="width: 15%;">
+      Long symbol
+    </th>
+    
+    <th style="width: 15%;">
+      Actions
+    </th>
+  </tr>
+  
+  <%= render :partial => 'currency', :collection => @currencies %>
+
+  <%= render :partial => 'new_currency' %>
+</table>
+
+<br />
+
+<%= link_to 'New currency', :action => 'new' %>

@@ -1,0 +1,11 @@
+<div class="width">
+  <div class="width">
+    <h1>
+      <%= session[:user_name] %> 's Categories
+    </h1>
+  </div>
+
+  <div id="category-tree" class="width">
+    <%=render :partial => 'category' , :collection => @user.top_categories %>
+  </div>
+</div>

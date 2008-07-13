@@ -1,0 +1,58 @@
+<% form_remote_tag :url => { :action => 'make' , :controller => 'transfers'} do %>
+
+
+<%= hidden_field_tag :embedded, embedded %>
+
+<div id="form_errors">
+
+</div>
+<div>
+  <h3>Description</h3>
+  <%= text_area :transfer, :description, :cols => 60, :rows => 4 %>
+</div>
+
+<hr class="hr-line-100prc" />
+  
+<div>
+  <h3>Date</h3>
+  <%= date_select :transfer, :day  %></p>
+</div>
+
+<hr class="hr-line-100prc" />
+
+<div>
+  <div>
+    <h3>Outcome</h3>
+	  <table id="outcome_items">
+        <tr>
+          <td> <span>Category</span> </td>
+          <td> <span>Description</span> </td>
+          <td> <span>Value</span> </td>
+          <td> <span>Currency</span> </td>		  
+        </tr>
+	    <%= render :partial => 'transfers/transfer_item', :object => { :type => 'outcome', :number => '0' , :choosen => @choosen_category_id } %>
+	  </table>
+    <%= link_to_remote "New outcome", :url => {:action => 'add_transfer_item', :controller => 'transfers', :type => 'outcome' } %>
+  </div>
+
+  <hr class="hr-line-100prc" />
+  
+  <div>
+    <h3>Income</h3>
+      <table id="income_items">
+        <tr>
+          <td> <span>Category</span> </td>
+          <td> <span>Description</span> </td>
+          <td> <span>Value</span> </td>
+        </tr>
+        <%= render :partial => 'transfers/transfer_item', :object => { :type => 'income', :number => '0' } %>
+      </table>
+      <%= link_to_remote "New income", :url => {:action => 'add_transfer_item', :controller => 'transfers', :type => 'income' } %>
+  </div>
+</div>
+
+<hr class="hr-line-100prc" />
+
+<%= submit_tag 'save' %>
+
+<% end %>

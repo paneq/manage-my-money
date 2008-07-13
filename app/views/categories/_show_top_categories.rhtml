@@ -1,0 +1,10 @@
+ 
+  <div class="categories">
+    <h1>
+      <%= session[:user_name] %> 's Categories
+    </h1>
+  </div>
+
+  <div>
+    <%= render :partial => 'category' , :collection => @user.top_categories %>
+  </div>

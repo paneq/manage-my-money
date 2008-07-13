@@ -1,0 +1,34 @@
+<h1>Editing an item of transfer</h1>
+
+<% form_tag :action => 'update', :id => @transfer_item do %>
+  <table>
+    <tr>
+      <th>
+        Description
+      </th>
+      
+      <th>
+        Value
+      </th>
+      
+      <th>
+        Category
+      </th>
+      
+      <th>
+        Action
+      </th>
+    </tr>
+    <tr>
+      <%= render :partial => 'form' %>
+      <td>
+        <%= submit_tag 'Save' %>
+      </td>
+    </tr>
+    
+  </table>
+  
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @transfer_item %> |
+<%= link_to 'Back', :action => 'list' %>

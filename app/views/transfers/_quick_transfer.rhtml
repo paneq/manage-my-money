@@ -1,0 +1,25 @@
+<% data = {} %>
+<% choosen = '' %>
+<% id = quick_transfer[:category_id] %>
+
+<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :from_category_id => id } do %>
+  <h3>Income</h3>
+  <table id="outcome_items">
+    <tr>
+      <td> <span>Category</span> </td>
+      <td> <span>Description</span> </td>
+      <td> <span>Value</span> </td>
+	  <td> <span>Currency</span> </td>
+    </tr>
+	<tr>
+      <td> <%= select_tag 'data[category]' , options_from_collection_for_select( @user.categories, 'id' , 'name' , choosen ) %> </td> 
+      <td> <%= text_field 'data', 'description', { :size=>35 } %> </td>
+      <td> <%= text_field 'data', 'value', { :size=>5 } %> </td>
+	  <td> <%= select 'data', 'currency', @user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] } %></td>
+	</tr>
+  </table>
+  
+  <hr class="hr-line-100prc" />
+  
+  <span><%= submit_tag 'Save' %></span>
+<% end %>

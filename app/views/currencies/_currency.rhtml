@@ -1,0 +1,12 @@
+<% size = '20x20' %>
+<tr id="currency-<%= currency.id -%>" class="<%= cycle('line-even', 'line-odd')-%>" >
+  <td><%=h currency.name %></td>
+  <td><%=h currency.symbol %></td>
+  <td><%=h currency.long_name %></td>
+  <td><%=h currency.long_symbol %></td>
+  <td style="text-align: center; ">
+    <%= link_to image_tag('/images/system-search.png',:alt => 'View', :size => size, :style => 'margin-right: 10px;'), :action => 'show', :id => currency %> 
+    <%= link_to image_tag('/images/edit-copy.png', :alt => 'Edit', :size => size, :style => 'margin-right: 10px;'), :action => 'edit', :id => currency %>
+    <%= link_to image_tag('/images/user-trash-full.png', :alt => 'Destroy', :size => size, :style => 'margin-right: 10px;'), { :action => 'destroy', :id => currency }, :confirm => 'Are you sure?', :method => :delete %>
+  </td>
+</tr>

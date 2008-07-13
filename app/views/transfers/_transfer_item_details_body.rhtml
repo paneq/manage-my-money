@@ -1,0 +1,4 @@
+<td class="padding-10-both" style="width: 130px;"><a style=""><%= transfer_item_details_body.category.name -%></a></td>
+<td class="padding-10-both" style=""><%= transfer_item_details_body.description -%> </td>
+<td class="padding-10-both number" style="width: 100px;"><%= "#{transfer_item_details_body.value.to_s} #{transfer_item_details_body.currency.symbol}" -%> </td>
+<td class="padding-10-both" style="width: 50px;"><%= link_to_remote 'Edit', :url => {:action => :edit_remote, :controller => 'transfer_items', :id => transfer_item_details_body.id } -%></td>

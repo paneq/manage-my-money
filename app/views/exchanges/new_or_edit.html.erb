@@ -1,0 +1,42 @@
+<%= error_messages_for :exchange %>
+<h1>Editing exchange</h1>
+<% form_for @exchange do |f| %>
+  <p>
+    <label for="exchange_currency_a">
+      First currency: 
+    </label>
+    <%= f.select :currency_a, @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+  </p>
+  
+  <p>
+    <label for="exchange_currency_b">
+      Second currency: 
+    </label>
+    <%= f.select :currency_b, @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+  </p>
+  
+  <p>
+    <label for="exchange_left_to_right">
+      Exchange from first to second currency: 
+    </label>
+    <%= f.text_field :left_to_right, :size => 8 %>
+  </p>
+  
+  <p>
+    <label for="exchange_right_to_left">
+      Exchange from second to first currency: 
+    </label>
+    <%= f.text_field :right_to_left, :size => 8 %>
+  </p>
+  
+  <p>
+    <label for="exchange_day">
+      Date of exchange: 
+    </label>
+    <%= f.date_select :day %>
+  </p>
+
+  <%= f.submit 'Save' %>
+<% end %>
+
+<%= link_to 'Exchanges list', exchanges_path %>

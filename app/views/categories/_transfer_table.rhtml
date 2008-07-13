@@ -1,0 +1,75 @@
+<table id="transfers-table" class="width" style="border-collapse: collapse; border: solid 1px #AAD3DB">
+  <tr style="background-color: #EAF2F5;">
+    <th class="transfer-table-border" width="100">
+      Date
+    </th>
+    <th class="transfer-table-border" width="%">
+      Description
+    </th>
+    <th class="transfer-table-border" width="130">
+      Destination
+    </th>
+    <th class="transfer-table-border" width="60">
+      Value
+    </th>
+    <th class="transfer-table-border" width="60">
+      Saldo
+    </th>
+    <th class="transfer-table-border" width="50">
+      Details
+    </th>
+  </tr>
+  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+    <td class="transfer-table-border">
+      <b><%= @start_day.to_date %></b>
+    </td>
+    <td colspan="5">
+    </td>
+  </tr>
+  <% @transfers_to_show.each do |e| %>
+    <%= render :partial => 'categories/transfer' , :object=> e %>
+  <% end %>
+  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+    <td class="transfer-table-border" >
+      <b><%= @end_day.to_date %></b>
+    </td>
+    <td colspan="3" class="value-for-time">
+      <b>Value for given time period:</b> &nbsp;&nbsp;
+	  	<% @value_between.each_pair do |currency, value| %>
+		<span>
+		  <%= "#{value} #{currency.symbol}" -%> <b>|</b>
+		</span>
+		<% end %>
+    </td>
+    <td colspan="2">
+    </td>
+  </tr>
+  
+  <% if @end_day.to_date < Date.today %>
+  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+    <td class="dots middle transfer-table-border" >
+      .<br />
+      .<br />
+      .<br />
+    </td>
+    <td colspan="5">
+    </td>
+  </tr>
+  <% end %>
+  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+    <td class="transfer-table-border" >
+      <b>NOW</b>
+    </td>
+    <td colspan="3" class="transfer-table-border" >
+    </td>
+    <td class="number transfer-table-border">
+	  <% @value.each_pair do |currency, value| %>
+	    <div>
+	    <b><%= "#{value} #{currency.symbol}" -%></b>
+	    </div>
+	  <% end %>
+    </td>
+    <td class="transfer-table-border">
+    </td>
+  </tr>
+  </table>

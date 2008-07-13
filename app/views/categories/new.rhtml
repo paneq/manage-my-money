@@ -1,0 +1,33 @@
+<h1>New category for <%= @category.user.name %></h1>
+
+<% # %>
+<% # %><% form_tag :action => 'create' do %>
+<% # %>  <%= render :partial => 'form' %>
+<% # %>  <%= submit_tag "Create" %>
+<% # %><% end %>
+
+<% form_for :category, :url => {:action => :create } do |form| %>
+<p> Name: <%= form.text_field :name %> </p>
+<p> Description: <%= form.text_field :description %></p>
+
+<p> Choose parent category please: </p>
+<%= select_tag 'category[parent_category]', options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
+
+<p> Enter opening balance for this category </p>
+<%= text_field_tag :opening_balance, "0" %>
+
+
+<% # %> <select name="category[parent_category]"> 
+<% # %> <%= options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
+<% # %> </select>
+<% # %><p> Parent category: <%= form.select(:parent_category, @parent_categories) %></p>
+<% # %><p> Parent category: <%= select(:parent_category, @parent_category_id, @parent_categories) %></p>
+<% # %> <p> Parent category: <%= form.collection_select(:parent_category, @category.user.categories , :id , :name) %> </p>
+
+
+<p> <%= submit_tag "Create" %> </p>
+<% end %>
+
+
+
+<%= link_to 'Back', :action => 'show_categories' %>

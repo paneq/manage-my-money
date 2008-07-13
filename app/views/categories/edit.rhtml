@@ -1,0 +1,23 @@
+<h1>Editing category</h1>
+
+<% form_tag :action => 'update', :id => @category do %>
+  <%= error_messages_for 'category' %>
+  
+  <p><label for="category_name">Name</label><br/>
+  <%= text_field 'category', 'name'  %></p>
+  
+  <p><label for="category_description">Description</label><br/>
+  <%= text_field 'category', 'description'  %></p>
+  
+  <% if !@category.is_top? %>
+	<p><label for="category_parent">Parent category</label><br/>
+	<%= select_tag 'category[parent_category]', options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
+	
+
+	
+  <% end %>
+
+  <%= submit_tag 'OK' %>
+<% end %>
+
+<%= link_to 'Back', :action => 'show', :id => @category %>

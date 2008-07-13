@@ -1,0 +1,14 @@
+<tr>
+  <td style="text-align : center">
+    <%= line_stats.name -%>
+  </td>
+  <td style="text-align : center">
+    <%= check_box_tag  line_stats.id.to_s + '-value', true %>
+  </td>
+  <td style="text-align : center">
+    <%= check_box_tag  line_stats.id.to_s + '-saldo', true %>
+  </td>
+  <td style="text-align : center">
+    <%= check_box_tag  line_stats.id.to_s + '-subc', true %>
+  </td>
+</tr>

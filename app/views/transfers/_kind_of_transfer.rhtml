@@ -1,0 +1,15 @@
+<b>
+<% case active_tab when :quick %>
+	<span class="kind-of-transfer-active-tab"> Quick transfer </span> 
+	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Full transfer" , :url => { :action => 'full_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Search" , :url => { :action => 'search_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+  <% when :full %>
+	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Quick transfer" , :url => { :action => 'quick_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+	<span class="kind-of-transfer-active-tab"> Full transfer </span>
+	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Search" , :url => { :action => 'search_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+  <% when :search %>
+    <span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Quick transfer" , :url => { :action => 'quick_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Full transfer" , :url => { :action => 'full_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
+	<span class="kind-of-transfer-active-tab"> Search </span>
+  <% end %>
+</b>

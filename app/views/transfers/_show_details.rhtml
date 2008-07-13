@@ -1,0 +1,5 @@
+<% size='15x15' %>
+<span id="show-details-<%= show_details -%>">
+ <%= link_to_remote image_tag("/images/system-search.png", :size => size) , {:url => { :action => :show_details , :controller => :transfers , :id => show_details }}, {:title => 'Show details'} %>
+</span>
+

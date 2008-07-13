@@ -1,0 +1,21 @@
+<h1> Transfer details </h1>
+
+<% for column in Transfer.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @transfer.send(column.name) %>
+</p>
+<% end %>
+
+<% @transfer.transfer_items.each do |item| %>
+  <div>
+    <span> <%= link_to item.category.name , :action => :show , :controller => :category , :id => item.category.id %> </span>
+    <span> <%= item.description %> </span>
+    <span> <%= item.value %> </span>
+  </div>
+<% end %>
+
+<br />
+<%= link_to 'Edit', :action => 'edit_with_items', :id => @transfer %> |
+<%= link_to 'Remove', { :action => 'destroy' , :id => @transfer } , :method => :post , :confirm => 'Are you sure?' %> | 
+
+

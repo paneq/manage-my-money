@@ -1,0 +1,65 @@
+<h1>Edit transfer with items</h1>
+
+<% form_tag :action=>:make , :id => @transfer.id do %>
+
+<div id="form_errors">
+
+</div>
+
+<div>
+  <h3>Description</h3>
+  <%= text_area :transfer, :description, :cols => 60, :rows => 4 %>
+</div>
+
+  <br /><br />
+  
+<div>
+  <h3>Date</h3>
+  <%= date_select :transfer, :day  %></p>
+</div>
+
+<div>
+  <div>
+    <br />
+    <h3>Outcome</h3>
+    <div>
+      <span>Category</span>
+      <span>Description</span>
+      <span>Value</span>
+    </div>
+    <div id="outcome_items">
+      <table>
+      <% @collection[:outcome].each do |element| %>
+        <%= render :partial => 'transfer_item', :object => element %>
+      <% end %>
+      </table>
+    </div>
+    <%= link_to_remote "New outcome", :url => {:action => 'add_transfer_item', :type => 'outcome' } %>
+  </div>
+
+  <hr />
+  
+  <div>
+    <br />
+    <h3>Income</h3>
+    <div>
+      <span>Category</span>
+      <span>Description</span>
+      <span>Value</span>
+    </div>
+    <div id="income_items"> 
+      <table>
+      <% @collection[:income].each do |element| %>
+        <%= render :partial => 'transfer_item', :object => element %>
+      <% end %>
+      </table>
+    </div>
+      <%= link_to_remote "New income", :url => {:action => 'add_transfer_item', :type => 'income' } %>
+  </div>
+</div>
+
+<hr />
+
+<%= submit_tag 'save' %>
+
+<% end %>
