@@ -1,0 +1,9 @@
+<h1>Editing transfer_item</h1>
+
+<% form_tag :action => 'update', :id => @transfer_item do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @transfer_item %> |
+<%= link_to 'Back', :action => 'list' %>

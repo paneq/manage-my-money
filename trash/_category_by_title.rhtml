@@ -1,0 +1,12 @@
+<% #put usage info here #>
+
+<li class="tree-small">
+  <span><%= category_by_title.name %></span>
+  </span>
+</li>
+<% if category_by_title.child_categories.size > 0 %>
+  <ul>
+  <%= render :partial => "category_by_title" , :collection => category_by_title.child_categories %>
+  </ul>
+<% end %>
+

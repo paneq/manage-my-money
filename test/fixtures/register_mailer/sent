@@ -1,0 +1,3 @@
+RegisterMailer#sent
+
+Find me in app/views/register_mailer/sent.rhtml

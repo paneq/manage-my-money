@@ -1,0 +1,8 @@
+<% for column in TransferItem.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @transfer_item.send(column.name) %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @transfer_item %> |
+<%= link_to 'Back', :action => 'list' %>

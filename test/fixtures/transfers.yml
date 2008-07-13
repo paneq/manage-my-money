@@ -1,0 +1,16 @@
+# == Schema Information
+# Schema version: 8
+#
+# Table name: transfers
+#
+#  id          :integer(11)   not null, primary key
+#  description :text          default(""), not null
+#  day         :date          not null
+#  user_id     :integer(11)   not null
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+two:
+  id: 2

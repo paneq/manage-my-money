@@ -1,0 +1,76 @@
+# == Schema Information
+# Schema version: 8
+#
+# Table name: exchanges
+#
+#  id            :integer(11)   not null, primary key
+#  currency_a    :integer(11)   not null
+#  currency_b    :integer(11)   not null
+#  left_to_right :float         not null
+#  right_to_left :float         not null
+#  day           :date          not null
+#  user_id       :integer(11)   
+#
+
+class Exchange < ActiveRecord::Base
+  belongs_to :left_currency,
+  :class_name => "Currency",
+  :foreign_key => "currency_a"
+  
+  belongs_to :right_currency,
+  :class_name => "Currency",
+  :foreign_key => "currency_b"             
+  
+  belongs_to  :user
+  
+  ##############################
+  # @author: Robert Pankowecki
+  def currencies
+    return (left_currencies.to_a + right_currencies.to_a).uniq
+  end
+  
+  ##############################
+  # @author: Robert Pankowecki
+  def before_validation 
+    self.currency_a, self.currency_b, self.left_to_right, self.right_to_left = self.currency_b, self.currency_a,self.right_to_left, self.left_to_right if self.currency_a and self.currency_b and self.currency_a > self.currency_b    
+  end
+  
+  ##############################
+  # @author: Robert Pankowecki
+  def validate
+    not_filled_fields { |error_message| errors.add(error_message) }
+    errors.add("Same currencies") if same_currencies?
+    errors.add("currencies order") if wrong_currencies_order?
+  end
+  
+  ##############################
+  # @author: Robert Pankowecki
+  def same_currencies?
+    return true if self.currency_a and self.currency_b and self.currency_a == self.currency_b
+  end  
+  
+  ##############################
+  # @author: Robert Pankowecki
+  def wrong_currencies_order?
+    return currency_a > currency_b
+  end
+  
+  ##############################
+  # @author: Robert Pankowecki
+  # @desctiption : I block is given yields an error message for each
+  #                field that is empty, otherwise returns an array of error messages
+  def not_filled_fields(&proc)
+    tb = []
+    unless Kernel.block_given?
+      block = Proc.new { |message| tb << message }
+    else
+      block = proc
+    end
+    
+    block.call('Exchange from first to second') if left_to_right == nil or left_to_right <= 0
+    block.call('Exchange from second to first') if right_to_left == nil or right_to_left <= 0
+    
+    return if Kernel.block_given?
+    return tb
+  end
+end

@@ -1,0 +1,15 @@
+<%= error_messages_for 'transfer_item' %>
+
+<!--[form:transfer_item]-->
+<p><label for="transfer_item_description">Description</label><br/>
+<%= text_area 'transfer_item', 'description'  %></p>
+
+<p><label for="transfer_item_gender">Gender</label><br/>
+<%= text_field 'transfer_item', 'gender'  %></p>
+
+<p><label for="transfer_item_value">Value</label><br/>
+<%= text_field 'transfer_item', 'value'  %></p>
+
+<p> Category: <%= collection_select('transfer_item' , :category, @user.categories , :id , :name) %></p>
+<!--[eoform:transfer_item]-->
+

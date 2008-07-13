@@ -1,0 +1,27 @@
+<h1>Listing transfer_items</h1>
+
+<table>
+  <tr>
+  <% for column in TransferItem.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for transfer_item in @transfer_items %>
+  <tr>
+  <% for column in TransferItem.content_columns %>
+    <td><%=h transfer_item.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Show', :action => 'show', :id => transfer_item %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => transfer_item %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => transfer_item }, :confirm => 'Are you sure?', :method => :post %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @transfer_item_pages.current.previous } if @transfer_item_pages.current.previous %>
+<%= link_to 'Next page', { :page => @transfer_item_pages.current.next } if @transfer_item_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New transfer_item', :action => 'new' %>
