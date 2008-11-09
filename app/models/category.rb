@@ -16,39 +16,39 @@ gem_original_require File.join(File.dirname(__FILE__), 'hash.rb')
 class Category < ActiveRecord::Base
 
   TYPES = {:ASSET  => 1,
-          :INCOME  => 2,
-          :EXPENSE => 3,
-          :LOAN    => 4,
-          :BALANCE => 0}
+    :INCOME  => 2,
+    :EXPENSE => 3,
+    :LOAN    => 4,
+    :BALANCE => 0}
     
   PERIODS = [ :SELECTED,
-              :THIS_DAY,
-              :LAST_DAY,
-              :THIS_WEEK,
-              :LAST_WEEK,
-              :LAST_7_DAYS,
-              :THIS_MONTH,
-              :LAST_MONTH,
-              :LAST_4_WEEKS,
-              :THIS_QUARTER,
-              :LAST_QUARTER,
-              :LAST_3_MONTHS,
-              :LAST_90_DAYS,
-              :THIS_YEAR,
-              :LAST_YEAR,
-              :LAST_12_MONTHS
-            ]
+    :THIS_DAY,
+    :LAST_DAY,
+    :THIS_WEEK,
+    :LAST_WEEK,
+    :LAST_7_DAYS,
+    :THIS_MONTH,
+    :LAST_MONTH,
+    :LAST_4_WEEKS,
+    :THIS_QUARTER,
+    :LAST_QUARTER,
+    :LAST_3_MONTHS,
+    :LAST_90_DAYS,
+    :THIS_YEAR,
+    :LAST_YEAR,
+    :LAST_12_MONTHS
+  ]
     
   belongs_to :user
   
   
   has_many   :child_categories,
-             :class_name => "Category",
-             :foreign_key => "category_id"
+    :class_name => "Category",
+    :foreign_key => "category_id"
              
   belongs_to :parent_category,
-             :class_name => "Category",
-             :foreign_key => "category_id"
+    :class_name => "Category",
+    :foreign_key => "category_id"
   
   
   
@@ -171,10 +171,10 @@ class Category < ActiveRecord::Base
       saldo = start_saldo
     end
     transfers = if subcategories_saldo
-        transfers_from_subcategories_between(start_day, end_day)
-      else
-        transfers_between( start_day , end_day )
-      end
+      transfers_from_subcategories_between(start_day, end_day)
+    else
+      transfers_between( start_day , end_day )
+    end
     transfers.sort! { |tr1 ,tr2| tr1.day <=> tr2.day } #this is a very important line!
     collection = []
     period_saldo = {}
@@ -353,11 +353,27 @@ class Category < ActiveRecord::Base
 	  c = self  
 	
     while c!=nil && !c.is_top? 
-	   sum +=1
+      sum +=1
       c = c.parent_category	  
     end
 	
     return sum
   end
+  
+  #======================
+  #nowy kod do liczenia
+  #
+  
+ 
+  def saldo_new
+    money = Money.new()
+    TransferItem.sum(:value, :group => 'currency_id', :conditions =>['category_id = ?', self.id]).each do |set|
+      currency, value = set
+      currency = Currency.find_by_id(currency)
+      money.add(value, currency)
+    end
+    return money
+  end
+  #======================
   
 end

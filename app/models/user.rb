@@ -50,9 +50,21 @@ class User < ActiveRecord::Base
     end
     return top
   end
-  
-  ############################
-  # @author: Jaroslaw Plebanski
+
+
+  def before_create
+      [ [ "My Assets" , :ASSET ] , 
+      [ "My Incomes" , :INCOME ] , 
+      [ "My Loans" , :LOAN ] , 
+      [ "My Expenses" , :EXPENSE ],
+      [ "Opening balances", :BALANCE ] ].each do | name, type |
+      self.categories << Category.new do |c| 
+        c.name = name
+        c.type = type
+      end  
+    end
+  end
+
   def before_destroy
     transfers.each do |t|
       t.transfer_items.each {|i| i.destroy }
@@ -60,10 +72,8 @@ class User < ActiveRecord::Base
     end
     categories.each {|c| c.destroy}
   end
+
   
-  ##############################
-  # @author: Robert Pankowecki
-  # @author: Jaroslaw Plebanski
   def self.authenticate(name, password)
     user = self.find_by_name(name)
     if user
@@ -93,9 +103,7 @@ class User < ActiveRecord::Base
   end
 
 
-  #######
   private
-  #######
 
   def self.encrypted_password(password, salt)
     string_to_hash = password + "wibble" + salt  # 'wibble' makes it harder to guess

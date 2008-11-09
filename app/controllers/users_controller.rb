@@ -91,19 +91,7 @@ class UsersController < ApplicationController
   # @author: Robert Pankowecki
   # @author: Jaroslaw Plebanski
   def create
-    @user = User.new(params[:user])
-
-    [ [ "My Assets" , :ASSET ] , 
-      [ "My Incomes" , :INCOME ] , 
-      [ "My Loans" , :LOAN ] , 
-      [ "My Expenses" , :EXPENSE ],
-      [ "Opening balances", :BALANCE ] ].each do | name, type |
-      @user.categories << Category.new do |c| 
-        c.name = name
-        c.type = type
-      end  
-    end
-    
+    @user = User.new(params[:user])    
     if @user.save
       flash[:notice] = 'User was successfully created.'      
       RegisterMailer.deliver_sent(@user)

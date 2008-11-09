@@ -19,77 +19,52 @@ class Transfer < ActiveRecord::Base
 
   has_many :currencies, :through => :transfer_items
 
-  ############
-  # @author: Mateusz Pawlik
   def destroy_with_transfer_items
     transfer_items.each { |ti| ti.destroy }
     destroy
   end
 
-  ############
-  # @author: Robert Pankowecki
   def <=>(other_transfer)
     return day <=> other_transfer.day
   end
 
-  ############
-  # @author: Robert Pankowecki
   def validate
     errors.add("Total value of income and outcome are different!") if error_while_validating_io_value
   end
   
-  ############
-  # @author: Robert Pankowecki
+
   def error_while_validating_io_value
     return !validate_io_values
   end
-  
-  ############
-  # @author: Robert Pankowecki  
+   
   def validate_io_values
-    return outcome_value == income_value
+    return (transfer_items.to_a.sum{|i| i.value} == 0)
   end
-  
-  ############
-  # @author: Robert Pankowecki  
+    
   def outcome_value
     sum_by_type :outcome
   end
   
-  ############
-  # @author: Robert Pankowecki  
   def income_value
     sum_by_type :income
   end
   
-  ############
-  # @author: Robert Pankowecki  
   def value
     return income_value, outcome_value
   end
   
-  ############
-  # @author: Jaroslaw Plebanski
   def categories_by_type(type)
     get_transfer_items_by_type(type).map {|t| t.category}
   end
   
-  ############
-  # @author: Jaroslaw Plebanski
   def outcome_categories
     categories_by_type :outcome
   end
   
-  
-  ############
-  # @author: Jaroslaw Plebanski
   def income_categories
     categories_by_type :income
   end
   
-  
-  ############
-  # @author: Jaroslaw Plebanski
   def opposite_categories(category)
     if income_categories.include?(category) 
       outcome_categories
@@ -100,8 +75,6 @@ class Transfer < ActiveRecord::Base
     end
   end
   
-  ############
-  # @author: Jaroslaw Plebanski
   def single_opposite_category(category)
     opc = opposite_categories(category)
     if opc.size == 1 
@@ -111,28 +84,20 @@ class Transfer < ActiveRecord::Base
     end
   end
   
-  ############
-  # @author: Robert Pankowecki  
   def outcome_transfer_items
     get_transfer_items_by_type :outcome
   end
   
   
-  ############
-  # @author: Robert Pankowecki  
   def income_transfer_items
     get_transfer_items_by_type :income
   end
 
-  ############
-  # @author: Robert Pankowecki  
   def both_transfer_items
     yield(:outcome, outcome_transfer_items)
     yield(:income, income_transfer_items)
   end
 
-  ############################
-  # @author: Robert Pankowecki
   # @description: Calculates changes for an array of categories in very naive way.
   def value_by_categories(categories)
     h = {}
