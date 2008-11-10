@@ -133,4 +133,5 @@ class CategoryTest < Test::Unit::TestCase
     hash_with_options[:value] ||= 100
   end
   
+  
 end
