@@ -397,7 +397,18 @@ class Category < ActiveRecord::Base
     saldo_at_the_end_of_day(Date.today)
   end
   
-  
+  def saldo_for_period_new(start_day, end_day)
+    money = Money.new()
+    TransferItem.sum(:value,
+      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+      :group => 'currency_id',
+      :conditions =>['category_id = ? AND transfers.day >= ? AND transfers.day <= ?', self.id, start_day, end_day]).each do |set|
+      currency, value = set
+      currency = Currency.find_by_id(currency)
+      money.add(value, currency)
+    end
+    return money
+  end
   
   #======================
   

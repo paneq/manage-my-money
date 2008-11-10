@@ -98,10 +98,37 @@ class CategoryTest < Test::Unit::TestCase
     end
     
   end
-  
-  
+
+
+  def test_saldo_for_periods
+    income_category = @user.categories[3]
+    outcome_category = @user.categories[4]
+    value = 100;
+
+    4.downto(0) do |number|
+      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+    end
+
+    4.downto(0) do |number|
+      start_day = number.days.ago.to_date;
+      end_day = Date.today
+      
+      assert_equal value*(number+1), income_category.saldo_for_period_new(start_day, end_day).value(@zloty)
+      assert_equal 1, income_category.saldo_for_period_new(start_day, end_day).currencies.size
+
+      assert_equal 100, income_category.saldo_for_period_new(start_day, start_day).value(@zloty)
+      assert_equal 1, income_category.saldo_for_period_new(start_day, start_day).currencies.size
+    end
+
+    assert income_category.saldo_for_period_new(100.days.ago, 5.days.ago).is_empty?
+    assert income_category.saldo_for_period_new(1.days.from_now, 100.days.from_now).is_empty?
+
+  end
+
+
   private
-  
+
+
   def save_simple_transfer_item(hash_with_options)
     hash = hash_with_options.clone()
     fill_simple_transfer_item_option_hash_with_defaults(hash)
@@ -124,6 +151,7 @@ class CategoryTest < Test::Unit::TestCase
     
     transfer.save!
   end
+
   
   def fill_simple_transfer_item_option_hash_with_defaults(hash_with_options)
     hash_with_options[:day] ||= 1.day.ago
