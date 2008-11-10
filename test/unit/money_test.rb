@@ -63,16 +63,19 @@ class MoneyTest < Test::Unit::TestCase
     @money = Money.new(@zloty => 11)
     @money.add(0.9, @zloty)
     assert @money.currencies.include?(@zloty)
+    assert 1, @money.currencies.size
     assert !@money.currencies.include?(@dolar)
     
     @money.add(0.9, @dolar)
     assert @money.currencies.include?(@zloty)
     assert @money.currencies.include?(@dolar)
+    assert 2, @money.currencies.size
     
     @money.add(123.9, @euro)
     assert @money.currencies.include?(@zloty)
     assert @money.currencies.include?(@dolar)
     assert @money.currencies.include?(@euro)
+    assert 3, @money.currencies.size
   end
   
   

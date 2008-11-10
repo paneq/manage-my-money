@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(:version => 9) do
 
   create_table "transfer_items", :force => true do |t|
     t.text    "description",                :null => false
-    t.boolean "gender",                     :null => false
     t.integer "value",                      :null => false
     t.integer "transfer_id",                :null => false
     t.integer "category_id",                :null => false

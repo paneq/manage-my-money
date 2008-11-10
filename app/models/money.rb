@@ -32,10 +32,16 @@ class Money
   def is_empty?
     return @hash.keys.size == 0
   end
+
+  def to_s
+    return @hash.to_s
+  end
   
   private
   
   def remove_zero_currencies
     @hash.delete_if { |currency, value|  value == 0.00}
   end
+  
+
 end

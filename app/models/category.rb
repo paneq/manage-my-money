@@ -11,7 +11,7 @@
 #  user_id     :integer(11)   
 #
 
-gem_original_require File.join(File.dirname(__FILE__), 'hash.rb')
+require 'hash'
 
 class Category < ActiveRecord::Base
 
@@ -54,19 +54,27 @@ class Category < ActiveRecord::Base
   
   has_many :transfer_items do
     def older_than(day)
-      #TODO
+      find :all, 
+        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+        :conditions =>['transfers.day > ?', day]
     end
     
     def older_or_equal(day)
-      #TODO
+      find :all, 
+        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+        :conditions =>['transfers.day >= ?', day]
     end
     
     def between_dates(start_date, end_date)
-      #TODO
+      find :all, 
+        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+        :conditions =>['transfers.day > ? AND transfers.day < ?', start_date, end_date]
     end
     
     def between_or_equal_dates(start_date, end_date)
-      #TODO
+      find :all, 
+        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+        :conditions =>['transfers.day >= ? AND transfers.day <= ?', start_date, end_date]
     end
   end
   
@@ -258,11 +266,7 @@ class Category < ActiveRecord::Base
     currencies.each {|c| tb[c] = 0}
 
     items.each do |ti|
-      tb[ti.currency] += if ti.gender
-        ti.value
-      else
-        -ti.value
-      end
+      tb[ti.currency] += ti.value
     end
     return tb
   end
@@ -350,7 +354,7 @@ class Category < ActiveRecord::Base
   
   def depth
     sum = 0;
-	  c = self  
+    c = self  
 	
     while c!=nil && !c.is_top? 
       sum +=1
@@ -374,6 +378,27 @@ class Category < ActiveRecord::Base
     end
     return money
   end
+  
+  
+  def saldo_at_end_of_day(day)
+    money = Money.new()
+    TransferItem.sum(:value, 
+      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id', 
+      :group => 'currency_id', 
+      :conditions =>['category_id = ? AND transfers.day <= ?', self.id, day]).each do |set|
+      currency, value = set
+      currency = Currency.find_by_id(currency)
+      money.add(value, currency)
+    end
+    return money
+  end
+  
+  def current_saldo
+    saldo_at_the_end_of_day(Date.today)
+  end
+  
+  
+  
   #======================
   
 end

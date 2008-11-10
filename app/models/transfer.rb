@@ -117,11 +117,7 @@ class Transfer < ActiveRecord::Base
     h = {}
     currencies.uniq.each {|c| h[c] = 0}
     transfer_items.in_category(category).each do |ti| 
-       h[ti.currency] += if ti.gender
-        ti.value
-      else
-        -ti.value
-      end
+      h[ti.currency] += ti.value
     end
     return h
   end #end of value_by_category
@@ -129,24 +125,16 @@ class Transfer < ActiveRecord::Base
    
   private
    
-  ############
-  # @author: Robert Pankowecki   
   def sum_by_type (type)
     tr = get_transfer_items_by_type type
     return tr.sum { |ti| ti.value }
   end
    
-   
-  ############
-  # @author: Robert Pankowecki   
-  def get_transfer_items_by_type (type)
-    transfers = []
-    gender = true
-    gender = false if type == :outcome
-    transfer_items.each do |ti|
-      transfers << ti if ti.gender == gender
-    end
-    transfers
+  
+  def get_transfer_items_by_type(type)
+    return transfer_items.select { |item|  item.value >= 0} if type == :income
+    return transfer_items.select { |item|  item.value < 0} if type == :outcome
+    raise 'Unknown type'
   end
   
   
