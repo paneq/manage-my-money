@@ -1,14 +1,14 @@
 # == Schema Information
-# Schema version: 8
+# Schema version: 20081110145518
 #
 # Table name: currencies
 #
-#  id          :integer(11)   not null, primary key
-#  symbol      :string(255)   default(""), not null
-#  long_symbol :string(255)   default(""), not null
-#  name        :string(255)   default(""), not null
-#  long_name   :string(255)   default(""), not null
-#  user_id     :integer(11)   
+#  id          :integer       not null, primary key
+#  symbol      :string(255)   not null
+#  long_symbol :string(255)   not null
+#  name        :string(255)   not null
+#  long_name   :string(255)   not null
+#  user_id     :integer       
 #
 
 class Currency < ActiveRecord::Base

@@ -1,14 +1,14 @@
 # == Schema Information
-# Schema version: 8
+# Schema version: 20081110145518
 #
 # Table name: categories
 #
-#  id          :integer(11)   not null, primary key
-#  name        :string(255)   default(""), not null
+#  id          :integer       not null, primary key
+#  name        :string(255)   not null
 #  description :string(255)   
-#  _type_      :integer(11)   
-#  category_id :integer(11)   
-#  user_id     :integer(11)   
+#  _type_      :integer       
+#  category_id :integer       
+#  user_id     :integer       
 #
 
 require 'hash'

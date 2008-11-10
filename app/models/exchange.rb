@@ -1,15 +1,15 @@
 # == Schema Information
-# Schema version: 8
+# Schema version: 20081110145518
 #
 # Table name: exchanges
 #
-#  id            :integer(11)   not null, primary key
-#  currency_a    :integer(11)   not null
-#  currency_b    :integer(11)   not null
+#  id            :integer       not null, primary key
+#  currency_a    :integer       not null
+#  currency_b    :integer       not null
 #  left_to_right :float         not null
 #  right_to_left :float         not null
 #  day           :date          not null
-#  user_id       :integer(11)   
+#  user_id       :integer       
 #
 
 class Exchange < ActiveRecord::Base

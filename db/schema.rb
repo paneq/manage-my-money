@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 9) do
+ActiveRecord::Schema.define(:version => 20081110145518) do
 
   create_table "categories", :force => true do |t|
     t.string  "name",        :null => false
@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(:version => 9) do
     t.float   "right_to_left", :null => false
     t.date    "day",           :null => false
     t.integer "user_id"
+  end
+
+  create_table "goals", :force => true do |t|
+    t.string   "description"
+    t.boolean  "include_subcategories"
+    t.integer  "period_type"
+    t.integer  "goal_type"
+    t.integer  "goal_completion_condition"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sessions", :force => true do |t|

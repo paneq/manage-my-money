@@ -1,14 +1,14 @@
 # == Schema Information
-# Schema version: 8
+# Schema version: 20081110145518
 #
 # Table name: users
 #
-#  id              :integer(11)   not null, primary key
+#  id              :integer       not null, primary key
 #  name            :string(255)   
 #  hashed_password :string(255)   
 #  salt            :string(255)   
 #  email           :string(255)   
-#  active          :boolean(1)    not null
+#  active          :boolean       not null
 #
 
 require 'digest/sha1'

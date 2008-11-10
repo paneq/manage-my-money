@@ -1,0 +1,30 @@
+# == Schema Information
+# Schema version: 20081110145518
+#
+# Table name: goals
+#
+#  id                        :integer       not null, primary key
+#  description               :string(255)   
+#  include_subcategories     :boolean       
+#  period_type               :integer       
+#  goal_type                 :integer       
+#  goal_completion_condition :integer       
+#  created_at                :datetime      
+#  updated_at                :datetime      
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  description: MyString
+  include_subcategories: false
+  period_type: 1
+  goal_type: 1
+  goal_completion_condition: 1
+
+two:
+  description: MyString
+  include_subcategories: false
+  period_type: 1
+  goal_type: 1
+  goal_completion_condition: 1

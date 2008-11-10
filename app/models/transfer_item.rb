@@ -1,14 +1,14 @@
 # == Schema Information
-# Schema version: 8
+# Schema version: 20081110145518
 #
 # Table name: transfer_items
 #
-#  id          :integer(11)   not null, primary key
-#  description :text          default(""), not null
-#  gender      :boolean(1)    not null
-#  value       :integer(11)   not null
-#  transfer_id :integer(11)   not null
-#  category_id :integer(11)   not null
+#  id          :integer       not null, primary key
+#  description :text          not null
+#  value       :integer       not null
+#  transfer_id :integer       not null
+#  category_id :integer       not null
+#  currency_id :integer       default(3), not null
 #
 
 class TransferItem < ActiveRecord::Base
