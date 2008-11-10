@@ -12,14 +12,18 @@
 #
 
 require 'hash'
+require 'hash_enums'
 
 class Category < ActiveRecord::Base
+  extend HashEnums
 
-  TYPES = {:ASSET  => 1,
+  types = {:ASSET  => 1,
     :INCOME  => 2,
     :EXPENSE => 3,
     :LOAN    => 4,
     :BALANCE => 0}
+
+  define_enum :type, types, {:attr_name => '_type_'}
     
   PERIODS = [ :SELECTED,
     :THIS_DAY,
@@ -97,7 +101,9 @@ class Category < ActiveRecord::Base
   end
   
   has_many :currencies, :through => :transfer_items, :uniq => :true
-  
+
+  has_many :goals
+
   def <=>(category)
     name <=> category.name
   end
@@ -328,17 +334,17 @@ class Category < ActiveRecord::Base
   end
   
   
-  def type=(a_type)
-    unless TYPES[a_type]
-      raise "Unknown type: " + a_type.to_s
-    else
-      self._type_ = TYPES[a_type]
-    end
-  end
-  
-  def type
-    TYPES.invert[self._type_]
-  end
+#  def type=(a_type)
+#    unless TYPES[a_type]
+#      raise "Unknown type: " + a_type.to_s
+#    else
+#      self._type_ = TYPES[a_type]
+#    end
+#  end
+#
+#  def type
+#    TYPES.invert[self._type_]
+#  end
   
   def before_validation
     if self.description.nil? or  self.description.empty? 

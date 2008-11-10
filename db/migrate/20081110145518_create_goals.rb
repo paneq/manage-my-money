@@ -3,9 +3,10 @@ class CreateGoals < ActiveRecord::Migration
     create_table :goals do |t|
       t.string :description
       t.boolean :include_subcategories
-      t.integer :period_type
-      t.integer :goal_type
-      t.integer :goal_completion_condition
+      t.integer :period_type_val
+      t.integer :goal_type_val
+      t.integer :goal_completion_condition_val
+      t.integer :category_id, :null => false
 
       t.timestamps
     end
