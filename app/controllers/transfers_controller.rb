@@ -57,15 +57,13 @@ class TransfersController < ApplicationController
     
     ti1 = TransferItem.new
     ti1.description = (params['data']['description'])
-    ti1.value = (params['data']['value'])
-    ti1.gender = true
+    ti1.value = (params['data']['value']).to_i
     ti1.category = category
     ti1.currency = currency
     
     ti2 = TransferItem.new
     ti2.description = (params['data']['description'])
-    ti2.value = (params['data']['value'])
-    ti2.gender = false
+    ti2.value = -1* (params['data']['value']).to_i
     @category = Category.find(params[:from_category_id])
     ti2.category = @category
     ti2.currency = currency
