@@ -125,6 +125,25 @@ class CategoryTest < Test::Unit::TestCase
 
   end
 
+  def test_saldo_after_day
+    income_category = @user.categories[2]
+    outcome_category = @user.categories[3]
+    value = 100;
+
+    4.downto(0) do |number|
+      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+    end
+
+    5.downto(1) do |number|
+      day = number.days.ago.to_date;
+
+      assert_equal value*(number), income_category.saldo_after_day_new(day).value(@zloty)
+      assert_equal 1, income_category.saldo_after_day_new(day).currencies.size
+    end
+    
+    assert income_category.saldo_after_day_new(Date.today).is_empty?
+  end
+
 
   private
 
