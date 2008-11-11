@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20081110145518) do
     t.integer  "period_type_int"
     t.integer  "goal_type_int"
     t.integer  "goal_completion_condition_int"
+    t.float    "value"
     t.integer  "category_id",                   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"

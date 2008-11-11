@@ -6,6 +6,7 @@ class CreateGoals < ActiveRecord::Migration
       t.integer :period_type_int
       t.integer :goal_type_int
       t.integer :goal_completion_condition_int
+      t.float :value
       t.integer :category_id, :null => false
 
       t.timestamps
