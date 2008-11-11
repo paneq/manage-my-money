@@ -161,8 +161,7 @@ class TransfersController < ApplicationController
         unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
           transfer_item = TransferItem.new
           transfer_item.description = p['description-' + i.to_s]
-          transfer_item.value = p['value-' + i.to_s]
-          transfer_item.gender = false
+          transfer_item.value = p['value-' + i.to_s].to_i * -1
           category = Category.find( p['category-' + i.to_s].to_i )
           transfer_item.category = category
           transfer_item.currency = Currency.find(p['currency-' + i.to_s].to_i)
@@ -176,8 +175,7 @@ class TransfersController < ApplicationController
         unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
           transfer_item = TransferItem.new
           transfer_item.description = p['description-' + i.to_s]
-          transfer_item.value = p['value-' + i.to_s]
-          transfer_item.gender = true
+          transfer_item.value = p['value-' + i.to_s].to_i
           category = Category.find(p['category-' + i.to_s].to_i)
           transfer_item.category = category
           transfer_item.currency = Currency.find(p['currency-' + i.to_s].to_i)
