@@ -4,7 +4,7 @@
 module HashEnums
   protected
   def define_enum(enum, types, options = nil)
-    suffix = '_val'
+    suffix = '_int'
     prefix = ''
 
     if options

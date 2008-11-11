@@ -39,9 +39,9 @@ ActiveRecord::Schema.define(:version => 20081110145518) do
   create_table "goals", :force => true do |t|
     t.string   "description"
     t.boolean  "include_subcategories"
-    t.integer  "period_type_val"
-    t.integer  "goal_type_val"
-    t.integer  "goal_completion_condition_val"
+    t.integer  "period_type_int"
+    t.integer  "goal_type_int"
+    t.integer  "goal_completion_condition_int"
     t.integer  "category_id",                   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"

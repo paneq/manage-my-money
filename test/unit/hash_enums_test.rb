@@ -35,7 +35,7 @@ class HashEnumsTest < ActiveSupport::TestCase
 
     temporary3 = Class.new do
       extend HashEnums
-      attr(:my_enum_val, true)
+      attr(:my_enum_int, true)
       define_enum :my_enum, {:type=>1}
     end
 
@@ -46,7 +46,7 @@ class HashEnumsTest < ActiveSupport::TestCase
     t.my_enum = :type
 
     assert_equal(:type, t.my_enum)
-    assert_equal(1, t.my_enum_val)
+    assert_equal(1, t.my_enum_int)
     assert_equal({:type=>1}, temporary3.MY_ENUMS)
 
   end

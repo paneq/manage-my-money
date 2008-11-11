@@ -6,9 +6,9 @@
 #  id                            :integer       not null, primary key
 #  description                   :string(255)   
 #  include_subcategories         :boolean       
-#  period_type_val               :integer       
-#  goal_type_val                 :integer       
-#  goal_completion_condition_val :integer       
+#  period_type_int               :integer       
+#  goal_type_int                 :integer       
+#  goal_completion_condition_int :integer       
 #  category_id                   :integer       not null
 #  created_at                    :datetime      
 #  updated_at                    :datetime      
