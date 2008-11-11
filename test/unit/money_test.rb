@@ -13,9 +13,8 @@ class MoneyTest < Test::Unit::TestCase
   
   def test_initialize
     assert_nothing_raised do
-      assert_nothing_thrown("Creating valid money object should not throw exception.") do
-        @money = Money.new(@zloty => 10, @dolar =>15)
-      end
+      @money = Money.new(@zloty => 10, @dolar =>15)
+      @money = Money.new(@zloty, 10)
     end
   end
   

@@ -145,8 +145,44 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
-  private
+  def test_transfers_with_saldo_for_period
+    income = @user.categories[1]
+    outcome = @user.categories[2]
+    value = 100;
 
+    5.downto(1) do |number|
+      t = Transfer.new(:user => @user)
+      t.day = number.days.ago
+      t.description = ''
+
+      number.times do
+        t.transfer_items << TransferItem.new(:category => income, :currency => @zloty, :description => '', :value => value)
+        t.transfer_items << TransferItem.new(:category => income, :currency => @euro, :description => '', :value => value)
+      end
+      t.transfer_items << TransferItem.new(:category => outcome, :currency => @zloty, :description => '', :value => -1*value*number)
+      t.transfer_items << TransferItem.new(:category => outcome, :currency => @euro, :description => '', :value => -1*value*number)
+
+      t.save!
+    end
+
+    5.downto(1) do |number|
+      result = income.transfers_with_saldo_for_period_new(5.days.ago, number.days.ago)
+      assert_equal 6 - number, result.size
+      5.downto(number) do |item_number|
+        item = result[5-item_number]
+        assert_equal item_number*value, item[:money].value(@zloty)
+        assert_equal item_number*value, item[:money].value(@euro)
+        assert_equal 2, item[:money].currencies.size
+      end
+    end
+
+    assert income.transfers_with_saldo_for_period_new(6.days.ago, 6.days.ago).empty?
+    assert income.transfers_with_saldo_for_period_new(1.day.from_now, 1.day.from_now).empty?
+
+  end
+
+
+  private
 
   def save_simple_transfer_item(hash_with_options)
     hash = hash_with_options.clone()

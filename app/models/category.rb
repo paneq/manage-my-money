@@ -81,7 +81,8 @@ class Category < ActiveRecord::Base
         :conditions =>['transfers.day >= ? AND transfers.day <= ?', start_date, end_date]
     end
   end
-  
+
+
   has_many :transfers , :through => :transfer_items, :uniq => true do
     def older_than(day)
       find :all, :conditions => ['day < ?', day]
@@ -99,10 +100,13 @@ class Category < ActiveRecord::Base
       find :all, :conditions => ['day >= ? and day <= ?', start_date, end_date]
     end
   end
-  
+
+
   has_many :currencies, :through => :transfer_items, :uniq => :true
 
+
   has_many :goals
+
 
   def <=>(category)
     name <=> category.name
@@ -124,14 +128,13 @@ class Category < ActiveRecord::Base
   def tree_with_parent
     tree
   end
-  
+
+
   def tree_without_parent
     tree( false )
   end
   
   
-  ############################
-  # @author: Robert Pankowecki
   # @description: Return a table of transfers that happend between given parameters.
   #               Including the start_day and the end_day !
   def transfers_between( start_day = nil , end_day = nil)
@@ -139,8 +142,6 @@ class Category < ActiveRecord::Base
   end  
   
   
-  ############################
-  # @author: Robert Pankowecki
   def transfers_from_subcategories_between( start_day = nil , end_day = nil)
     t = []
     tree_with_parent().each { |c|  t+= c.transfers_between(start_day, end_day) }
@@ -149,16 +150,13 @@ class Category < ActiveRecord::Base
   end
 
 
-  #####################  
-  # @author: Robert Pankowecki
   # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #                 The collection is sorted by day of transfer and returns also a period_saldo
   def transfers_with_saldo_between( start_day = nil , end_day = nil )
     transfers_with_chooseable_saldo_between( false, start_day, end_day )    
   end
   
-  #####################  
-  # @author: Robert Pankowecki
+
   # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #                 The collection is sorted by day of transfer and returns also a period_saldo
   def transfers_with_subcategories_saldo_between( start_day = nil , end_day = nil )
@@ -166,8 +164,7 @@ class Category < ActiveRecord::Base
   end
   
   
-  #####################  
-  # @author: Robert Pankowecki
+
   # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #                 The collection is sorted by day of transfer and returns also a period_saldo
   def transfers_with_chooseable_saldo_between( subcategories_saldo = false , start_day = nil , end_day = nil )
@@ -212,8 +209,6 @@ class Category < ActiveRecord::Base
   end
   
   
-  #####################  
-  # @author: Robert Pankowecki
   # @description: Returns the saldo of category at the end of given day
   def value_at_end_of_day( end_day )  ## to probuje zrobic TODO
     #poprawione zwraca hasze z walutami i odpowiadajacymi im wartosciami
@@ -230,8 +225,7 @@ class Category < ActiveRecord::Base
   end
 
 
-  ############################
-  # @author: Robert Pankowecki
+
   # @description: Returns the saldo of category and its child_categoris at the end of given day
   def subcategories_value_at_end_of_day( end_day )
     h = {}
@@ -244,22 +238,19 @@ class Category < ActiveRecord::Base
     return h
   end
   
-  ############################
-  # @author: Robert Pankowecki
+
   def chooseable_value_at_end_of_day( end_day , with_subc = true )
     return subcategories_value_at_end_of_day(end_day) if with_subc
     return value_at_end_of_day(end_day)
   end
   
-  ############################
-  # @author: Robert Pankowecki
+
   def value_with_chooseable_subc(start_day = nil , end_day = nil, subc = true)
     return value_with_subcategories( start_day, end_day) if subc
     return value(start_day, end_day)
   end
 
-  ############################
-  # @author: Robert Pankowecki
+
   def value ( start_day = nil , end_day = nil )
     if ( !start_day.nil? and !end_day.nil? )
       #TODO itemy z jakiegos przedzialu czasu powinny byc u gory zdefiniowane sql a nie wybierane jak nizej selektem
@@ -334,17 +325,17 @@ class Category < ActiveRecord::Base
   end
   
   
-#  def type=(a_type)
-#    unless TYPES[a_type]
-#      raise "Unknown type: " + a_type.to_s
-#    else
-#      self._type_ = TYPES[a_type]
-#    end
-#  end
-#
-#  def type
-#    TYPES.invert[self._type_]
-#  end
+  #  def type=(a_type)
+  #    unless TYPES[a_type]
+  #      raise "Unknown type: " + a_type.to_s
+  #    else
+  #      self._type_ = TYPES[a_type]
+  #    end
+  #  end
+  #
+  #  def type
+  #    TYPES.invert[self._type_]
+  #  end
   
   def before_validation
     if self.description.nil? or  self.description.empty? 
@@ -418,6 +409,7 @@ class Category < ActiveRecord::Base
     return money
   end
 
+
   def saldo_after_day_new(day)
     money = Money.new()
     TransferItem.sum(:value,
@@ -430,6 +422,31 @@ class Category < ActiveRecord::Base
     end
     return money
   end
+
+
+  # Returns array of hashes{:transfer => tr, :money => Money object}
+  def transfers_with_saldo_for_period_new(start_day, end_day)
+    transfers = Transfer.find(
+      :all,
+      :select =>      'transfers.*, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
+      :joins =>       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
+      :group =>       'transfers.id, transfer_items.currency_id',
+      :conditions =>  ['transfer_items.category_id = ? AND transfers.day >= ? AND transfers.day <= ?', self.id, start_day, end_day],
+      :order =>       'transfers.day, transfers.id, transfer_items.currency_id')
+    
+    list = []
+    last_transfer = nil
+    for t in transfers do
+      if last_transfer == t
+        list.last[:money].add(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
+      else
+        list << {:transfer => t, :money => Money.new(Currency.find(t.read_attribute('currency_id')) => t.read_attribute('value_for_currency').to_i )}
+      end
+      last_transfer = t
+    end
+    return list;
+  end
+
   #======================
   
 end

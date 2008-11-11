@@ -5,8 +5,12 @@
 
 class Money
   
-  def initialize(hash = {})
-    @hash = hash
+  def initialize(hash = {}, second = nil)
+    if second
+      @hash = {hash => second}
+    else
+      @hash = hash
+    end
     remove_zero_currencies
   end
   
