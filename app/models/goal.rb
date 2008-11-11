@@ -14,7 +14,7 @@
 #  updated_at                    :datetime      
 #
 
-require 'hash_enums'
+#require 'hash_enums'
 class Goal < ActiveRecord::Base
   extend HashEnums
   belongs_to :category

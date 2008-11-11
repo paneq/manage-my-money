@@ -2,6 +2,7 @@
 # and open the template in the editor.
 
 module HashEnums
+  protected
   def define_enum(enum, types, options = nil)
     suffix = '_val'
     prefix = ''
