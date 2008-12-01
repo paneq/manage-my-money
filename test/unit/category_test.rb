@@ -152,7 +152,7 @@ class CategoryTest < Test::Unit::TestCase
 
     5.downto(1) do |number|
       t = Transfer.new(:user => @user)
-      t.day = number.days.ago
+      t.day = number.days.ago.to_date
       t.description = ''
 
       number.times do
@@ -166,7 +166,7 @@ class CategoryTest < Test::Unit::TestCase
     end
 
     5.downto(1) do |number|
-      result = income.transfers_with_saldo_for_period_new(5.days.ago, number.days.ago)
+      result = income.transfers_with_saldo_for_period_new(5.days.ago.to_date, number.days.ago.to_date)
       assert_equal 6 - number, result.size
       5.downto(number) do |item_number|
         item = result[5-item_number]
