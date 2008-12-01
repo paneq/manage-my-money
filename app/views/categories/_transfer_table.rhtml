@@ -35,7 +35,7 @@
     </td>
     <td colspan="3" class="value-for-time">
       <b>Value for given time period:</b> &nbsp;&nbsp;
-	  	<% @value_between.each_pair do |currency, value| %>
+	  	<% @value_between.each do |currency, value| %>
 		<span>
 		  <%= "#{value} #{currency.symbol}" -%> <b>|</b>
 		</span>
@@ -63,7 +63,7 @@
     <td colspan="3" class="transfer-table-border" >
     </td>
     <td class="number transfer-table-border">
-	  <% @value.each_pair do |currency, value| %>
+	  <% @value.each do |currency, value| %>
 	    <div>
 	    <b><%= "#{value} #{currency.symbol}" -%></b>
 	    </div>

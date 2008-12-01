@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
         :show => [:post, :get],
       }
     }
+    
   map.resources     :currencies
     {
       :member => {
@@ -44,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
       }
     }
   map.resources     :exchanges
+
   map.resources     :transfers_items,
     {
       :member => {
@@ -52,6 +54,7 @@ ActionController::Routing::Routes.draw do |map|
         :remove_transfer_item => :get
       }
     }
+
   map.resources     :transfers,
     {
       :member => {
@@ -66,26 +69,18 @@ ActionController::Routing::Routes.draw do |map|
         :hide_details => :get
       }
     }
+
   map.resources     :users,
     {
       :member => {
-        :login => [:post, :get]
+        :login => :get,
+        :logout => :get
+      },
+      :collection => {
       }
     }
-  map.resources     :graphs
-#   map.resources     :friendships, 
-#     :member => {
-#       :accept_friend => :post,
-#       :create => :post
-#                }
-#   map.resource      :session
-#   
-#   map.resources :points,
-#     :member => {:create => :post}
-#   
-#   map.resources :categories
-  
-  map.home          '/', :controller => 'users', :action => 'main'
+    
+  map.home          '/', :controller => 'users', :action => 'login'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

@@ -26,126 +26,6 @@ class CategoriesController < ApplicationController
   end
 
 
-  # @description:  when request is 'post' it saves in sessions[:stats] a table of hashes( :value , :name ) that is used to
-  #                generate another graph, also saves session[:labels] and session[:stats_title]. Sets @draw to true so graph is drawen.
-  #
-  #                when request is 'get' graph will not be drawen.
-  def graph3
-    @default_length = '6'
-    @default_period = 'MONTHS'
-    if request.post?
-      @draw = true
-      @stats = []
-      @labels = {}
-      length = params[:length].to_i
-      period = params[:period].intern
-      has_labels = false;
-
-      @user.categories.each do |category|
-          subc = false
-          subc = true if params[category.id.to_s + '-subc'] == "true"
-        
-        if params[category.id.to_s + '-value'] == 'true'
-          tmp_stats = []
-          category.stats_for_last_xxx_chooseable_subc(length, subc, period).each_with_index do |d, index| 
-            tmp_stats << d[:value] 
-            @labels[index] = d[:end].to_s if not has_labels
-          end
-          @stats << { :name => category.name + ' [value]', :value => tmp_stats }
-          has_labels = true;
-        end
-
-        if params[category.id.to_s + '-saldo'] == 'true'
-          tmp_stats = []
-          category.saldo_for_last_xxx_chooseable_subc(length, subc, period).each_with_index do |d,index| 
-            tmp_stats << d[:value]
-            @labels[index] = d[:end].to_s if not has_labels
-          end
-          @stats << { :name => category.name + ' [saldo]', :value => tmp_stats }
-          has_labels = true;
-        end
-
-      end
-      session[:stats] = @stats
-      session[:labels] = @labels
-      session[:stats_title] = "Statistics for last #{length.to_s} #{period.to_s.downcase}"
-    else
-      @draw = false
-    end
-  end
-
-
-
-  # @description: Saves in sessions[:stats] a table of hashes( :value , :name ) that is used to
-  #               generate another graph
-  def graph2
-    @default_id = params[:category_id].to_i || @user.categories.first.id
-    @default_length = '6'
-    @default_period = 'MONTHS'
-    if request.post?
-      @draw = true
-      @category = Category.find(params[:category_id].to_i)
-      subc = false
-      subc = true if params[:show_with_subcategories] == "true"
-      length = params[:length].to_i
-      period = params[:period].intern
-      
-      @stats =  @category.stats_for_last_xxx_chooseable_subc(length, subc, period)
-      session[:stats] = @stats
-      session[:stats_type] = "bar"
-      session[:stats_for] = @category.name
-    else
-      @draw = false
-#       session.delete :stats
-#       session.delete :stats_type
-#       session.delete :stats_for
-    end
-  end
-
-  # @description: Saves in sessions[:stats] a table of hashes( :value , :name ) that is used to
-  #               generate a graph
-  def graph
-    @default_id = params[:category_id].to_i || @user.categories.first.id
-    @default_depth = params[:depth] || 2
-    @default_char_type = params[:type] || 'pie'
-      
-    if request.post?
-      @draw = true
-      @category = Category.find(params[:category_id].to_i)
-      
-      get_date_from_params
-      info = @category.info(@start_day , @end_day)
-      
-      to_session = []
-      to_session << { :name => info[:category].name , :value => info[:only_value] }
-      depth = 1
-      sub_categories = info[:sub_categories]
-      new_sub = []
-      while depth <= params[:depth].to_i 
-        new_sub = []
-        sub_categories.each do |sc|
-          new_sub += sc[:sub_categories]
-          if sc[:sub_categories].empty? or depth == params[:depth].to_i
-            to_session << {:name => sc[:category].name, :value => sc[:value]}
-          else
-            to_session << {:name => sc[:category].name, :value => sc[:only_value]}
-          end
-        end
-        
-        sub_categories = new_sub
-        depth += 1;
-      
-      end
-      @stats = to_session
-      session[:stats] = to_session
-      session[:stats_type] = params[:type]
-      session[:stats_for] = @category.name
-    else
-      @draw = false
-    end
-  end
-
-
   def show
     session[:category_id] = @category.id
     session[:how_many] = {:outcome => 0, :income => 0}
@@ -156,8 +36,9 @@ class CategoriesController < ApplicationController
       #@value = @category.value_with_subcategories
       raise "test if ever happen"
     else
-      @transfers_to_show, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
-      @value = @category.value
+      @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
+      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
+      @value = @category.saldo_at_end_of_day(@end_day.to_date)
     end
   end
 

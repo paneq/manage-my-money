@@ -86,6 +86,12 @@ class Money
     return Money.new(@hash.clone)
   end
 
+
+  def each
+    @hash.each_pair { |key, val|  yield key, val}
+  end
+
+
   private
   
   def remove_zero_currencies

@@ -8,16 +8,7 @@ class UsersController < ApplicationController
   # List of developers that has their own site in "About Us" section
   # I know this is not a proper place for such thing
   INDIVIDUAL = ['rupert' , 'sejtenik' , 'matti' ]
-
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :create, :update ],
-         :redirect_to => { :action => :index }
-
-  verify :method => :delete, :only => [:destroy],
-         :redirect_to => { :action => :index }
-
-  ####################################
-  # @author: Jaroslaw Plebanski
+  
   def destroy
     session[:user_id] = nil
     session[:user_name] = ""
@@ -26,7 +17,7 @@ class UsersController < ApplicationController
     redirect_to :action => :index, :controller => :users
   end
 
-  #########
+  
   def login
     session[:user_id] = nil
     if request.post?
@@ -41,10 +32,9 @@ class UsersController < ApplicationController
     end
   end
 
-  ###############
-  # @author: Robert Pankowecki
-  # @description: This method search for user becuase logged use can view home site
-  #               but even if user is not logged we do not redirect him as in :find_user filter!
+
+  # This method search for user becuase logged use can view home site
+  # but even if user is not logged we do not redirect him as in :find_user filter!
   def index
     @user = User.find(session[:user_id]) if session[:user_id]
   end
@@ -54,42 +44,38 @@ class UsersController < ApplicationController
     @user = User.find(session[:user_id]) if session[:user_id]
   end
 
-
-
-  ##########
+  
   def logout
+    @user = User.find(params[:id])
+    return unless @user.id == session[:user_id]
     session[:user_id] = nil
     session[:user_name] = ""
-    redirect_to :action => "index" 
     flash[:notice] = 'You have been logged out'
+    redirect_to '/'
   end
 
-  #####################
+  
   def activate
-	@user = User.find(params[:id])
-	hash = params[:activate_hash]
-	user_hash = @user.to_hash
-	if hash == user_hash
-	  @user.active = true
-	  @user.save!
-	  flash[:notice] = "Your account is now active. You can log in."
-	  redirect_to :action => :index
-	else
-	  flash[:notice] = "Account has NOT been activated"
-	  redirect_to :action => :index
-	end
+    @user = User.find(params[:id])
+    hash = params[:activate_hash]
+    user_hash = @user.to_hash
+    if hash == user_hash
+      @user.active = true
+      @user.save!
+      flash[:notice] = "Your account is now active. You can log in."
+      redirect_to :action => :index
+    else
+      flash[:notice] = "Account has NOT been activated"
+      redirect_to :action => :index
+    end
   end
 
 
-  #####################
   def new
     @user = User.new
   end
 
 
-  #############################
-  # @author: Robert Pankowecki
-  # @author: Jaroslaw Plebanski
   def create
     @user = User.new(params[:user])    
     if @user.save
@@ -104,8 +90,6 @@ class UsersController < ApplicationController
   end
 
 
-  ##########################
-  # @author: Robert Pankowecki
   # @description: Regarding to send param "who" decide which partial
   #               should be used to show additional information about some of us
   # remote

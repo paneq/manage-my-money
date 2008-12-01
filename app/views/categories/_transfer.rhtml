@@ -1,5 +1,5 @@
 <% # %>
-<% # %> transfer = { :transfer => 'contains real transfer with id, day, description itp' , :saldo => 'contains saldo in category after transfer', :value => 'contains value of transfer'}
+<% # %> transfer = { :transfer => 'contains real transfer with id, day, description itp', :money => 'contains value of transfer as Money object', :saldo => 'Saldo as Money object'}
 <% size='15x15' %>
 <tr id="transfer-in-category-line-<%= transfer[:transfer].id -%>" class="<%= cycle('line-even', 'line-odd') %>" >
 <td class="transfer-table-border"> <%= transfer[:transfer].day -%></td>
@@ -13,14 +13,14 @@
 -%>
 </td>
 <td class="number transfer-table-border">
-	<% transfer[:value].each_pair do |currency, value| %>
+	<% transfer[:money].each do |currency, value| %>
 		<div>
 			<%= "#{value} #{currency.symbol}" -%>
 		</div>
 	<% end %>
 </td>
 <td class="number transfer-table-border">
-	<% transfer[:saldo].each_pair do |currency, value| %>
+	<% transfer[:saldo].each do |currency, value| %>
 		<div>
 			<%= "#{value} #{currency.symbol}" -%>
 		</div>

@@ -150,6 +150,12 @@ class CategoryTest < Test::Unit::TestCase
     outcome = @user.categories[2]
     value = 100;
 
+    zloty_bonus = 000
+    euro_bonus = 00
+
+    save_simple_transfer_item(:income_category => income, :outcome_category => outcome, :day => 10.day.ago.to_date, :currency => @zloty, :value => zloty_bonus)
+    save_simple_transfer_item(:income_category => income, :outcome_category => outcome, :day => 10.day.ago.to_date, :currency => @euro, :value => euro_bonus)
+
     5.downto(1) do |number|
       t = Transfer.new(:user => @user)
       t.day = number.days.ago.to_date
@@ -168,11 +174,21 @@ class CategoryTest < Test::Unit::TestCase
     5.downto(1) do |number|
       result = income.transfers_with_saldo_for_period_new(5.days.ago.to_date, number.days.ago.to_date)
       assert_equal 6 - number, result.size
+      saldo = Money.new()
       5.downto(number) do |item_number|
         item = result[5-item_number]
+
+        #test money
         assert_equal item_number*value, item[:money].value(@zloty)
         assert_equal item_number*value, item[:money].value(@euro)
         assert_equal 2, item[:money].currencies.size
+
+        saldo.add(item[:money])
+
+        #test saldo
+        assert_equal saldo.value(@zloty) + zloty_bonus, item[:saldo].value(@zloty)
+        assert_equal saldo.value(@euro) + euro_bonus, item[:saldo].value(@euro)
+        assert_equal 2, item[:saldo].currencies.size
       end
     end
 

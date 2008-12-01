@@ -6,29 +6,22 @@ class TransfersController < ApplicationController
 
 
   public
-
-#   def save_in_session
-#     session[:transfer_id] = params[:id]
-#     redirect_to :action => :index
-#   end
-
-
   
   #remote
   def full_transfer_show
   
     @choosen_category_id  = session[:category_id]
     render :update do |page|
-        page.replace_html 'form-for-transfer', :partial => 'transfers/full_transfer', :locals => { :category_id => params[:category_id] , :embedded => true}
-        page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :full , :category_id => params[:category_id]}
+      page.replace_html 'form-for-transfer', :partial => 'transfers/full_transfer', :locals => { :category_id => params[:category_id] , :embedded => true}
+      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :full , :category_id => params[:category_id]}
     end
   end
   
   #remote
   def quick_transfer_show
     render :update do |page|
-        page.replace_html 'form-for-transfer', :partial => 'transfers/quick_transfer', :object => { :category_id => params[:category_id] }
-        page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :quick, :category_id => params[:category_id]}
+      page.replace_html 'form-for-transfer', :partial => 'transfers/quick_transfer', :object => { :category_id => params[:category_id] }
+      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :quick, :category_id => params[:category_id]}
     end
   
   end
@@ -36,8 +29,8 @@ class TransfersController < ApplicationController
   #remote
   def search_show
     render :update do |page|
-        page.replace_html 'form-for-transfer', :partial => 'transfers/search_transfers', :locals => { :category_id => params[:category_id] }
-        page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :search, :category_id => params[:category_id]}
+      page.replace_html 'form-for-transfer', :partial => 'transfers/search_transfers', :locals => { :category_id => params[:category_id] }
+      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :search, :category_id => params[:category_id]}
     end
   
   end
@@ -72,19 +65,16 @@ class TransfersController < ApplicationController
       @start_day = 1.month.ago.to_date
       @end_day = Date.today
     
-      @transfers_to_show, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
-      @value = @category.value
+      @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
+      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
+      @value = @category.saldo_at_end_of_day(@end_day.to_date)
+
       where = 'transfer-table-div'
       render :update do |page|
         page.replace_html where, :partial => 'categories/transfer_table'
         page.replace_html 'form-for-transfer', :partial=>'transfers/quick_transfer', :object => { :category_id => @category.id}
       end
       
-      
-      #where = 'quick-transfers'
-      #render :update do |page|
-      #  page.insert_html :bottom , where , :partial => 'category/transfer_for_subcategories' , :object => transfer
-      #end
     else
       # TODO: change it so there will be a notice that something went wrong
       where = 'quick-transfers'
@@ -132,10 +122,7 @@ class TransfersController < ApplicationController
     end
   end
 
-  ################
-  # @author: Robert Pankowecki
-  # @author: Jaroslaw Plebanski
-  # @author: Mateusz Pawlik
+
   def make
     if request.get? 
       session[:how_many] = {:outcome => 0, :income => 0}
@@ -157,7 +144,7 @@ class TransfersController < ApplicationController
       @transfer_items_to = []
       p = params[:outcome]
       (0..session[:how_many][:outcome]+1).each do |i|
-#         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
+        #         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
         unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
           transfer_item = TransferItem.new
           transfer_item.description = p['description-' + i.to_s]
@@ -171,7 +158,7 @@ class TransfersController < ApplicationController
       end
       p = params[:income]
       (0..session[:how_many][:income]+1).each do |i|
-#         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
+        #         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
         unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
           transfer_item = TransferItem.new
           transfer_item.description = p['description-' + i.to_s]
@@ -194,9 +181,12 @@ class TransfersController < ApplicationController
           @category = Category.find(session[:category_id])
           @start_day = 1.month.ago.to_date
           @end_day = Date.today
-  #     
-          @transfers_to_show, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
-          @value = @category.value
+  
+
+          @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
+          @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
+          @value = @category.saldo_at_end_of_day(@end_day.to_date)
+
           where = 'transfer-table-div'
           render :update do |page|
             page.replace_html where, :partial => 'categories/transfer_table'
@@ -290,19 +280,6 @@ class TransfersController < ApplicationController
       end
     end
   end
-
-
-
-
-  ####################
-  # @author: Generated by Rails
-  # @author: Robert Pankowecki
- # def list
-    #@transfer_pages, @transfers = paginate :transfers, :per_page => 20
-#    @transfers = @user.transfers
- #   @transfers.sort! { | t1, t2 | t1.day <=> t2.day }
- #   @transfers.reverse!
- # end
   
 
 

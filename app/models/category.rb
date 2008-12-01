@@ -271,71 +271,60 @@ class Category < ActiveRecord::Base
   
   ############################
   # @author: Robert Pankowecki
-  def value_with_subcategories( start_day = nil , end_day = nil )
-    h = {}
-    tree_with_parent.collect { |cat| cat.value( start_day, end_day ) }.each do |hash|
-      hash.each_pair do |currency, value|
-        h[currency] = 0 unless h[currency]
-        h[currency] += value
-      end
-    end
-    return h
-  end
+#  def value_with_subcategories( start_day = nil , end_day = nil )
+#    h = {}
+#    tree_with_parent.collect { |cat| cat.value( start_day, end_day ) }.each do |hash|
+#      hash.each_pair do |currency, value|
+#        h[currency] = 0 unless h[currency]
+#        h[currency] += value
+#      end
+#    end
+#    return h
+#  end
   
   
   ###########################
   # @author: Robert Pankowecki, 
   # @author: Jaroslaw Plebanski
   # @description: return hash with :only_value, :value, :sub_categories, :category
-  def info( start_day = nil , end_day = nil)
-    v = transfers_between(start_day , end_day).collect{|t| t.value_by_category(self)}.sum
-    
-    h = {}
-    h[:only_value] = v
-    h[:category] = self
-    tb = []
-    child_categories.each do |c|
-      information = c.info( start_day , end_day )
-      v += information[:value]
-      tb << information
-    end
-    h[:sub_categories] = tb
-    h[:value] = v
-    return h
-  end
+#  def info( start_day = nil , end_day = nil)
+#    v = transfers_between(start_day , end_day).collect{|t| t.value_by_category(self)}.sum
+#
+#    h = {}
+#    h[:only_value] = v
+#    h[:category] = self
+#    tb = []
+#    child_categories.each do |c|
+#      information = c.info( start_day , end_day )
+#      v += information[:value]
+#      tb << information
+#    end
+#    h[:sub_categories] = tb
+#    h[:value] = v
+#    return h
+#  end
   
   #rupert should be ok
   #@description: return hash with :tree_value, :value, :sub_categories, :category
-  def info2( start_day = nil , end_day = nil)
-    transfers_list = transfers.between_or_equal_dates(start_day, end_day)
-    result = {:category => self}
-    result[:value] = {}
-    result[:subcategories] = []
-    transfers_list.each do |t|
-      result[:value] += t.value_by_category(self)
-    end
-    result[:tree_value] = result[:value].clone
-    
-    child_categories.each do |c|
-      information = c.info(start_day, end_day)
-      result[:tree_value] += information[:tree_value]
-      result[:subcategories] << information
-    end
-    return result
-  end
+#  def info2( start_day = nil , end_day = nil)
+#    transfers_list = transfers.between_or_equal_dates(start_day, end_day)
+#    result = {:category => self}
+#    result[:value] = {}
+#    result[:subcategories] = []
+#    transfers_list.each do |t|
+#      result[:value] += t.value_by_category(self)
+#    end
+#    result[:tree_value] = result[:value].clone
+#
+#    child_categories.each do |c|
+#      information = c.info(start_day, end_day)
+#      result[:tree_value] += information[:tree_value]
+#      result[:subcategories] << information
+#    end
+#    return result
+#  end
   
   
-  #  def type=(a_type)
-  #    unless TYPES[a_type]
-  #      raise "Unknown type: " + a_type.to_s
-  #    else
-  #      self._type_ = TYPES[a_type]
-  #    end
-  #  end
-  #
-  #  def type
-  #    TYPES.invert[self._type_]
-  #  end
   
   def before_validation
     if self.description.nil? or  self.description.empty? 
@@ -424,8 +413,8 @@ class Category < ActiveRecord::Base
   end
 
 
-  # Returns array of hashes{:transfer => tr, :money => Money object}
-  def transfers_with_saldo_for_period_new(start_day, end_day)
+  # Returns array of hashes{:transfer => tr, :money => Money object, :saldo => Money object}
+  def transfers_with_saldo_for_period_new(start_day, end_day)    
     transfers = Transfer.find(
       :all,
       :select =>      'transfers.*, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
@@ -444,6 +433,13 @@ class Category < ActiveRecord::Base
       end
       last_transfer = t
     end
+    
+    saldo = saldo_at_end_of_day(start_day - 1.day)
+    for t in list do
+      saldo.add(t[:money])
+      t[:saldo] = saldo.clone
+    end
+
     return list;
   end
 

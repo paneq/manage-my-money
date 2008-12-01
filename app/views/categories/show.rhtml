@@ -1,20 +1,20 @@
 <div>
-  <h1>Transfers from this category</h1>
+  <h1>Transfery w tej kategorii</h1>
   
   <div style="position : relative; padding-top : 15px;">
     <b>Name:</b> <%= @category.name %> <span class="to-right"><%= link_to 'Edit category ', :action => 'edit', :id => @category %></span>
   </div> 
   
   <% unless @category.description.empty? %>
-  <p><b>Description:</b> <%= @category.description %>
-  </p>
+    <p><b>Description:</b> <%= @category.description %>
+    </p>
   <% end %>
   
   <div id="transfer-table-div">
 	  <% unless @transfers_to_show.empty? %>
 	    <%= render :partial => 'transfer_table' %>
 	  <% else %>
-	      <b>There are no transfers in selected period of time.</b>
+	      <b>W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>
 	  <% end %>
   </div>
   <br />

@@ -160,7 +160,14 @@ class MoneyTest < Test::Unit::TestCase
     assert_not_equal money, clonned
   end
 
-  
+
+  def test_each
+    money = Money.new(@euro => 10, @zloty => 20)
+    money2 = Money.new()
+    money.each { |currency, value| money2.add(value, currency) }
+    assert_equal(money, money2)
+  end
+
   def test_range
     #testowanie zaokraglen tylko do 2 miejsc po przecinku i takie tam
   end
