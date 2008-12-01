@@ -140,7 +140,26 @@ class MoneyTest < Test::Unit::TestCase
     money.add(-10, @zloty)
     assert money.is_empty?
   end
-  
+
+
+  def test_equal
+    money = Money.new(@euro => 10, @zloty => 20)
+    money2 = Money.new(@euro => 10, @zloty => 20)
+    money3 = Money.new(@euro => 10)
+    assert_equal money, money2
+    assert_not_equal money, money3
+  end
+
+
+  def test_clone
+    money = Money.new(@euro => 10, @zloty => 20)
+    clonned = money.clone()
+    assert_equal money, clonned
+
+    clonned.add(10, @euro)
+    assert_not_equal money, clonned
+  end
+
   
   def test_range
     #testowanie zaokraglen tylko do 2 miejsc po przecinku i takie tam
@@ -155,5 +174,6 @@ class MoneyTest < Test::Unit::TestCase
     proc.call
     assert_equal before, money.currencies
   end
-  
+
+
 end

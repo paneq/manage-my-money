@@ -57,7 +57,8 @@ class Money
     end
     remove_zero_currencies
   end
-  
+
+
   def is_empty?
     return @hash.keys.size == 0
   end
@@ -66,10 +67,25 @@ class Money
     return is_empty?
   end
 
+
   def to_s
     return @hash.to_s
   end
-  
+
+
+  def ==(obj)
+    return false unless obj.currencies.size == self.currencies.size
+    for currency in self.currencies
+      return false unless obj.value(currency) == self.value(currency)
+    end
+    return true
+  end
+
+
+  def clone
+    return Money.new(@hash.clone)
+  end
+
   private
   
   def remove_zero_currencies
