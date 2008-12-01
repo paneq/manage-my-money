@@ -124,7 +124,7 @@
           <li><%= link_to 'Register', :action => :new, :controller => :users %></li>
         <% end %>
         <% if @user %>
-          <li><%= link_to 'Logout', {:action => 'logout', :controller => 'users', :id =>@user} %></li>
+          <li><%= link_to 'Logout', logout_url %></li>
           <li><%= link_to 'Remove account', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Are you sure?" %></li>
           <li><%= link_to 'New transfer', :action => :make, :controller => :transfers %></li>
           <li><%= link_to 'Transfers - ToDo', :action => :list, :controller => :transfers %></li>

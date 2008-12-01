@@ -1,7 +1,7 @@
 class TransfersController < ApplicationController
 
   layout 'main'
-  before_filter :find_user
+  before_filter :login_required
   before_filter :check_perm_for_transfer , :only => [:show_details , :show , :edit_with_items, :destroy]
 
 

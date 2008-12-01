@@ -1,7 +1,7 @@
 class ExchangesController < ApplicationController
   
   layout 'main'
-  before_filter :find_user
+  before_filter :login_required
   before_filter :find_and_set_exchange, :only => [:show, :edit, :update, :destroy]
   before_filter :check_perm_read, :only => [:show]
   before_filter :check_perm_write, :only => [:edit, :update, :destroy]

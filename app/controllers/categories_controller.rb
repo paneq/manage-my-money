@@ -1,7 +1,7 @@
 class CategoriesController < ApplicationController
 
   layout 'main'
-  before_filter :find_user
+  before_filter :login_required
   before_filter :check_perm, :only => [:show_with_subcategories , :show , :remove, :search]
   
   

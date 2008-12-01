@@ -7,11 +7,11 @@ class CategoryTest < Test::Unit::TestCase
     @user = User.new()
     @user.active = true
     @user.email = 'email@example.com'
-    @user.name = 'rupert'
+    @user.login = 'rupert'
     @user.password = 'p@ssword'
     @user.password_confirmation = 'p@ssword'
     @user.save!
-   
+    @user.activate!
     @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
     @euro = Currency.new(:symbol => 'E', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'euro euro')
     @zloty.save!

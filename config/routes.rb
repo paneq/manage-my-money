@@ -32,55 +32,64 @@ ActionController::Routing::Routes.draw do |map|
   
 
   map.resources     :categories
-    {
-      :member => {
-        :show => [:post, :get],
-      }
+  {
+    :member => {
+      :show => [:post, :get],
     }
+  }
     
   map.resources     :currencies
-    {
-      :member => {
-        :create_remote => :post
-      }
+  {
+    :member => {
+      :create_remote => :post
     }
+  }
   map.resources     :exchanges
 
   map.resources     :transfers_items,
     {
-      :member => {
-        :edit_remote => [:post, :get],
-        :discard=> [:post, :get],
-        :remove_transfer_item => :get
-      }
+    :member => {
+      :edit_remote => [:post, :get],
+      :discard=> [:post, :get],
+      :remove_transfer_item => :get
     }
+  }
 
   map.resources     :transfers,
     {
-      :member => {
-        :show_details=> :post
-      },
-      :collection => {
-        :full_transfer_show => :get, 
-        :search_show => :get,
-        :quick_transfer_show => :get,
-        :quick_transfer => :post,
-        :add_transfer_item => :get,
-        :hide_details => :get
-      }
+    :member => {
+      :show_details=> :post
+    },
+    :collection => {
+      :full_transfer_show => :get,
+      :search_show => :get,
+      :quick_transfer_show => :get,
+      :quick_transfer => :post,
+      :add_transfer_item => :get,
+      :hide_details => :get
     }
+  }
 
   map.resources     :users,
     {
-      :member => {
-        :login => :get,
-        :logout => :get
-      },
-      :collection => {
-      }
+    :member => {
+      :login => :get,
+      :logout => :get
+    },
+    :collection => {
     }
-    
-  map.home          '/', :controller => 'users', :action => 'login'
+  }
+  map.resource :session
+  map.home          '/', :controller => 'sessions', :action => 'default'
+
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  #map.register '/register', :controller => 'users', :action => 'create'
+  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
+  
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+
+
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
