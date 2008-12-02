@@ -118,23 +118,20 @@
       <ul class="submenu1">
         
     
-        <li><%= link_to 'Home', :controller => :users %></li>
+        <li><%= link_to 'Start', :controller => :users %></li>
         <% if session[:user_id].nil? %>
-	  <li><%= link_to 'Login', :action => :login, :controller => :users %> </li>
-          <li><%= link_to 'Register', :action => :new, :controller => :users %></li>
+	  <li><%= link_to 'Logowanie', :action => :login, :controller => :users %> </li>
+          <li><%= link_to 'Rejestracja', :action => :new, :controller => :users %></li>
         <% end %>
         <% if @user %>
-          <li><%= link_to 'Logout', logout_url %></li>
-          <li><%= link_to 'Remove account', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Are you sure?" %></li>
-          <li><%= link_to 'New transfer', :action => :make, :controller => :transfers %></li>
-          <li><%= link_to 'Transfers - ToDo', :action => :list, :controller => :transfers %></li>
-          <li><%= link_to 'New category', :action => :new, :controller => :categories %></li>
-          <li><%= link_to 'Categories', :action => :index, :controller => :categories %></li>
-          <li><%= link_to 'Currencies', :action => :index, :controller => :currencies %></li>
-          <li><%= link_to 'Exchanges', :action => :index, :controller => :exchanges %></li>
-          <li><%= link_to 'Graph', :action => :graph, :controller => :categories %></li>
-          <li><%= link_to 'Another Graph', :action => :graph2, :controller => :categories %></li>
-          <li><%= link_to 'Yet Another Graph', :action => :graph3, :controller => :categories %></li>
+          <li><%= link_to 'Wyloguj', logout_url %></li>
+          <li><%= link_to 'Usuń konto', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Are you sure?" %></li>
+          <li><%= link_to 'Nowy transfer', :action => :make, :controller => :transfers %></li>
+          <li><%= link_to 'Transfery - ToDo', :action => :list, :controller => :transfers %></li>
+          <li><%= link_to 'Nowa kategoria', :action => :new, :controller => :categories %></li>
+          <li><%= link_to 'Kategorie', :action => :index, :controller => :categories %></li>
+          <li><%= link_to 'Waluty', :action => :index, :controller => :currencies %></li>
+          <li><%= link_to 'Kursy', :action => :index, :controller => :exchanges %></li>
         <% end %>
 
       </ul>
@@ -181,7 +178,7 @@
   <div id="bg" class="width">
 
 <!--    <img src="/images/logo.gif" alt="Our logo"/> -->
-     <a href='http://pledgie.com/campaign/show/139'><img style="padding-top:5px;" alt='Click here to lend your support to: Best internet financial management application and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaign/badge/139?skin_name=chrome' border='0' /></a>
+     <!--<a href='http://pledgie.com/campaign/show/139'><img style="padding-top:5px;" alt='Click here to lend your support to: Best internet financial management application and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaign/badge/139?skin_name=chrome' border='0' /></a>-->
       
  
 
