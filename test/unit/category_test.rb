@@ -15,8 +15,7 @@ class CategoryTest < Test::Unit::TestCase
     @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
     @euro = Currency.new(:symbol => 'E', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'euro euro')
     @zloty.save!
-    @euro.save!
-    
+    @euro.save!    
   end
   
   def test_user_has_required_categories_after_created

@@ -1,10 +1,10 @@
 <h1>Logowanie</h1>
 
 <% form_tag session_path do -%>
-<p><%= label_tag 'login' %><br />
+<p><%= label_tag 'login', 'Login' %><br />
 <%= text_field_tag 'login', @login %></p>
 
-<p><%= label_tag 'Hasło' %><br/>
+<p><%= label_tag 'password', 'Hasło' %><br/>
 <%= password_field_tag 'password', nil %></p>
 
 
