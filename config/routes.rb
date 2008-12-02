@@ -31,6 +31,10 @@ ActionController::Routing::Routes.draw do |map|
 
   
 
+  map.resource :session
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+
   map.resources     :categories
   {
     :member => {
@@ -70,24 +74,17 @@ ActionController::Routing::Routes.draw do |map|
     }
   }
 
-  map.resources     :users,
-    {
-    :member => {
-      :login => :get,
-      :logout => :get
-    },
-    :collection => {
-    }
-  }
-  map.resource :session
+  map.resources     :users
+
+
+
   map.home          '/', :controller => 'sessions', :action => 'default'
 
   map.signup '/signup', :controller => 'users', :action => 'new'
   #map.register '/register', :controller => 'users', :action => 'create'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  
 
 
 
