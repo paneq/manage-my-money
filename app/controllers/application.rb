@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   #
-  protect_from_forgery if ENV["RAILS_ENV"] =='production' # :secret => '2c6164eef68d2782b197c7a76a616283'
+  protect_from_forgery unless ENV["RAILS_ENV"] =='test' # :secret => '2c6164eef68d2782b197c7a76a616283'
   
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters
