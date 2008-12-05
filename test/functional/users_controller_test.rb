@@ -67,7 +67,7 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_should_activate_user
     assert_nil User.authenticate('aaron', 'test')
     get :activate, :activation_code => users(:aaron).activation_code
-    assert_redirected_to '/'
+    assert_redirected_to '/login'
     assert_not_nil flash[:notice]
     assert_equal users(:aaron), User.authenticate('aaron', 'test')
   end
@@ -89,6 +89,6 @@ class UsersControllerTest < Test::Unit::TestCase
   protected
     def create_user(options = {})
       post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-        :password => 'quire', :password_confirmation => 'quire' }.merge(options)
+        :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options)
     end
 end
