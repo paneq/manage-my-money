@@ -1,0 +1,30 @@
+<% form_for(@user) do |f| -%>
+
+<%= error_messages_for 'user' %>
+
+<p><%= label_tag 'email' %><br/>
+<%= f.text_field :email %></p>
+
+<p><%= label_tag 'password' %><br/>
+<%= f.password_field :password %></p>
+
+<p><%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
+<%= f.password_field :password_confirmation %></p>
+
+<%#*todo: combo%>
+<p><%= label_tag 'transaction_amount_limit_type' %><br/>
+<%= f.select :transaction_amount_limit_type, @transaction_amount_limit_types %></p>
+
+<p><%= label_tag 'transaction_amount_limit_value' %><br/>
+<%= f.text_field :transaction_amount_limit_value %></p>
+
+<%#*todo: check box%>
+<p><%= label_tag 'include_transactions_from_subcategories' %><br/>
+<%= f.check_box :include_transactions_from_subcategories %></p>
+
+<%#*todo: combo%>
+<p><%= label_tag 'multi_currency_balance_calculating_algorithm' %><br/>
+<%= f.select :multi_currency_balance_calculating_algorithm, @multi_currency_balance_calculating_algorithms %></p>
+
+<p><%= submit_tag 'Update' %></p>
+<% end -%>

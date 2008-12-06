@@ -27,6 +27,7 @@ module HashEnums
 
     types_const_name = enum.to_s.pluralize.upcase.intern
 
+    #konwertowanie tabeli na hash
     types = nil
     if types_array_or_hash.instance_of?(Array)
       types = {}
@@ -37,25 +38,30 @@ module HashEnums
 
     const_set(types_const_name, types)
 
+    #definicja settera obiektu
     define_method((enum.to_s + '=').intern) do |a_type|
 
+      a_type = a_type.instance_of?(String) ? a_type.intern : a_type #a_type musi być symbolem - konwersja jest potrzebna kiedy wartośc przychodzi z formularza
       unless types[a_type]
-        raise "Unknown type: " + a_type.to_s
+        raise "Unknown enum value: " + a_type.to_s
       else
         self.send(attr_name + "=", types[a_type])
       end
     end
 
+    #definicja gettera obiekt
     define_method(enum) do
       type = self.send(attr_name)
       types.invert[type]
     end
 
+    #definiowanie gettera do hasha z mozliwymi wartosciami enum na poziomie Klasy
     class_eval <<EVAL
       def self.#{(types_const_name)}
           #{types_const_name}
       end
 EVAL
+
 
   end
 end

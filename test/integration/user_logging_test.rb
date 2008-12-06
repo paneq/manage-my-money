@@ -5,7 +5,6 @@ class UserLoggingTest < ActionController::IntegrationTest
 
   def setup
     @rupert = User.new()
-    @rupert.id= 1
     @rupert.active = true
     @rupert.email = 'email@example.com'
     @rupert.login = 'rupert_XYZ_ab'

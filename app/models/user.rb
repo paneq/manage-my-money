@@ -105,12 +105,15 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
+  validates_inclusion_of    :transaction_amount_limit_type_int, :in => User.TRANSACTION_AMOUNT_LIMIT_TYPES.values
+  validates_inclusion_of    :multi_currency_balance_calculating_algorithm_int, :in => User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.values
+
   before_create :make_activation_code 
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :name, :password, :password_confirmation
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :multi_currency_balance_calculating_algorithm, :include_transactions_from_subcategories, :transaction_amount_limit_value, :transaction_amount_limit_type
 
 
   # Activates the user in the database.

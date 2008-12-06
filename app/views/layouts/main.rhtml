@@ -82,7 +82,7 @@
   <div id="page">
 
 
-<table cellspacing="0" cellpadding="0" style="width: 100%; border-spacing: 0px; border: 0px; border-collapse: collapse; padding: 0px; margin:0 px;">
+<table cellspacing="0" cellpadding="0" style="width: 100%; border-spacing: 0px; border: 0px; border-collapse: collapse; padding: 0px; margin: 0px;">
   <tr style="width: 100%; padding: 0px; margin: 0px;">
     <td class="alignTop" style="width: 100%; padding-right: 30px; padding-left:10px; padding-top: 10px; padding-bottom: 20px;">
     
@@ -96,36 +96,31 @@
 
       
       <%= yield  %>
-     
-       
-      <!--
-      <% # %> <h4>Session</h4> <%= debug(session) %>
-      <% # %> <h4>Params</h4>   <%= debug(params) %>
-      -->
+
       
     
     </td>
     
     
     
-    <td class="lightBlueBg horzPad floatRight" style="width: 250px; padding: 0; margin: 0; padding-top: 20px;">
+    <td id="right_menu" class="lightBlueBg horzPad floatRight" style="width: 250px; padding: 0; margin: 0; padding-top: 20px;">
     <h2>My Money <span class="dark">Menu</span></h2>
       <p><b>
-          <% if session[:user_id].nil? -%>
+          <% unless logged_in? -%>
             please login
           <% else -%>
-            Logged as <%= session[:user_name] -%>
+            Logged as <%= self.current_user.login -%>
           <% end -%>
       </b></p>
       <ul class="submenu1">
         
     
         <li><%= link_to 'Start', :controller => :users %></li>
-        <% if session[:user_id].nil? %>
+        <% if logged_in? %>
 	  <li><%= link_to 'Logowanie', :action => :login, :controller => :users %> </li>
           <li><%= link_to 'Rejestracja', :action => :new, :controller => :users %></li>
         <% end %>
-        <% if @user %>
+        <% if logged_in? %>
           <li><%= link_to 'Wyloguj', logout_url %></li>
           <li><%= link_to 'Usuń konto', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Are you sure?" %></li>
           <li><%= link_to 'Nowy transfer', :action => :make, :controller => :transfers %></li>
@@ -134,55 +129,32 @@
           <li><%= link_to 'Kategorie', :action => :index, :controller => :categories %></li>
           <li><%= link_to 'Waluty', :action => :index, :controller => :currencies %></li>
           <li><%= link_to 'Kursy', :action => :index, :controller => :exchanges %></li>
+          <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user) %></li>
+
         <% end %>
 
       </ul>
 
-      <% if @user %>
+      <% if logged_in? %>
       <p><b>Quick acces:</b></p>
         <ul class="submenu3">
           <%= render :partial => "/categories/category_in_layout" , :collection => @user.top_categories %>	
         </ul>
       <br />
       <% end %>
-      <!--
-      <div id="google-adsense" class="google-adsense">
-        <script type="text/javascript">
-        google_ad_client = "pub-2226189545749227";
-        google_ad_width = 120;
-        google_ad_height = 240;
-        google_ad_format = "120x240_as";
-        google_ad_type = "text_image";
-        //2007-04-01: PionowyBanerPoPrawej, SzareKolorki
-        google_ad_channel = "6185314495+6571374916";
-        google_color_border = "EAF2F5";
-        google_color_bg = "EAF2F5";
-        google_color_link = "000000";
-        google_color_text = "333333";
-        google_color_url = "666666";
-        
-        </script>
-        <script type="text/javascript"
-          src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-        </script>
-      </div>
-    -->
+
     
     </td>
   </tr>
 </table>
-<div> <!-- end of page -->
-
+</div> <!-- end of page -->
+</div> <!-- end of content -->
 <!-- #footer: holds the site footer (logo and links) -->
 <div id="footer" style="margin-top:20px;">
     
   <!-- #bg: applies the site width and footer background -->
   <div id="bg" class="width">
 
-<!--    <img src="/images/logo.gif" alt="Our logo"/> -->
-     <!--<a href='http://pledgie.com/campaign/show/139'><img style="padding-top:5px;" alt='Click here to lend your support to: Best internet financial management application and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaign/badge/139?skin_name=chrome' border='0' /></a>-->
-      
- 
 
     <ul>
       <li><a href="http://www.opensourcetemplates.org">opensourcetemplates.org</a></li>
@@ -195,13 +167,7 @@
 </div>
 <!-- #footer end -->
 
-<!-- GOOGLE ANALYTICS --><!--
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-_uacct = "UA-723971-5";
-urchinTracker();
-</script> -->
+
 </body>
 
 </html>
