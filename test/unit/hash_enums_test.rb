@@ -96,4 +96,25 @@ class HashEnumsTest < ActiveSupport::TestCase
 
   end
 
+ def test_enum_methods_from_array
+
+    temporary6 = Class.new do
+      extend HashEnums
+      attr(:my_enum_int, true)
+      define_enum :my_enum, [:type, :type2, :type3]
+    end
+
+
+    t = temporary6.new
+    assert_equal(nil, t.my_enum)
+
+    t.my_enum = :type
+
+    assert_equal(:type, t.my_enum)
+    assert(([:type, :type2, :type3] - temporary6.MY_ENUMS.keys) == [])
+    assert((temporary6.MY_ENUMS.keys - [:type, :type2, :type3]) == [])
+  end
+
+
+
 end

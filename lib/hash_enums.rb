@@ -1,9 +1,11 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
 module HashEnums
   protected
-  def define_enum(enum, types, options = nil)
+  ## definiuje pole typu enum w klasie modelu (getter i setter w obiekcie, oraz stala na poziomie klasy z dostepnymi typami
+  # enum - symbol, nazwa gettera i settera
+  # types - tablica symboli dostepnych typow, lub hash dostepnych typow i ich wartosci numerycznych
+  # options - hash opcji ustalajacych nazwe pola w bazie danych: :attr_suffix, :attr_prefix, :attr_name
+  # author - JP
+  def define_enum(enum, types_array_or_hash, options = nil)
     suffix = '_int'
     prefix = ''
 
@@ -24,6 +26,14 @@ module HashEnums
     end
 
     types_const_name = enum.to_s.pluralize.upcase.intern
+
+    types = nil
+    if types_array_or_hash.instance_of?(Array)
+      types = {}
+      types_array_or_hash.each_with_index { |type_name, type_value| types[type_name] = type_value }
+    else
+      types = types_array_or_hash
+    end
 
     const_set(types_const_name, types)
 

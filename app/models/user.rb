@@ -1,6 +1,19 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+  extend HashEnums
+  
+  define_enum :transaction_amount_limit_type, [:transaction_count, 
+                                               :week_count,
+                                               :actual_month,
+                                               :actual_and_last_month
+                                               ]
+  define_enum :multi_currency_balance_calculating_algorithm, [:show_all_currencies,
+                                                              :calculate_with_newest_exchanges,
+                                                              :calculate_with_exchanges_closest_to_transaction,
+                                                              :calculate_with_newest_exchanges_but,
+                                                              :calculate_with_exchanges_closest_to_transaction_but
+                                                              ]
 
   has_many :categories
   has_many :transfers

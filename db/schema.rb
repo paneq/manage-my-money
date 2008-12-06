@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081110145518) do
+ActiveRecord::Schema.define(:version => 20081206132610) do
 
   create_table "categories", :force => true do |t|
     t.string  "name",        :null => false
@@ -72,18 +72,22 @@ ActiveRecord::Schema.define(:version => 20081110145518) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                     :limit => 40
-    t.string   "name",                      :limit => 100, :default => ""
-    t.string   "email",                     :limit => 100
-    t.string   "crypted_password",          :limit => 40
-    t.string   "salt",                      :limit => 40
+    t.string   "login",                                        :limit => 40
+    t.string   "name",                                         :limit => 100, :default => ""
+    t.string   "email",                                        :limit => 100
+    t.string   "crypted_password",                             :limit => 40
+    t.string   "salt",                                         :limit => 40
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "remember_token",            :limit => 40
+    t.string   "remember_token",                               :limit => 40
     t.datetime "remember_token_expires_at"
-    t.string   "activation_code",           :limit => 40
+    t.string   "activation_code",                              :limit => 40
     t.datetime "activated_at"
-    t.boolean  "active",                                   :default => false, :null => false
+    t.boolean  "active",                                                      :default => false, :null => false
+    t.integer  "transaction_amount_limit_type",                               :default => 0,     :null => false
+    t.integer  "transaction_amount_limit_value"
+    t.boolean  "include_transactions_from_subcategories",                     :default => false, :null => false
+    t.integer  "multi_currency_balance_calculating_algorithm",                :default => 0,     :null => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
