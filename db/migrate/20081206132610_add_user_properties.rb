@@ -7,9 +7,9 @@ class AddUserProperties < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :users, :transaction_amount_limit_type
+    remove_column :users, :transaction_amount_limit_type_int
     remove_column :users, :transaction_amount_limit_value
     remove_column :users, :include_transactions_from_subcategories
-    remove_column :users, :multi_currency_balance_calculating_algorithm
+    remove_column :users, :multi_currency_balance_calculating_algorithm_int
   end
 end
