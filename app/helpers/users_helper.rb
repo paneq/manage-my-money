@@ -90,4 +90,49 @@ module UsersHelper
     end
   end
 
+
+  ##
+  # Zwraca opis danej opcji ustawień użytkownika związanej z przeliczaniem walut
+  # author JP
+  #
+  def get_desc_for_calculating_algorithm(name)
+    case name
+      when :show_all_currencies
+        'Pokazuj wartość salda dla wszystkich użytych walut'
+      when :calculate_with_newest_exchanges
+        'Przelicz na domyślną walutę po kursie nabliższym aktualnej daty'
+      when :calculate_with_exchanges_closest_to_transaction
+        'Przelicz na domyślną walutę po kursie najbliższym daty transakcji'
+      when :calculate_with_newest_exchanges_but
+        'Przelicz na domyślną walutę po kursie najbliższym aktualnej
+daty ale tylko dla transakcji, które nie mają powiązanych ze sobą
+kursów'
+      when :calculate_with_exchanges_closest_to_transaction_but
+        'Przelicz na domyślną walutę po kursie najbliższym daty
+transakcji ale tylko dla transakcji, które nie mają powiązanych
+ze sobą kursów'
+      else
+        throw "No description for " + name
+    end
+  end
+
+  ##
+  # Zwraca opis danej opcji ustawień użytkownika związanej z wyświetlaniem transakcji
+  # author JP
+  #
+  def get_desc_for_transaction_amount_limit_type(name)
+    case name
+      when :transaction_count
+        'Pokazuj określoną liczbę transakcji'
+      when :week_count
+        'Pokazuj transakcje z określonej liczby tygodni'
+      when :actual_month
+        'Pokazuj transakcje z aktualnego miesiąca'
+      when :actual_and_last_month
+        'Pokazuj transakcje z aktualnego i poprzedniego miesiąca'
+      else
+        throw "No description for " + name
+    end
+  end
+
 end

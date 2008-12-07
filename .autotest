@@ -1,5 +1,5 @@
-require 'autotest/redgreen'
-require 'autotest/html_report'  
+require 'autotest/redgreen' 
+ 
 
 module Autotest::GnomeNotify
 
@@ -14,7 +14,7 @@ module Autotest::GnomeNotify
   # [title]        Notification message title
   # [message]      Core message for the notification
   def self.notify stock_icon, title, message
-    options = "-t #{EXPIRATION_IN_SECONDS * 1000} -i #{stock_icon}"
+    options = "-t #{EXPIRATION_IN_SECONDS * 1000} -i #{stock_icon} -h int:x:50 -h int:y:0"
     system "notify-send #{options} '#{title}' '#{message}'"
   end
 

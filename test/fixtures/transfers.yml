@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081110145518
+# Schema version: 20081206132610
 #
 # Table name: transfers
 #

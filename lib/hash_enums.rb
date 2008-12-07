@@ -56,11 +56,11 @@ module HashEnums
     end
 
     #definiowanie gettera do hasha z mozliwymi wartosciami enum na poziomie Klasy
-    class_eval <<EVAL
+    class_eval <<-EVAL
       def self.#{(types_const_name)}
           #{types_const_name}
       end
-EVAL
+    EVAL
 
 
   end

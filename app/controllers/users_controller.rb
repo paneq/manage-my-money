@@ -43,20 +43,21 @@ class UsersController < ApplicationController
 
   def edit
     if check_perm(params[:id])
-      @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
-      @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
+      prepare_arrays_for_view
     end
   end
 
 
   def update
     if check_perm(params[:id])
-      if self.current_user.update_attributes(params[:user])
-        flash[:notice] = 'User was successfully updated.'
-        redirect_to :controller => 'sessions', :action => 'default'
-      else
-        @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
-        @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
+      begin
+        if self.current_user.update_attributes(params[:user])
+          flash[:notice] = 'User was successfully updated.'
+          redirect_to :controller => 'sessions', :action => 'default'
+          return
+        end
+      rescue
+        prepare_arrays_for_view
         render :action => 'edit'
       end
     end
@@ -78,6 +79,11 @@ class UsersController < ApplicationController
       return false
     end
     return true
+  end
+
+  def prepare_arrays_for_view
+    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
+    @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
   end
 
 

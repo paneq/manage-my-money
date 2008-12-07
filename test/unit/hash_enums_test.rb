@@ -2,7 +2,7 @@
 # and open the template in the editor.
 
 require 'hash_enums'
-
+require 'test_helper'
 
 class HashEnumsTest < ActiveSupport::TestCase
 

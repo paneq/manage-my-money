@@ -14,6 +14,7 @@ class UsersControllerTest < Test::Unit::TestCase
     @controller = UsersController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    UsersController.send(:public, :current_user=)
   end
 
 
@@ -105,10 +106,100 @@ class UsersControllerTest < Test::Unit::TestCase
     # well played, sir
   end
 
+  def test_should_not_see_user_edit_form_without_login
+    get :edit
+    assert_response :redirect
+  end
 
+  def test_should_not_update_user_without_login
+    put :update
+    assert_response :redirect
+  end
+
+  def test_should_not_destroy_user_without_login
+    delete :destroy
+    assert_response :redirect
+  end
+
+
+  def test_should_not_edit_another_user
+    login_as :quentin
+    get :edit, :id => users(:aaron).id
+    assert_response :redirect
+  end
+
+  def test_should_not_update_another_user
+    login_as :quentin
+    put :update, :id => users(:aaron).id
+    assert_response :redirect
+  end
+
+  def test_should_not_destroy_another_user
+    login_as :quentin
+    delete :destroy, :id => users(:aaron).id
+    assert_response :redirect
+  end
+
+
+  def test_should_see_user_edit_form
+    login_as :quentin
+    get :edit, :id => users(:quentin).id
+    assert_response :success
+    assert_select "input#user_email"
+    assert_select "input#user_password"
+    assert_select "select#user_transaction_amount_limit_type" do
+      assert_select "option", :count => 4
+    end
+    assert_select "input#user_transaction_amount_limit_value"
+    assert_select "input#user_include_transactions_from_subcategories"
+    assert_select "fieldset#user_multi_currency_balance_calculating_algorithms" do
+      assert_select "input[type=radio]", :count => 5
+    end
+  end
+
+   def test_should_update_user
+     login_as :quentin
+     params = {
+       :id => users(:quentin).id,
+       :user => {
+         :password => nil,
+         :password_confirmation => nil,
+         :include_transactions_from_subcategories => '1',
+         :transaction_amount_limit_type => 'transaction_count',
+         :transaction_amount_limit_value => '12',
+         :email => 'a@a.pl',
+         :multi_currency_balance_calculating_algorithm => 'show_all_currencies'
+        }
+      } 
+     put :update,  params
+     assert_redirected_to :action => "default", :controller => :sessions
+     user = User.find(users(:quentin).id)
+     assert_equal true, user.include_transactions_from_subcategories
+     assert_equal 12, user.transaction_amount_limit_value
+     assert_equal :show_all_currencies, user.multi_currency_balance_calculating_algorithm
+     assert_equal :transaction_count, user.transaction_amount_limit_type
+   end
+
+   def test_should_redirect_user_with_errors_on_update
+     login_as :quentin
+     params = {
+       :id => users(:quentin).id,
+       :user => {
+         :password => nil,
+         :password_confirmation => nil,
+         :email => 'a@a.pl',
+         :transaction_amount_limit_type => 'transaction_count_', #<-Error
+         :transaction_amount_limit_value => '12',
+         :include_transactions_from_subcategories => '1',
+         :multi_currency_balance_calculating_algorithm => 'show_all_currencies'
+        }
+      }
+     put :update,  params
+     assert_template 'users/edit'
+   end
+
+  
   protected
-
-
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
       :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options)

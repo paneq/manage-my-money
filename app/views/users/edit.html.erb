@@ -1,30 +1,41 @@
-<% form_for(@user) do |f| -%>
+<%= javascript_include_tag 'user.js' %>
+<h1>Edycja ustawień</h1>
+
+<% form_for(@current_user) do |f| -%>
 
 <%= error_messages_for 'user' %>
 
-<p><%= label_tag 'email' %><br/>
+<fieldset style="margin-top: 1em">
+<legend>Konto użytkownika</legend>
+<p><%= f.label 'email' %><br/>
 <%= f.text_field :email %></p>
 
-<p><%= label_tag 'password' %><br/>
+<p><%= f.label 'password', 'Hasło: ' %><br/>
 <%= f.password_field :password %></p>
 
-<p><%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
+<p><%= f.label 'password_confirmation', 'Potwiedź hasło: ' %><br/>
 <%= f.password_field :password_confirmation %></p>
 
-<%#*todo: combo%>
-<p><%= label_tag 'transaction_amount_limit_type' %><br/>
-<%= f.select :transaction_amount_limit_type, @transaction_amount_limit_types %></p>
+</fieldset>
 
-<p><%= label_tag 'transaction_amount_limit_value' %><br/>
-<%= f.text_field :transaction_amount_limit_value %></p>
+<fieldset style="margin-top: 1em">
+<legend>System settings</legend>
+<p><%= f.label 'transaction_amount_limit_type', 'Ograniczenie ilości wyświetlanych transakcji: ' %><br/>
+  <%= f.select :transaction_amount_limit_type, @transaction_amount_limit_types.map { |type| [get_desc_for_transaction_amount_limit_type(type), type] }, {}, :onchange => 'show_or_hide_transaction_limit_value()'%>
+<%= f.text_field :transaction_amount_limit_value, :size => 5 %></p>
 
-<%#*todo: check box%>
-<p><%= label_tag 'include_transactions_from_subcategories' %><br/>
+<%= javascript_tag("show_or_hide_transaction_limit_value()") %>
+
+<p><%= f.label 'include_transactions_from_subcategories', 'W kategoriach pokazuj transakcje z podkategorii: ' %><br/>
 <%= f.check_box :include_transactions_from_subcategories %></p>
 
-<%#*todo: combo%>
-<p><%= label_tag 'multi_currency_balance_calculating_algorithm' %><br/>
-<%= f.select :multi_currency_balance_calculating_algorithm, @multi_currency_balance_calculating_algorithms %></p>
+<fieldset id='user_multi_currency_balance_calculating_algorithms'>
+<legend>Algorytm przeliczania walut</legend>
+<% @multi_currency_balance_calculating_algorithms.each do |option| -%>
+<%= f.radio_button :multi_currency_balance_calculating_algorithm, option -%> <%= get_desc_for_calculating_algorithm(option) -%> <br/>
+<% end -%>
+</fieldset>
 
-<p><%= submit_tag 'Update' %></p>
+</fieldset>
+<p><%= f.submit 'Update' %></p>
 <% end -%>
