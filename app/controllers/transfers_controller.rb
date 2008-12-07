@@ -45,7 +45,7 @@ class TransfersController < ApplicationController
     currency = Currency.find(params['data']['currency'])
     transfer = Transfer.new
     transfer.day = Date.today
-    transfer.user = @user
+    transfer.user = self.current_user
     transfer.description = (params['data']['description'])
     
     ti1 = TransferItem.new
@@ -287,7 +287,7 @@ class TransfersController < ApplicationController
   
   def check_perm_for_transfer
     @transfer = Transfer.find(params[:id])
-    if @transfer.user.id != @user.id
+    if @transfer.user.id != self.current_user.id
       flash[:notice] = 'You do not have permission to view this transfer!'
       @transfer = nil
       redirect_to :action => :index, :controller => :categories

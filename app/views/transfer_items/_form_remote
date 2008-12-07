@@ -1,6 +1,6 @@
 <% # = error_messages_for 'transfer_item' %>
   <td class="padding-10-both" style="width: 130px;"><%= text_field 'transfer_item', 'description', :class => :width%></td>
   <td class="padding-10-both" style=""> <%= text_field 'transfer_item', 'value', :class => :width%></td>
-  <td class="padding-10-both number" style="width: 100px;"> <%= collection_select 'transfer_item' , :category, @user.categories , :id , :name, :class => :width %></td>
+  <td class="padding-10-both number" style="width: 100px;"> <%= collection_select 'transfer_item' , :category, @current_user.categories , :id , :name, :class => :width %></td>
 <!--[eoform:transfer_item]-->
 

@@ -40,6 +40,7 @@ class UsersController < ApplicationController
     end
   end
 
+
   def edit
     if check_perm(params[:id])
       @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
@@ -47,9 +48,10 @@ class UsersController < ApplicationController
     end
   end
 
+
   def update
     if check_perm(params[:id])
-      if @user.update_attributes(params[:user])
+      if self.current_user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'
         redirect_to :controller => 'sessions', :action => 'default'
       else
@@ -60,13 +62,17 @@ class UsersController < ApplicationController
     end
   end
 
+  
   def destroy
      check_perm(params[:id])
   end
 
+
   private
+
+  
   def check_perm(user_id_from_request)
-    unless @user.id == user_id_from_request.to_i
+    unless self.current_user.id == user_id_from_request.to_i
       flash[:error]  = "Thou shall not do this with this user"
       redirect_back_or_default('/')
       return false

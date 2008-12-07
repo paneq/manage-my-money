@@ -12,10 +12,10 @@
 	  <td> <span>Currency</span> </td>
     </tr>
 	<tr>
-      <td> <%= select_tag 'data[category]' , options_from_collection_for_select( @user.categories, 'id' , 'name' , choosen ) %> </td> 
+      <td> <%= select_tag 'data[category]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
       <td> <%= text_field 'data', 'description', { :size=>35 } %> </td>
       <td> <%= text_field 'data', 'value', { :size=>5 } %> </td>
-	  <td> <%= select 'data', 'currency', @user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] } %></td>
+	  <td> <%= select 'data', 'currency', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] } %></td>
 	</tr>
   </table>
   

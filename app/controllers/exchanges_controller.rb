@@ -11,7 +11,7 @@ class ExchangesController < ApplicationController
   #        :redirect_to => { :action => :list }
 
   def index
-    @exchanges = @user.visible_exchanges
+    @exchanges = self.current_user.visible_exchanges
   end
 
 
@@ -27,7 +27,7 @@ class ExchangesController < ApplicationController
 
   def create
     @exchange = Exchange.new(params[:exchange])
-    @exchange.user = @user
+    @exchange.user = self.current_user
     if @exchange.save
       flash[:notice] = 'Exchange was successfully created.'
       redirect_to exchanges_path
@@ -41,7 +41,7 @@ class ExchangesController < ApplicationController
   # remote
   def create_remote
     @exchange= Exchange.new(params[:exchange])
-    @exchange.user = @user
+    @exchange.user = self.current_user
     where_insert = 'exchanges-list'
     where_replace = 'new-exchange'
     where_error = 'flash_notice'
@@ -88,7 +88,7 @@ class ExchangesController < ApplicationController
     end
   
     def check_perm_read
-      if @exchange.user != nil and @exchange.user.id != @user.id
+      if @exchange.user != nil and @exchange.user.id != self.current_user.id
         flash[:notice] = 'You do not have permission to view this exchange'
         @exchange= nil
         redirect_to exchanges_path
@@ -96,7 +96,7 @@ class ExchangesController < ApplicationController
     end
     
     def check_perm_write
-      if @exchange.user == nil or @exchange.user.id != @user.id
+      if @exchange.user == nil or @exchange.user.id != self.current_user.id
         flash[:notice] = 'You do not have permission to modify this exchange'
         @exchange = nil
         redirect_to exchanges_path

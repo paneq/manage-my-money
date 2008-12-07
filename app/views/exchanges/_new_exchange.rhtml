@@ -3,11 +3,11 @@
   		<div  style="background-color: #76FAB3; margin-top: 3px; padding-top: 3px; width: 100%">
 	  		<% form_remote_tag :url =>{ :controller => :exchanges, :action => :create_remote } do %>
 				<div style="background-color: #76FAB3; width: 15%; float: left; padding-bottom: 3px; ">
-				  <%= select 'exchange', 'currency_a', @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+				  <%= select 'exchange', 'currency_a', @current_user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
 				</div>
 				
 				<div style="background-color: #76FAB3; width: 15%; float: left; padding-bottom: 3px;">
-				  <%= select 'exchange', 'currency_b', @user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
+				  <%= select 'exchange', 'currency_b', @current_user.visible_currencies.collect {|c| [ c.name, c.id ] } %>
 				</div>
 				
 				<div style="background-color: #76FAB3; width: 10%; float: left; padding-bottom: 3px; ">

@@ -65,6 +65,7 @@ class CategoriesController < ApplicationController
       @day = calculate_start_day(params['time'])
     render :layout => false
   end
+
   def period_changed_end
     @day = calculate_end_day(params['time'])
     render :layout => false
@@ -106,7 +107,7 @@ class CategoriesController < ApplicationController
 
   def new
     @category = Category.new
-    @category.user = User.find(session[:user_id])
+    @category.user = self.current_user
     @parent_categories = @category.user.categories.map {|cat| [cat.name, cat.id]}
     @parent_category_id = params[:parent_category_id].to_i
   end
@@ -115,14 +116,14 @@ class CategoriesController < ApplicationController
   def create
     if params[:category][:parent_category].is_a? String
       nr = params[:category][:parent_category].to_i
-      params[:category][:parent_category] = Category.find( nr )
+      params[:category][:parent_category] = self.current_user.categories.find( nr )
     end
 	###We should excpect an error in next lines because Category.find may not find :-)
     @category = Category.new(params[:category])
-    @category.user = User.find(session[:user_id])
+    @category.user =self.current_user
     @category.type = @category.parent_category.type
     if @category.save
-      if params['opening_balance'].to_i > 0
+      if params['opening_balance'].to_i != 0
         make_opening_transfer
       end
       flash[:notice] = 'Category was successfully created.'
@@ -137,7 +138,7 @@ class CategoriesController < ApplicationController
 
 
   def edit
-    @category = Category.find(params[:id])
+    @category = self.current_user.categories.find(params[:id])
     @parent_categories = @category.user.categories.map {|cat| [cat.name, cat.id]}
     @parent_category_id = @category.parent_category.id if !@category.is_top?
 
@@ -147,8 +148,7 @@ class CategoriesController < ApplicationController
 
 
   def update
-    @category = Category.find(params[:id])
-    
+    @category = self.current_user.categories.find(params[:id])
     if params[:category][:parent_category]!=nil
       parent_category = Category.find(params[:category][:parent_category].to_i)
       params[:category][:parent_category] = parent_category
@@ -208,13 +208,11 @@ class CategoriesController < ApplicationController
         flash[:notice] = 'transfer created; '
       end
   end
-   
 
-  ##############
-  # @author: Robert Pankowecki
+
   def check_perm
-    @category = Category.find(params[:id])
-    if @category.user.id != @user.id
+    @category = self.current_user.categories.find(params[:id])
+    unless @category
       flash[:notice] = 'You do not have permission to view this category'
       @category = nil
       redirect_to :action => :show_categories , :controller => :category
@@ -247,10 +245,5 @@ class CategoriesController < ApplicationController
       @end_time = Date.new(y , m , d)
     end
   end
-  
-  
-  
-  
-  
-  
+    
 end

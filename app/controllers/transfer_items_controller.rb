@@ -113,7 +113,7 @@ class TransferItemsController < ApplicationController
   
   def check_perm
     @transfer_item = TransferItem.find(params[:id])
-    if @transfer_item.category.user.id != @user.id
+    if @transfer_item.category.user.id != self.current_user.id
       @transfer_item = nil
       flash[:notice] = 'You do not have permission to view this transfer item'
       redirect_to :action => :index, :controller => :categories

@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   layout 'main'
 
   def new
+    logged_in?
   end
 
   def create

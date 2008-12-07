@@ -5,9 +5,9 @@
 <% end %>
 <% id = 'transfer_item_' + transfer_item[:type] + '_' + transfer_item[:number].to_s -%>
     <tr id="<%= id -%>">
-      <td> <%= select_tag transfer_item[:type].to_s + "[category-" + transfer_item[:number].to_s + "]" , options_from_collection_for_select( @user.categories, 'id' , 'name' , choosen ) %> </td> 
+      <td> <%= select_tag transfer_item[:type].to_s + "[category-" + transfer_item[:number].to_s + "]" , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
       <td> <%= text_field transfer_item[:type], 'description-' + transfer_item[:number].to_s, { :size=>40 , :value=>"#{transfer_item[:description] }"}%> </td>
       <td> <%= text_field transfer_item[:type], 'value-' + transfer_item[:number].to_s, { :size=>5 , :value=> "#{transfer_item[:value]}"}%> </td>
-      <td> <%= select_tag transfer_item[:type].to_s + "[currency-" + transfer_item[:number].to_s + "]", options_from_collection_for_select(@user.visible_currencies, 'id', 'long_symbol') %></td>
+      <td> <%= select_tag transfer_item[:type].to_s + "[currency-" + transfer_item[:number].to_s + "]", options_from_collection_for_select(@current_user.visible_currencies, 'id', 'long_symbol') %></td>
       <td> <%= link_to_remote "Remove", {:url => {:action => 'remove_transfer_item', :controller => 'transfers', :id_to_remove => id  }}, {:title => 'Remove'} %> </td>
    </tr>

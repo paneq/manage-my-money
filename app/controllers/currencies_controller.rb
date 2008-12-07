@@ -11,7 +11,7 @@ class CurrenciesController < ApplicationController
   #          :redirect_to => { :action => :list }
 
   def index
-    @currencies = @user.visible_currencies
+    @currencies = self.current_user.visible_currencies
   end
 
   def show
@@ -27,7 +27,7 @@ class CurrenciesController < ApplicationController
   # remote
   def create_remote
     @currency = Currency.new(params[:currency])
-    @currency.user = @user
+    @currency.user = self.current_user
     where_insert = 'currencies-list'
     where_replace = 'new-currency'
     where_error = 'flash_notice'
@@ -51,7 +51,7 @@ class CurrenciesController < ApplicationController
 
   def create
     @currency = Currency.new(params[:currency])
-    @currency.user = @user
+    @currency.user = self.current_user
     if @currency.save
       flash[:notice] = 'Currency was successfully created.'
       redirect_to :action => :index
@@ -77,7 +77,7 @@ class CurrenciesController < ApplicationController
 
   def destroy
     @currency.destroy
-    redirect_to :back
+    redirect_to currencies_url
   end
   
   private
@@ -88,7 +88,7 @@ class CurrenciesController < ApplicationController
   
 
     def check_perm_read
-      if @currency.user != nil and @currency.user.id != @user.id
+      if @currency.user != nil and @currency.user.id != self.current_user.id
         flash[:notice] = 'You do not have permission to view this currency'
         @currency = nil
         redirect_to :action => :index , :controller => :currencies
@@ -97,7 +97,7 @@ class CurrenciesController < ApplicationController
     
 
     def check_perm_write
-      if @currency.user == nil or @currency.user.id != @user.id
+      if @currency.user == nil or @currency.user.id != self.current_user.id
         flash[:notice] = 'You do not have permission to modify this currency'
         @currency = nil
         redirect_to :action => :index , :controller => :currencies

@@ -10,14 +10,12 @@ module AuthenticatedSystem
     # Future calls avoid the database because nil is not equal to false.
     def current_user
       @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_user == false
-      @user = @current_user #our_own_line
     end
 
     # Store the given user id in the session.
     def current_user=(new_user)
       session[:user_id] = new_user ? new_user.id : nil
       @current_user = new_user || false
-      @user = @current_user #our_own_line
     end
 
     # Check if the user is authorized
