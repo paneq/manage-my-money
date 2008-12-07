@@ -5,10 +5,6 @@ require 'sessions_controller'
 class SessionsController; def rescue_action(e) raise e end; end
 
 class SessionsControllerTest < Test::Unit::TestCase
-  # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead
-  # Then, you can remove it from this and the units test.
-  include AuthenticatedTestHelper
-
   fixtures :users
 
   def setup
@@ -17,11 +13,27 @@ class SessionsControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
+
+  def test_should_see_proper_menu_when_logging_in
+    get :new
+    assert_select "ul.submenu1" do
+
+      assert_select "li#login", 1
+      assert_select "li#login", /Logowanie/
+
+      assert_select "li#register", 1
+      assert_select "li#register", /Rejestracja/
+
+    end
+  end
+
+
   def test_should_login_and_redirect
     post :create, :login => 'quentin', :password => 'test'
     assert session[:user_id]
     assert_response :redirect
   end
+
 
   def test_should_fail_login_and_not_redirect
     post :create, :login => 'quentin', :password => 'bad password'
@@ -29,6 +41,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert_response :success
   end
 
+  
   def test_should_logout
     login_as :quentin
     get :destroy
@@ -36,21 +49,25 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert_response :redirect
   end
 
+
   def test_should_remember_me
     post :create, :login => 'quentin', :password => 'test', :remember_me => "1"
     assert_not_nil @response.cookies["auth_token"]
   end
 
+
   def test_should_not_remember_me
     post :create, :login => 'quentin', :password => 'test', :remember_me => "0"
     assert_equal [], @response.cookies["auth_token"]
   end
-  
+
+
   def test_should_delete_token_on_logout
     login_as :quentin
     get :destroy
     assert_equal [], @response.cookies["auth_token"]
   end
+
 
   def test_should_login_with_cookie
     users(:quentin).remember_me
@@ -59,6 +76,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert @controller.send(:logged_in?)
   end
 
+
   def test_should_fail_expired_cookie_login
     users(:quentin).remember_me
     users(:quentin).update_attribute :remember_token_expires_at, 5.minutes.ago.utc
@@ -66,6 +84,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     get :new
     assert !@controller.send(:logged_in?)
   end
+
 
   def test_should_fail_cookie_login
     users(:quentin).remember_me

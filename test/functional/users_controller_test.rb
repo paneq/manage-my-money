@@ -7,7 +7,6 @@ class UsersController; def rescue_action(e) raise e end; end
 class UsersControllerTest < Test::Unit::TestCase
   # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead
   # Then, you can remove it from this and the units test.
-  include AuthenticatedTestHelper
 
   fixtures :users
 
@@ -17,12 +16,28 @@ class UsersControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
+
+  def test_should_see_proper_menu_when_registering
+    get :new
+    assert_select "ul.submenu1" do
+
+      assert_select "li#login", 1
+      assert_select "li#login", /Logowanie/
+
+      assert_select "li#register", 1
+      assert_select "li#register", /Rejestracja/
+
+    end
+  end
+
+
   def test_should_allow_signup
     assert_difference 'User.count' do
       create_user
       assert_response :redirect
     end
   end
+
 
   def test_should_require_login_on_signup
     assert_no_difference 'User.count' do
@@ -31,6 +46,7 @@ class UsersControllerTest < Test::Unit::TestCase
       assert_response :success
     end
   end
+
 
   def test_should_require_password_on_signup
     assert_no_difference 'User.count' do
@@ -64,6 +80,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:user).activation_code
   end
 
+
   def test_should_activate_user
     assert_nil User.authenticate('aaron', 'test')
     get :activate, :activation_code => users(:aaron).activation_code
@@ -71,13 +88,15 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_not_nil flash[:notice]
     assert_equal users(:aaron), User.authenticate('aaron', 'test')
   end
-  
+
+
   def test_should_not_activate_user_without_key
     get :activate
     assert_nil flash[:notice]
   rescue ActionController::RoutingError
     # in the event your routes deny this, we'll just bow out gracefully.
   end
+
 
   def test_should_not_activate_user_with_blank_key
     get :activate, :activation_code => ''
@@ -86,9 +105,14 @@ class UsersControllerTest < Test::Unit::TestCase
     # well played, sir
   end
 
+
   protected
-    def create_user(options = {})
-      post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-        :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options)
-    end
+
+
+  def create_user(options = {})
+    post :create, :user => { :login => 'quire', :email => 'quire@example.com',
+      :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options)
+  end
+
+  
 end
