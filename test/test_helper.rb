@@ -27,4 +27,18 @@ class Test::Unit::TestCase
   self.use_instantiated_fixtures  = false
 
   # Add more helper methods to be used by all tests here...
+  def save_rupert
+    @rupert = User.new()
+    @rupert.active = true
+    @rupert.email = 'email@example.com'
+    @rupert.login = 'rupert_XYZ_ab'
+    @rupert.password = @rupert.login
+    @rupert.password_confirmation = @rupert.login
+    @rupert.save!
+    @rupert.activate!
+  end
+
+  def log_rupert
+    @request.session[:user_id] = @rupert.id
+  end
 end

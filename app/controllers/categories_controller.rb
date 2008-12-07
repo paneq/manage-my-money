@@ -3,15 +3,6 @@ class CategoriesController < ApplicationController
   layout 'main'
   before_filter :login_required
   before_filter :check_perm, :only => [:show_with_subcategories , :show , :remove, :search]
-  
-  
-
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :create, :update ],
-         :redirect_to => { :action => :index }
-
-
-
 
   # @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a

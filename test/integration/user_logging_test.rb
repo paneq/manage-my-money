@@ -4,14 +4,7 @@ class UserLoggingTest < ActionController::IntegrationTest
   #fixtures :all
 
   def setup
-    @rupert = User.new()
-    @rupert.active = true
-    @rupert.email = 'email@example.com'
-    @rupert.login = 'rupert_XYZ_ab'
-    @rupert.password = @rupert.login
-    @rupert.password_confirmation = @rupert.login
-    @rupert.save!
-    @rupert.activate!
+    save_rupert
   end
 
 
