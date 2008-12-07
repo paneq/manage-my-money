@@ -115,12 +115,11 @@
       <ul class="submenu1">
         
     
-        <li><%= link_to 'Start', :controller => :users %></li>
-        <% if logged_in? %>
-	  <li><%= link_to 'Logowanie', :action => :login, :controller => :users %> </li>
+        
+        <% unless logged_in? %>
+          <li><%= link_to 'Logowanie', login_url %> </li>
           <li><%= link_to 'Rejestracja', :action => :new, :controller => :users %></li>
-        <% end %>
-        <% if logged_in? %>
+        <% else %>
           <li><%= link_to 'Wyloguj', logout_url %></li>
           <li><%= link_to 'Usuń konto', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Are you sure?" %></li>
           <li><%= link_to 'Nowy transfer', :action => :make, :controller => :transfers %></li>
