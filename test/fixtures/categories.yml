@@ -3,12 +3,14 @@
 #
 # Table name: categories
 #
-#  id          :integer       not null, primary key
-#  name        :string(255)   not null
-#  description :string(255)   
-#  _type_      :integer       
-#  category_id :integer       
-#  user_id     :integer       
+#  id                :integer       not null, primary key
+#  name              :string(255)   not null
+#  description       :string(255)   
+#  category_type_int :integer       
+#  user_id           :integer       
+#  parent_id         :integer       
+#  lft               :integer       
+#  rgt               :integer       
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
