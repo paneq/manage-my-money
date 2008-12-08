@@ -1,4 +1,4 @@
-<h1>New category for <%= @category.user.name %></h1>
+<h1>Dodaj nową kategorię</h1>
 
 <% # %>
 <% # %><% form_tag :action => 'create' do %>
@@ -7,10 +7,10 @@
 <% # %><% end %>
 
 <% form_for :category, :url => {:action => :create } do |form| %>
-<p> Name: <%= form.text_field :name %> </p>
-<p> Description: <%= form.text_field :description %></p>
+<p> Nazwa: <%= form.text_field :name %> </p>
+<p> Opis: <%= form.text_field :description %></p>
 
-<p> Choose parent category please: </p>
+<p> Wybierz kategorię nadrzędną: </p>
 <%= select_tag 'category[parent_category]', options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
 
 <p> Enter opening balance for this category </p>
