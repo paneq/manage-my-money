@@ -3,7 +3,7 @@
 <div id="category-line" class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>">
    
   <span id="category-link" class="floatLeft category verticalCenter" style="">
-    <a style="padding-left : <%= ( category.depth  + 1 ) * 20 %>px;">
+    <a style="padding-left : <%= ( category.level  + 1 ) * 20 %>px;">
       <%= image_tag "/images/bg/submenu1.gif", :style => 'align: left;' -%> 
       <a><%= h category.name %></a>
       </a>
@@ -21,12 +21,6 @@
   
   
 </div>
-
-<% if category.child_categories.size > 0 %>
-  
-  <%= render :partial => 'category' , :collection => category.child_categories %>
-  
-<% end %>
 
 
 

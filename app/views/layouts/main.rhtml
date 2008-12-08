@@ -137,7 +137,7 @@
       <% if logged_in? %>
       <p><b>Quick acces:</b></p>
         <ul class="submenu3">
-          <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.top_categories %>
+          <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.categories %>
         </ul>
       <br />
       <% end %>

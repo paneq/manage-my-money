@@ -12,11 +12,13 @@
 ActiveRecord::Schema.define(:version => 20081206132610) do
 
   create_table "categories", :force => true do |t|
-    t.string  "name",        :null => false
+    t.string  "name",              :null => false
     t.string  "description"
-    t.integer "_type_"
-    t.integer "category_id"
+    t.integer "category_type_int"
     t.integer "user_id"
+    t.integer "parent_id"
+    t.integer "lft"
+    t.integer "rgt"
   end
 
   create_table "currencies", :force => true do |t|

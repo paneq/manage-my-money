@@ -10,6 +10,8 @@ class CategoryControllerTest < Test::Unit::TestCase
     @controller = CategoriesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+
+    save_currencies
     save_rupert
     log_rupert
   end
@@ -35,6 +37,57 @@ class CategoryControllerTest < Test::Unit::TestCase
     end
   end
 
+
+  def test_new
+    get :new 
+    assert_response :success
+    assert_template 'new'
+    assert_select 'div#category-edit' do
+      assert_select 'p#name', 1
+      assert_select 'p#description', 1
+      assert_select 'p#parent', 1
+      assert_select 'p#balance' do
+        assert_select 'span#currency'
+      end
+      assert_select 'p#create', 1
+    end
+    @rupert.categories.count.times do |nr|
+      assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.categories[nr].name}")
+    end
+    @rupert.visible_currencies.count.times do |nr|
+      assert_select "select#currency-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.visible_currencies[nr].long_name}")
+    end
+  end
+
+
+  def test_proper_selcted_element_when_new_with_given_parent_category
+    parent_category = @rupert.categories.top_of_type(:EXPENSE)
+    get :new, :parent_category_id => parent_category.id
+    assert_response :success
+    assert_template 'new'
+    assert_select 'div#category-edit' do
+      assert_select 'option[selected=selected]', parent_category.name
+    end
+  end
+
+  
+  def test_create
+    parent_category = @rupert.categories.top_of_type(:INCOME)
+    post :create, :category => {
+      :name => 'test name',
+      :description => 'test description',
+      :parent => parent_category.id,
+      :opening_balance => '1 200',
+      :opening_balance_currency => @zloty.id
+    }
+    assert_redirected_to :action => :index
+    created_category = @rupert.categories.find_by_name('test name')
+
+    assert created_category.saldo_at_end_of_day(Date.today).currencies.include?(@zloty)
+    assert_equal 1200, created_category.saldo_at_end_of_day(Date.today).value(@zloty)
+    #test wartosc
+  end
+  
   #  def test_list
   #    get :list
   #

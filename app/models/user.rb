@@ -39,17 +39,27 @@ class User < ActiveRecord::Base
                                                               :calculate_with_exchanges_closest_to_transaction_but
                                                               ]
 
-  has_many :categories
+  has_many :categories, :order => 'category_type_int, lft' do
+    def top
+      find(:all, :conditions => ['parent_id IS NULL'])
+    end
+
+    def top_of_type(type)
+      find(:first, :conditions => ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
+    end
+  end
+  
   has_many :transfers
+  has_many :transfer_items, :through => :transfers
   has_many :currencies
   has_many :visible_currencies,
     :class_name => 'Currency',
-    :finder_sql => 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id is null)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
+    :finder_sql => 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
   has_many :exchanges
   has_many :visible_exchanges,
     :class_name => 'Exchange',
-    :finder_sql => 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id is null)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
+    :finder_sql => 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
   before_create :create_top_categories
   before_destroy :remove_all_data
@@ -64,14 +74,14 @@ class User < ActiveRecord::Base
 
 
   def create_top_categories
-    [ [ "My Assets" , :ASSET ] ,
-      [ "My Incomes" , :INCOME ] ,
-      [ "My Loans" , :LOAN ] ,
-      [ "My Expenses" , :EXPENSE ],
-      [ "Opening balances", :BALANCE ] ].each do | name, type |
+    [ [ "Zasoby" , :ASSET ] ,
+      [ "Przychody" , :INCOME ] ,
+      [ "Wydatki" , :EXPENSE ],
+      [ "Zobowiązania" , :LOAN ] ,
+      [ "Bilanse otwarcia", :BALANCE ] ].each do | name, type |
       self.categories << Category.new do |c|
         c.name = name
-        c.type = type
+        c.category_type = type
       end
     end
   end
@@ -79,7 +89,7 @@ class User < ActiveRecord::Base
 
   def remove_all_data
     transfer_items.destroy_all
-    transfer.destroy_all
+    transfers.destroy_all
     categories.destroy_all
     exchanges.destroy_all
     currencies.destroy_all

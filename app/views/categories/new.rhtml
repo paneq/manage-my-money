@@ -1,33 +1,27 @@
 <h1>Dodaj nową kategorię</h1>
+<div id="category-edit">
+  <% form_for :category, :url => {:action => :create } do |form| %>
+    <p id="name"> Nazwa: <%= form.text_field :name %> </p>
+    <p id="description"> Opis: <%= form.text_field :description %></p>
 
-<% # %>
-<% # %><% form_tag :action => 'create' do %>
-<% # %>  <%= render :partial => 'form' %>
-<% # %>  <%= submit_tag "Create" %>
-<% # %><% end %>
+    <p id="parent">
+    Wybierz kategorię nadrzędną:
+    <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', @parent), :id => 'parent-select'%>
+    </p>
 
-<% form_for :category, :url => {:action => :create } do |form| %>
-<p> Nazwa: <%= form.text_field :name %> </p>
-<p> Opis: <%= form.text_field :description %></p>
+    <p id="balance">
+      Wprowadź bilans otwarcia kategorii:
+      <%= form.text_field :opening_balance %>
+      <span id="currency">
+        <%= collection_select :category, :opening_balance_currency, @currencies, :id, :long_name, {}, :id =>'currency-select' %>
+      </span>
+    </p>
 
-<p> Wybierz kategorię nadrzędną: </p>
-<%= select_tag 'category[parent_category]', options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
-
-<p> Enter opening balance for this category </p>
-<%= text_field_tag :opening_balance, "0" %>
-
-
-<% # %> <select name="category[parent_category]"> 
-<% # %> <%= options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
-<% # %> </select>
-<% # %><p> Parent category: <%= form.select(:parent_category, @parent_categories) %></p>
-<% # %><p> Parent category: <%= select(:parent_category, @parent_category_id, @parent_categories) %></p>
-<% # %> <p> Parent category: <%= form.collection_select(:parent_category, @category.user.categories , :id , :name) %> </p>
-
-
-<p> <%= submit_tag "Create" %> </p>
-<% end %>
+    <p id="create">
+      <%= form.submit "Utwórz nową kategorię" %>
+    </p>
+  <% end %>
+</div>
 
 
-
-<%= link_to 'Back', :action => 'show_categories' %>
+<%= link_to 'Powróć do listy kategorii', categories_url %>

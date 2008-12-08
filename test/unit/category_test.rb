@@ -4,14 +4,7 @@ class CategoryTest < Test::Unit::TestCase
   #fixtures :categories
 
   def setup
-    @user = User.new()
-    @user.active = true
-    @user.email = 'email@example.com'
-    @user.login = 'rupert'
-    @user.password = 'p@ssword'
-    @user.password_confirmation = 'p@ssword'
-    @user.save!
-    @user.activate!
+    save_rupert
     @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
     @euro = Currency.new(:symbol => 'E', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'euro euro')
     @zloty.save!
@@ -19,19 +12,19 @@ class CategoryTest < Test::Unit::TestCase
   end
   
   def test_user_has_required_categories_after_created
-    assert_equal 5, @user.categories.count, "User should have 5 categories after creation"
+    assert_equal 5, @rupert.categories.count, "User should have 5 categories after creation"
   end
   
   def test_zero_saldo_at_start
-    @user.categories.each do |category|
+    @rupert.categories.each do |category|
       assert category.saldo_new.is_empty?, "Category should have saldo = 0 at the begining"
       assert_equal 0, category.saldo_new.currencies.size, "At the beggining saldo does not contains any currency"
     end
   end
   
   def test_saldo_after_transfers_in_one_currency    
-    income_category = @user.categories[0]
-    outcome_category = @user.categories[1]
+    income_category = @rupert.categories[0]
+    outcome_category = @rupert.categories[1]
     
     save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
     
@@ -44,8 +37,8 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal 1, income_category.saldo_new.currencies.size
     assert_equal 1, outcome_category.saldo_new.currencies.size
     
-    income_category = @user.categories[1]
-    outcome_category = @user.categories[2]
+    income_category = @rupert.categories[1]
+    outcome_category = @rupert.categories[2]
     
     save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.day.from_now, :currency => @zloty, :value => 200)   
     
@@ -57,9 +50,9 @@ class CategoryTest < Test::Unit::TestCase
   end
   
   def test_saldo_after_transfers_in_many_currencies    
-    income_category = @user.categories[0]
-    outcome_income_category = @user.categories[1]
-    outcome_category = @user.categories[2]
+    income_category = @rupert.categories[0]
+    outcome_income_category = @rupert.categories[1]
+    outcome_category = @rupert.categories[2]
     
     save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
     save_simple_transfer_item(:income_category => outcome_income_category, :outcome_category => outcome_category, :day => 1.day.from_now, :currency => @euro, :value => 200) 
@@ -74,8 +67,8 @@ class CategoryTest < Test::Unit::TestCase
   
   
   def test_saldo_at_end_of_days
-    income_category = @user.categories[0]
-    outcome_category = @user.categories[1]
+    income_category = @rupert.categories[0]
+    outcome_category = @rupert.categories[1]
     
     total = 0;
     5.downto(1) do |number|
@@ -100,8 +93,8 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_saldo_for_periods
-    income_category = @user.categories[3]
-    outcome_category = @user.categories[4]
+    income_category = @rupert.categories[3]
+    outcome_category = @rupert.categories[4]
     value = 100;
 
     4.downto(0) do |number|
@@ -125,8 +118,8 @@ class CategoryTest < Test::Unit::TestCase
   end
 
   def test_saldo_after_day
-    income_category = @user.categories[2]
-    outcome_category = @user.categories[3]
+    income_category = @rupert.categories[2]
+    outcome_category = @rupert.categories[3]
     value = 100;
 
     4.downto(0) do |number|
@@ -145,8 +138,8 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_transfers_with_saldo_for_period
-    income = @user.categories[1]
-    outcome = @user.categories[2]
+    income = @rupert.categories[1]
+    outcome = @rupert.categories[2]
     value = 100;
 
     zloty_bonus = 000
@@ -156,7 +149,7 @@ class CategoryTest < Test::Unit::TestCase
     save_simple_transfer_item(:income_category => income, :outcome_category => outcome, :day => 10.day.ago.to_date, :currency => @euro, :value => euro_bonus)
 
     5.downto(1) do |number|
-      t = Transfer.new(:user => @user)
+      t = Transfer.new(:user => @rupert)
       t.day = number.days.ago.to_date
       t.description = ''
 
@@ -196,6 +189,13 @@ class CategoryTest < Test::Unit::TestCase
 
   end
 
+  def test_save_with_parent_category_in_valid_set
+    @parent = @rupert.categories.top_of_type(:ASSET)
+    category = Category.new(:name => 'test', :description => 'test', :category_type => :ASSET, :user => @rupert, :parent => @parent)
+    category.save!
+    assert @parent.descendants.include?(category)
+    assert_equal category.parent, @parent
+  end
 
   private
 
@@ -226,7 +226,7 @@ class CategoryTest < Test::Unit::TestCase
   def fill_simple_transfer_item_option_hash_with_defaults(hash_with_options)
     hash_with_options[:day] ||= 1.day.ago
     hash_with_options[:description] ||= ''
-    hash_with_options[:user] ||= @user
+    hash_with_options[:user] ||= @rupert
     hash_with_options[:currency] ||= @zloty
     hash_with_options[:value] ||= 100
   end

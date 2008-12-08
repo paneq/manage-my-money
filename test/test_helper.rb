@@ -38,6 +38,18 @@ class Test::Unit::TestCase
     @rupert.activate!
   end
 
+  def make_currencies
+    @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
+    @dolar = Currency.new(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykańcki')
+    @euro = Currency.new(:symbol => '€', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'Europejckie euro')
+    @currencies = [@zloty, @euro, @dolar]
+  end
+
+  def save_currencies
+    make_currencies unless @currencies
+    @currencies.each {|currency| currency.save!}
+  end
+
   def log_rupert
     @request.session[:user_id] = @rupert.id
   end

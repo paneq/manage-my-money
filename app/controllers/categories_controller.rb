@@ -53,7 +53,7 @@ class CategoriesController < ApplicationController
   end
 
   def period_changed_start
-      @day = calculate_start_day(params['time'])
+    @day = calculate_start_day(params['time'])
     render :layout => false
   end
 
@@ -97,28 +97,24 @@ class CategoriesController < ApplicationController
 
 
   def new
-    @category = Category.new
-    @category.user = self.current_user
-    @parent_categories = @category.user.categories.map {|cat| [cat.name, cat.id]}
-    @parent_category_id = params[:parent_category_id].to_i
+    @parent = params[:parent_category_id].to_i
+    @category = Category.new()
+    @categories = self.current_user.categories
+    @currencies = self.current_user.visible_currencies
+    
   end
 
 
   def create
-    if params[:category][:parent_category].is_a? String
-      nr = params[:category][:parent_category].to_i
-      params[:category][:parent_category] = self.current_user.categories.find( nr )
-    end
-	###We should excpect an error in next lines because Category.find may not find :-)
+    params[:category][:parent] = self.current_user.categories.find( params[:category][:parent].to_i )
     @category = Category.new(params[:category])
-    @category.user =self.current_user
-    @category.type = @category.parent_category.type
+    @category.user = self.current_user
     if @category.save
-      if params['opening_balance'].to_i != 0
+      if params[:category][:opening_balance].to_i != 0
         make_opening_transfer
       end
-      flash[:notice] = 'Category was successfully created.'
-      redirect_to :action => :index, :controller => :categories
+      flash[:notice] ||= 'Utworzono nową kategorię'
+      redirect_to categories_url
     else
       flash[:notice] = 'Category was NOT successfully created.'
       render :action => 'new'
@@ -162,42 +158,35 @@ class CategoriesController < ApplicationController
    
    
   def make_opening_transfer
-      #new opening_balance transfer here
-      #category = Category.find(params['data']['category'])
-      transfer = Transfer.new
-      transfer.day = Date.today
-      transfer.user = @user
-      transfer.description = "Opening balance"
+    #new opening_balance transfer here
+    #category = Category.find(params['data']['category'])
+    currency = self.current_user.visible_currencies.find(params[:category][:opening_balance_currency].to_i)
+    value = params[:category][:opening_balance]
+    value.slice!(" ") #removes all spaces from input data so string like "10 000" will be converted to "10000" and treted well by "to_i" method in next line
+    value = value.to_i
+    transfer = Transfer.new
+    transfer.day = Date.today
+    transfer.user = self.current_user
+    transfer.description = "Bilans otwarcia"
     
-      ti1 = TransferItem.new
-      ti1.description = "Opening balance"
-      ti1.value = params['opening_balance'].to_i
-      ti1.gender = true
-      ti1.category = @category
-    
-      ti2 = TransferItem.new
-      ti2.description = "Opening balance"
-      ti2.value = params['opening_balance'].to_i
-      ti2.gender = false
-      opening_category = @user.categories.find(:first, :conditions => "_type_ = #{Category::TYPES[:BALANCE]}" )
+    t1 = TransferItem.new
+    t1.description = "Bilans otwarcia"
+    t1.value = value
+    t1.category = @category
+    t1.currency = currency
+
+    t2 = TransferItem.new
+    t2.description = t1.description
+    t2.value = -1 * t1.value
+    t2.currency = t1.currency
+    opening_category = self.current_user.categories.top_of_type(:BALANCE)
       
-      if opening_category.nil? 
-        opening_category = Category.create do |c|
-          c.name = "Opening balances"
-          c.description = "Opening balances created automatically"
-          c.type = Category::TYPES[:BALANCE]
-        end
-        
-        @user.categories << opening_category
-        @user.save
-      end
-      
-      ti2.category = opening_category
+    t2.category = opening_category
     
-      transfer.transfer_items << ti2 << ti1
-      if transfer.save
-        flash[:notice] = 'transfer created; '
-      end
+    transfer.transfer_items << t2 << t1
+    if transfer.save
+      flash[:notice] = 'Utworzono kategorię wraz z bilansem otwarcia'
+    end
   end
 
 
@@ -221,7 +210,7 @@ class CategoriesController < ApplicationController
     if params[:transfer].nil? or params[:transfer]['start(1i)'].nil?
       @start_time = Time.now.years_ago(2).to_date
     else
-#       @start_time = params[:start].to_time
+      #       @start_time = params[:start].to_time
       d = params[:transfer]['start(3i)'].to_i
       m = params[:transfer]['start(2i)'].to_i
       y = params[:transfer]['start(1i)'].to_i

@@ -17,14 +17,12 @@ require 'hash_enums'
 class Category < ActiveRecord::Base
   extend HashEnums
 
-  types = {:ASSET  => 1,
-    :INCOME  => 2,
-    :EXPENSE => 3,
-    :LOAN    => 4,
-    :BALANCE => 0}
+  define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
-  define_enum :type, types, {:attr_name => '_type_'}
-    
+  acts_as_nested_set :scope=> [:user_id, :category_type_int]
+
+  attr_accessor :opening_balance, :opening_balance_currency
+
   PERIODS = [ :SELECTED,
     :THIS_DAY,
     :LAST_DAY,
@@ -44,18 +42,7 @@ class Category < ActiveRecord::Base
   ]
     
   belongs_to :user
-  
-  
-  has_many   :child_categories,
-    :class_name => "Category",
-    :foreign_key => "category_id"
-             
-  belongs_to :parent_category,
-    :class_name => "Category",
-    :foreign_key => "category_id"
-  
-  
-  
+
   has_many :transfer_items do
     def older_than(day)
       find :all, 
@@ -115,25 +102,21 @@ class Category < ActiveRecord::Base
   def short_name
     name[0,15]
   end
-  
-  def tree( with_parent = true)
-    this_tree = []
-    this_tree << self if with_parent
-    child_categories.each { |child| this_tree += child.tree }
-    this_tree
-  end
-  
-  
-  def tree_with_parent
-    tree
+
+
+  def parent=(element)
+    @parent_to_save = element
+    self.category_type_int = element.category_type_int
   end
 
 
-  def tree_without_parent
-    tree( false )
+  def after_save
+    if @parent_to_save
+      self.move_to_child_of(@parent_to_save)
+      @parent_to_save = nil
+    end
   end
-  
-  
+
 #  # @description: Return a table of transfers that happend between given parameters.
 #  #               Including the start_day and the end_day !
 #  def transfers_between( start_day = nil , end_day = nil)
@@ -333,22 +316,9 @@ class Category < ActiveRecord::Base
   
 
   def is_top?
-    category_id.nil?
+    root?
   end
-  
-  
-  def depth
-    sum = 0;
-    c = self  
-	
-    while c!=nil && !c.is_top? 
-      sum +=1
-      c = c.parent_category	  
-    end
-	
-    return sum
-  end
-  
+    
   #======================
   #nowy kod do liczenia
   #
