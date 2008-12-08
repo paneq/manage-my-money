@@ -100,9 +100,16 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
 
+#  def test_should_not_save_user_with_no_transaction_amount_limit_value_when_needed
+#    test_user = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :week_count})
+#    test_user.save
+#    assert test_user.errors.on(:transaction_amount_limit_value)
+#  end
+
+
 protected
   def create_user(options = {})
-    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options))
+    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :actual_month }.merge(options))
     record.save
     record
   end

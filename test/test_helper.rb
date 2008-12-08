@@ -34,6 +34,7 @@ class Test::Unit::TestCase
     @rupert.login = 'rupert_XYZ_ab'
     @rupert.password = @rupert.login
     @rupert.password_confirmation = @rupert.login
+    @rupert.transaction_amount_limit_type = :actual_month
     @rupert.save!
     @rupert.activate!
   end

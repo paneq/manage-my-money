@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   layout 'main'
   before_filter :login_required, :only => [:edit, :destroy, :update]
-
+  before_filter :check_perm, :only => [:edit, :destroy, :update]
   # render new.rhtml
   def new
     @user = User.new
@@ -42,37 +42,30 @@ class UsersController < ApplicationController
 
 
   def edit
-    if check_perm(params[:id])
-      prepare_arrays_for_view
-    end
+    prepare_arrays_for_view
   end
 
 
   def update
-    if check_perm(params[:id])
-      begin
-        if self.current_user.update_attributes(params[:user])
-          flash[:notice] = 'User was successfully updated.'
-          redirect_to :controller => 'sessions', :action => 'default'
-          return
-        end
-      rescue
-        prepare_arrays_for_view
-        render :action => 'edit'
-      end
+    if self.current_user.update_attributes(params[:user])
+      flash[:notice] = 'User was successfully updated.'
+      redirect_to :controller => 'sessions', :action => 'default'
+    else
+      prepare_arrays_for_view
+      render :action => 'edit'
     end
   end
 
   
   def destroy
-     check_perm(params[:id])
   end
 
 
   private
 
   
-  def check_perm(user_id_from_request)
+  def check_perm
+    user_id_from_request = params[:id]
     unless self.current_user.id == user_id_from_request.to_i
       flash[:error]  = "Thou shall not do this with this user"
       redirect_back_or_default('/')

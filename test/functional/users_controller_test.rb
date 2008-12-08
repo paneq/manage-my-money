@@ -180,7 +180,7 @@ class UsersControllerTest < Test::Unit::TestCase
      assert_equal :transaction_count, user.transaction_amount_limit_type
    end
 
-   def test_should_redirect_user_with_errors_on_update
+   def test_should_fail_user_with_errors_on_update
      login_as :quentin
      params = {
        :id => users(:quentin).id,
@@ -194,15 +194,16 @@ class UsersControllerTest < Test::Unit::TestCase
          :multi_currency_balance_calculating_algorithm => 'show_all_currencies'
         }
       }
-     put :update,  params
-     assert_template 'users/edit'
+      assert_raise(RuntimeError, "Unknown enum value: transaction_count_") do
+        put :update,  params
+      end
    end
 
   
   protected
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-      :password => 'komandosi', :password_confirmation => 'komandosi' }.merge(options)
+      :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :actual_month }.merge(options)
   end
 
   
