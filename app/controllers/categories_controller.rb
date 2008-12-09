@@ -126,9 +126,8 @@ class CategoriesController < ApplicationController
 
   def edit
     @category = self.current_user.categories.find(params[:id])
-    @parent_categories = @category.user.categories.map {|cat| [cat.name, cat.id]}
-    @parent_category_id = @category.parent_category.id if !@category.is_top?
-
+    @parent = @category.parent
+    @top = self.current_user.categories.top_of_type(@category.category_type)
   end
 
 

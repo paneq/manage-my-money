@@ -81,13 +81,90 @@ class CategoryControllerTest < Test::Unit::TestCase
       :opening_balance_currency => @zloty.id
     }
     assert_redirected_to :action => :index
-    created_category = @rupert.categories.find_by_name('test name')
 
+    created_category = @rupert.categories.find_by_name('test name')
+    assert_not_nil created_category
+    assert_equal parent_category, created_category.parent
     assert created_category.saldo_at_end_of_day(Date.today).currencies.include?(@zloty)
     assert_equal 1200, created_category.saldo_at_end_of_day(Date.today).value(@zloty)
-    #test wartosc
   end
-  
+
+
+  def test_edit_top_category
+    get :edit, :id => @rupert.categories.top_of_type(:INCOME)
+    assert_response :success
+    assert_template 'edit'
+    assert_select 'div#category-edit' do
+      assert_select 'p#name', 1
+      assert_select 'p#description', 1
+      assert_select 'p#parent', 0
+      assert_select 'p#update', 1
+    end
+  end
+
+
+  def test_edit_non_top_category
+    # INCOME -            [SELECTED]
+    #        |- food      [EDITED]
+    #        |-- healthy
+    #        |- house
+    #        |-- rent
+    #        |- clothes
+    income_category = @rupert.categories.top_of_type(:EXPENSE)
+    food = Category.new(
+      :name => 'food',
+      :description => 'food',
+      :parent => income_category,
+      :user => @rupert
+    )
+    house = Category.new(
+      :name => 'house',
+      :description => 'house',
+      :parent => income_category,
+      :user => @rupert
+    )
+    clothes = Category.new(
+      :name => 'clothes',
+      :description => 'clothes',
+      :parent => income_category,
+      :user => @rupert
+    )
+    healthy = Category.new(
+      :name => 'healthy',
+      :description => 'healthy',
+      :parent => food,
+      :user => @rupert
+    )
+    rent = Category.new(
+      :name => 'rent',
+      :description => 'rent',
+      :parent => house,
+      :user => @rupert
+    )
+    @rupert.categories << food << house << clothes << healthy << rent
+    @rupert.save!
+    
+    get :edit, :id => food.id
+    assert_response :success
+    assert_template 'edit'
+    assert_select 'div#category-edit' do
+      assert_select 'p#parent', 1
+      assert_select 'option[selected=selected]', income_category.name
+    end
+    [income_category, house, rent, clothes].each_with_index do |c, nr|
+      assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new(c.name)
+    end
+  end
+
+  def test_update
+
+  end
+
+
+  def test_destroy
+
+  end
+
   #  def test_list
   #    get :list
   #

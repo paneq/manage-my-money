@@ -5,15 +5,9 @@ class CategoryTest < Test::Unit::TestCase
 
   def setup
     save_rupert
-    @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
-    @euro = Currency.new(:symbol => 'E', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'euro euro')
-    @zloty.save!
-    @euro.save!    
+    save_currencies
   end
   
-  def test_user_has_required_categories_after_created
-    assert_equal 5, @rupert.categories.count, "User should have 5 categories after creation"
-  end
   
   def test_zero_saldo_at_start
     @rupert.categories.each do |category|
@@ -189,12 +183,36 @@ class CategoryTest < Test::Unit::TestCase
 
   end
 
+
   def test_save_with_parent_category_in_valid_set
     @parent = @rupert.categories.top_of_type(:ASSET)
-    category = Category.new(:name => 'test', :description => 'test', :category_type => :ASSET, :user => @rupert, :parent => @parent)
-    category.save!
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :category_type => :ASSET,
+      :user => @rupert,
+      :parent => @parent
+    )
+    @rupert.categories << category
+    @rupert.save!
     assert @parent.descendants.include?(category)
     assert_equal category.parent, @parent
+    assert @rupert.categories.include?(category)
+  end
+
+  
+  def test_should_not_save_without_user
+    @parent = @rupert.categories.top_of_type(:ASSET)
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :category_type => :ASSET,
+      :user => nil,
+      :parent => @parent
+    )
+    assert_raise ActiveRecord::ActiveRecordError do
+      category.save
+    end
   end
 
   private

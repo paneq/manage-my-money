@@ -100,6 +100,55 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
 
+
+  def test_should_have_required_categories_after_created
+    save_rupert
+    assert_equal 5, @rupert.categories.count, "User should have 5 categories after creation"
+  end
+
+
+  def test_should_find_top_category_of_type
+    save_rupert
+    base_categories = @rupert.categories.clone
+    @rupert.categories.each do |category|
+      assert_equal category, @rupert.categories.top_of_type(category.category_type)
+    end
+
+    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    category = Category.new(:name => 'test', :description => 'test', :category_type => :EXPENSE, :user => @rupert, :parent => @parent)
+    @rupert.categories << category
+    @rupert.save!
+
+    assert_equal 5, base_categories.size
+    assert_equal 6, @rupert.categories.count
+    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top_of_type(:EXPENSE)
+
+    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    category = Category.new(:name => 'test2', :description => 'test2', :category_type => :EXPENSE, :user => @rupert, :parent => @parent)
+    @rupert.categories << category
+    @rupert.save!
+
+    assert_equal 5, base_categories.size
+    assert_equal 7, @rupert.categories.count
+    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top_of_type(:EXPENSE)
+  end
+
+
+  def test_shoud_have_categories_in_valid_order
+    save_rupert
+    assert_equal [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE], @rupert.categories.map {|c| c.category_type}
+
+    categories_ids = @rupert.categories.map {|c| c.id}
+
+    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    category = Category.new(:name => 'test', :description => 'test', :category_type => :EXPENSE, :user => @rupert)
+    category.parent = @parent
+    @rupert.categories << category
+    @rupert.save!
+
+    categories_ids.insert(3, category.id)
+    assert_equal categories_ids, @rupert.categories(true).map {|c| c.id}
+  end
 #  def test_should_not_save_user_with_no_transaction_amount_limit_value_when_needed
 #    test_user = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :week_count})
 #    test_user.save

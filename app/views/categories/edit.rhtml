@@ -1,23 +1,21 @@
-<h1>Editing category</h1>
+<h1>Edycja kategorii</h1>
+<div id="category-edit">
+<% form_for :category, :url => {:action => :update } do |form| %>
+  <p id="name"> Nazwa: <%= form.text_field :name %> </p>
+  <p id="description"> Opis: <%= form.text_field :description %></p>
 
-<% form_tag :action => 'update', :id => @category do %>
-  <%= error_messages_for 'category' %>
-  
-  <p><label for="category_name">Name</label><br/>
-  <%= text_field 'category', 'name'  %></p>
-  
-  <p><label for="category_description">Description</label><br/>
-  <%= text_field 'category', 'description'  %></p>
-  
   <% if !@category.is_top? %>
-	<p><label for="category_parent">Parent category</label><br/>
-	<%= select_tag 'category[parent_category]', options_from_collection_for_select(@category.user.categories, 'id', 'name', @parent_category_id) %>
-	
+    <p id="parent">
+      Wybierz kategorię nadrzędną:
+      <%= select_tag '[category]parent',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+    </p>
 
-	
   <% end %>
-
-  <%= submit_tag 'OK' %>
+  <p id="update">
+    <%= form.submit "Zapisz zmiany" %>
+  </p>
 <% end %>
+</div>
 
-<%= link_to 'Back', :action => 'show', :id => @category %>
+
+<%= link_to 'Powróć do listy kategorii', categories_url %>

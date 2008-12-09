@@ -64,15 +64,7 @@ class User < ActiveRecord::Base
   before_create :create_top_categories
   before_destroy :remove_all_data
 
-  def top_categories
-    top = []
-    for c in self.categories do
-      top << c if c.parent_category.nil?
-    end
-    return top
-  end
-
-
+  
   def create_top_categories
     [ [ "Zasoby" , :ASSET ] ,
       [ "Przychody" , :INCOME ] ,
