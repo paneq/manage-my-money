@@ -134,18 +134,18 @@ class CategoriesController < ApplicationController
 
 
   def update
+    #begin
     @category = self.current_user.categories.find(params[:id])
-    if params[:category][:parent_category]!=nil
-      parent_category = Category.find(params[:category][:parent_category].to_i)
-      params[:category][:parent_category] = parent_category
-    end
-    
-    if @category.update_attributes(params[:category])
-      flash[:notice] = 'Category was successfully updated.'
-      redirect_to :action => 'show', :id => @category
-    else
-      render :action => 'edit'
-    end
+    @category.name = params[:category][:name]
+    @category.description = params[:category][:description]
+    @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
+    @category.save!
+    flash[:notice] = 'Category was successfully updated.'
+    redirect_to categories_url
+    #rescue Exception
+     # thr
+      #render :action => 'edit'
+    #end
   end
 
 

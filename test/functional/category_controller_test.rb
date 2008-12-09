@@ -104,128 +104,117 @@ class CategoryControllerTest < Test::Unit::TestCase
 
 
   def test_edit_non_top_category
-    # INCOME -            [SELECTED]
-    #        |- food      [EDITED]
-    #        |-- healthy
-    #        |- house
-    #        |-- rent
-    #        |- clothes
-    income_category = @rupert.categories.top_of_type(:EXPENSE)
-    food = Category.new(
-      :name => 'food',
-      :parent => income_category,
-      :user => @rupert
-    )
-    house = Category.new(
-      :name => 'house',
-      :parent => income_category,
-      :user => @rupert
-    )
-    clothes = Category.new(
-      :name => 'clothes',
-      :parent => income_category,
-      :user => @rupert
-    )
-    healthy = Category.new(
-      :name => 'healthy',
-      :parent => food,
-      :user => @rupert
-    )
-    rent = Category.new(
-      :name => 'rent',
-      :parent => house,
-      :user => @rupert
-    )
-    @rupert.categories << food << house << clothes << healthy << rent
-    @rupert.save!
-    
-    get :edit, :id => food.id
+    create_rupert_expenses_account_structure
+
+    get :edit, :id => @food.id
     assert_response :success
     assert_template 'edit'
     assert_select 'div#category-edit' do
       assert_select 'p#parent', 1
-      assert_select 'option[selected=selected]', income_category.name
+      assert_select 'option[selected=selected]', @expense_category.name
     end
-    [income_category, house, rent, clothes].each_with_index do |c, nr|
+    [@expense_category, @house, @rent, @clothes].each_with_index do |c, nr|
       assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new(c.name)
     end
   end
 
-  def test_update
+
+  def test_update_top_category
+    income_category = @rupert.categories.top_of_type(:EXPENSE)
+    loan_category = @rupert.categories.top_of_type(:LOAN)
+
+    put :update, :id => loan_category.id, :category => {
+      :name => 'new_loan_name',
+      :description => 'new_loan_description',
+      :category_type => income_category.category_type,
+      :category_type_int => income_category.category_type_int,
+      :parent => income_category.id
+    }
+
+    assert_redirected_to :action => :index
+
+    #chaning name and description should pass
+    loan_category = @rupert.categories.find(loan_category.id) #newset version of category
+    assert_equal 'new_loan_name', loan_category.name
+    assert_equal 'new_loan_description', loan_category.description
+
+    #changing type and parent should failed
+    assert loan_category.is_top?
+    assert_equal :LOAN, loan_category.category_type
 
   end
 
+
+  def test_update_non_top_category
+    create_rupert_expenses_account_structure
+
+    put :update, :id => @healthy.id, :category => {
+      :name => 'new_healthy_name',
+      :description => 'new_healthy_description',
+      :parent => @expense_category.id,
+      :category_type => @loan_category.category_type,
+      :category_type_int => @loan_category.category_type_int
+    }
+
+    assert_redirected_to :action => :index
+
+    #changing name, description and parent should pass
+    @healthy = @rupert.categories.find(@healthy.id) #newset version of category
+    assert_equal 'new_healthy_name', @healthy.name
+    assert_equal 'new_healthy_description', @healthy.description
+    assert_equal @expense_category, @healthy.parent
+
+    #changing type should failed
+    assert_equal :EXPENSE, @healthy.category_type
+
+  end
+
+  #TODO: testy przy podawaniu zlych danych, np kiedy proba przeniesienia kategorii do takiej gdzie przeniesc nie mozna.
 
   def test_destroy
 
   end
 
-  #  def test_list
-  #    get :list
-  #
-  #    assert_response :success
-  #    assert_template 'list'
-  #
-  #    assert_not_nil assigns(:categories)
-  #  end
-  #
-  #  def test_show
-  #    get :show, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'show'
-  #
-  #    assert_not_nil assigns(:category)
-  #    assert assigns(:category).valid?
-  #  end
-  #
-  #  def test_new
-  #    get :new
-  #
-  #    assert_response :success
-  #    assert_template 'new'
-  #
-  #    assert_not_nil assigns(:category)
-  #  end
-  #
-  #  def test_create
-  #    num_categories = Category.count
-  #
-  #    post :create, :category => {}
-  #
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'list'
-  #
-  #    assert_equal num_categories + 1, Category.count
-  #  end
-  #
-  #  def test_edit
-  #    get :edit, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'edit'
-  #
-  #    assert_not_nil assigns(:category)
-  #    assert assigns(:category).valid?
-  #  end
-  #
-  #  def test_update
-  #    post :update, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'show', :id => @first_id
-  #  end
-  #
-  #  def test_destroy
-  #    assert_nothing_raised {
-  #      Category.find(@first_id)
-  #    }
-  #
-  #    post :destroy, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'list'
-  #
-  #    assert_raise(ActiveRecord::RecordNotFound) {
-  #      Category.find(@first_id)
-  #    }
-  #  end
+
+  private
+  
+  def create_rupert_expenses_account_structure
+    # EXPENSE -            [SELECTED]
+    #         |- food      [EDITED]
+    #         |-- healthy
+    #         |- house
+    #         |-- rent
+    #         |- clothes
+
+    @expense_category = @rupert.categories.top_of_type(:EXPENSE)
+    @loan_category = @rupert.categories.top_of_type(:LOAN)
+
+    @food = Category.new(
+      :name => 'food',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @house = Category.new(
+      :name => 'house',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @clothes = Category.new(
+      :name => 'clothes',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @healthy = Category.new(
+      :name => 'healthy',
+      :parent => @food,
+      :user => @rupert
+    )
+    @rent = Category.new(
+      :name => 'rent',
+      :parent => @house,
+      :user => @rupert
+    )
+    @rupert.categories << @food << @house << @clothes << @healthy << @rent
+    @rupert.save!
+  end
 end
