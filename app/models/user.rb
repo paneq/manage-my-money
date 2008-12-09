@@ -61,6 +61,9 @@ class User < ActiveRecord::Base
     :class_name => 'Exchange',
     :finder_sql => 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
+  has_many :goals, :through => :categories
+  has_many :reports
+
   before_create :create_top_categories
   before_destroy :remove_all_data
 
@@ -90,7 +93,7 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :transaction_amount_limit_type_int, :in => User.TRANSACTION_AMOUNT_LIMIT_TYPES.values
   validates_inclusion_of    :multi_currency_balance_calculating_algorithm_int, :in => User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.values
   validates_presence_of     :transaction_amount_limit_value, :if => :transaction_amount_limit_with_value?
-  validates_numericality_of :transaction_amount_limit_value, :only_integer => true, :greater_then => 0, :if => :transaction_amount_limit_with_value?
+  validates_numericality_of :transaction_amount_limit_value, :greater_than => 0, :if => :transaction_amount_limit_with_value? 
 
   #used for conditional validation of transaction_amount_limit_value
   def transaction_amount_limit_with_value?

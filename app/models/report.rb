@@ -25,6 +25,8 @@ class Report < ActiveRecord::Base
   define_enum :period_type, [:week, :day, :custom] #TODO
   define_enum :report_view_type, [:pie, :linear, :text, :bar]
 
+  belongs_to :user
+
   validates_presence_of :period_start, :period_end, :if => :period_type_custom?
   validates_inclusion_of :period_type, :in => Report.PERIOD_TYPES.keys
   validates_presence_of :name

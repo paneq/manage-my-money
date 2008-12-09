@@ -1,0 +1,35 @@
+<h1>Dodawanie nowego raportu</h1>
+
+<%  form_for @report do |f|%>
+Wybierz typ raportu: <br/>
+[radio]<br/>
+- Raport udzialu podkategorii w kategorii (wykres)<br/>
+- Raport pokazujacy wartosc kategorii w czasie (wykres)<br/>
+- Raport przeplywu srodkow (tekst)<br/>
+<br/>
+[tutaj javascript przelaczajacy dostepne pola w zaleznosci od wyboru]<br/>
+[niewidzialne pole :report_class]<br/>
+<%= hidden_field_tag("report_class", "ValueReport") %>
+<br/>
+[pola wspolne]<br/>
+[tataj partial/helper do wyboru okresu (lista rozwijana + dwa pola date)]<br/>
+nazwa string<br/>
+<br/>
+[pola dla ShareReport]<br/>
+report_view_type enum<br/>
+share_type enum<br/>
+depth int<br/>
+max_categories_count int<br/>
+one category (combo/list/tree)<br/>
+<br/>
+[pola dla ValueReport]<br/>
+period_division_int enum<br/>
+many categories with options (tree)<br/>
+<br/>
+[pola dla FlowReport]<br/>
+many categories with options (tree)<br/>
+<br/>
+
+<%= f.submit %>
+
+<% end %>

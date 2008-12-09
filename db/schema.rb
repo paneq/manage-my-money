@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20081208215053) do
     t.date     "period_end"
     t.integer  "report_view_type_int",                    :null => false
     t.boolean  "is_predefined",        :default => false, :null => false
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "share_type_int",       :default => 0

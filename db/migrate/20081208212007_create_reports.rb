@@ -10,6 +10,7 @@ class CreateReports < ActiveRecord::Migration
       t.date :period_end
       t.integer :report_view_type_int, :null => false
       t.boolean :is_predefined, :null => false, :default => false
+      t.column :user_id, :integer, :null => true
 
       t.timestamps
 

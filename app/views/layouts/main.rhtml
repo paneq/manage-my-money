@@ -92,6 +92,13 @@
             <%= flash[:notice] %>
           <% end %>
         </blockquote>
+
+         <blockquote id="flash_error">
+          <% if flash[:error] %>
+            <%= flash[:error] %>
+          <% end %>
+        </blockquote>
+
         <br />
 
       
@@ -129,6 +136,7 @@
           <li><%= link_to 'Waluty', :action => :index, :controller => :currencies %></li>
           <li><%= link_to 'Kursy', :action => :index, :controller => :exchanges %></li>
           <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user) %></li>
+          <li><%= link_to 'Raporty', reports_url %></li>
 
         <% end %>
 

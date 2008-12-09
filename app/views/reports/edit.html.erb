@@ -1,0 +1,31 @@
+<h1>Edytowanie raportu</h1>
+
+Wybierz typ raportu:
+[radio]
+- Raport udzialu podkategorii w kategorii (wykres)
+- Raport pokazujacy wartosc kategorii w czasie (wykres)
+- Raport przeplywu srodkow (tekst)
+
+[tutaj javascript przelaczajacy dostepne pola w zaleznosci od wyboru]
+
+[pola wspolne]
+[tataj partial/helper do wyboru okresu (lista rozwijana + dwa pola date)]
+nazwa string
+
+[pola dla ShareReport]
+report_view_type enum
+share_type enum
+depth int
+max_categories_count int
+one category (combo/list/tree)
+
+[pola dla ValueReport]
+period_division_int enum
+many categories with options (tree)
+
+[pola dla FlowReport]
+many categories with options (tree)
+
+[(mozliwosc skopiowania raportu pod nowa nazwa)]
+
+[submit]

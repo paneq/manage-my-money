@@ -56,8 +56,9 @@ class UsersController < ApplicationController
     end
   end
 
-  
+  #todo
   def destroy
+    self.current_user.destroy
   end
 
 
