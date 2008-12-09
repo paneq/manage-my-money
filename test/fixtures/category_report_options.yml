@@ -1,0 +1,24 @@
+# == Schema Information
+# Schema version: 20081208215053
+#
+# Table name: category_report_options
+#
+#  id                 :integer       not null, primary key
+#  inclusion_type_int :integer       default(0), not null
+#  report_id          :integer       not null
+#  category_id        :integer       not null
+#  created_at         :datetime      
+#  updated_at         :datetime      
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  integer: 
+  integer: 
+  integer: 
+
+two:
+  integer: 
+  integer: 
+  integer: 

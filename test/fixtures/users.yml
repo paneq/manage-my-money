@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081206132610
+# Schema version: 20081208215053
 #
 # Table name: users
 #
@@ -16,7 +16,7 @@
 #  activation_code                                  :string(40)    
 #  activated_at                                     :datetime      
 #  active                                           :boolean       not null
-#  transaction_amount_limit_type_int                :integer       default(0), not null
+#  transaction_amount_limit_type_int                :integer       default(2), not null
 #  transaction_amount_limit_value                   :integer       
 #  include_transactions_from_subcategories          :boolean       not null
 #  multi_currency_balance_calculating_algorithm_int :integer       default(0), not null

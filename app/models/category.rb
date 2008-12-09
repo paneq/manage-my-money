@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081206132610
+# Schema version: 20081208215053
 #
 # Table name: categories
 #
@@ -95,6 +95,8 @@ class Category < ActiveRecord::Base
 
   has_many :goals
 
+  has_many :category_report_options, :foreign_key => :category_id
+  has_many :multiple_category_reports, :through => :category_report_options
 
   def <=>(category)
     name <=> category.name

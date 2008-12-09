@@ -39,6 +39,18 @@ class Test::Unit::TestCase
     @rupert.activate!
   end
 
+  def save_jarek
+    @jarek = User.new()
+    @jarek.active = true
+    @jarek.email = 'email@example.com'
+    @jarek.login = 'jarek_XYZ_ab'
+    @jarek.password = @jarek.login
+    @jarek.password_confirmation = @jarek.login
+    @jarek.transaction_amount_limit_type = :actual_month
+    @jarek.save!
+    @jarek.activate!
+  end
+
   def make_currencies
     @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
     @dolar = Currency.new(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykańcki')
