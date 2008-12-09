@@ -113,31 +113,26 @@ class CategoryControllerTest < Test::Unit::TestCase
     income_category = @rupert.categories.top_of_type(:EXPENSE)
     food = Category.new(
       :name => 'food',
-      :description => 'food',
       :parent => income_category,
       :user => @rupert
     )
     house = Category.new(
       :name => 'house',
-      :description => 'house',
       :parent => income_category,
       :user => @rupert
     )
     clothes = Category.new(
       :name => 'clothes',
-      :description => 'clothes',
       :parent => income_category,
       :user => @rupert
     )
     healthy = Category.new(
       :name => 'healthy',
-      :description => 'healthy',
       :parent => food,
       :user => @rupert
     )
     rent = Category.new(
       :name => 'rent',
-      :description => 'rent',
       :parent => house,
       :user => @rupert
     )
