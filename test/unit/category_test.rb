@@ -189,7 +189,6 @@ class CategoryTest < Test::Unit::TestCase
     category = Category.new(
       :name => 'test',
       :description => 'test',
-      :category_type => :ASSET,
       :user => @rupert,
       :parent => @parent
     )
@@ -197,6 +196,7 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.save!
     assert @parent.descendants.include?(category)
     assert_equal category.parent, @parent
+    assert_equal :ASSET, category.category_type
     assert @rupert.categories.include?(category)
   end
 

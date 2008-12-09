@@ -216,5 +216,14 @@ class CategoryControllerTest < Test::Unit::TestCase
     )
     @rupert.categories << @food << @house << @clothes << @healthy << @rent
     @rupert.save!
+
+    assert_equal @expense_category, @food.parent
+    assert_equal @food, @healthy.parent
+    assert_equal @expense_category, @house.parent
+    assert_equal @house, @rent.parent
+    assert_equal @expense_category, @clothes.parent
+    categories_types = [@expense_category, @food, @house, @clothes, @healthy, @rent].map { |c| c.category_type}.uniq!
+    assert_equal 1, categories_types.size
+    assert_equal :EXPENSE, categories_types.first
   end
 end
