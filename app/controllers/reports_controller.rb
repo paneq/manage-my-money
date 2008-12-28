@@ -13,27 +13,28 @@ class ReportsController < ApplicationController
  end
 
  def new
-   @report = Report.new
+   @report = ShareReport.new
+#   @share_types = ShareReport.SHARE_TYPES.keys
  end
 
  def create
    @report = nil
    case params[:report_class]
    when 'ShareReport'
-     @report = ShareReport.new(params[:report])
+     @report = ShareReport.new(params[:share_report])
    when 'ValueReport'
-     @report = ValueReport.new(params[:report])
+     @report = ValueReport.new(params[:value_report])
    when 'FlowReport'
-     @report = FlowReport.new(params[:report])
+     @report = FlowReport.new(params[:flow_report])
    else
      raise 'Unknown Report Class'
    end
 
-   if @report.save
+   if @report.save!
      flash[:notice] = "Twoj raport zostal dodany"
      redirect_to :index
    else
-     @report = Report.new #TODO: problem jesli zostawie raport typu konkretnego..
+#     @report = Report.new #TODO: problem jesli zostawie raport typu konkretnego..
      flash[:error]  = "Nie udalo sie dodac raportu"
      render :action => 'new'
    end

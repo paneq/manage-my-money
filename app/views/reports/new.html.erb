@@ -1,6 +1,8 @@
 <h1>Dodawanie nowego raportu</h1>
 
-<%  form_for @report do |f|%>
+<%= error_messages_for :current_user %>
+
+<%  form_for @report, :url => {:action => 'create', :controller => 'Reports'} do |f|%>
 Wybierz typ raportu: <br/>
 <%= radio_button_tag :report_type, 'ShareReport', true, {:onclick => "Element.show('share_report_options'); Element.hide('value_report_options'); Element.hide('flow_report_options');"} -%> <%= 'Raport udzialu podkategorii w kategorii (wykres)' -%> <br/>
 <%= radio_button_tag :report_type, 'ValueReport', false, {:onclick => "Element.hide('share_report_options'); Element.show('value_report_options'); Element.hide('flow_report_options');"} -%> <%= 'Raport pokazujacy wartosc kategorii w czasie (wykres)' -%> <br/>
@@ -9,7 +11,7 @@ Wybierz typ raportu: <br/>
 
 [tutaj javascript przelaczajacy dostepne pola w zaleznosci od wyboru]<br/>
 [niewidzialne pole :report_class]<br/>
-<%= hidden_field_tag("report_class", "ValueReport") %>
+<%= hidden_field_tag("report_class", "ShareReport") %>
 <br/>
 [pola wspolne]<br/>
 [tataj partial/helper do wyboru okresu (lista rozwijana + dwa pola date)]<br/>
@@ -18,23 +20,20 @@ Wybierz typ raportu: <br/>
 <div id="share_report_options">
 [pola dla ShareReport]<br/>
 
-<%#= f.label 'transaction_amount_limit_type', 'Ograniczenie ilości wyświetlanych transakcji: ' %><br/>
-  <%#= f.select :transaction_amount_limit_type, @transaction_amount_limit_types.map { |type| [get_desc_for_transaction_amount_limit_type(type), type] }%>
-<%= f.test_field :report_view_type%>
-report_view_type enum<br/>
-share_type enum<br/>
+<%= f.label :report_view_type, "Wyglad raportu: " %><%= f.enum_select :report_view_type %> <br/>
+<%= f.label :share_type, "Podział: " %><%= f.enum_select :share_type %> <br/>
 <%= f.label :depth, 'Zaglebienie' %><%= f.text_field :depth  %> <br/>
 <%= f.label :max_categories_count, 'Maksymalna ilość kategorii' %><%= f.text_field :max_categories_count  %>
-one category (combo/list/tree)<br/> <!-- helper -->
+<br/>one category (combo/list/tree)<br/> <!-- helper -->
 </div>
 <br/>
-<div id="value_report_options">
+<div id="value_report_options" style="display:none">
 [pola dla ValueReport]<br/>
 period_division_int enum<br/>
 many categories with options (tree)<br/>
 </div>
 <br/>
-<div id="flow_report_options">
+<div id="flow_report_options" style="display:none">
 [pola dla FlowReport]<br/>
 many categories with options (tree)<br/>
 </div>
