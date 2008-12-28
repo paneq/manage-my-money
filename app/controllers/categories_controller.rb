@@ -35,13 +35,7 @@ class CategoriesController < ApplicationController
 
   def search
     session[:category_id] = @category.id
-    if params['period'] == 'SELECTED'
-      @start_day = Date.new(params['period_start']['year'].to_i, params['period_start']['month'].to_i, params['period_start']['day'].to_i)
-      @end_day = Date.new(params['period_end']['year'].to_i, params['period_end']['month'].to_i, params['period_end']['day'].to_i)
-    else
-      @start_day = calculate_start_day(params['period'])
-      @end_day   = calculate_end_day(params['period'])
-    end
+    @start_day, @end_day = get_period('transfer_day')
     if params['show_with_subcategories']
       @transfers_to_show, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
       @value = @category.value_with_subcategories
@@ -52,15 +46,7 @@ class CategoriesController < ApplicationController
     render :action => :show
   end
 
-  def period_changed_start
-    @day = calculate_start_day(params['time'])
-    render :layout => false
-  end
-
-  def period_changed_end
-    @day = calculate_end_day(params['time'])
-    render :layout => false
-  end
+  
 
 
   def index

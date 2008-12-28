@@ -1,5 +1,5 @@
 <h1>Dodawanie nowego raportu</h1>
-
+<% choosen = '' %>
 <%= error_messages_for :current_user %>
 
 <%  form_for @report, :url => {:action => 'create', :controller => 'Reports'} do |f|%>
@@ -15,6 +15,7 @@ Wybierz typ raportu: <br/>
 <br/>
 [pola wspolne]<br/>
 [tataj partial/helper do wyboru okresu (lista rozwijana + dwa pola date)]<br/>
+<%= date_period_fields("report_day", Date.today, Date.today) %>
 <%= f.label :name, 'Nazwa' %><%= f.text_field :name  %>
 <br/>
 <div id="share_report_options">
@@ -23,8 +24,8 @@ Wybierz typ raportu: <br/>
 <%= f.label :report_view_type, "Wyglad raportu: " %><%= f.enum_select :report_view_type %> <br/>
 <%= f.label :share_type, "Podział: " %><%= f.enum_select :share_type %> <br/>
 <%= f.label :depth, 'Zaglebienie' %><%= f.text_field :depth  %> <br/>
-<%= f.label :max_categories_count, 'Maksymalna ilość kategorii' %><%= f.text_field :max_categories_count  %>
-<br/>one category (combo/list/tree)<br/> <!-- helper -->
+<%= f.label :max_categories_count, 'Maksymalna ilość kategorii' %><%= f.text_field :max_categories_count  %> <br/>
+<%= f.label :category, 'Kategoria' %><%= f.select :category, @current_user.categories.map { |cat| [cat.name , cat.id]} %>
 </div>
 <br/>
 <div id="value_report_options" style="display:none">

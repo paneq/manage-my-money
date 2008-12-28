@@ -21,6 +21,7 @@ class ReportsController < ApplicationController
    @report = nil
    case params[:report_class]
    when 'ShareReport'
+     params[:share_report]['category'] = Category.find params[:share_report]['category'] #TODO i dont like this code
      @report = ShareReport.new(params[:share_report])
    when 'ValueReport'
      @report = ValueReport.new(params[:value_report])
@@ -30,11 +31,14 @@ class ReportsController < ApplicationController
      raise 'Unknown Report Class'
    end
 
-   if @report.save!
+   @report.user = @current_user
+   @report.period_type = :custom #TODO
+   @report.period_start, @report.period_end = get_period('report_day')
+
+   if @report.save
      flash[:notice] = "Twoj raport zostal dodany"
-     redirect_to :index
+     redirect_to :action => :index
    else
-#     @report = Report.new #TODO: problem jesli zostawie raport typu konkretnego..
      flash[:error]  = "Nie udalo sie dodac raportu"
      render :action => 'new'
    end
@@ -42,9 +46,10 @@ class ReportsController < ApplicationController
  end
 
  def destroy
+    @report = Report.find params[:id]
     @report.destroy
     flash[:notice] = 'Raport zostal pomyslnie usuniety'
-    redirect_to :index
+    redirect_to :action => :index
  end
 
  def edit

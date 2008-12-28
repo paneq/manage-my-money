@@ -1,29 +1,37 @@
 <% form_tag url_for(:action => :search, :controller => :categories, :id => category_id), {:method => :post} do %>
   Include subcategories &nbsp;&nbsp;<%= check_box_tag 'show_with_subcategories', true %> 
-  <p id="transfers-period"><label for="transfer_day">Choose period:</label>
-  <%= select_tag :period, options_from_collection_for_select(Category::PERIODS, :to_s, :to_s)  %></p>
+  <%#*<p id="transfers-period"><label for="transfer_day">Choose period:</label>%>
+  <%#= select_tag :period, options_from_collection_for_select(Category::PERIODS, :to_s, :to_s)  %></p>
 
-  <p id="transfers-day-start"><label for="transfer_day">Select start date</label>
-  <%= select_date 1.month.ago, :prefix => 'period_start' %></p>
+  <%#*<p id="transfers-day-start"><label for="transfer_day">Select start date</label>%>
+  <%#= select_date 1.month.ago, :prefix => 'period_start' %></p>
   
-  <p id="transfers-day-end"><label for="transfer_day">Select end date</label>
-  <%= select_date Date.today , :prefix => 'period_end' %></p>
+  <%#*<p id="transfers-day-end"><label for="transfer_day">Select end date</label>%>
+  <%#= select_date Date.today , :prefix => 'period_end' %></p>
   
-  <%= submit_tag '&nbsp;Show&nbsp;' %>
-<% end %>
+  
 
-<%= observe_field 'period',
+
+<%#= observe_field 'period',
     :frequency => 1,
     :update => 'transfers-day-start' ,
     :on => 'click' ,
     :with => 'time',
     :url => {:action => :period_changed_start, :controller => :categories } 
-%>
+%>#
 
-<%= observe_field 'period',
+<%#= observe_field 'period',
     :frequency => 1,
     :update => 'transfers-day-end' ,
     :on => 'click' ,
     :with => 'time',
     :url => {:action => :period_changed_end, :controller => :categories } 
-%>
+%>#
+
+
+<%= date_period_fields("transfer_day", @start_day, @end_day) %>
+
+
+<%= submit_tag '&nbsp;Show&nbsp;' %>
+
+<% end %>

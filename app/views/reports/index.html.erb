@@ -1,10 +1,9 @@
 <h1>Raporty</h1>
 
-<h2>Moje raporty</h2>) <br/>
-<br/>
+<h2>Moje raporty</h2><br/>
 Nazwa             | Akcje       <%= link_to "Nowy raport", new_report_url %><br/>
 <%  @user_reports.each do |report| %>
-  <%=report.name%> <%= link_to "Pokaz", report_url(report) %> | <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", destroy_report_url(report) %> | ([kopiuj])<br/>
+  <%=report.name%> <%= link_to "Pokaz", report_url(report) %> | <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", report_path(report), :method => :delete, :id => report.id %> | ([kopiuj])<br/>
 <% end %>
 <br/>
 <h2>Raporty predefiniowane</h2><br/>

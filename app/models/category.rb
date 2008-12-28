@@ -25,24 +25,6 @@ class Category < ActiveRecord::Base
 
   attr_accessor :opening_balance, :opening_balance_currency
 
-  PERIODS = [ :SELECTED,
-    :THIS_DAY,
-    :LAST_DAY,
-    :THIS_WEEK,
-    :LAST_WEEK,
-    :LAST_7_DAYS,
-    :THIS_MONTH,
-    :LAST_MONTH,
-    :LAST_4_WEEKS,
-    :THIS_QUARTER,
-    :LAST_QUARTER,
-    :LAST_3_MONTHS,
-    :LAST_90_DAYS,
-    :THIS_YEAR,
-    :LAST_YEAR,
-    :LAST_12_MONTHS
-  ]
-    
   belongs_to :user
 
   has_many :transfer_items do

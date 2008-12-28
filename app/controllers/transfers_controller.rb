@@ -28,6 +28,8 @@ class TransfersController < ApplicationController
   
   #remote
   def search_show
+    @start_day = 1.month.ago
+    @end_day = Date.today
     render :update do |page|
       page.replace_html 'form-for-transfer', :partial => 'transfers/search_transfers', :locals => { :category_id => params[:category_id] }
       page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :search, :category_id => params[:category_id]}

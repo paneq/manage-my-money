@@ -17,7 +17,22 @@ class ApplicationController < ActionController::Base
 
   # Pick a unique cookie name to distinguish our session data from others'
   session :session_key => '_money_session_id'
-  
+
+
+  def period_changed_start
+    @start_day = calculate_start_day(params['time'])
+    render :layout => false, :template => 'application/period_changed_start'
+  end
+
+  def period_changed_end
+    @end_day = calculate_end_day(params['time'])
+    render :layout => false, :template => 'application/period_changed_end'
+  end
+
+
+
+
+
   private
   
 
@@ -70,6 +85,17 @@ class ApplicationController < ActionController::Base
       else                2.years.from_now
     end
     return end_day
+  end
+
+  def get_period(period)
+     if params[period + "_period"] == 'SELECTED'
+      start_day = Date.new(params[period+'_start']['year'].to_i, params[period+'_start']['month'].to_i, params[period+'_start']['day'].to_i)
+      end_day = Date.new(params[period+'_end']['year'].to_i, params[period+'_end']['month'].to_i, params[period+'_end']['day'].to_i)
+    else
+      start_day = calculate_start_day(params[period])
+      end_day   = calculate_end_day(params[period])
+    end
+    return start_day, end_day, params[period]
   end
   
 end
