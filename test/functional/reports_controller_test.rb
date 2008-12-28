@@ -1,8 +1,24 @@
 require 'test_helper'
 
+
 class ReportsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+
+  fixtures :users
+
+  def setup
+    save_jarek
+    log_user(@jarek)
   end
+
+
+  test "should see new report form" do
+#    login_as :quentin
+    get :new
+  end
+
+  test "should see index form" do
+#    login_as :quentin
+    get :index
+  end
+
 end

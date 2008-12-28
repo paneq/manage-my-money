@@ -19,7 +19,7 @@
 </fieldset>
 
 <fieldset style="margin-top: 1em">
-<legend>System settings</legend>
+<legend>Ustawienia systemu</legend>
 <p><%= f.label 'transaction_amount_limit_type', 'Ograniczenie ilości wyświetlanych transakcji: ' %><br/>
   <%= f.select :transaction_amount_limit_type, @transaction_amount_limit_types.map { |type| [get_desc_for_transaction_amount_limit_type(type), type] }, {}, :onchange => 'show_or_hide_transaction_limit_value()'%>
 <%= f.text_field :transaction_amount_limit_value, :size => 5 %></p>

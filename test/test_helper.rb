@@ -64,6 +64,12 @@ class Test::Unit::TestCase
   end
 
   def log_rupert
-    @request.session[:user_id] = @rupert.id
+#    @request.session[:user_id] = @rupert.id
+    log_user(@rupert)
   end
+
+  def log_user(user)
+    @request.session[:user_id] = user.id
+  end
+
 end
