@@ -24,4 +24,8 @@ class ValueReport < MultipleCategoryReport
   define_enum :period_division, [:day, :week, :none] #TODO
   validates_inclusion_of :report_view_type, :in => [:bar, :linear]
 
+   def value_report?
+    true
+  end
+
 end

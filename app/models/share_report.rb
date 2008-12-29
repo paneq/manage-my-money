@@ -27,4 +27,8 @@ class ShareReport < Report
   validates_presence_of :report_view_type, :share_type, :category
   validates_inclusion_of :report_view_type, :in => [:pie, :bar]
 
+  def share_report?
+    true
+  end
+
 end

@@ -1,9 +1,12 @@
-<%  form_for @report do |form|%>
-<%= render :partial => 'common_fields', :locals => {:form => form}  %>
-<div id="flow_report_options">
+<div id="flow_report_options" <%= 'style="display:none"' unless @report.flow_report? %>>
+<%  form_for @flow_report || @report do |form|%>
+<%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'FlowReport'}  %>
+
 many categories with options (tree)<br/>
-</div>
+
 
 <%= form.submit %>
 
 <% end %>
+
+</div>

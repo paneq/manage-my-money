@@ -22,4 +22,9 @@
 
 class FlowReport < MultipleCategoryReport
   validates_inclusion_of :report_view_type, :in => [:text]
+
+  def flow_report?
+    true
+  end
+
 end

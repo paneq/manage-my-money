@@ -12,13 +12,65 @@ class ReportsControllerTest < ActionController::TestCase
 
 
   test "should see new report form" do
-#    login_as :quentin
     get :new
+    assert_response :success
   end
 
   test "should see index form" do
-#    login_as :quentin
     get :index
+    assert_response :success
+  end
+
+  test "should see edit form" do
+    get :edit, :id => create_share_report.id
+    assert_response :success
+    assert_select "div#share_report_options"
+
+    get :edit, :id => create_flow_report.id
+    assert_response :success
+    assert_select "div#flow_report_options"
+
+    get :edit, :id => create_value_report.id
+    assert_response :success
+    assert_select "div#value_report_options"
+
+  end
+
+
+  private
+  def create_share_report
+    r = ShareReport.new
+    r.category = @jarek.categories.first
+    r.report_view_type = :pie
+    r.period_type = :week
+    r.share_type = :percentage
+    r.name = "Testowy raport"
+    r.save!
+    r
+  end
+
+  def create_flow_report
+    r = FlowReport.new
+    @jarek.categories.each do |c|
+      r.categories << c
+    end
+    r.report_view_type = :text
+    r.period_type = :week
+    r.name = "Testowy raport"
+    r.save!
+    r
+  end
+
+  def create_value_report
+    r = ValueReport.new
+    @jarek.categories.each do |c|
+      r.categories << c
+    end
+    r.report_view_type = :bar
+    r.period_type = :week
+    r.name = "Testowy raport"
+    r.save!
+    r
   end
 
 end

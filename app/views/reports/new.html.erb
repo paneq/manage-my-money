@@ -1,16 +1,17 @@
 <h1>Dodawanie nowego raportu</h1>
 
-<%= error_messages_for :current_user %>
+<%= error_messages_for :report %>
 
 Wybierz typ raportu: <br/>
 
-<% remote_function_call = remote_function(:with => "'report_type='+encodeURIComponent(value)", :update => 'new-report-form', :url => {:action => 'report_type_choosen'}); %>
-<%= radio_button_tag :report_type, 'ShareReport', @report.type == 'ShareReport', {:onclick => remote_function_call } -%> <%= 'Raport udzialu podkategorii w kategorii (wykres)' -%> <br/>
-<%= radio_button_tag :report_type, 'ValueReport', @report.type == 'ValueReport', {:onclick => remote_function_call } -%> <%= 'Raport pokazujacy wartosc kategorii w czasie (wykres)' -%> <br/>
-<%= radio_button_tag :report_type, 'FlowReport', @report.type == 'FlowReport', {:onclick => remote_function_call } -%> <%= 'Raport przeplywu srodkow (tekst)' -%> <br/>
+<%= radio_button_tag :report_type, 'ShareReport', @report.share_report?, {:onclick => control_visibility_of_report_forms(@share_report) } -%> <%= 'Raport udzialu podkategorii w kategorii (wykres)' -%> <br/>
+<%= radio_button_tag :report_type, 'ValueReport', @report.value_report?, {:onclick => control_visibility_of_report_forms(@value_report) } -%> <%= 'Raport pokazujacy wartosc kategorii w czasie (wykres)' -%> <br/>
+<%= radio_button_tag :report_type, 'FlowReport', @report.flow_report?, {:onclick => control_visibility_of_report_forms(@flow_report) } -%> <%= 'Raport przeplywu srodkow (tekst)' -%> <br/>
 
 <br/>
 
 <div id="new-report-form">
-<%= render :partial => @partial_name if @partial_name %>
+<%= render :partial => get_report_partial_name(@share_report) %>
+<%= render :partial => get_report_partial_name(@value_report) %>
+<%= render :partial => get_report_partial_name(@flow_report) %>
 </div>

@@ -36,4 +36,16 @@ class Report < ActiveRecord::Base
     period_type == :custom
   end
 
+  def share_report?
+    false
+  end
+
+  def flow_report?
+    false
+  end
+
+  def value_report?
+    false
+  end
+  
 end

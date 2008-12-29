@@ -13,23 +13,30 @@ class ReportsController < ApplicationController
  end
 
  def new
-#   @report = ShareReport.new
+   @share_report = ShareReport.new
+   @flow_report = FlowReport.new
+   @value_report = ValueReport.new
+   @report = Report.new
+#   @report_type = nil
 #   @share_types = ShareReport.SHARE_TYPES.keys
+   @report_view_types = [:bar, :pie]
  end
 
  def create
-   @report = nil
-   case params[:report_type]
-   when 'ShareReport'
-     params[:share_report]['category'] = Category.find params[:share_report]['category'] #TODO i dont like this code
-     @report = ShareReport.new(params[:share_report])
-   when 'ValueReport'
-     @report = ValueReport.new(params[:value_report])
-   when 'FlowReport'
-     @report = FlowReport.new(params[:flow_report])
-   else
-     raise 'Unknown Report Class'
-   end
+   @share_report = nil
+   @value_report = nil
+   @flow_report = nil
+   @report = case params[:report_type]
+     when 'ShareReport'
+       params[:share_report]['category'] = Category.find params[:share_report]['category'] #TODO i dont like this code
+       @share_report = ShareReport.new(params[:share_report])
+     when 'ValueReport'
+       @value_report = ValueReport.new(params[:value_report])
+     when 'FlowReport'
+       @flow_report = FlowReport.new(params[:flow_report])
+     else
+       raise 'Unknown Report Class'
+     end
 
    @report.user = @current_user
    @report.period_type = :custom #TODO
@@ -40,6 +47,9 @@ class ReportsController < ApplicationController
      redirect_to :action => :index
    else
      flash[:error]  = "Nie udalo sie dodac raportu"
+     @value_report = ValueReport.new if !@value_report
+     @share_report = ShareReport.new if !@share_report
+     @flow_report = FlowReport.new if !@flow_report
      @partial_name = get_report_partial_name @report
      render :action => 'new'
    end
@@ -54,19 +64,21 @@ class ReportsController < ApplicationController
  end
 
  def edit
-    @report = Report.find params[:id]
+    @flow_report = @value_report = @share_report = @report = Report.find(params[:id]) #I dont care ktory raport to jest
     @partial_name = get_report_partial_name @report
  end
 
  def update
    @report = Report.find params[:id]
-   if @report.update_attributes(params[:report])
+   params[:share_report]['category'] = Category.find params[:share_report]['category'] if params[:share_report]['category'] #TODO i dont like this code
+   @report.period_start, @report.period_end = get_period('report_day')
+   if @report.update_attributes(params[@report.type.to_s.underscore.intern])
       flash[:notice] = 'Raport zostal pomyslnie zapisany'
       redirect_to :action => :index
    else
      flash[:notice] = 'Raport nie zostal pomyslnie zapisany'
      @partial_name = get_report_partial_name @report
-     render :action => 'edit'
+     render :action => :edit
    end
  end
 
@@ -118,7 +130,7 @@ class ReportsController < ApplicationController
  end
 
  def get_report_partial_name(report)
-   report.type.to_s.underscore + '_fields'
+     report.type.to_s.underscore + '_fields'
  end
 
 
