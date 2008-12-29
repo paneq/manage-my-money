@@ -13,13 +13,13 @@ class ReportsController < ApplicationController
  end
 
  def new
-   @report = ShareReport.new
+#   @report = ShareReport.new
 #   @share_types = ShareReport.SHARE_TYPES.keys
  end
 
  def create
    @report = nil
-   case params[:report_class]
+   case params[:report_type]
    when 'ShareReport'
      params[:share_report]['category'] = Category.find params[:share_report]['category'] #TODO i dont like this code
      @report = ShareReport.new(params[:share_report])
@@ -40,6 +40,7 @@ class ReportsController < ApplicationController
      redirect_to :action => :index
    else
      flash[:error]  = "Nie udalo sie dodac raportu"
+     @partial_name = get_report_partial_name @report
      render :action => 'new'
    end
 
@@ -53,18 +54,41 @@ class ReportsController < ApplicationController
  end
 
  def edit
-
+    @report = Report.find params[:id]
+    @partial_name = get_report_partial_name @report
  end
 
  def update
+   @report = Report.find params[:id]
    if @report.update_attributes(params[:report])
       flash[:notice] = 'Raport zostal pomyslnie zapisany'
-      redirect_to :index
+      redirect_to :action => :index
    else
      flash[:notice] = 'Raport nie zostal pomyslnie zapisany'
+     @partial_name = get_report_partial_name @report
      render :action => 'edit'
    end
  end
+
+
+ #xhr
+ def report_type_choosen
+   case params[:report_type]
+   when 'ShareReport'
+     @report = ShareReport.new()
+   when 'ValueReport'
+     @report = ValueReport.new()
+   when 'FlowReport'
+     @report = FlowReport.new()
+   else
+     raise 'Unknown Report Class'
+   end
+
+   partial_name = get_report_partial_name @report
+   render :partial => partial_name
+
+ end
+
 
  #private
  def prepare_system_reports
@@ -92,5 +116,10 @@ class ReportsController < ApplicationController
 
    reports
  end
+
+ def get_report_partial_name(report)
+   report.type.to_s.underscore + '_fields'
+ end
+
 
 end

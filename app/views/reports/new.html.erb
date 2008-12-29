@@ -1,45 +1,16 @@
 <h1>Dodawanie nowego raportu</h1>
-<% choosen = '' %>
+
 <%= error_messages_for :current_user %>
 
-<%  form_for @report, :url => {:action => 'create', :controller => 'Reports'} do |f|%>
 Wybierz typ raportu: <br/>
-<%= radio_button_tag :report_type, 'ShareReport', true, {:onclick => "Element.show('share_report_options'); Element.hide('value_report_options'); Element.hide('flow_report_options');"} -%> <%= 'Raport udzialu podkategorii w kategorii (wykres)' -%> <br/>
-<%= radio_button_tag :report_type, 'ValueReport', false, {:onclick => "Element.hide('share_report_options'); Element.show('value_report_options'); Element.hide('flow_report_options');"} -%> <%= 'Raport pokazujacy wartosc kategorii w czasie (wykres)' -%> <br/>
-<%= radio_button_tag :report_type, 'FlowReport', false, {:onclick => "Element.hide('share_report_options'); Element.hide('value_report_options'); Element.show('flow_report_options');"} -%> <%= 'Raport przeplywu srodkow (tekst)' -%> <br/>
 
+<% remote_function_call = remote_function(:with => "'report_type='+encodeURIComponent(value)", :update => 'new-report-form', :url => {:action => 'report_type_choosen'}); %>
+<%= radio_button_tag :report_type, 'ShareReport', @report.type == 'ShareReport', {:onclick => remote_function_call } -%> <%= 'Raport udzialu podkategorii w kategorii (wykres)' -%> <br/>
+<%= radio_button_tag :report_type, 'ValueReport', @report.type == 'ValueReport', {:onclick => remote_function_call } -%> <%= 'Raport pokazujacy wartosc kategorii w czasie (wykres)' -%> <br/>
+<%= radio_button_tag :report_type, 'FlowReport', @report.type == 'FlowReport', {:onclick => remote_function_call } -%> <%= 'Raport przeplywu srodkow (tekst)' -%> <br/>
 
-[tutaj javascript przelaczajacy dostepne pola w zaleznosci od wyboru]<br/>
-[niewidzialne pole :report_class]<br/>
-<%= hidden_field_tag("report_class", "ShareReport") %>
 <br/>
-[pola wspolne]<br/>
-[tataj partial/helper do wyboru okresu (lista rozwijana + dwa pola date)]<br/>
-<%= date_period_fields("report_day", Date.today, Date.today) %>
-<%= f.label :name, 'Nazwa' %><%= f.text_field :name  %>
-<br/>
-<div id="share_report_options">
-[pola dla ShareReport]<br/>
 
-<%= f.label :report_view_type, "Wyglad raportu: " %><%= f.enum_select :report_view_type %> <br/>
-<%= f.label :share_type, "Podział: " %><%= f.enum_select :share_type %> <br/>
-<%= f.label :depth, 'Zaglebienie' %><%= f.text_field :depth  %> <br/>
-<%= f.label :max_categories_count, 'Maksymalna ilość kategorii' %><%= f.text_field :max_categories_count  %> <br/>
-<%= f.label :category, 'Kategoria' %><%= f.select :category, @current_user.categories.map { |cat| [cat.name , cat.id]} %>
+<div id="new-report-form">
+<%= render :partial => @partial_name if @partial_name %>
 </div>
-<br/>
-<div id="value_report_options" style="display:none">
-[pola dla ValueReport]<br/>
-period_division_int enum<br/>
-many categories with options (tree)<br/>
-</div>
-<br/>
-<div id="flow_report_options" style="display:none">
-[pola dla FlowReport]<br/>
-many categories with options (tree)<br/>
-</div>
-<br/>
-
-<%= f.submit %>
-
-<% end %>

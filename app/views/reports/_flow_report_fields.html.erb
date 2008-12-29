@@ -1,0 +1,9 @@
+<%  form_for @report do |form|%>
+<%= render :partial => 'common_fields', :locals => {:form => form}  %>
+<div id="flow_report_options">
+many categories with options (tree)<br/>
+</div>
+
+<%= form.submit %>
+
+<% end %>

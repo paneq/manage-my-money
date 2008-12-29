@@ -1,0 +1,11 @@
+<%  form_for @report do |form|%>
+<%= render :partial => 'common_fields', :locals => {:form => form}  %>
+
+<div id="value_report_options">
+<%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %> <br/>
+many categories with options (tree)<br/>
+</div>
+
+<%= form.submit %>
+
+<% end %>

@@ -1,0 +1,4 @@
+<%= hidden_field_tag("report_type", @report.type) %>
+<%= date_period_fields("report_day", Date.today, Date.today) %>
+<%= form.label :name, 'Nazwa' %><%= form.text_field :name  %>
+

@@ -76,6 +76,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources     :users
   map.resources     :reports
+  map.resources     :share_reports, :controller => 'reports'
+  map.resources     :value_reports, :controller => 'reports'
+  map.resources     :flow_reports, :controller => 'reports'
 
 
 
