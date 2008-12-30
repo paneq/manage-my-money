@@ -7,7 +7,7 @@ Wybierz typ raportu: <br/>
 <%  [[@share_report, 'Raport udzialu podkategorii w kategorii (wykres)'],
      [@value_report, 'Raport pokazujacy wartosc kategorii w czasie (wykres)'],
      [@flow_report, 'Raport przeplywu srodkow (tekst)']].each do |report, desc| %>
-  <%= radio_button_tag :report_type, report.type, @report.type == report.type, {:onclick => control_visibility_of_report_forms(report) } -%> <%= desc -%> <br/>
+  <%= radio_button_tag :report_type, report.type_str, @report.type_str == report.type_str, {:onclick => control_visibility_of_report_forms(report) } -%> <%= desc -%> <br/>
 <%  end %>
 
 <br/>

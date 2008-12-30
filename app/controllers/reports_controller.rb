@@ -23,7 +23,6 @@ class ReportsController < ApplicationController
    @flow_report = nil
    @report = case params[:report_type]
      when 'ShareReport'
-       params[:share_report]['category'] = Category.find params[:share_report]['category'] #TODO i dont like this code
        @share_report = ShareReport.new(params[:share_report])
      when 'ValueReport'
        @value_report = ValueReport.new(params[:value_report])
@@ -66,9 +65,8 @@ class ReportsController < ApplicationController
 
  def update
    @report = Report.find params[:id]
-   params[:share_report]['category'] = Category.find params[:share_report]['category'] if params[:share_report] #TODO i dont like this code
    @report.period_start, @report.period_end = get_period('report_day')
-   if @report.update_attributes(params[@report.type.to_s.underscore.intern])
+   if @report.update_attributes(params[@report.type_str.underscore.intern])
       flash[:notice] = 'Raport zostal pomyslnie zapisany'
       redirect_to :action => :index
    else
@@ -109,7 +107,7 @@ class ReportsController < ApplicationController
  end
 
  def get_report_partial_name(report)
-     report.type.to_s.underscore + '_fields'
+     report.type_str.underscore + '_fields'
  end
 
  def prepare_reports

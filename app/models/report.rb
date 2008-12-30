@@ -47,5 +47,9 @@ class Report < ActiveRecord::Base
   def value_report?
     false
   end
+
+  def type_str
+    read_attribute :type
+  end
   
 end

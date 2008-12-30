@@ -5,7 +5,7 @@
 <%= form.label :share_type, "Podział: " %><%= form.enum_select :share_type %> <br/>
 <%= form.label :depth, 'Zaglebienie' %><%= form.text_field :depth  %> <br/>
 <%= form.label :max_categories_count, 'Maksymalna ilość kategorii' %><%= form.text_field :max_categories_count  %> <br/>
-<%= form.label :category, 'Kategoria' %><%= form.select :category, @current_user.categories.map { |cat| [cat.name , cat.id]} %>
+<%= form.label :category, 'Kategoria' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name , cat.id]} %>
 <br/>
 <br/>
 <%= form.submit %>

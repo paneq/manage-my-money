@@ -1,7 +1,7 @@
 module ReportsHelper
 
   def get_report_partial_name(report)
-     report.type.to_s.underscore + '_fields'
+     report.type_str.underscore + '_fields'
   end
 
 

@@ -733,3 +733,8 @@ ul.submenu3 a:hover {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+
+.invisible {
+  display: none;
+}
