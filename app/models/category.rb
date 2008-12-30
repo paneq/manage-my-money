@@ -398,6 +398,63 @@ class Category < ActiveRecord::Base
     return list;
   end
 
+  #TODO
+  # Oblicza udzial wartosci podkategorii w kategorii
+  # 
+  # Parametry:
+  #  share_type to jedno z [:percentage, :value]
+  #  max_categories_count liczba podkategorii do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'
+  #  depth stopien zaglebienia w podkategorie w obliczeniach
+  #  period_start, period_end zakres czasowy
+  #
+  # Wyjscie:
+  #  tablica tablic postaci:
+  #  [[wartosc1,nazwa1],[wartosc2,nazwa2]]
+  #  sortowanie od najwiekszej wartosci
+  def calculate_share_values(max_categories_count, depth, period_start, period_end, share_type)
+    [[9,'Nazwa1'],[7,'Nazwa2'],[2,'Nazwa3'],[1,'Nazwa4'],[5,'Pozostale']]
+  end
+
+  #TODO
+  # Podaje saldo/salda kategorii w podanym czasie
+  #
+  # Parametry:
+  #  inclusion_type to jedno z [:category_only, :subcategory_only, :both]
+  #  period_division to jedno z [:day, :week, :none] (lista niedokończona) podzial podanego zakresu czasu na podokresy
+  #  period_start, period_end zakres czasowy
+  #
+  # Wyjscie:
+  #  tablica wartosci postaci:
+  #  [1,2,3]
+  #  w szczegolnym przypadku tablica moze byc jednoelementowa, np gdy period_division == :none
+  #  sortowanie od najstarszej wartosci
+  #
+  def calculate_values(inclusion_type, period_division, period_start, period_end)
+    [1,2,3]
+  end
+
+
+  #TODO
+  # Uwaga: powinno sie znalezc w jakims bardziej uniwersalnym miejscu (module/klasie)
+  # Podaje etykiety dla wartosci generowanych przez metode calculate_values
+  #
+  # Parametry:
+  #  takie jak w calculate_values
+  #
+  # Wyjście:
+  #  tablica wartosci postaci:
+  #  ['tydzien1','tydzien2','tydzien3']
+  #  ['Styczen','Luty','Marzec']
+  #  ['Poniedzialek', 'Wtorek']
+  #  ['2007','2008']
+  #  [''] dla period_division == :none
+  #  sortowanie od etykiety opisujacej najstarsza wartosc
+  def self.get_values_labels(period_division, period_start, period_end)
+    ['tydzien1','tydzien2','tydzien3']
+  end
+
+
+
   #======================
   
 end

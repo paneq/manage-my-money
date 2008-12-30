@@ -9,7 +9,20 @@ class ReportsController < ApplicationController
  end
 
  def show
-   
+   @report = Report.find params[:id]
+   respond_to do |format|
+    format.html do
+      if @report.flow_report?
+        render :template => 'reports/show_flow_report'
+      else
+        @graph = open_flash_chart_object(600,300, url_for(:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json'))
+        render :template => 'reports/show_graph_report'
+      end
+    end
+    format.json do
+      render :text => get_graph_data
+    end
+   end
  end
 
  def new
@@ -56,7 +69,7 @@ class ReportsController < ApplicationController
  end
 
  def edit
-    @report = Report.find(params[:id]) #I dont care ktory raport to jest
+    @report = Report.find(params[:id])
     if @report.value_report? || @report.flow_report?
       @report.prepare_category_report_options @current_user.categories
     end
@@ -79,7 +92,11 @@ class ReportsController < ApplicationController
    end
  end
 
- #private
+
+ 
+
+
+ private
  def prepare_system_reports
    reports = []
    r = ShareReport.new
@@ -117,6 +134,55 @@ class ReportsController < ApplicationController
    @value_report.prepare_category_report_options @current_user.categories
    @flow_report.prepare_category_report_options @current_user.categories
    @flow_report.report_view_type = :text
+ end
+
+ def get_graph_data
+   @report = Report.find(params[:id])
+   title = Title.new(@report.name)
+   chart = OpenFlashChart.new
+   chart.title = title
+
+   graph = nil
+   elements = []
+   
+    if @report.share_report?
+      values_and_labels = @report.category.calculate_share_values @report.max_categories_count, @report.depth, @report.period_start, @report.period_end, @report.share_type
+      graph = get_graph_object @report
+      if @report.report_view_type == :pie
+        graph.values = values_and_labels.map {|val| PieValue.new(val[0],val[1])}
+      else
+        graph.values = values_and_labels.map {|val| val[0]}
+        x_axis = XAxis.new
+        x_axis.labels = values_and_labels.map {|val| val[1]}
+        chart.x_axis = x_axis
+      end
+      elements << graph
+    else if @report.value_report?
+      @report.category_report_options.each do |option|
+        values = option.category.calculate_values option.inclusion_type, @report.period_division, @report.period_start, @report.period_end
+        graph = get_graph_object @report
+        graph.values = values
+        graph.set_key(option.category.name,12)
+        elements << graph
+      end
+      labels = Category.get_values_labels @report.period_division, @report.period_start, @report.period_end
+      x_axis = XAxis.new
+      x_axis.labels = labels
+      chart.x_axis = x_axis
+    else
+      throw 'Wrong report type'
+    end
+   end
+   elements.each {|e| chart << e }
+   chart.to_s
+ end
+
+  def get_graph_object report
+    case report.report_view_type
+    when :bar then Bar.new
+    when :pie then Pie.new
+    when :linear then Line.new
+    end
  end
 
 
