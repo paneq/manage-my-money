@@ -1,0 +1,11 @@
+<div class="category-option">
+<% new_or_existing = category_option.new_record? ? 'new' : 'existing' %>
+<% prefix = "#{report_type}[#{new_or_existing}_category_report_options][]" %>
+<% fields_for prefix, category_option do |option_form| -%>
+  <p>
+     <%= category_option.category.name %>
+     <%= option_form.enum_select :inclusion_type, :class => :category_report_option %>
+     <%= option_form.hidden_field :category_id %>
+  </p>
+<% end -%>
+</div>

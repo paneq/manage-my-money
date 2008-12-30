@@ -8,9 +8,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
   
   test "Should create and save MultipleCategoryReport" do
     r = MultipleCategoryReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :bar
     r.period_type = :week
     r.name = "Testowy raport"
@@ -28,9 +26,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     assert !r.save
     assert r.errors.on(:period_type)
     assert_equal 1, r.errors.count
@@ -42,10 +38,10 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r.name = "Testowy raport"
     r.period_type = :week
     assert !r.save
-    assert r.errors.on(:categories)
-    r.categories = []
+    assert r.errors.on(:category_report_options)
+    r.category_report_options = []
     assert !r.save
-    assert r.errors.on(:categories)
+    assert r.errors.on(:category_report_options)
     assert_equal 1, r.errors.count
   end
 

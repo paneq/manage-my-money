@@ -23,8 +23,9 @@
   # @author jPlebanski
   def enum_select(object, method, options = {})
 
-    object_class = object.camelcase.constantize
-    enum_values = instance_variable_get("@#{method.to_s.pluralize}") || object_class.const_get(method.to_s.pluralize.upcase.intern).keys
+    object_name = (options[:class] || object).to_s
+    object_class = object_name.camelcase.constantize
+    enum_values = options[:values] || instance_variable_get("@#{method.to_s.pluralize}") || object_class.const_get(method.to_s.pluralize.upcase.intern).keys
 
     description_method = "get_desc_for_#{method.to_s}".intern
     should_get_description = respond_to? description_method

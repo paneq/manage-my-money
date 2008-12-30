@@ -51,9 +51,7 @@ class ReportsControllerTest < ActionController::TestCase
 
   def create_flow_report
     r = FlowReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :text
     r.period_type = :week
     r.name = "Testowy raport"
@@ -63,9 +61,7 @@ class ReportsControllerTest < ActionController::TestCase
 
   def create_value_report
     r = ValueReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :bar
     r.period_type = :week
     r.name = "Testowy raport"

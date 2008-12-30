@@ -1,9 +1,14 @@
-<div id="flow_report_options" <%= 'style="display:none"' unless @report.flow_report? %>>
-<%  form_for @flow_report || @report do |form|%>
-<%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'FlowReport'}  %>
+<div id="flow_report_options" <%= 'style="display:none"' unless @report.flow_report? %> >
+<%  form_for report do |form|%>
+<%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'FlowReport', :report => report}  %>
+<%= form.hidden_field :report_view_type %>
 
-many categories with options (tree)<br/>
-
+<div id="categories-options">
+  <fieldset style="margin-top: 1em">
+  <legend>Kategorie uwzględnione na raporcie</legend>
+  <%= render :partial => 'category_option', :collection => (@flow_report || @report).category_report_options, :locals => {:report_type => 'flow_report'} %>
+  </fieldset>
+</div>
 
 <%= form.submit %>
 

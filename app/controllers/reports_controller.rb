@@ -13,13 +13,8 @@ class ReportsController < ApplicationController
  end
 
  def new
-   @share_report = ShareReport.new
-   @flow_report = FlowReport.new
-   @value_report = ValueReport.new
+   prepare_reports
    @report = Report.new
-#   @report_type = nil
-#   @share_types = ShareReport.SHARE_TYPES.keys
-   @report_view_types = [:bar, :pie]
  end
 
  def create
@@ -47,9 +42,7 @@ class ReportsController < ApplicationController
      redirect_to :action => :index
    else
      flash[:error]  = "Nie udalo sie dodac raportu"
-     @value_report = ValueReport.new if !@value_report
-     @share_report = ShareReport.new if !@share_report
-     @flow_report = FlowReport.new if !@flow_report
+     prepare_reports
      @partial_name = get_report_partial_name @report
      render :action => 'new'
    end
@@ -64,43 +57,29 @@ class ReportsController < ApplicationController
  end
 
  def edit
-    @flow_report = @value_report = @share_report = @report = Report.find(params[:id]) #I dont care ktory raport to jest
+    @report = Report.find(params[:id]) #I dont care ktory raport to jest
+    if @report.value_report? || @report.flow_report?
+      @report.prepare_category_report_options @current_user.categories
+    end
     @partial_name = get_report_partial_name @report
  end
 
  def update
    @report = Report.find params[:id]
-   params[:share_report]['category'] = Category.find params[:share_report]['category'] if params[:share_report]['category'] #TODO i dont like this code
+   params[:share_report]['category'] = Category.find params[:share_report]['category'] if params[:share_report] #TODO i dont like this code
    @report.period_start, @report.period_end = get_period('report_day')
    if @report.update_attributes(params[@report.type.to_s.underscore.intern])
       flash[:notice] = 'Raport zostal pomyslnie zapisany'
       redirect_to :action => :index
    else
      flash[:notice] = 'Raport nie zostal pomyslnie zapisany'
+     if @report.value_report? || @report.flow_report?
+      @report.prepare_category_report_options @current_user.categories
+     end
      @partial_name = get_report_partial_name @report
      render :action => :edit
    end
  end
-
-
- #xhr
- def report_type_choosen
-   case params[:report_type]
-   when 'ShareReport'
-     @report = ShareReport.new()
-   when 'ValueReport'
-     @report = ValueReport.new()
-   when 'FlowReport'
-     @report = FlowReport.new()
-   else
-     raise 'Unknown Report Class'
-   end
-
-   partial_name = get_report_partial_name @report
-   render :partial => partial_name
-
- end
-
 
  #private
  def prepare_system_reports
@@ -114,16 +93,16 @@ class ReportsController < ApplicationController
    r.save!
    reports << r
 
-   r = ValueReport.new
-   self.current_user.categories.top.each do |c|
-     r.categories << c
-   end
-   r.report_view_type = :bar
-   r.period_type = :week
-   r.period_division = :none
-   r.name = "Systemowy raport 2"
-   r.save!
-   reports << r
+#   r = ValueReport.new
+#   self.current_user.categories.top.each do |c|
+#     r.categories << c
+#   end
+#   r.report_view_type = :bar
+#   r.period_type = :week
+#   r.period_division = :none
+#   r.name = "Systemowy raport 2"
+#   r.save!
+#   reports << r
 
 
    reports
@@ -131,6 +110,15 @@ class ReportsController < ApplicationController
 
  def get_report_partial_name(report)
      report.type.to_s.underscore + '_fields'
+ end
+
+ def prepare_reports
+   @value_report = ValueReport.new if !@value_report
+   @share_report = ShareReport.new if !@share_report
+   @flow_report = FlowReport.new if !@flow_report
+   @value_report.prepare_category_report_options @current_user.categories
+   @flow_report.prepare_category_report_options @current_user.categories
+   @flow_report.report_view_type = :text
  end
 
 

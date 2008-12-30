@@ -21,15 +21,62 @@
 #
 
 class MultipleCategoryReport < Report
-  has_many :category_report_options, :foreign_key => :report_id
+  has_many :category_report_options, :foreign_key => :report_id, :dependent => :destroy
   has_many :categories, :through => :category_report_options
 
   validate :has_at_least_one_category?
 
+  validates_associated :category_report_options
+
   def has_at_least_one_category?
-     unless categories != nil && categories.size > 0
-       errors.add(:categories, "Should have at least one category")
+     unless category_report_options != nil && category_report_options.size > 0
+       errors.add(:category_report_options, "Powinna być wybrana conajmiej jedna kategoria")
      end
   end
+
+  def new_category_report_options=(category_report_options_attr)
+    category_report_options_attr.each do |attributes|
+      if attributes[:inclusion_type] != 'none'
+        category = Category.find(attributes[:category_id])
+        category_report_options.build({:inclusion_type => attributes[:inclusion_type], :category => category})
+      else 
+        category_report_options.delete_if {|item| item.category_id == attributes[:category_id]}
+      end
+    end
+  end
+
+  after_update :save_options
+
+  def existing_category_report_options=(category_report_options_attr)
+    category_report_options.reject(&:new_record?).each do |option|
+      attributes = category_report_options_attr[option.id.to_s]
+      if attributes && attributes[:inclusion_type] != 'none'
+        option.attributes = attributes
+      else
+        category_report_options.delete(option)
+      end
+    end
+  end
+
+  def save_options
+    category_report_options.each do |option|
+      option.save(false)
+    end
+  end
+
+
+
+
+  #dla kazdej category na liscie categories i dla ktorej nie ma category_report_option
+  #tworzy category_report_option i ustawia mu inclusion_type na :none
+  #
+  def prepare_category_report_options(given_categories)
+    given_categories.each do |cat|
+      unless categories.include? cat
+        category_report_options << CategoryReportOption.new({:category => cat, :inclusion_type => :none})
+      end
+   end
+  end
+
 
 end

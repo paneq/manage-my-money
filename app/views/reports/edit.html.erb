@@ -3,5 +3,5 @@
 <%= error_messages_for :report %>
 
 <div id="edit-report-form">
-<%= render :partial => @partial_name if @partial_name %>
+<%= render :partial => @partial_name, :locals => {:report => @report} %>
 </div>

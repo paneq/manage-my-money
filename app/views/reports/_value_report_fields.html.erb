@@ -1,10 +1,18 @@
 <div id="value_report_options" <%= 'style="display:none"' unless @report.value_report? %>>
-<%  form_for @value_report || @report do |form|%>
-<%= render :partial => 'common_fields', :locals => {:form => form, :report_type => 'ValueReport'}  %>
+<%  form_for report do |form|%>
+<%= render :partial => 'common_fields', :locals => {:form => form, :report_type => 'ValueReport', :report => report}  %>
 
 
 <%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %> <br/>
-many categories with options (tree)<br/>
+<%= form.label :report_view_type, "Wyglad raportu: " %><%= form.enum_select :report_view_type, :values => [:bar, :linear] %> <br/>
+
+<div id="categories-options">
+  <fieldset style="margin-top: 1em">
+  <legend>Kategorie uwzględnione na raporcie</legend>
+  <%= render :partial => 'category_option', :collection => (@value_report || @report).category_report_options, :locals => {:report_type => 'value_report'} %>
+  </fieldset>
+</div>
+
 
 
 <%= form.submit %>

@@ -8,9 +8,7 @@ class FlowReportTest < ActiveSupport::TestCase
 
  test "Should create FlowReport" do
     r = FlowReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :text
     r.period_type = :week
     r.name = "Testowy raport"
@@ -19,9 +17,7 @@ class FlowReportTest < ActiveSupport::TestCase
 
  test "Should have only text view type" do
     r = FlowReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :linear
     r.period_type = :week
     r.name = "Testowy raport"

@@ -8,9 +8,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should create and save ValueReport" do
     r = ValueReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :bar
     r.period_type = :week
     r.name = "Testowy raport"
@@ -19,9 +17,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should validate report_view_type" do
     r = ValueReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :pie
     r.period_type = :week
     r.name = "Testowy raport"
@@ -32,9 +28,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should have many category options" do
     r = ValueReport.new
-    @jarek.categories.each do |c|
-      r.categories << c
-    end
+    add_category_options @jarek, r
     r.report_view_type = :bar
     r.period_type = :week
     r.name = "Testowy raport"

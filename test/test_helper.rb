@@ -72,4 +72,10 @@ class Test::Unit::TestCase
     @request.session[:user_id] = user.id
   end
 
+  def add_category_options(user, report)
+    user.categories.each do |c|
+      report.category_report_options << CategoryReportOption.new({:category => c, :inclusion_type => :both})
+    end
+  end
+
 end
