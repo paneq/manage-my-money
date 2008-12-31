@@ -1,13 +1,20 @@
 <h1>Raporty</h1>
 
 <h2>Moje raporty</h2><br/>
-Nazwa             | Akcje       <%= link_to "Nowy raport", new_report_url %><br/>
+<b>  <%= link_to "Nowy raport", new_report_url %> </b>
+<br/>
+<br/>
+<table>
+<tr><td><b>Nazwa</b></td><td><b>Akcje</b></td></tr>
 <%  @user_reports.each do |report| %>
-  <%=report.name%> <%= link_to "Pokaz", report_url(report) %> | <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", report_path(report), :method => :delete, :id => report.id %> | ([kopiuj])<br/>
+  <tr class="<%= cycle('line-even', 'line-odd') %>"><td><%=report.name%></td><td><%= link_to "Pokaz", report_url(report) %> | <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", report_path(report), :method => :delete, :id => report.id %></td></tr>
 <% end %>
+</table>
 <br/>
 <h2>Raporty predefiniowane</h2><br/>
-Nazwa                                     | Akcje<br/>
+<table>
+<tr><td><b>Nazwa</b></td><td><b>Akcje</b></td></tr>
 <%  @system_reports.each do |report| %>
-  <%=report.name%> <%= link_to "Pokaz", report_url(report) %> | [kopiuj do moich raportow]<br/>
+  <tr class="<%= cycle('line-even', 'line-odd') %>"><td><%=report.name%></td><td><%= link_to "Pokaz", report_url(report, :virtual=>true) %> | <%= link_to "Kopiuj do moich raportow", url_for(:controller => 'reports', :action => 'copy_report', :id => report.id) %></td></tr>
 <% end %>
+</table>

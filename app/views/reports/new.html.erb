@@ -17,3 +17,5 @@ Wybierz typ raportu: <br/>
   <%= render :partial => get_report_partial_name(report), :locals => {:report => report} %>
 <%  end %>
 </div>
+
+<%= link_to 'Anuluj', reports_url %>

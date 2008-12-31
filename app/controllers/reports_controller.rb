@@ -9,13 +9,14 @@ class ReportsController < ApplicationController
  end
 
  def show
-   @report = Report.find params[:id]
+   @report = get_report_from_params
    respond_to do |format|
     format.html do
       if @report.flow_report?
         render :template => 'reports/show_flow_report'
       else
-        @graph = open_flash_chart_object(600,300, url_for(:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json'))
+        url = {:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json', :virtual => params[:virtual]}
+        @graph = open_flash_chart_object(600,300, url_for(url))
         render :template => 'reports/show_graph_report'
       end
     end
@@ -51,7 +52,11 @@ class ReportsController < ApplicationController
 
    if @report.save
      flash[:notice] = "Twoj raport zostal dodany"
-     redirect_to :action => :index
+     if params[:commit] == 'Zapisz i pokaż'
+        redirect_to :action => :show, :id => @report.id
+     else
+        redirect_to :action => :index
+     end
    else
      flash[:error]  = "Nie udalo sie dodac raportu"
      prepare_reports
@@ -81,7 +86,11 @@ class ReportsController < ApplicationController
    @report.period_start, @report.period_end = get_period('report_day')
    if @report.update_attributes(params[@report.type_str.underscore.intern])
       flash[:notice] = 'Raport zostal pomyslnie zapisany'
-      redirect_to :action => :index
+      if params[:commit] == 'Zapisz i pokaż'
+        redirect_to :action => :show, :id => @report.id
+      else
+        redirect_to :action => :index
+      end
    else
      flash[:notice] = 'Raport nie zostal pomyslnie zapisany'
      if @report.value_report? || @report.flow_report?
@@ -93,20 +102,31 @@ class ReportsController < ApplicationController
  end
 
 
- 
+ def copy_report
+    report = prepare_system_reports[params[:id].to_i]
+    report.id = nil
+    if report.save!
+      flash[:notice] = 'Raport zostal pomyslnie skopiowany'
+    else
+      flash[:notice] = 'Raport nie zostal skopiowany'
+    end
+      redirect_to :action => :index
+ end
 
 
  private
  def prepare_system_reports
    reports = []
    r = ShareReport.new
+   r.user = @current_user
    r.category = self.current_user.categories.top_of_type :ASSET
    r.report_view_type = :pie
    r.period_type = :week
    r.share_type = :percentage
    r.name = "Systemowy raport 1"
-   r.save!
-   reports << r
+   r.id = 0
+#   r.save!
+   reports[r.id] = r
 
 #   r = ValueReport.new
 #   self.current_user.categories.top.each do |c|
@@ -137,7 +157,7 @@ class ReportsController < ApplicationController
  end
 
  def get_graph_data
-   @report = Report.find(params[:id])
+   @report = get_report_from_params
    title = Title.new(@report.name)
    chart = OpenFlashChart.new
    chart.title = title
@@ -183,6 +203,14 @@ class ReportsController < ApplicationController
     when :pie then Pie.new
     when :linear then Line.new
     end
+ end
+
+ def get_report_from_params
+   if params[:virtual]
+     prepare_system_reports[params[:id].to_i]
+   else
+     Report.find params[:id]
+   end
  end
 
 

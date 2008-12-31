@@ -1,2 +1,10 @@
 <script type="text/javascript" src="/javascripts/swfobject.js"></script>
 <%= @graph %>
+
+<br/>
+<br/>[jakas smieszna tabelka tu] <br/><br/>
+
+
+<%= link_to 'Wszystkie raporty', reports_url %>
+| <%= link_to "Edytuj", edit_report_url(@report) %>
+| <%= link_to "Usun", report_path(@report), :method => :delete, :id => @report.id %>

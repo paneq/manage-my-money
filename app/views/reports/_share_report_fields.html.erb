@@ -8,7 +8,9 @@
 <%= form.label :category, 'Kategoria' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name , cat.id]} %>
 <br/>
 <br/>
-<%= form.submit %>
+<%= form.submit 'Zapisz'%>
+<%= form.submit 'Zapisz i pokaż'%>
+
 
 <% end %>
 
