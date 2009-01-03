@@ -60,7 +60,7 @@ class CategoryControllerTest < Test::Unit::TestCase
   end
 
 
-  def test_proper_selcted_element_when_new_with_given_parent_category
+  def test_new_and_proper_selcted_element_when_given_parent_category
     parent_category = @rupert.categories.top_of_type(:EXPENSE)
     get :new, :parent_category_id => parent_category.id
     assert_response :success

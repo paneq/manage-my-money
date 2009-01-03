@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
  
   layout 'main'
   before_filter :login_required
-  before_filter :check_perm, :only => [:show_with_subcategories , :show , :remove, :search]
+  before_filter :check_perm, :only => [:show , :remove, :search]
 
   # @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
@@ -33,6 +33,9 @@ class CategoriesController < ApplicationController
     end
   end
 
+  #TODO: sprawic zeby search dzialał jak show
+  # i wszystko co z tym zwiazanie jak np metody w modelu dla podkategorii
+  # aktualnie leci exception z braku metody
   def search
     session[:category_id] = @category.id
     @start_day, @end_day = get_period('transfer_day')
@@ -181,7 +184,6 @@ class CategoriesController < ApplicationController
       flash[:notice] = 'You do not have permission to view this category'
       @category = nil
       redirect_to :action => :show_categories , :controller => :category
-      return
       #why doesn't it work ? There is no flash ?
     end
   end
