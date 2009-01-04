@@ -1,0 +1,8 @@
+<%= link_to 'Wszystkie raporty', reports_url %>
+
+<% unless @virtual %>
+
+| <%= link_to "Edytuj", edit_report_url(@report) %>
+| <%= link_to "Usun", report_path(@report), :method => :delete, :id => @report.id %>
+
+<% end %>

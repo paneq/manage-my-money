@@ -17,6 +17,7 @@ class ReportsController < ApplicationController
       else
         url = {:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json', :virtual => params[:virtual]}
         @graph = open_flash_chart_object(600,300, url_for(url))
+        @virtual = params[:virtual]
         render :template => 'reports/show_graph_report'
       end
     end
@@ -156,6 +157,11 @@ class ReportsController < ApplicationController
    @flow_report.report_view_type = :text
  end
 
+
+  ###########################
+  # dobre kolorki do ustawienia: fdd84e, 6886b4, 72ae6e, d1695e, 8a6eaf, efaa43,
+  # tlo: 4a465a
+
  def get_graph_data
    @report = get_report_from_params
    title = Title.new(@report.name)
@@ -164,6 +170,7 @@ class ReportsController < ApplicationController
 
    graph = nil
    elements = []
+   colours = get_colors
    
     if @report.share_report?
       values_and_labels = @report.category.calculate_share_values @report.max_categories_count, @report.depth, @report.period_start, @report.period_end, @report.share_type
@@ -183,8 +190,10 @@ class ReportsController < ApplicationController
         graph = get_graph_object @report
         graph.values = values
         graph.set_key(option.category.name,12)
+        graph.colour = colours[rand(colours.size) ]
         elements << graph
       end
+
       labels = Category.get_values_labels @report.period_division, @report.period_start, @report.period_end
       x_axis = XAxis.new
       x_axis.labels = labels
@@ -204,6 +213,14 @@ class ReportsController < ApplicationController
     when :linear then Line.new
     end
  end
+
+  def get_colors
+    colours = []
+    0xFDD84E.step(0xFF0000, 1500) do |num|
+          colours << "#%x"  % num
+    end
+    colours
+  end
 
  def get_report_from_params
    if params[:virtual]

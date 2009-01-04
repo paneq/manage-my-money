@@ -95,6 +95,18 @@ module ApplicationHelper
 
   end
 
+  def switch(div_id, name)
+    result = ''
+    result += link_to_function name, :id => "switch_for_#{div_id}", :onclick =>  <<-JS
+      if(Element.visible('#{div_id}')) {
+            Element.hide('#{div_id}')
+        } else {
+            Element.show('#{div_id}')
+        }
+    JS
+  end
+
+
   private
   def get_date_begin_field_name(name)
     "#{name.gsub(/_/, '-')}-start"

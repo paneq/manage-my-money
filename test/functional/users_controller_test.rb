@@ -15,6 +15,7 @@ class UsersControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     UsersController.send(:public, :current_user=)
+    save_currencies
   end
 
 
@@ -161,7 +162,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_select "select#user_default_currency_id" do
       assert_select "option", :count => user_visible_currencies.count
       user_visible_currencies.each do |cur|
-        assert_select "option[value=#{cur.id}]", cur.long_name
+        assert_select "option[value=#{cur.id}]", cur.long_symbol
       end
     end
   end
@@ -178,7 +179,7 @@ class UsersControllerTest < Test::Unit::TestCase
          :transaction_amount_limit_value => '12',
          :email => 'a@a.pl',
          :multi_currency_balance_calculating_algorithm => 'show_all_currencies',
-#         :default_currency_id => Currency.find(:first, :conditions => {:long_symbol => 'PLN'}).id
+         :default_currency_id => Currency.find(:first, :conditions => {:long_symbol => 'USD'}).id
         }
       } 
      put :update,  params
@@ -188,7 +189,7 @@ class UsersControllerTest < Test::Unit::TestCase
      assert_equal 12, user.transaction_amount_limit_value
      assert_equal :show_all_currencies, user.multi_currency_balance_calculating_algorithm
      assert_equal :transaction_count, user.transaction_amount_limit_type
-#     assert_equal 2, user.default_currency_id
+     assert_equal Currency.find(:first, :conditions => {:long_symbol => 'USD'}).id, user.default_currency.id
    end
 
    def test_should_fail_user_with_errors_on_update
