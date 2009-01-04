@@ -430,11 +430,7 @@ class Category < ActiveRecord::Base
   private
 
   def universal_saldo(hash = {})
-    info = {
-      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
-      :group => 'currency_id',
-      :conditions =>['category_id = ?', self.id]
-    }
+    info = info_by_user_algorithm
     info.merge!(hash)
 
     money = Money.new()
@@ -446,5 +442,38 @@ class Category < ActiveRecord::Base
     end
     return money
 
+  end
+
+  def info_by_user_algorithm
+    return case self.user.multi_currency_balance_calculating_algorithm
+    when :calculate_with_exchanges_closest_to_transaction
+      {
+        :joins => 
+        'INNER JOIN Transfers AS transfers ON (transfer_items.transfer_id = transfers.id)
+        JOIN Exchanges as ex ON
+          (
+          ex.Id IN
+            (
+              SELECT Id FROM Exchanges as e WHERE
+                (
+                abs( julianday(t.day) - julianday(e.day) ) =
+                  (
+                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2
+                  )
+                )
+              ORDER BY e.day ASC LIMIT 1
+            )
+          )
+        ', #tutaj trzeba zrobic zeby joinowal jak inna waluta niz domyslna i mnozyl kurs do obliczenia wartosci
+        :group => 'currency_id',
+        :conditions =>['category_id = ?', self.id]
+      }
+    else
+      {
+        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+        :group => 'currency_id',
+        :conditions =>['category_id = ?', self.id]
+      }
+    end
   end
 end
