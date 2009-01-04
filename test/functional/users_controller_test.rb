@@ -144,6 +144,7 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_should_see_user_edit_form
     login_as :quentin
     get :edit, :id => users(:quentin).id
+    user = User.find(users(:quentin).id)
     assert_response :success
     assert_select "input#user_email"
     assert_select "input#user_password"
@@ -154,6 +155,14 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_select "input#user_include_transactions_from_subcategories"
     assert_select "fieldset#user_multi_currency_balance_calculating_algorithms" do
       assert_select "input[type=radio]", :count => 5
+    end
+
+    user_visible_currencies = user.visible_currencies
+    assert_select "select#user_default_currency_id" do
+      assert_select "option", :count => user_visible_currencies.count
+      user_visible_currencies.each do |cur|
+        assert_select "option[value=#{cur.id}]", cur.long_name
+      end
     end
   end
 
@@ -168,7 +177,8 @@ class UsersControllerTest < Test::Unit::TestCase
          :transaction_amount_limit_type => 'transaction_count',
          :transaction_amount_limit_value => '12',
          :email => 'a@a.pl',
-         :multi_currency_balance_calculating_algorithm => 'show_all_currencies'
+         :multi_currency_balance_calculating_algorithm => 'show_all_currencies',
+#         :default_currency_id => Currency.find(:first, :conditions => {:long_symbol => 'PLN'}).id
         }
       } 
      put :update,  params
@@ -178,6 +188,7 @@ class UsersControllerTest < Test::Unit::TestCase
      assert_equal 12, user.transaction_amount_limit_value
      assert_equal :show_all_currencies, user.multi_currency_balance_calculating_algorithm
      assert_equal :transaction_count, user.transaction_amount_limit_type
+#     assert_equal 2, user.default_currency_id
    end
 
    def test_should_fail_user_with_errors_on_update

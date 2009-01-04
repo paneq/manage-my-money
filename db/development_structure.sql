@@ -8,7 +8,7 @@ CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
 CREATE TABLE "sessions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "session_id" varchar(255), "data" text, "updated_at" datetime);
 CREATE TABLE "transfer_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "value" integer NOT NULL, "transfer_id" integer NOT NULL, "category_id" integer NOT NULL, "currency_id" integer DEFAULT 3 NOT NULL);
 CREATE TABLE "transfers" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "day" date NOT NULL, "user_id" integer NOT NULL);
-CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "login" varchar(40), "name" varchar(100) DEFAULT '', "email" varchar(100), "crypted_password" varchar(40), "salt" varchar(40), "created_at" datetime, "updated_at" datetime, "remember_token" varchar(40), "remember_token_expires_at" datetime, "activation_code" varchar(40), "activated_at" datetime, "active" boolean DEFAULT 'f' NOT NULL, "transaction_amount_limit_type_int" integer DEFAULT 2 NOT NULL, "transaction_amount_limit_value" integer, "include_transactions_from_subcategories" boolean DEFAULT 'f' NOT NULL, "multi_currency_balance_calculating_algorithm_int" integer DEFAULT 0 NOT NULL);
+CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "login" varchar(40), "name" varchar(100) DEFAULT '', "email" varchar(100), "crypted_password" varchar(40), "salt" varchar(40), "created_at" datetime, "updated_at" datetime, "remember_token" varchar(40), "remember_token_expires_at" datetime, "activation_code" varchar(40), "activated_at" datetime, "active" boolean DEFAULT 'f' NOT NULL, "transaction_amount_limit_type_int" integer DEFAULT 2 NOT NULL, "transaction_amount_limit_value" integer, "include_transactions_from_subcategories" boolean DEFAULT 'f' NOT NULL, "multi_currency_balance_calculating_algorithm_int" integer DEFAULT 0 NOT NULL, "default_currency_id" integer DEFAULT 1 NOT NULL);
 CREATE INDEX "index_sessions_on_session_id" ON "sessions" ("session_id");
 CREATE INDEX "index_sessions_on_updated_at" ON "sessions" ("updated_at");
 CREATE UNIQUE INDEX "index_users_on_login" ON "users" ("login");
@@ -38,3 +38,5 @@ INSERT INTO schema_migrations (version) VALUES ('20081206132610');
 INSERT INTO schema_migrations (version) VALUES ('20081208212007');
 
 INSERT INTO schema_migrations (version) VALUES ('20081208215053');
+
+INSERT INTO schema_migrations (version) VALUES ('20090104123107');

@@ -26,6 +26,10 @@
 
 <%= javascript_tag("show_or_hide_transaction_limit_value()") %>
 
+<p><%= f.label :default_currency, 'Domyślna waluta ' %><br/>
+<%= f.select :default_currency_id, @currencies_for_select.map { |cur| [cur.long_symbol, cur.id]} %></p>
+
+
 <p><%= f.label 'include_transactions_from_subcategories', 'W kategoriach pokazuj transakcje z podkategorii: ' %><br/>
 <%= f.check_box :include_transactions_from_subcategories %></p>
 

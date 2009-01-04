@@ -78,6 +78,7 @@ class UsersController < ApplicationController
   def prepare_arrays_for_view
 #    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
     @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
+    @currencies_for_select = @current_user.visible_currencies
   end
 
 

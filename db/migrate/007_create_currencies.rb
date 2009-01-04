@@ -7,7 +7,7 @@ class CreateCurrencies < ActiveRecord::Migration
       t.column :long_name, :string, :null => false
       t.column :user_id, :integer, :null => true
     end
-    self.standard_currencies.each {|c| cur = Currency.new(c); cur.save}
+    self.standard_currencies.each {|c| cur = Currency.new(c); cur.save!}
   end
 
   def self.down
