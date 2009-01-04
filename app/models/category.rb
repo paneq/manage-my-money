@@ -447,24 +447,44 @@ class Category < ActiveRecord::Base
   def info_by_user_algorithm
     return case self.user.multi_currency_balance_calculating_algorithm
     when :calculate_with_exchanges_closest_to_transaction
-      {
-        :joins => 
-        'INNER JOIN Transfers AS transfers ON (transfer_items.transfer_id = transfers.id)
-        JOIN Exchanges as ex ON
+
+       {
+        :joins =>
+          #1 oznacza domyslna walute
+          #3 oznacza aktualnego uzytkownika idk
+          #17 oznacza numer kategorii ktorej saldo tak obliczamy
+        '
+SELECT sum (CASE
+  WHEN ti.currency_id = 1 THEN ti.value
+  WHEN ex.currency_a = 1 THEN ti.value*ex.right_to_left
+  WHEN ex.currency_a != 1 THEN ti.value*ex.left_to_right
+  END) FROM Transfer_Items AS ti
+JOIN Transfers AS t ON (ti.transfer_id = t.id)
+LEFT JOIN Exchanges as ex ON
+  (
+  ti.currency_id != 1 AND ex.Id IN
+    (
+      SELECT Id FROM Exchanges as e WHERE
+        (
+        abs( julianday(t.day) - julianday(e.day) ) =
           (
-          ex.Id IN
+          SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
             (
-              SELECT Id FROM Exchanges as e WHERE
-                (
-                abs( julianday(t.day) - julianday(e.day) ) =
-                  (
-                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2
-                  )
-                )
-              ORDER BY e.day ASC LIMIT 1
+            (e2.currency_a = 1 AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = 1)
             )
           )
-        ', #tutaj trzeba zrobic zeby joinowal jak inna waluta niz domyslna i mnozyl kurs do obliczenia wartosci
+        AND
+          (
+          (e.currency_a = 1 AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = 1)
+          )
+        )
+      ORDER BY e.day ASC LIMIT 1
+    )
+  )
+WHERE t.user_id = 3 AND ti.category_id = 17;
+
+
+        ', #TODO: ?? zrobic zeby nie bylo walut dla kazdego tylko kazdy 3 swoje dostawal ? SPOSOB LICZENIA JEDEN ALE ROZNE WHERY W ZALEZNOSCI OD ROZNYCH SALD TAK JAK WCZESNIEJ DOKLADNIE
         :group => 'currency_id',
         :conditions =>['category_id = ?', self.id]
       }
