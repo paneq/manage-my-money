@@ -313,41 +313,16 @@ class Category < ActiveRecord::Base
   def saldo_new
     universal_saldo()
   end
+
   
-  def universal_saldo(hash = {})
-    info = {
-      :group => 'currency_id',
-      :conditions =>['category_id = ?', self.id]
-    }
-    info.merge!(hash)
-    
-    money = Money.new()
-    
-    TransferItem.sum(:value, info).each do |set|
-      currency, value = set
-      currency = Currency.find_by_id(currency)
-      money.add(value, currency)
-    end
-    return money
-    
-  end
-
-
   def saldo_at_end_of_day(day)
     universal_saldo(
-      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
       :conditions =>['category_id = ? AND transfers.day <= ?', self.id, day])
-  end
-
-
-  def current_saldo
-    saldo_at_end_of_day(Date.today)
   end
 
 
   def saldo_for_period_new(start_day, end_day)
     universal_saldo(
-      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
       :conditions =>['category_id = ? AND transfers.day >= ? AND transfers.day <= ?', self.id, start_day, end_day]
     )
   end
@@ -355,11 +330,14 @@ class Category < ActiveRecord::Base
 
   def saldo_after_day_new(day)
     universal_saldo(
-      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
       :conditions =>['category_id = ? AND transfers.day > ?', self.id, day]
     )
   end
 
+
+  def current_saldo
+    saldo_at_end_of_day(Date.today)
+  end
 
   # Returns array of hashes{:transfer => tr, :money => Money object, :saldo => Money object}
   def transfers_with_saldo_for_period_new(start_day, end_day)    
@@ -449,5 +427,24 @@ class Category < ActiveRecord::Base
 
 
   #======================
-  
+  private
+
+  def universal_saldo(hash = {})
+    info = {
+      :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
+      :group => 'currency_id',
+      :conditions =>['category_id = ?', self.id]
+    }
+    info.merge!(hash)
+
+    money = Money.new()
+
+    TransferItem.sum(:value, info).each do |set|
+      currency, value = set
+      currency = Currency.find_by_id(currency)
+      money.add(value, currency)
+    end
+    return money
+
+  end
 end
