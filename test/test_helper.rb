@@ -46,7 +46,7 @@ class Test::Unit::TestCase
   def save_jarek
     @jarek = User.new()
     @jarek.active = true
-    @jarek.email = 'email@example.com'
+    @jarek.email = 'jarek@example.com'
     @jarek.login = 'jarek_XYZ_ab'
     @jarek.password = @jarek.login
     @jarek.password_confirmation = @jarek.login
