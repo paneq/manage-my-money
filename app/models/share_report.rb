@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081208215053
+# Schema version: 20090104123107
 #
 # Table name: reports
 #
@@ -11,6 +11,7 @@
 #  period_end           :date          
 #  report_view_type_int :integer       not null
 #  is_predefined        :boolean       not null
+#  user_id              :integer       
 #  created_at           :datetime      
 #  updated_at           :datetime      
 #  share_type_int       :integer       default(0)

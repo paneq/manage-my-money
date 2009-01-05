@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081208215053
+# Schema version: 20090104123107
 #
 # Table name: categories
 #
@@ -316,22 +316,17 @@ class Category < ActiveRecord::Base
 
   
   def saldo_at_end_of_day(day)
-    universal_saldo(
-      :conditions =>['category_id = ? AND transfers.day <= ?', self.id, day])
+    universal_saldo('t.day <= ?', day)
   end
 
 
   def saldo_for_period_new(start_day, end_day)
-    universal_saldo(
-      :conditions =>['category_id = ? AND transfers.day >= ? AND transfers.day <= ?', self.id, start_day, end_day]
-    )
+    universal_saldo('t.day >= ? AND t.day <= ?', start_day, end_day)
   end
 
 
   def saldo_after_day_new(day)
-    universal_saldo(
-      :conditions =>['category_id = ? AND transfers.day > ?', self.id, day]
-    )
+    universal_saldo('t.day > ?', day)
   end
 
 
@@ -425,20 +420,33 @@ class Category < ActiveRecord::Base
   end
 
 
+  def test
+    self.user.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
+    universal_saldo
+  end
 
   #======================
   private
 
-  def universal_saldo(hash = {})
+  def universal_saldo(additional_condition="", *params)
     info = info_by_user_algorithm
-    info.merge!(hash)
+    unless additional_condition.blank?
+      info[:conditions].first << " AND #{additional_condition}"
+      info[:conditions] += params
+    end
 
     money = Money.new()
 
     TransferItem.sum(:value, info).each do |set|
-      currency, value = set
-      currency = Currency.find_by_id(currency)
-      money.add(value, currency)
+      if set.class == Array
+        # group by currency
+        currency, value = set
+        currency = Currency.find_by_id(currency)
+        money.add(value, currency)
+      else
+        # calculated to one value in default currency
+        money.add(set.to_f, Currency.find_by_id(self.user.default_currency))
+      end
     end
     return money
 
@@ -447,52 +455,57 @@ class Category < ActiveRecord::Base
   def info_by_user_algorithm
     return case self.user.multi_currency_balance_calculating_algorithm
     when :calculate_with_exchanges_closest_to_transaction
+      #1 oznacza domyslna walute
+      #3 oznacza aktualnego uzytkownika idk
+      #17 oznacza numer kategorii ktorej saldo tak obliczamy
+      currency = self.user.default_currency
+      {
 
-       {
-        :joins =>
-          #1 oznacza domyslna walute
-          #3 oznacza aktualnego uzytkownika idk
-          #17 oznacza numer kategorii ktorej saldo tak obliczamy
-        '
-SELECT sum (CASE
-  WHEN ti.currency_id = 1 THEN ti.value
-  WHEN ex.currency_a = 1 THEN ti.value*ex.right_to_left
-  WHEN ex.currency_a != 1 THEN ti.value*ex.left_to_right
-  END) FROM Transfer_Items AS ti
-JOIN Transfers AS t ON (ti.transfer_id = t.id)
-LEFT JOIN Exchanges as ex ON
-  (
-  ti.currency_id != 1 AND ex.Id IN
-    (
-      SELECT Id FROM Exchanges as e WHERE
-        (
-        abs( julianday(t.day) - julianday(e.day) ) =
+        :select => "
+        CASE
+        WHEN ti.currency_id = #{currency.id} THEN ti.value
+        WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
+        WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+        END
+        ",
+
+        :from => 'Transfer_Items as ti',
+
+        :joins =>"
+        JOIN Transfers AS t ON (ti.transfer_id = t.id)
+        LEFT JOIN Exchanges as ex ON
           (
-          SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+          ti.currency_id != #{currency.id} AND ex.Id IN
             (
-            (e2.currency_a = 1 AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = 1)
+              SELECT Id FROM Exchanges as e WHERE
+                (
+                abs( julianday(t.day) - julianday(e.day) ) =
+                  (
+                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+                    (
+                    (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
+                    )
+                  )
+                AND
+                  (
+                  (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+                  )
+                )
+              ORDER BY e.day ASC LIMIT 1
             )
           )
-        AND
-          (
-          (e.currency_a = 1 AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = 1)
-          )
-        )
-      ORDER BY e.day ASC LIMIT 1
-    )
-  )
-WHERE t.user_id = 3 AND ti.category_id = 17;
-
-
-        ', #TODO: ?? zrobic zeby nie bylo walut dla kazdego tylko kazdy 3 swoje dostawal ? SPOSOB LICZENIA JEDEN ALE ROZNE WHERY W ZALEZNOSCI OD ROZNYCH SALD TAK JAK WCZESNIEJ DOKLADNIE
-        :group => 'currency_id',
-        :conditions =>['category_id = ?', self.id]
+        ",
+ 
+        :conditions => ['t.user_id = ? AND ti.category_id = ?', self.user.id, self.id]
+        #TODO: ?? zrobic zeby nie bylo walut dla kazdego tylko kazdy 3 swoje dostawal ? SPOSOB LICZENIA JEDEN ALE ROZNE WHERY W ZALEZNOSCI OD ROZNYCH SALD TAK JAK WCZESNIEJ DOKLADNIE
       }
     else
       {
-        :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
-        :group => 'currency_id',
-        :conditions =>['category_id = ?', self.id]
+        :select => 'ti.value',
+        :from => 'Transfer_Items as ti',
+        :joins => 'INNER JOIN Transfers AS t ON ti.transfer_id = t.id',
+        :group => 'ti.currency_id',
+        :conditions =>['t.user_id = ? AND ti.category_id = ?', self.user.id, self.id]
       }
     end
   end

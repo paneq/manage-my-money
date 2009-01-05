@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20081208215053
+# Schema version: 20090104123107
 #
 # Table name: exchanges
 #
@@ -32,7 +32,7 @@ class Exchange < ActiveRecord::Base
   ##############################
   # @author: Robert Pankowecki
   def before_validation 
-    self.currency_a, self.currency_b, self.left_to_right, self.right_to_left = self.currency_b, self.currency_a,self.right_to_left, self.left_to_right if self.currency_a and self.currency_b and self.currency_a > self.currency_b    
+    self.left_currency, self.right_currency, self.left_to_right, self.right_to_left = self.right_currency, self.left_currency, self.right_to_left, self.left_to_right if self.currency_a and self.currency_b and self.currency_a.id > self.currency_b.id
   end
   
   ##############################
@@ -46,13 +46,13 @@ class Exchange < ActiveRecord::Base
   ##############################
   # @author: Robert Pankowecki
   def same_currencies?
-    return true if self.currency_a and self.currency_b and self.currency_a == self.currency_b
+    return true if self.left_currency and self.right_currency and self.left_currency.id == self.right_currency.id
   end  
   
   ##############################
   # @author: Robert Pankowecki
   def wrong_currencies_order?
-    return currency_a > currency_b
+    return self.left_currency.id > self.right_currency.id
   end
   
   ##############################

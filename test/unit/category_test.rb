@@ -4,10 +4,8 @@ class CategoryTest < Test::Unit::TestCase
   #fixtures :categories
 
   def setup
-    save_rupert
     save_currencies
-    @income_category = @rupert.categories[0]
-    @outcome_category = @rupert.categories[1]
+    save_rupert
   end
   
   
@@ -134,22 +132,23 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_saldo_multi_currency_balance_calculating_algorithm
-#    @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
-#    @rupert.currency = @zloty
-#    @rupert.save!
-#    value = 100
-#    first_exchange_rate = 4
-#    second_exchange_rate = first_exchange_rate / 2
-#
-#    save_simple_transfer_item(:income_category => @income_category, :outcome_category => @outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
-#    @rupert.exchanges.create(:currency_a => @zloty, :currency_b =>@euro, :left_to_right => 1.0 / first_exchange_rate, :right_to_left => first_exchange_rate, :day => 5.days.ago.to_date)
-#    save_simple_transfer_item(:income_category => @income_category, :outcome_category => @outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
-#    @rupert.exchanges.create(:currency_a => @zloty, :currency_b =>@euro, :left_to_right => 1.0 / second_exchange_rate , :right_to_left => second_exchange_rate , :day => 3.days.ago.to_date)
-#    save_simple_transfer_item(:income_category => @income_category, :outcome_category => @outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
-#    saldo = @income_category.saldo_for_period_new(6.days.ago.to_date, 2.days.ago.to_date)
-#
-#    assert_equal 1, saldo.currencies.size
-#    assert_equal value + first_exchange_rate*value + second_exchange_rate*value
+        @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
+        @rupert.save!
+        income_category = @rupert.categories[0]
+        outcome_category = @rupert.categories[1]
+        value = 100
+        first_exchange_rate = 4
+        second_exchange_rate = first_exchange_rate / 2
+
+        save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
+        @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate, :right_to_left => first_exchange_rate, :day => 5.days.ago.to_date)
+        save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+        @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / second_exchange_rate , :right_to_left => second_exchange_rate , :day => 3.days.ago.to_date)
+        save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
+        saldo = income_category.saldo_for_period_new(6.days.ago.to_date, 2.days.ago.to_date)
+
+        assert_equal 1, saldo.currencies.size
+        assert_equal value + first_exchange_rate*value + second_exchange_rate*value, saldo.value(@zloty)
   end
 
   def test_transfers_with_saldo_for_period

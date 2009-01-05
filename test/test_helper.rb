@@ -28,6 +28,8 @@ class Test::Unit::TestCase
 
   # Add more helper methods to be used by all tests here...
   def save_rupert
+    make_currencies
+    @zloty.save! if @zloty.id.nil?
     @rupert = User.new()
     @rupert.active = true
     @rupert.email = 'email@example.com'
@@ -35,6 +37,8 @@ class Test::Unit::TestCase
     @rupert.password = @rupert.login
     @rupert.password_confirmation = @rupert.login
     @rupert.transaction_amount_limit_type = :actual_month
+    @rupert.multi_currency_balance_calculating_algorithm = :show_all_currencies
+    @rupert.default_currency = @zloty
     @rupert.save!
     @rupert.activate!
   end
@@ -52,19 +56,21 @@ class Test::Unit::TestCase
   end
 
   def make_currencies
-    @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
-    @dolar = Currency.new(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykańcki')
-    @euro = Currency.new(:symbol => '€', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'Europejckie euro')
-    @currencies = [@zloty, @euro, @dolar]
+    unless @currencies
+      @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
+      @dolar = Currency.new(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykańcki')
+      @euro = Currency.new(:symbol => '€', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'Europejckie euro')
+      @currencies = [@zloty, @euro, @dolar]
+    end
   end
 
   def save_currencies
-    make_currencies unless @currencies
+    make_currencies
     @currencies.each {|currency| currency.save!}
   end
 
   def log_rupert
-#    @request.session[:user_id] = @rupert.id
+    #    @request.session[:user_id] = @rupert.id
     log_user(@rupert)
   end
 
