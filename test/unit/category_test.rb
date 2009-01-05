@@ -132,7 +132,7 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
-  def test_saldo_multi_currency_balance_calculating_algorithm
+  def test_saldo_calculate_with_exchanges_closest_to_transaction
     @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
     @rupert.save!
     income_category = @rupert.categories[0]
@@ -164,6 +164,44 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal 1, saldo.currencies.size
     assert_equal value + first_exchange_rate*value + second_exchange_rate*value, saldo.value(@zloty)
   end
+
+
+  def test_saldo_calculate_with_newest_exchanges
+    @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_newest_exchanges
+    @rupert.save!
+    income_category = @rupert.categories[0]
+    outcome_category = @rupert.categories[1]
+    value = 100
+    first_exchange_rate = 4
+    bad_exchange_rate = 100
+
+    #this exchange should not be used by algorithm becuase it is the newest one
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 20.days.ago.to_date)
+
+    #no exchange to use becuase it is in default currency already
+    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
+
+    #this exchange ratio should not be used by the algorithm becuase it is not the newest one
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 5.days.ago.to_date)
+
+    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+
+    #this exchange should not be used by algorithm becuase it is about other currencies
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 1.days.ago.to_date)
+
+    #this exchange ratio should not be used by algorithm becuase it belongs to another person
+    @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 1.days.ago.to_date)
+
+    #this one should be used be the algorithm, right currencies, the newest one and belongs to the right user
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
+    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
+
+    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
+
+    assert_equal 1, saldo.currencies.size
+    assert_equal value + 2*first_exchange_rate*value, saldo.value(@zloty)
+  end
+
 
   def test_transfers_with_saldo_for_period
     income = @rupert.categories[1]

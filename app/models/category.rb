@@ -455,12 +455,8 @@ class Category < ActiveRecord::Base
   def info_by_user_algorithm
     return case self.user.multi_currency_balance_calculating_algorithm
     when :calculate_with_exchanges_closest_to_transaction
-      #1 oznacza domyslna walute
-      #3 oznacza aktualnego uzytkownika idk
-      #17 oznacza numer kategorii ktorej saldo tak obliczamy
       currency = self.user.default_currency
       {
-
         :select => "
         CASE
         WHEN ti.currency_id = #{currency.id} THEN ti.value
@@ -483,6 +479,7 @@ class Category < ActiveRecord::Base
                   (
                   SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
                     (
+                    (e2.user_id = #{self.user.id} ) AND
                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
                     )
                   )
@@ -490,14 +487,61 @@ class Category < ActiveRecord::Base
                   (
                   (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
                   )
+                AND
+                  (
+                  e.user_id = #{self.user.id}
+                  )
                 )
               ORDER BY e.day ASC LIMIT 1
             )
           )
         ",
- 
         :conditions => ['t.user_id = ? AND ti.category_id = ?', self.user.id, self.id]
-        #TODO: ?? zrobic zeby nie bylo walut dla kazdego tylko kazdy 3 swoje dostawal ? SPOSOB LICZENIA JEDEN ALE ROZNE WHERY W ZALEZNOSCI OD ROZNYCH SALD TAK JAK WCZESNIEJ DOKLADNIE
+      }
+    when :calculate_with_newest_exchanges
+      currency = self.user.default_currency
+      {
+        :select => "
+        CASE
+        WHEN ti.currency_id = #{currency.id} THEN ti.value
+        WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
+        WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+        END
+        ",
+
+        :from => 'Transfer_Items as ti',
+
+        :joins =>"
+        JOIN Transfers AS t ON (ti.transfer_id = t.id)
+        LEFT JOIN Exchanges as ex ON
+          (
+          ti.currency_id != #{currency.id} AND ex.Id IN
+            (
+              SELECT Id FROM Exchanges as e WHERE
+                (
+                abs( julianday('now') - julianday(e.day) ) =
+                  (
+                  SELECT min( abs( julianday('now') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+                    (
+                    (e2.user_id = #{self.user.id} ) AND
+                    ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
+                    )
+                  )
+                AND
+                  (
+                  (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+                  )
+                AND
+                  (
+                  e.user_id = #{self.user.id}
+                  )
+                )
+              ORDER BY e.day ASC LIMIT 1
+            )
+          )
+        ",
+
+        :conditions => ['t.user_id = ? AND ti.category_id = ?', self.user.id, self.id]
       }
     else
       {
