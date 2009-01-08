@@ -7,8 +7,6 @@ class CategoryTest < Test::Unit::TestCase
     save_currencies
     save_rupert
     save_jarek
-
-    turn_on_sql_logging
   end
   
   
