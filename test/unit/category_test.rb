@@ -7,6 +7,8 @@ class CategoryTest < Test::Unit::TestCase
     save_currencies
     save_rupert
     save_jarek
+
+    turn_on_sql_logging
   end
   
   
@@ -285,6 +287,71 @@ class CategoryTest < Test::Unit::TestCase
     assert_raise ActiveRecord::ActiveRecordError do
       category.save
     end
+  end
+
+
+  def test_moves_child_categories_when_destroyed
+    #Asset -
+    #      |-test
+    #         |-child1
+    #         |-child2
+    parent = @rupert.categories.top_of_type(:ASSET)
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :user => @rupert,
+      :parent => parent
+    )
+    @rupert.categories << category
+    @rupert.save!
+    
+    child1 = Category.new(
+      :name => 'child1',
+      :description => 'child1',
+      :user => @rupert,
+      :parent => category
+    )
+
+    child2 = Category.new(
+      :name => 'child2',
+      :description => 'child2',
+      :user => @rupert,
+      :parent => category
+    )
+    @rupert.categories << child1 << child2
+    @rupert.save!
+
+    #Asset -
+    #      |-child1
+    #      |-child2
+
+    @rupert.categories(true).find_by_name('test').destroy
+    parent = @rupert.categories(true).top_of_type(:ASSET)
+    
+    assert_equal 7, @rupert.categories.size #5 top categories and 2 children of asset category
+    assert_equal 2, parent.children.count
+    assert_equal parent.children[0], child1
+    assert_equal parent.children[1], child2
+  end
+
+
+  def test_indestructible_top_categories
+    #TODO: napisac
+  end
+
+  def test_moves_transfer_items_when_destroyed
+    parent = @rupert.categories.top_of_type(:ASSET)
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :user => @rupert,
+      :parent => parent
+    )
+    @rupert.categories << category
+    @rupert.save!
+
+    #TODO : napisac
+    #save_simple_transfer_item
   end
 
   private

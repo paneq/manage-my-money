@@ -9,6 +9,8 @@ class CategoriesController < ApplicationController
 
 
   # remote
+  #should not be here!
+  #should be by js hidden and showed
   def quick
     where = "form-for-quick-transfer"
     render :update do |page|
@@ -59,10 +61,6 @@ class CategoriesController < ApplicationController
   # TODO move it to model!
   def remove
     unless @category.nil? or @category.parent_category.nil?
-      @category.child_categories.each do |c| 
-        c.parent_category = @category.parent_category
-        c.save
-      end
       @category.transfers.each do |t|
         t.transfer_items.each do |ti|
           if ti.category.id == @category.id 

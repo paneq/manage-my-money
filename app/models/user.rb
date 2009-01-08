@@ -87,11 +87,11 @@ class User < ActiveRecord::Base
 
 
   def remove_all_data
-    transfer_items.destroy_all
-    transfers.destroy_all
-    categories.destroy_all
-    exchanges.destroy_all
-    currencies.destroy_all
+    transfer_items.delete_all
+    transfers.delete_all
+    categories.delete_all
+    exchanges.delete_all
+    currencies.delete_all
   end
 
   validates_inclusion_of    :transaction_amount_limit_type_int, :in => User.TRANSACTION_AMOUNT_LIMIT_TYPES.values

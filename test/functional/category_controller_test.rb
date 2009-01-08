@@ -175,6 +175,9 @@ class CategoryControllerTest < Test::Unit::TestCase
 
   end
 
+  def test_show
+    
+  end
 
   private
   

@@ -21,7 +21,7 @@ class Category < ActiveRecord::Base
 
   define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
-  acts_as_nested_set :scope=> [:user_id, :category_type_int]
+  acts_as_nested_set :scope=> [:user_id, :category_type_int], :dependent => :destroy
 
   attr_accessor :opening_balance, :opening_balance_currency
 
@@ -80,6 +80,8 @@ class Category < ActiveRecord::Base
   has_many :category_report_options, :foreign_key => :category_id
   has_many :multiple_category_reports, :through => :category_report_options
 
+  before_destroy :move_transfer_items_to_parent_category
+
   def <=>(category)
     name <=> category.name
   end
@@ -101,6 +103,32 @@ class Category < ActiveRecord::Base
       self.move_to_child_of(@parent_to_save)
       @parent_to_save = nil
     end
+  end
+
+  alias_method :original_destroy, :destroy
+
+  def destroy
+    #this could not be done with before_destroy because all children are destroyed first and then before_destroy is exectued
+    # in other words before_destroy is exectued before destroying object but after destroying child objects...
+    # Look: :dependent => :destroy
+    
+    children.to_a.each do |c|
+      c.parent = self.parent
+      c.save!
+    end unless is_top?
+    throw :indestructible if is_top? #cannot be destroyed but can be deleted
+
+    # Moving children makes SQL queries that updates current object lft and rgt fields.
+    # Becuase of that we need to update it calling reload_nested_set so valid fields are stored
+    # and another sql queries are exectued with valid values -> queries that destroy children
+    reload_nested_set
+    original_destroy
+
+  end
+  
+
+  def move_transfer_items_to_parent_category
+    
   end
 
   #  # @description: Return a table of transfers that happend between given parameters.

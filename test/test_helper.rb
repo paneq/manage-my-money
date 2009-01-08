@@ -78,6 +78,11 @@ class Test::Unit::TestCase
     @request.session[:user_id] = user.id
   end
 
+  def turn_on_sql_logging
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    ActiveRecord::Base.clear_active_connections!
+  end
+
   def add_category_options(user, report)
     user.categories.each do |c|
       report.category_report_options << CategoryReportOption.new({:category => c, :inclusion_type => :both})
