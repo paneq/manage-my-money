@@ -186,6 +186,9 @@ class CategoryControllerTest < Test::Unit::TestCase
     assert_select_rjs :replace_html, 'category-tree' do
       assert_select 'div#category-line', @rupert.categories.count
     end
+    assert_select_rjs :replace_html, 'flash_notice' do
+      assert_select "a", /Usunięto/
+    end
   end
 
 

@@ -1,6 +1,6 @@
 # TODO Operate on the page object
 if @destroyed
-  page.replace_html 'flash_notice', 'Usunięto kategorię.'
+  page.replace_html 'flash_notice', '<a>Usunięto kategorię.</a>'
   page.visual_effect :highlight, 'flash_notice'
   page.replace_html 'category-tree', :partial => 'category', :collection => @current_user.categories
 else
