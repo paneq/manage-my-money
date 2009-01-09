@@ -52,34 +52,26 @@ class CategoriesController < ApplicationController
   end
 
   
-
-
   def index
   
   end
-  
-  # TODO move it to model!
-  def remove
-    unless @category.nil? or @category.parent_category.nil?
-      @category.transfers.each do |t|
-        t.transfer_items.each do |ti|
-          if ti.category.id == @category.id 
-            ti.category = Category.find(@category.parent_category.id) 
-            ti.save
-          end
-        end
-      end
+
+
+  def destroy
+    @category = self.current_user.categories.find(params[:id])
+    @destroyed = false
+    catch(:indestructible) do
       @category.destroy
-      
-      render :update do |page|
-        page.replace_html 'category-tree', :partial => 'category', :collection => @user.top_categories 
-      end
-    else
-      render :update do |page|
-        page.replace_html 'flash_notice', 'You cannot remove this category.' 
-        page.visual_effect :highlight, 'flash_notice'
-      end
+      @destroyed = true
     end
+    respond_to do |format|
+      format.html do
+        flash[:notice] = @destroyed ? "Usunięto kategorię" : "Nie można usunąć kategorii"
+        redirect_to categories_path
+      end
+      format.js # destroy.js.rjs
+    end
+
   end
 
 
@@ -88,7 +80,6 @@ class CategoriesController < ApplicationController
     @category = Category.new()
     @categories = self.current_user.categories
     @currencies = self.current_user.visible_currencies
-    
   end
 
 
@@ -109,17 +100,13 @@ class CategoriesController < ApplicationController
   end
 
 
-
-
   def edit
     @category = self.current_user.categories.find(params[:id])
     @parent = @category.parent
     @top = self.current_user.categories.top_of_type(@category.category_type)
   end
 
-
-
-
+  
   def update
     #begin
     @category = self.current_user.categories.find(params[:id])
@@ -130,8 +117,8 @@ class CategoriesController < ApplicationController
     flash[:notice] = 'Category was successfully updated.'
     redirect_to categories_url
     #rescue Exception
-     # thr
-      #render :action => 'edit'
+    # thr
+    #render :action => 'edit'
     #end
   end
 

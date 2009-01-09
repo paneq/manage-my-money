@@ -171,22 +171,54 @@ class CategoryControllerTest < Test::Unit::TestCase
 
   #TODO: testy przy podawaniu zlych danych, np kiedy proba przeniesienia kategorii do takiej gdzie przeniesc nie mozna.
 
-  def test_destroy
+  def test_destroy_non_top_category
+    create_rupert_expenses_account_structure
+    delete :destroy, :id => @food
+    assert_redirected_to :action => :index, :controller => :categories
+    assert_match "Usunięto", flash[:notice]
+  end
+
+
+  def test_remote_destroy_non_top_category
+    create_rupert_expenses_account_structure
+    xhr :delete, :destroy, :id => @food
+    assert_response :success
+    assert_select_rjs :replace_html, 'category-tree' do
+      assert_select 'div#category-line', @rupert.categories.count
+    end
+  end
+
+
+  def test_destroy_top_category
+    delete :destroy, :id => @rupert.categories.top_of_type(:EXPENSE)
+    assert_redirected_to :action => :index, :controller => :categories
+    assert_match("Nie można", flash[:notice])
+  end
+
+
+  def test_remote_destroy_top_category
+    xhr :delete, :destroy, :id => @rupert.categories.top_of_type(:EXPENSE)
+    assert_response :success
+    assert_select_rjs :replace_html, 'flash_notice' do
+      assert_select "a", /Nie można/
+    end
 
   end
+
 
   def test_show
     
   end
+
 
   private
   
   def create_rupert_expenses_account_structure
     # EXPENSE -            [SELECTED]
     #         |- food      [EDITED]
-    #         |-- healthy
+    #            |- healthy
     #         |- house
-    #         |-- rent
+    #            |- rent
     #         |- clothes
 
     @expense_category = @rupert.categories.top_of_type(:EXPENSE)

@@ -21,7 +21,7 @@ class CategoryTest < Test::Unit::TestCase
     income_category = @rupert.categories[0]
     outcome_category = @rupert.categories[1]
     
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
     
     assert_equal(100, income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
     assert_equal(-100, outcome_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
@@ -35,7 +35,7 @@ class CategoryTest < Test::Unit::TestCase
     income_category = @rupert.categories[1]
     outcome_category = @rupert.categories[2]
     
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.day.from_now, :currency => @zloty, :value => 200)   
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 1.day.from_now, :currency => @zloty, :value => 200)
     
     assert_equal(-100 + 200, income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
     assert_equal(-200, outcome_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
@@ -49,8 +49,8 @@ class CategoryTest < Test::Unit::TestCase
     outcome_income_category = @rupert.categories[1]
     outcome_category = @rupert.categories[2]
     
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
-    save_simple_transfer_item(:income_category => outcome_income_category, :outcome_category => outcome_category, :day => 1.day.from_now, :currency => @euro, :value => 200) 
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
+    save_simple_transfer_item(:income => outcome_income_category, :outcome => outcome_category, :day => 1.day.from_now, :currency => @euro, :value => 200)
     
     assert_equal(-100, outcome_income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
     assert_equal(200, outcome_income_category.saldo_new.value(@euro), "Saldo should change of the same value as transfer item for given category")
@@ -69,11 +69,11 @@ class CategoryTest < Test::Unit::TestCase
     5.downto(1) do |number|
       value = number*10
       total +=value
-      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+      save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
       assert_equal total, income_category.saldo_at_end_of_day(number.days.ago.to_date).value(@zloty)
       
       #day later
-      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => (number-1).days.ago.to_date, :currency => @euro, :value => value)
+      save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => (number-1).days.ago.to_date, :currency => @euro, :value => value)
       assert_equal total, income_category.saldo_at_end_of_day((number-1).days.ago.to_date).value(@euro)
     end
     
@@ -93,7 +93,7 @@ class CategoryTest < Test::Unit::TestCase
     value = 100;
 
     4.downto(0) do |number|
-      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+      save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
     end
 
     4.downto(0) do |number|
@@ -118,7 +118,7 @@ class CategoryTest < Test::Unit::TestCase
     value = 100;
 
     4.downto(0) do |number|
-      save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+      save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
     end
 
     5.downto(1) do |number|
@@ -146,10 +146,10 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate, :right_to_left => first_exchange_rate, :day => 20.days.ago.to_date)
 
     #no exchange to use becuase it is in default currency already
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
     
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate, :right_to_left => first_exchange_rate, :day => 5.days.ago.to_date)
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
 
     #this exchange ratio should not be used by algorithm becuase it belongs to another person
     @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 5.days.ago.to_date)
@@ -157,7 +157,7 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 5.days.ago.to_date)
     
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / second_exchange_rate , :right_to_left => second_exchange_rate , :day => 3.days.ago.to_date)
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
 
     saldo = income_category.saldo_for_period_new(6.days.ago.to_date, 2.days.ago.to_date)
 
@@ -179,12 +179,12 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 20.days.ago.to_date)
 
     #no exchange to use becuase it is in default currency already
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
 
     #this exchange ratio should not be used by the algorithm becuase it is not the newest one
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 5.days.ago.to_date)
 
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
 
     #this exchange should not be used by algorithm becuase it is about other currencies
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 1.days.ago.to_date)
@@ -194,7 +194,7 @@ class CategoryTest < Test::Unit::TestCase
 
     #this one should be used be the algorithm, right currencies, the newest one and belongs to the right user
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
-    save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
+    save_simple_transfer_item(:income => income_category, :outcome => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
     
     saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
 
@@ -211,8 +211,8 @@ class CategoryTest < Test::Unit::TestCase
     zloty_bonus = 000
     euro_bonus = 00
 
-    save_simple_transfer_item(:income_category => income, :outcome_category => outcome, :day => 10.day.ago.to_date, :currency => @zloty, :value => zloty_bonus)
-    save_simple_transfer_item(:income_category => income, :outcome_category => outcome, :day => 10.day.ago.to_date, :currency => @euro, :value => euro_bonus)
+    save_simple_transfer_item(:income => income, :outcome => outcome, :day => 10.day.ago.to_date, :currency => @zloty, :value => zloty_bonus)
+    save_simple_transfer_item(:income => income, :outcome => outcome, :day => 10.day.ago.to_date, :currency => @euro, :value => euro_bonus)
 
     5.downto(1) do |number|
       t = Transfer.new(:user => @rupert)
@@ -351,7 +351,10 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.save!
 
     #TODO : napisac
-    #save_simple_transfer_item
+    save_simple_transfer_item(:income => parent, :outcome => category, :day => Time.now.to_date, :currency => @zloty, :value => 100)
+    category.destroy
+    assert_equal 2, parent.transfer_items.count
+    assert_equal 0, parent.saldo_new.value(@zloty)
   end
 
   private
@@ -365,13 +368,13 @@ class CategoryTest < Test::Unit::TestCase
     transfer.description = hash[:description]
     
     transfer.transfer_items << TransferItem.new(
-      :category => hash[:income_category], 
+      :category => hash[:income],
       :currency => hash[:currency],  
       :description => hash[:description], 
       :value => hash[:value])
     
     transfer.transfer_items << TransferItem.new(
-      :category => hash[:outcome_category], 
+      :category => hash[:outcome],
       :currency => hash[:currency],
       :description => hash[:description], 
       :value => -1*hash[:value])

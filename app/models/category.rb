@@ -119,6 +119,8 @@ class Category < ActiveRecord::Base
       c.save!
     end 
 
+    TransferItem.update_all("category_id = #{self.parent.id}", "category_id = #{self.id}")
+
     # Moving children makes SQL queries that updates current object lft and rgt fields.
     # Becuase of that we need to update it calling reload_nested_set so valid fields are stored
     # and another sql queries are exectued with valid values -> queries that destroy children
