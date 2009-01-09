@@ -111,12 +111,13 @@ class Category < ActiveRecord::Base
     #this could not be done with before_destroy because all children are destroyed first and then before_destroy is exectued
     # in other words before_destroy is exectued before destroying object but after destroying child objects...
     # Look: :dependent => :destroy
-    
+
+    throw :indestructible if is_top? #cannot be destroyed but can be deleted
+
     children.to_a.each do |c|
       c.parent = self.parent
       c.save!
-    end unless is_top?
-    throw :indestructible if is_top? #cannot be destroyed but can be deleted
+    end 
 
     # Moving children makes SQL queries that updates current object lft and rgt fields.
     # Becuase of that we need to update it calling reload_nested_set so valid fields are stored

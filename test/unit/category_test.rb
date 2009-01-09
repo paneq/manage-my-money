@@ -334,7 +334,9 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_indestructible_top_categories
-    #TODO: napisac
+    @rupert.categories.each do |top_category|
+      assert_throws(:indestructible) {top_category.destroy}
+    end
   end
 
   def test_moves_transfer_items_when_destroyed
