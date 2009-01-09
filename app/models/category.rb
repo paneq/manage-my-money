@@ -547,9 +547,9 @@ class Category < ActiveRecord::Base
             (
               SELECT Id FROM Exchanges as e WHERE
                 (
-                abs( julianday('now') - julianday(e.day) ) =
+                abs( julianday('now', 'start of day') - julianday(e.day) ) =
                   (
-                  SELECT min( abs( julianday('now') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+                  SELECT min( abs( julianday('now', 'start of day') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
