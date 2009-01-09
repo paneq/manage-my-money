@@ -195,7 +195,7 @@ class CategoryTest < Test::Unit::TestCase
     #this one should be used be the algorithm, right currencies, the newest one and belongs to the right user
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
     save_simple_transfer_item(:income_category => income_category, :outcome_category => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
-    sleep(1)
+    
     saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
 
     assert_equal 1, saldo.currencies.size
