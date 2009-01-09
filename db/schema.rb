@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(:version => 20090104123107) do
     t.string   "activation_code",                                  :limit => 40
     t.datetime "activated_at"
     t.boolean  "active",                                                          :default => false, :null => false
-    t.integer  "transaction_amount_limit_type_int",                               :default => 0,     :null => false
+    t.integer  "transaction_amount_limit_type_int",                               :default => 2,     :null => false
     t.integer  "transaction_amount_limit_value"
     t.boolean  "include_transactions_from_subcategories",                         :default => false, :null => false
     t.integer  "multi_currency_balance_calculating_algorithm_int",                :default => 0,     :null => false

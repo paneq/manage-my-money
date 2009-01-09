@@ -23,6 +23,8 @@ class Exchange < ActiveRecord::Base
   
   belongs_to  :user
   
+  alias_method :original_save, :save
+
   ##############################
   # @author: Robert Pankowecki
   def currencies
@@ -31,8 +33,9 @@ class Exchange < ActiveRecord::Base
   
   ##############################
   # @author: Robert Pankowecki
-  def before_validation 
-    self.left_currency, self.right_currency, self.left_to_right, self.right_to_left = self.right_currency, self.left_currency, self.right_to_left, self.left_to_right if self.currency_a and self.currency_b and self.currency_a.id > self.currency_b.id
+  def save
+    self.left_currency, self.right_currency, self.left_to_right, self.right_to_left = self.right_currency, self.left_currency, self.right_to_left, self.left_to_right if self.left_currency and self.right_currency and self.left_currency.id > self.right_currency.id
+    original_save
   end
   
   ##############################
