@@ -80,8 +80,6 @@ class Category < ActiveRecord::Base
   has_many :category_report_options, :foreign_key => :category_id
   has_many :multiple_category_reports, :through => :category_report_options
 
-  before_destroy :move_transfer_items_to_parent_category
-
   def <=>(category)
     name <=> category.name
   end
@@ -127,11 +125,6 @@ class Category < ActiveRecord::Base
     reload_nested_set
     original_destroy
 
-  end
-  
-
-  def move_transfer_items_to_parent_category
-    
   end
 
   #  # @description: Return a table of transfers that happend between given parameters.
