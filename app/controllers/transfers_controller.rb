@@ -11,19 +11,19 @@ class TransfersController < ApplicationController
   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
   def quick_transfer
     data = params['data'].to_hash
-    transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
-    transfer.user = self.current_user
+    @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
+    @transfer.user = self.current_user
     
     ti1 = TransferItem.new(data.pass('description','category_id', 'currency_id', 'value'))
     ti2 = TransferItem.new(data.pass('description', 'currency_id'))
     ti2.value = -1* ti1.value
     ti2.category = self.current_user.categories.find(data['from_category_id'])
-    transfer.transfer_items << ti2 << ti1
+    @transfer.transfer_items << ti2 << ti1
     
-    if transfer.save
+    if @transfer.save
       @category = self.current_user.categories.find(params['current_category'])
-      @start_day = transfer.day.beginning_of_month
-      @end_day = transfer.day.end_of_month
+      @start_day = @transfer.day.beginning_of_month
+      @end_day = @transfer.day.end_of_month
     
       @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
       @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
@@ -39,7 +39,7 @@ class TransfersController < ApplicationController
       # TODO: change it so there will be a notice that something went wrong
       where = 'quick-transfers'
       render :update do |page|
-        page.insert_html :bottom , where , :partial => '' , :object => transfer
+        page.insert_html :bottom , where , :partial => '' , :object => @transfer
       end
     end
   end
