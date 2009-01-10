@@ -10,24 +10,51 @@
 #
 
 class Transfer < ActiveRecord::Base
-  has_many :transfer_items do
+  validates_associated :transfer_items
+  
+  has_many :transfer_items, :dependent => :delete_all do
     def in_category(category)
       find :all, :conditions => ['category_id = ?', category.id]
     end
   end
+
   belongs_to :user
 
   has_many :currencies, :through => :transfer_items
-
-  def destroy_with_transfer_items
-    transfer_items.each { |ti| ti.destroy }
-    destroy
+  
+  after_update :save_transfer_items
+  
+  def new_transfer_items_attributes=(transfer_items_attributes)
+    transfer_items_attributes.each do |attributes|
+      transfer_items.build(attributes[1])
+    end
   end
+
+
+  def existing_transfer_items_attributes=(transfer_items_attributes)
+    transfer_items.reject(&:new_record?).each do |transfer_item|
+      attributes = transfer_items_attributes[transfer_item.id.to_s]
+      if attributes
+        transfer_item.attributes = attributes
+      else
+        transfer_items.delete(transfer_item)
+      end
+    end
+  end
+
+
+  def save_transfer_items
+    transfer_items.each do |transfer_item|
+      transfer_item.save(false)
+    end
+  end
+
 
   def <=>(other_transfer)
     return day <=> other_transfer.day
   end
 
+  
   def validate
     errors.add("Total value of income and outcome are different!") if error_while_validating_io_value
   end

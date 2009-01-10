@@ -1,13 +1,24 @@
-<% if @choosen_category_id.nil? %>
-  <% choosen = transfer_item[:choosen] %>
-<% else %>
-  <% choosen = @choosen_category_id %>
+<% hack ||= false %>
+<% if transfer_item.new_record? %>
+  <% prefix = "transfer[new_transfer_items_attributes][#{transfer_item.transfer_item_type.to_s}PUT_ID_HERE]" if hack %>
+  <% prefix = "transfer[new_transfer_items_attributes][#{transfer_item.transfer_item_type.to_s}#{transfer_item.object_id.abs}]" unless hack %>
+<%  else %>
+  <% prefix = "transfer[existing_transfer_items_attributes][]" %>
 <% end %>
-<% id = 'transfer_item_' + transfer_item[:type] + '_' + transfer_item[:number].to_s -%>
-    <tr id="<%= id -%>">
-      <td> <%= select_tag transfer_item[:type].to_s + "[category-" + transfer_item[:number].to_s + "]" , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
-      <td> <%= text_field transfer_item[:type], 'description-' + transfer_item[:number].to_s, { :size=>40 , :value=>"#{transfer_item[:description] }"}%> </td>
-      <td> <%= text_field transfer_item[:type], 'value-' + transfer_item[:number].to_s, { :size=>5 , :value=> "#{transfer_item[:value]}"}%> </td>
-      <td> <%= select_tag transfer_item[:type].to_s + "[currency-" + transfer_item[:number].to_s + "]", options_from_collection_for_select(@current_user.visible_currencies, 'id', 'long_symbol') %></td>
-      <td> <%= link_to_remote "Remove", {:url => {:action => 'remove_transfer_item', :controller => 'transfers', :id_to_remove => id  }}, {:title => 'Remove'} %> </td>
-   </tr>
+
+<% fields_for prefix, transfer_item do |task_form| -%>
+
+  <tr class="transfer-item">
+    <%= task_form.hidden_field :transfer_item_type %>
+    <td> <%= task_form.select :category_id, @current_user.categories.map { |c| [c.name, c.id] } %> </td>
+    <td> <%= task_form.text_field :description, :size=>40 %> </td>
+    <td> <%= task_form.text_field :value, :size=>5 %> </td>
+    <td> <%= task_form.select :currency_id, @current_user.visible_currencies.map{|c| [c.long_symbol, c.id] } %></td>
+    <td> <%= link_to_function "Usuń" , "$(this).up('.transfer-item').remove()" %>  </td>
+  </tr>
+
+
+<% end -%>
+
+
+

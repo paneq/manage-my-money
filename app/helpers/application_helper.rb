@@ -2,6 +2,15 @@
 module ApplicationHelper
   include Forms::ApplicationHelper
 
+  def add_transfer_item(transfer_item_type)
+    jsfunction_code = link_to_function 'Nowy element' do |page|
+      page.insert_html :bottom, "full-#{transfer_item_type.to_s.downcase}-items", :partial => '/transfers/transfer_item', :locals => {:hack => true}, :object => TransferItem.new(:transfer_item_type => transfer_item_type, :currency_id => @current_user.default_currency.id)
+    end
+    jsfunction_code.gsub! "onclick=\"try", "onclick=\"var my_uid = uid();\n try "; #TODO: wyjąc metodę UID  z head'a layoutu
+    jsfunction_code.gsub! "PUT_ID_HERE", "&quot; + my_uid +&quot;"
+    return jsfunction_code
+  end
+
   def get_periods
     [ :SELECTED,
     :THIS_DAY,

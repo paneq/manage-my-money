@@ -20,6 +20,10 @@ class CategoriesController < ApplicationController
 
 
   def show
+    @transfer = Transfer.new
+    @transfer.transfer_items.build(:transfer_item_type => :income)
+    @transfer.transfer_items.build(:transfer_item_type => :outcome)
+    
     session[:category_id] = @category.id
     session[:how_many] = {:outcome => 0, :income => 0}
     @start_day = 1.month.ago.to_date

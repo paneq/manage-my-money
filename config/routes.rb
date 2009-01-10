@@ -69,7 +69,6 @@ ActionController::Routing::Routes.draw do |map|
       :search_show => :get,
       :quick_transfer_show => :get,
       :quick_transfer => :post,
-      :add_transfer_item => :get,
       :hide_details => :get
     }
   }

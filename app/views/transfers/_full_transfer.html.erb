@@ -1,4 +1,4 @@
-<% form_remote_tag :url => { :action => 'make' , :controller => 'transfers'} do %>
+<% form_remote_for @transfer do |f| %>
 
 
 <%= hidden_field_tag :embedded, embedded %>
@@ -9,49 +9,36 @@
 </div>
 <div>
   <h3>Description</h3>
-  <%= text_area :transfer, :description, :cols => 60, :rows => 4 %>
+  <%= f.text_area :description, :cols => 60, :rows => 4 %>
 </div>
 
 <hr class="hr-line-100prc" />
   
 <div>
   <h3>Date</h3>
-  <%= date_select :transfer, :day  %></p>
+  <%= f.date_select :day  %></p>
 </div>
 
 <hr class="hr-line-100prc" />
-
-<div>
+<% types = [[:outcome, 'Outcome'],[:income, 'Income']] %>
+<% types.each do |type| %>
   <div>
-    <h3>Outcome</h3>
-	  <table id="outcome_items">
+    <h3><%= type[1] -%></h3>
+	  <table id="full-<%= type[0].to_s -%>-items">
         <tr>
-          <td> <span>Category</span> </td>
-          <td> <span>Description</span> </td>
-          <td> <span>Value</span> </td>
-          <td> <span>Currency</span> </td>		  
+          <td> <span>Kategoria</span> </td>
+          <td> <span>Opis</span> </td>
+          <td> <span>Wartość</span> </td>
+          <td> <span>Waluta</span> </td>
         </tr>
-	    <%= render :partial => 'transfers/transfer_item', :object => { :type => 'outcome', :number => '0' , :choosen => @choosen_category_id } %>
+	    <%= render :partial => 'transfers/transfer_item', :collection => @transfer.transfer_items.select {|ti| ti.transfer_item_type == type[0]} %>
 	  </table>
-    <%= link_to_remote "New outcome", :url => {:action => 'add_transfer_item', :controller => 'transfers', :type => 'outcome' } %>
+      <%= add_transfer_item(type[0]) %>
   </div>
 
-  <hr class="hr-line-100prc" />
-  
-  <div>
-    <h3>Income</h3>
-      <table id="income_items">
-        <tr>
-          <td> <span>Category</span> </td>
-          <td> <span>Description</span> </td>
-          <td> <span>Value</span> </td>
-        </tr>
-        <%= render :partial => 'transfers/transfer_item', :object => { :type => 'income', :number => '0' } %>
-      </table>
-      <%= link_to_remote "New income", :url => {:action => 'add_transfer_item', :controller => 'transfers', :type => 'income' } %>
-  </div>
-</div>
+  <%= "<hr class='hr-line-100prc' />" if types.first == type %>
 
+  <% end %>
 <hr class="hr-line-100prc" />
 
 <%= submit_tag 'save' %>
