@@ -1,4 +1,4 @@
-# == Schema Information
+# == Schema algorithmrmation
 # Schema version: 20090104123107
 #
 # Table name: categories
@@ -99,7 +99,7 @@ class Category < ActiveRecord::Base
   def after_save
     if @parent_to_save
       self.move_to_child_of(@parent_to_save)
-      @parent_to_save = nil
+      @parent_to_save = :default
     end
   end
 
@@ -129,12 +129,12 @@ class Category < ActiveRecord::Base
 
   #  # @description: Return a table of transfers that happend between given parameters.
   #  #               Including the start_day and the end_day !
-  #  def transfers_between( start_day = nil , end_day = nil)
+  #  def transfers_between( start_day = :default , end_day = :default)
   #    return transfers.between_or_equal_dates(start_day, end_day).uniq
   #  end
   #
   #
-  #  def transfers_from_subcategories_between( start_day = nil , end_day = nil)
+  #  def transfers_from_subcategories_between( start_day = :default , end_day = :default)
   #    t = []
   #    tree_with_parent().each { |c|  t+= c.transfers_between(start_day, end_day) }
   #    t.uniq!
@@ -144,14 +144,14 @@ class Category < ActiveRecord::Base
   #
   #  # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #  #                 The collection is sorted by day of transfer and returns also a period_saldo
-  #  def transfers_with_saldo_between( start_day = nil , end_day = nil )
+  #  def transfers_with_saldo_between( start_day = :default , end_day = :default )
   #    transfers_with_chooseable_saldo_between( false, start_day, end_day )
   #  end
   #
   #
   #  # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #  #                 The collection is sorted by day of transfer and returns also a period_saldo
-  #  def transfers_with_subcategories_saldo_between( start_day = nil , end_day = nil )
+  #  def transfers_with_subcategories_saldo_between( start_day = :default , end_day = :default )
   #    transfers_with_chooseable_saldo_between( true, start_day, end_day )
   #  end
   #
@@ -159,10 +159,10 @@ class Category < ActiveRecord::Base
   #
   #  # @descriptioin : Return a table o hashes that contains :saldo and :transfer related to that saldo
   #  #                 The collection is sorted by day of transfer and returns also a period_saldo
-  #  def transfers_with_chooseable_saldo_between( subcategories_saldo = false , start_day = nil , end_day = nil )
-  #    if start_day.nil? or end_day.nil?
-  #      start_day = nil
-  #      end_day = nil
+  #  def transfers_with_chooseable_saldo_between( subcategories_saldo = false , start_day = :default , end_day = :default )
+  #    if start_day.:default? or end_day.:default?
+  #      start_day = :default
+  #      end_day = :default
   #      start_saldo = {}
   #      saldo = {}
   #    else
@@ -237,14 +237,14 @@ class Category < ActiveRecord::Base
   #  end
   #
   #
-  #  def value_with_chooseable_subc(start_day = nil , end_day = nil, subc = true)
+  #  def value_with_chooseable_subc(start_day = :default , end_day = :default, subc = true)
   #    return value_with_subcategories( start_day, end_day) if subc
   #    return value(start_day, end_day)
   #  end
   #
   #
-  #  def value ( start_day = nil , end_day = nil )
-  #    if ( !start_day.nil? and !end_day.nil? )
+  #  def value ( start_day = :default , end_day = :default )
+  #    if ( !start_day.:default? and !end_day.:default? )
   #      #TODO itemy z jakiegos przedzialu czasu powinny byc u gory zdefiniowane sql a nie wybierane jak nizej selektem
   #      items = transfer_items.select{ |ti| ti.transfer.day.between?(start_day, end_day)}
   #    else
@@ -263,7 +263,7 @@ class Category < ActiveRecord::Base
   
   ############################
   # @author: Robert Pankowecki
-  #  def value_with_subcategories( start_day = nil , end_day = nil )
+  #  def value_with_subcategories( start_day = :default , end_day = :default )
   #    h = {}
   #    tree_with_parent.collect { |cat| cat.value( start_day, end_day ) }.each do |hash|
   #      hash.each_pair do |currency, value|
@@ -279,7 +279,7 @@ class Category < ActiveRecord::Base
   # @author: Robert Pankowecki, 
   # @author: Jaroslaw Plebanski
   # @description: return hash with :only_value, :value, :sub_categories, :category
-  #  def info( start_day = nil , end_day = nil)
+  #  def algorithm( start_day = :default , end_day = :default)
   #    v = transfers_between(start_day , end_day).collect{|t| t.value_by_category(self)}.sum
   #
   #    h = {}
@@ -287,9 +287,9 @@ class Category < ActiveRecord::Base
   #    h[:category] = self
   #    tb = []
   #    child_categories.each do |c|
-  #      information = c.info( start_day , end_day )
-  #      v += information[:value]
-  #      tb << information
+  #      algorithmrmation = c.algorithm( start_day , end_day )
+  #      v += algorithmrmation[:value]
+  #      tb << algorithmrmation
   #    end
   #    h[:sub_categories] = tb
   #    h[:value] = v
@@ -298,7 +298,7 @@ class Category < ActiveRecord::Base
   
   #rupert should be ok
   #@description: return hash with :tree_value, :value, :sub_categories, :category
-  #  def info2( start_day = nil , end_day = nil)
+  #  def algorithm2( start_day = :default , end_day = :default)
   #    transfers_list = transfers.between_or_equal_dates(start_day, end_day)
   #    result = {:category => self}
   #    result[:value] = {}
@@ -309,9 +309,9 @@ class Category < ActiveRecord::Base
   #    result[:tree_value] = result[:value].clone
   #
   #    child_categories.each do |c|
-  #      information = c.info(start_day, end_day)
-  #      result[:tree_value] += information[:tree_value]
-  #      result[:subcategories] << information
+  #      algorithmrmation = c.algorithm(start_day, end_day)
+  #      result[:tree_value] += algorithmrmation[:tree_value]
+  #      result[:subcategories] << algorithmrmation
   #    end
   #    return result
   #  end
@@ -319,7 +319,7 @@ class Category < ActiveRecord::Base
   
   
   def before_validation
-    if self.description.nil? or  self.description.empty? 
+    if self.description.nil? or self.description.empty?
       self.description = " " #self.type.to_s + " " + self.name  
     end  
   end
@@ -334,29 +334,30 @@ class Category < ActiveRecord::Base
   #
   
  
-  def saldo_new
-    universal_saldo()
+  def saldo_new(algorithm=:default)
+    universal_saldo(algorithm)
   end
 
   
-  def saldo_at_end_of_day(day)
-    universal_saldo('t.day <= ?', day)
+  def saldo_at_end_of_day(day, algorithm=:default)
+    universal_saldo(algorithm, 't.day <= ?', day)
   end
 
 
-  def saldo_for_period_new(start_day, end_day)
-    universal_saldo('t.day >= ? AND t.day <= ?', start_day, end_day)
+  def saldo_for_period_new(start_day, end_day, algorithm=:default)
+    universal_saldo(algorithm, 't.day >= ? AND t.day <= ?', start_day, end_day)
   end
 
 
-  def saldo_after_day_new(day)
-    universal_saldo('t.day > ?', day)
+  def saldo_after_day_new(day, algorithm=:default)
+    universal_saldo(algorithm, 't.day > ?', day)
   end
 
 
-  def current_saldo
-    saldo_at_end_of_day(Date.today)
+  def current_saldo(algorithm=:default)
+    saldo_at_end_of_day(Date.today, algorithm)
   end
+
 
   # Returns array of hashes{:transfer => tr, :money => Money object, :saldo => Money object}
   def transfers_with_saldo_for_period_new(start_day, end_day)    
@@ -369,7 +370,7 @@ class Category < ActiveRecord::Base
       :order =>       'transfers.day, transfers.id, transfer_items.currency_id')
     
     list = []
-    last_transfer = nil
+    last_transfer = :default
     for t in transfers do
       if last_transfer == t
         list.last[:money].add(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
@@ -379,7 +380,7 @@ class Category < ActiveRecord::Base
       last_transfer = t
     end
     
-    saldo = saldo_at_end_of_day(start_day - 1.day)
+    saldo = saldo_at_end_of_day(start_day - 1.day, :show_all_currencies)
     for t in list do
       saldo.add(t[:money])
       t[:saldo] = saldo.clone
@@ -387,6 +388,7 @@ class Category < ActiveRecord::Base
 
     return list;
   end
+
 
   #TODO
   # Oblicza udzial wartosci podkategorii w kategorii
@@ -404,6 +406,7 @@ class Category < ActiveRecord::Base
   def calculate_share_values(max_categories_count, depth, period_start, period_end, share_type)
     [[9,'Nazwa1'],[7,'Nazwa2'],[2,'Nazwa3'],[1,'Nazwa4'],[5,'Pozostale']]
   end
+  
 
   #TODO
   # Podaje saldo/salda kategorii w podanym czasie
@@ -444,24 +447,21 @@ class Category < ActiveRecord::Base
   end
 
 
-  def test
-    self.user.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
-    universal_saldo
-  end
-
   #======================
   private
 
-  def universal_saldo(additional_condition="", *params)
-    info = info_by_user_algorithm
+
+
+  def universal_saldo(algorithm = :default, additional_condition="", *params)
+    algorithm = algorithm(algorithm)
     unless additional_condition.blank?
-      info[:conditions].first << " AND #{additional_condition}"
-      info[:conditions] += params
+      algorithm[:conditions].first << " AND #{additional_condition}"
+      algorithm[:conditions] += params
     end
 
     money = Money.new()
 
-    TransferItem.sum(:value, info).each do |set|
+    TransferItem.sum(:value, algorithm).each do |set|
       if set.class == Array
         # group by currency
         currency, value = set
@@ -476,8 +476,11 @@ class Category < ActiveRecord::Base
 
   end
 
-  def info_by_user_algorithm
-    return case self.user.multi_currency_balance_calculating_algorithm
+
+  def algorithm(algorithm)
+    return case algorithm
+    when :default
+      algorithm(self.user.multi_currency_balance_calculating_algorithm)
     when :calculate_with_exchanges_closest_to_transaction
       currency = self.user.default_currency
       {

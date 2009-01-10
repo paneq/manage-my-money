@@ -1,15 +1,11 @@
 <div>
-  <h1>Transfery w tej kategorii</h1>
+  <h1><%= @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', :action => 'edit', :id => @category %></a></h1>
   
-  <div style="position : relative; padding-top : 15px;">
-    <b>Name:</b> <%= @category.name %> <span class="to-right"><%= link_to 'Edit category ', :action => 'edit', :id => @category %></span>
-  </div> 
-  
-  <% unless @category.description.empty? %>
-    <p><b>Description:</b> <%= @category.description %>
+  <% unless @category.description.blank? %>
+    <p><b>Opis:</b> <%= @category.description %>
     </p>
   <% end %>
-  
+  <br />
   <div id="transfer-table-div">
 	  <% unless @transfers_to_show.empty? %>
 	    <%= render :partial => 'transfer_table' %>
@@ -20,11 +16,7 @@
   <br />
   
   <div id="kind-of-transfer">
-    <%= render :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :quick, :category_id => @category.id}  %>
-  </div>
-  
-  <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
-    <%= render :partial => 'transfers/quick_transfer' , :object => { :category_id => @category.id } %>
+    <%= render :partial => 'transfers/kind_of_transfer', :locals => { :category_id => @category.id}  %>
   </div>
 
 </div>

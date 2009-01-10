@@ -24,6 +24,7 @@ class CategoriesController < ApplicationController
     session[:how_many] = {:outcome => 0, :income => 0}
     @start_day = 1.month.ago.to_date
     @end_day = Date.today
+    @choosen_category_id = session[:category_id]
     if params['show_with_subcategories']
       #@transfers_to_show, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
       #@value = @category.value_with_subcategories

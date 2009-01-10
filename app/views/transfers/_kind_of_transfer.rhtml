@@ -1,15 +1,42 @@
+<% all = [['quick', 'Szybki'],['full', 'Pelny'],['search','Wyszukaj']] %>
+<% show = all.first %>
 <b>
-<% case active_tab when :quick %>
-	<span class="kind-of-transfer-active-tab"> Quick transfer </span> 
-	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Full transfer" , :url => { :action => 'full_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Search" , :url => { :action => 'search_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-  <% when :full %>
-	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Quick transfer" , :url => { :action => 'quick_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-	<span class="kind-of-transfer-active-tab"> Full transfer </span>
-	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Search" , :url => { :action => 'search_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-  <% when :search %>
-    <span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Quick transfer" , :url => { :action => 'quick_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-	<span class="kind-of-transfer-inactive-tab"> <%= link_to_remote "Full transfer" , :url => { :action => 'full_transfer_show' , :controller => 'transfers', :category_id => category_id } %> </span>
-	<span class="kind-of-transfer-active-tab"> Search </span>
-  <% end %>
+  <span id="kind-of-transfer">
+    <% all.each do |active| %>
+      <span id="kind-of-transfer-<%= active[0] -%>" <%= " style='display:none'" unless active == show %> >
+
+        <% all.each do |element| %>
+
+          <%if active == element%>
+            <span class="kind-of-transfer-active-tab">
+              <%= element[1] -%>
+            </span>
+          <% else %>
+            <span class="kind-of-transfer-inactive-tab">
+              <a href="#" onclick="Element.show('form-for-transfer-<%= element[0] %>'); Element.hide('form-for-transfer-<%= active[0] %>'); Element.show('kind-of-transfer-<%= element[0] %>'); Element.hide('kind-of-transfer-<%= active[0] %>');">
+                <%= element[1] %>
+              </a>
+            </span>
+          <% end %>
+
+        <% end %>
+      </span>
+    <% end %>
+  </span>
 </b>
+
+<div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
+
+  <div id="form-for-transfer-quick">
+    <%= render :partial => 'transfers/quick_transfer', :object => { :category_id => @choosen_category_id } %>
+  </div>
+
+  <div id="form-for-transfer-full" style="display:none">
+    <%= render :partial => 'transfers/full_transfer', :locals => { :category_id => @choosen_category_id , :embedded => true}  %>
+  </div>
+
+  <div id="form-for-transfer-search" style="display:none">
+    <%= render :partial => 'transfers/search_transfers', :locals => { :category_id => @choosen_category_id } %>
+  </div>
+
+</div>

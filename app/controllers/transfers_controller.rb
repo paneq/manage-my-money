@@ -5,41 +5,6 @@ class TransfersController < ApplicationController
   before_filter :check_perm_for_transfer , :only => [:show_details , :show , :edit_with_items, :destroy]
 
 
-  public
-  
-  #remote
-  def full_transfer_show
-  
-    @choosen_category_id  = session[:category_id]
-    render :update do |page|
-      page.replace_html 'form-for-transfer', :partial => 'transfers/full_transfer', :locals => { :category_id => params[:category_id] , :embedded => true}
-      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :full , :category_id => params[:category_id]}
-    end
-  end
-  
-  #remote
-  def quick_transfer_show
-    render :update do |page|
-      page.replace_html 'form-for-transfer', :partial => 'transfers/quick_transfer', :object => { :category_id => params[:category_id] }
-      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :quick, :category_id => params[:category_id]}
-    end
-  
-  end
-  
-  #remote
-  def search_show
-    @start_day = 1.month.ago
-    @end_day = Date.today
-    render :update do |page|
-      page.replace_html 'form-for-transfer', :partial => 'transfers/search_transfers', :locals => { :category_id => params[:category_id] }
-      page.replace_html 'kind-of-transfer', :partial => 'transfers/kind_of_transfer', :locals => {:active_tab => :search, :category_id => params[:category_id]}
-    end
-  
-  end
-
-
-  #################
-  # @author: Robert Pankowecki
   # remote
   # TODO: check if ti1. ti2.category.user == @user ?
   def quick_transfer
@@ -74,7 +39,7 @@ class TransfersController < ApplicationController
       where = 'transfer-table-div'
       render :update do |page|
         page.replace_html where, :partial => 'categories/transfer_table'
-        page.replace_html 'form-for-transfer', :partial=>'transfers/quick_transfer', :object => { :category_id => @category.id}
+        page.replace_html 'form-for-transfer-quick', :partial=>'transfers/quick_transfer', :object => { :category_id => @category.id}
       end
       
     else

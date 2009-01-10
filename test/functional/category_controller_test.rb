@@ -17,7 +17,6 @@ class CategoryControllerTest < Test::Unit::TestCase
   end
 
 
-  #TODO poprawic by sprawdzal kiedy nie tylko domyslne kategorie ale tez dodatkowe. Ze wtedy ta dodatkowa jest w odpowiednim miejscu, nie ostatnia a wewnatrz ktorejs
   def test_index
     get :index
     assert_response :success
