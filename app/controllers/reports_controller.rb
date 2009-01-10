@@ -12,14 +12,14 @@ class ReportsController < ApplicationController
    @report = get_report_from_params
    respond_to do |format|
     format.html do
-      if @report.flow_report?
+       @virtual = params[:virtual]
+       if @report.flow_report?
         render :template => 'reports/show_flow_report'
-      else
+       else
         url = {:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json', :virtual => params[:virtual]}
         @graph = open_flash_chart_object(600,300, url_for(url))
-        @virtual = params[:virtual]
         render :template => 'reports/show_graph_report'
-      end
+       end
     end
     format.json do
       render :text => get_graph_data
