@@ -1,7 +1,7 @@
 <% choosen = '' %>
 <% id = quick_transfer[:category_id] %>
 
-<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :current_category => id} do %>
+<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers'} do %>
   <h3>Rozchód</h3>
   <table id="income_items">
     <tr>
@@ -18,6 +18,7 @@
 	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
       <td> <%= date_select  :data, :day  %> </td>
       <%= hidden_field_tag  'data[from_category_id]', id %>
+      <%= hidden_field_tag :current_category, id %>
 	</tr>
   </table>
   
@@ -28,7 +29,7 @@
 <hr class="hr-line-100prc" />
 <br />
 
-<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :current_category => id} do %>
+<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers'} do %>
   <h3>Przychód</h3>
   <table id="outcome_items">
     <tr>
@@ -45,6 +46,7 @@
 	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
       <td> <%= date_select  :data, :day  %> </td>
       <%= hidden_field_tag  'data[category_id]', id %>
+      <%= hidden_field_tag :current_category, id %>
 	</tr>
   </table>
 

@@ -21,20 +21,9 @@ class TransfersController < ApplicationController
     @transfer.transfer_items << ti2 << ti1
     
     if @transfer.save
-      @category = self.current_user.categories.find(params['current_category'])
-      @start_day = @transfer.day.beginning_of_month
-      @end_day = @transfer.day.end_of_month
-    
-      @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-      @value = @category.saldo_at_end_of_day(@end_day.to_date)
-
-      where = 'transfer-table-div'
-      render :update do |page|
-        page.replace_html where, :partial => 'categories/transfer_table'
+      render_transfer_table do |page|
         page.replace_html 'form-for-transfer-quick', :partial=>'transfers/quick_transfer', :object => { :category_id => @category.id}
       end
-      
     else
       # TODO: change it so there will be a notice that something went wrong
       where = 'quick-transfers'
@@ -138,7 +127,7 @@ class TransfersController < ApplicationController
       if @transfer.save
       
         if params[:embedded]=='true' #full transfer w kategorii
-          @category = Category.find(session[:category_id])
+          @category = Category.find(params[:current_category])
           @start_day = 1.month.ago.to_date
           @end_day = Date.today
   
@@ -150,7 +139,7 @@ class TransfersController < ApplicationController
           where = 'transfer-table-div'
           render :update do |page|
             page.replace_html where, :partial => 'categories/transfer_table'
-            page.replace_html 'form-for-transfer', :partial=>'transfers/full_transfer', :locals => {:embedded=>true}
+            page.replace_html 'form-for-transfer', :partial=>'transfers/full_transfer', :locals => {:category_id => params[:current_category] ,:embedded=>true}
           end
       
         elsif session[:back_to_category] # z kategorii wywolalismy edit
