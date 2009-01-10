@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
 
   #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work
-  #If exists bloock is yield with page so you can do more things with it
+  #If exists bloock is yield with page so you can update the page with another way you like
   def render_transfer_table(&block)
     @category ||= self.current_user.categories.find(params['current_category'])
     @start_day ||= @transfer.day.beginning_of_month
