@@ -127,7 +127,7 @@ class TransfersController < ApplicationController
       if @transfer.save
         if params[:embedded]=='true'#full transfer w kategorii
           render_transfer_table do |page|
-            page.replace_html 'form-for-transfer', :partial=>'transfers/full_transfer', :locals => {:category_id => params[:current_category] ,:embedded=>true}
+            page.replace_html 'form-for-transfer-full', :partial=>'transfers/full_transfer', :locals => {:category_id => params[:current_category] ,:embedded=>true}
           end
       
         elsif session[:back_to_category] # z kategorii wywolalismy edit
