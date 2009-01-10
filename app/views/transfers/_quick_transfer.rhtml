@@ -1,25 +1,52 @@
-<% data = {} %>
 <% choosen = '' %>
 <% id = quick_transfer[:category_id] %>
 
-<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :from_category_id => id } do %>
-  <h3>Income</h3>
-  <table id="outcome_items">
+<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :current_category => id} do %>
+  <h3>Rozchód</h3>
+  <table id="income_items">
     <tr>
-      <td> <span>Category</span> </td>
-      <td> <span>Description</span> </td>
-      <td> <span>Value</span> </td>
-	  <td> <span>Currency</span> </td>
+      <td> <span>Do kategorii</span> </td>
+      <td> <span>Opis</span> </td>
+      <td> <span>Wartość</span> </td>
+	  <td> <span>Waluta</span> </td>
+      <td> <span>Data </span> </td>
     </tr>
 	<tr>
-      <td> <%= select_tag 'data[category]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
-      <td> <%= text_field 'data', 'description', { :size=>35 } %> </td>
-      <td> <%= text_field 'data', 'value', { :size=>5 } %> </td>
-	  <td> <%= select 'data', 'currency', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] } %></td>
+      <td> <%= select_tag 'data[category_id]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
+      <td> <%= text_field_tag 'data[description]','', { :size=>35 } %> </td>
+      <td> <%= text_field_tag 'data[value]','', { :size=>5 } %> </td>
+	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
+      <td> <%= date_select  :data, :day  %> </td>
+      <%= hidden_field_tag  'data[from_category_id]', id %>
 	</tr>
   </table>
   
-  <hr class="hr-line-100prc" />
-  
-  <span><%= submit_tag 'Save' %></span>
+  <span><%= submit_tag 'Zapisz' %></span>
+<% end %>
+
+<br />
+<hr class="hr-line-100prc" />
+<br />
+
+<% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers' , :current_category => id} do %>
+  <h3>Przychód</h3>
+  <table id="outcome_items">
+    <tr>
+      <td> <span>Z kategorii</span> </td>
+      <td> <span>Opis</span> </td>
+      <td> <span>Wartość</span> </td>
+	  <td> <span>Waluta</span> </td>
+      <td> <span>Data </span> </td>
+    </tr>
+	<tr>
+      <td> <%= select_tag 'data[from_category_id]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
+      <td> <%= text_field_tag 'data[description]','', { :size=>35 } %> </td>
+      <td> <%= text_field_tag 'data[value]','', { :size=>5 } %> </td>
+	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
+      <td> <%= date_select  :data, :day  %> </td>
+      <%= hidden_field_tag  'data[category_id]', id %>
+	</tr>
+  </table>
+
+  <span><%= submit_tag 'Zapisz' %></span>
 <% end %>

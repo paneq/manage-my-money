@@ -1,36 +1,29 @@
 class TransfersController < ApplicationController
 
+  require 'hash'
+  
   layout 'main'
   before_filter :login_required
   before_filter :check_perm_for_transfer , :only => [:show_details , :show , :edit_with_items, :destroy]
 
 
   # remote
-  # TODO: check if ti1. ti2.category.user == @user ?
+  # TODO: sprawdzenie czy kategorie i waluty naleza do usera
   def quick_transfer
-    category = Category.find(params['data']['category'])
-    currency = Currency.find(params['data']['currency'])
-    transfer = Transfer.new
-    transfer.day = Date.today
+    data = params['data'].to_hash
+    transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
     transfer.user = self.current_user
-    transfer.description = (params['data']['description'])
     
-    ti1 = TransferItem.new
-    ti1.description = (params['data']['description'])
-    ti1.value = (params['data']['value']).to_i
-    ti1.category = category
-    ti1.currency = currency
-    
-    ti2 = TransferItem.new
-    ti2.description = (params['data']['description'])
-    ti2.value = -1* (params['data']['value']).to_i
-    @category = Category.find(params[:from_category_id])
-    ti2.category = @category
-    ti2.currency = currency
+    ti1 = TransferItem.new(data.pass('description','category_id', 'currency_id', 'value'))
+    ti2 = TransferItem.new(data.pass('description', 'currency_id'))
+    ti2.value = -1* ti1.value
+    ti2.category = self.current_user.categories.find(data['from_category_id'])
     transfer.transfer_items << ti2 << ti1
+    
     if transfer.save
-      @start_day = 1.month.ago.to_date
-      @end_day = Date.today
+      @category = self.current_user.categories.find(params['current_category'])
+      @start_day = transfer.day.beginning_of_month
+      @end_day = transfer.day.end_of_month
     
       @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
       @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
@@ -105,7 +98,7 @@ class TransfersController < ApplicationController
       m = params[:transfer]['day(2i)'].to_i
       y = params[:transfer]['day(1i)'].to_i
       @transfer.day = Date.new(y , m , d)
-      @transfer.user = User.find(session[:user_id])
+      @transfer.user = self.current_user
       @transfer.description = params[:transfer][:description]
       @transfer_items_from = []
       @transfer_items_to = []
@@ -144,7 +137,7 @@ class TransfersController < ApplicationController
       t_description = @transfer.description
       if @transfer.save
       
-        if params[:embedded]=='true'
+        if params[:embedded]=='true' #full transfer w kategorii
           @category = Category.find(session[:category_id])
           @start_day = 1.month.ago.to_date
           @end_day = Date.today
@@ -160,11 +153,11 @@ class TransfersController < ApplicationController
             page.replace_html 'form-for-transfer', :partial=>'transfers/full_transfer', :locals => {:embedded=>true}
           end
       
-        elsif session[:back_to_category]
+        elsif session[:back_to_category] # z kategorii wywolalismy edit
           redirect_to :action => :show, :controller => :categories, :id => session[:back_to_category]
         
         else 
-      
+          #po prostu transfer new
           @transfer = nil # dzieki temu przy odrysowywaniu nie nadpiusuje nam desciption poprzednim
           render :update do |page|
             page.replace_html 'form-for-transfer', :partial => 'full_transfer'
