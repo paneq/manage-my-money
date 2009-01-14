@@ -357,6 +357,84 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal 0, parent.saldo_new.value(@zloty)
   end
 
+
+  #przykłady na jednej walucie i prostych transferach
+  def test_calculate_flow_values
+    
+
+    prepare_sample_catagory_tree_for_jarek
+    category1 = @jarek.categories.top_of_type(:INCOME)
+    category2 = @jarek.categories.find_by_name "child1"
+
+    save_simple_transfer_item(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
+
+    #prosty przykład - jeden przepływ jedna wartosć
+    categories = [category1.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 1, flow_values[:in].size
+    assert_equal 0, flow_values[:out].size
+    assert_equal 100, flow_values[:in].first[:values].value(@zloty)
+
+    #przypadek w którym podajemy wszystkie kategorie ktorych dotycza transakcje
+    categories = [category1.id, category2.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 0, flow_values[:in].size
+    assert_equal 0, flow_values[:out].size
+
+
+    save_simple_transfer_item(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 44)
+
+    categories = [category1.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 1, flow_values[:in].size
+    assert_equal 0, flow_values[:out].size
+    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
+
+
+    categories = [category1.id, category2.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 0, flow_values[:in].size
+    assert_equal 0, flow_values[:out].size
+    
+
+    save_simple_transfer_item(:income => category2, :outcome => category1, :day => 1.day.ago, :currency => @zloty, :value => 33)
+
+    categories = [category1.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 1, flow_values[:in].size
+    assert_equal 1, flow_values[:out].size
+    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+
+
+    category3 = @jarek.categories.find_by_name "child2"
+    save_simple_transfer_item(:income => category1, :outcome => category3, :day => 1.day.ago, :currency => @zloty, :value => 66)
+    categories = [category1.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 2, flow_values[:in].size
+    assert_equal 1, flow_values[:out].size
+    assert_equal 144, flow_values[:in].find{|el| el[:category].name == "child1"}[:values].value(@zloty)
+    assert_equal 66, flow_values[:in].find{|el| el[:category].name == "child2"}[:values].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+
+
+
+    categories = [category1.id, category2.id, category3.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 0, flow_values[:in].size
+    assert_equal 0, flow_values[:out].size
+    
+
+    categories = [category1.id, category3.id]
+    flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
+    assert_equal 1, flow_values[:in].size
+    assert_equal 1, flow_values[:out].size
+    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+
+  end
+
+
   private
 
   def save_simple_transfer_item(hash_with_options)
@@ -390,6 +468,35 @@ class CategoryTest < Test::Unit::TestCase
     hash_with_options[:currency] ||= @zloty
     hash_with_options[:value] ||= 100
   end
-  
+
+  def prepare_sample_catagory_tree_for_jarek
+    parent1 = @jarek.categories.top_of_type(:ASSET)
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :user => @jarek,
+      :parent => parent1
+    )
+
+    @jarek.categories << category
+    @jarek.save!
+
+    child1 = Category.new(
+      :name => 'child1',
+      :description => 'child1',
+      :user => @jarek,
+      :parent => category
+    )
+
+    child2 = Category.new(
+      :name => 'child2',
+      :description => 'child2',
+      :user => @jarek,
+      :parent => category
+    )
+
+    @jarek.categories << child1 << child2
+    @jarek.save!
+  end
   
 end

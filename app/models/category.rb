@@ -447,6 +447,61 @@ class Category < ActiveRecord::Base
   end
 
 
+
+
+  #
+  #
+  # Wyjście:
+  # hash z dwoma kluczami :in oraz :out
+  # z których każdy zawiera tabele...
+  # przykład
+  # {
+  # :in => [
+  #         {
+  #          :category => Category,
+  #          :values => Money
+  #         },
+  #         {
+  #          :category => category,
+  #          :values => Money
+  #         }
+  # ],
+  # :out => [] }
+
+  def self.calculate_flow_values(categories, period_start, period_end)
+    flow_categories = Category.find(
+      :all,
+      :select =>      'categories.*,
+                       ti2.value >=0 as income,
+                       ti2.currency_id,
+                       sum(abs(ti2.value)) as sum_value',
+      :joins =>       'INNER JOIN transfers t on categories.id = ti2.category_id
+                       INNER JOIN transfer_items ti on ti.transfer_id = t.id
+                       INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id',
+      :group =>       'ti2.category_id,
+                       ti2.currency_id,
+                       ti2.value >= 0',
+      :conditions =>  ['ti.category_id in (?)
+                        and ti2.category_id not in (?)
+                        AND t.day >= ?
+                        AND t.day <= ?',
+                        categories, categories, period_start, period_end],
+      :order =>       'categories.lft')
+
+    #TODO: cumulate Money walues for one category
+
+    flow_categories.collect! do |cat|
+      {
+        :category => cat,
+        :values => Money.new( Currency.find(cat.read_attribute('currency_id') ), cat.read_attribute('sum_value').to_f )
+      }
+    end
+
+    cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == '0'}
+
+    {:out => cash_out, :in => cash_in}
+  end
+
   #======================
   private
 
