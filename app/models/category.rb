@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20090104123107
+#
+# Table name: categories
+#
+#  id                :integer       not null, primary key
+#  name              :string(255)   not null
+#  description       :string(255)   
+#  category_type_int :integer       
+#  user_id           :integer       
+#  parent_id         :integer       
+#  lft               :integer       
+#  rgt               :integer       
+#
+
 # == Schema algorithmrmation
 # Schema version: 20090104123107
 #

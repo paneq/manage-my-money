@@ -89,6 +89,26 @@ class CategoryControllerTest < Test::Unit::TestCase
   end
 
 
+  def test_create_with_float_opening_balance
+    parent_category = @rupert.categories.top_of_type(:INCOME)
+    post :create, :category => {
+      :name => 'test name',
+      :description => 'test description',
+      :parent => parent_category.id,
+      :opening_balance => '1234.56',
+      :opening_balance_currency => @zloty.id
+    }
+    assert_redirected_to :action => :index
+
+    created_category = @rupert.categories.find_by_name('test name')
+    assert_not_nil created_category
+    assert_equal parent_category, created_category.parent
+    assert created_category.saldo_at_end_of_day(Date.today).currencies.include?(@zloty)
+    assert_equal 1234.56 , created_category.saldo_at_end_of_day(Date.today).value(@zloty)
+  end
+
+
+
   def test_edit_top_category
     get :edit, :id => @rupert.categories.top_of_type(:INCOME)
     assert_response :success

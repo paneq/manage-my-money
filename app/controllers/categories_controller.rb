@@ -93,7 +93,7 @@ class CategoriesController < ApplicationController
     @category = Category.new(params[:category])
     @category.user = self.current_user
     if @category.save
-      if params[:category][:opening_balance].to_i != 0
+      if params[:category][:opening_balance].to_f != 0
         make_opening_transfer
       end
       flash[:notice] ||= 'Utworzono nową kategorię'
@@ -140,8 +140,8 @@ class CategoriesController < ApplicationController
     #category = Category.find(params['data']['category'])
     currency = self.current_user.visible_currencies.find(params[:category][:opening_balance_currency].to_i)
     value = params[:category][:opening_balance]
-    value.slice!(" ") #removes all spaces from input data so string like "10 000" will be converted to "10000" and treted well by "to_i" method in next line
-    value = value.to_i
+    value.slice!(" ") #removes all spaces from input data so string like "10 000" will be converted to "10000" and treted well by "to_f" method in next line
+    value = value.to_f
     transfer = Transfer.new
     transfer.day = Date.today
     transfer.user = self.current_user
