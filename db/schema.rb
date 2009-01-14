@@ -38,11 +38,11 @@ ActiveRecord::Schema.define(:version => 20090104123107) do
   end
 
   create_table "exchanges", :force => true do |t|
-    t.integer "currency_a",    :null => false
-    t.integer "currency_b",    :null => false
-    t.float   "left_to_right", :null => false
-    t.float   "right_to_left", :null => false
-    t.date    "day",           :null => false
+    t.decimal "currency_a",    :precision => 8, :scale => 4, :null => false
+    t.decimal "currency_b",    :precision => 8, :scale => 4, :null => false
+    t.float   "left_to_right",                               :null => false
+    t.float   "right_to_left",                               :null => false
+    t.date    "day",                                         :null => false
     t.integer "user_id"
   end
 

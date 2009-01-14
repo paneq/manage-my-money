@@ -4,8 +4,8 @@
 # Table name: exchanges
 #
 #  id            :integer       not null, primary key
-#  currency_a    :integer       not null
-#  currency_b    :integer       not null
+#  currency_a    :decimal(8, 4) not null
+#  currency_b    :decimal(8, 4) not null
 #  left_to_right :float         not null
 #  right_to_left :float         not null
 #  day           :date          not null
