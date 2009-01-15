@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   session :session_key => '_money_session_id'
 
 
+
   def period_changed_start
     @start_day = calculate_start_day(params['time'])
     render :layout => false, :template => 'application/period_changed_start'
