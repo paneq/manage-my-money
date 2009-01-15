@@ -19,10 +19,9 @@ role :web, "s.rootnode.pl"
 role :db,  "s.rootnode.pl", :primary => true
 
 
-#desc ''
+desc 'Change all files in latest release to be unreadible and unexecutable by people from same group and others'
+task :chmod_files do
+  run "chmod -R go= #{latest_release}"
+end
 
-#task :chmod_files do
-#  run 'chmod -R go= '
-#end
-
-#after "deploy:symlink", :chmod_files
+after "deploy:symlink", :chmod_files
