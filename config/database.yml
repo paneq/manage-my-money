@@ -15,6 +15,8 @@ test:
   host: localhost
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  host: localhost
+  adapter: mysql
+  database: rupert_3m
+  host: mysql.rootnode.net
+  username: rupert_3m
+  password: Ok5f0R9lkMCR6
