@@ -562,19 +562,19 @@ class Category < ActiveRecord::Base
         END
         ",
 
-        :from => 'Transfer_Items as ti',
+        :from => 'transfer_items as ti',
 
         :joins =>"
-        JOIN Transfers AS t ON (ti.transfer_id = t.id)
-        LEFT JOIN Exchanges as ex ON
+        JOIN transfers AS t ON (ti.transfer_id = t.id)
+        LEFT JOIN exchanges as ex ON
           (
           ti.currency_id != #{currency.id} AND ex.Id IN
             (
-              SELECT Id FROM Exchanges as e WHERE
+              SELECT Id FROM exchanges as e WHERE
                 (
                 abs( julianday(t.day) - julianday(e.day) ) =
                   (
-                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
@@ -606,11 +606,11 @@ class Category < ActiveRecord::Base
         END
         ",
 
-        :from => 'Transfer_Items as ti',
+        :from => 'transfer_items as ti',
 
         :joins =>"
-        JOIN Transfers AS t ON (ti.transfer_id = t.id)
-        LEFT JOIN Exchanges as ex ON
+        JOIN transfers AS t ON (ti.transfer_id = t.id)
+        LEFT JOIN exchanges as ex ON
           (
           ti.currency_id != #{currency.id} AND ex.Id IN
             (
@@ -643,8 +643,8 @@ class Category < ActiveRecord::Base
     else
       {
         :select => 'ti.value',
-        :from => 'Transfer_Items as ti',
-        :joins => 'INNER JOIN Transfers AS t ON ti.transfer_id = t.id',
+        :from => 'transfer_items as ti',
+        :joins => 'INNER JOIN transfers AS t ON ti.transfer_id = t.id',
         :group => 'ti.currency_id',
         :conditions =>['t.user_id = ? AND ti.category_id = ?', self.user.id, self.id]
       }
