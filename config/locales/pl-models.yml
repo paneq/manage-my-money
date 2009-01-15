@@ -1,0 +1,8 @@
+pl:
+  activerecord:
+    models:
+      user: Użytkownik
+      report: Raport
+    attributes:
+      report:
+        name: Nazwa

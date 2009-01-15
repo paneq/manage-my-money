@@ -14,13 +14,13 @@ pre {
 
 .fieldWithErrors {
   padding: 2px;
-  background-color: red;
+  background-color: #668FA3;
   display: table;
 }
 
 #errorExplanation {
   width: 400px;
-  border: 2px solid red;
+  border: 2px solid black;
   padding: 7px;
   padding-bottom: 12px;
   margin-bottom: 20px;
@@ -33,7 +33,7 @@ pre {
   padding: 5px 5px 5px 15px;
   font-size: 12px;
   margin: -7px;
-  background-color: #c00;
+  background-color: #668FA3;
   color: #fff;
 }
 
