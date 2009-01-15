@@ -501,7 +501,7 @@ class Category < ActiveRecord::Base
                         AND t.day >= ?
                         AND t.day <= ?',
                         categories, categories, period_start, period_end],
-      :order =>       'categories.lft')
+      :order =>       'categories.category_type_int, categories.lft')
 
     #TODO: cumulate Money walues for one category
 
