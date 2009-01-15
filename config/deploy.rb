@@ -12,7 +12,17 @@ set :scm, :subversion
 
 set :user, "rupert"
 set :use_sudo, false
+set :group_writable, false
 
 role :app, "s.rootnode.pl"
 role :web, "s.rootnode.pl"
 role :db,  "s.rootnode.pl", :primary => true
+
+
+#desc ''
+
+#task :chmod_files do
+#  run 'chmod -R go= '
+#end
+
+#after "deploy:symlink", :chmod_files
