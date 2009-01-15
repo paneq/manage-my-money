@@ -172,6 +172,13 @@ class MoneyTest < Test::Unit::TestCase
       assert_equal 0, money.value(@zloty)
   end
 
+  def test_value_and_currency_for_one_value
+    money = Money.new(@zloty, 10)
+    assert_equal 10, money.value
+    assert_equal @zloty, money.currency
+  end
+
+
 
   def test_range
     #testowanie zaokraglen tylko do 2 miejsc po przecinku i takie tam

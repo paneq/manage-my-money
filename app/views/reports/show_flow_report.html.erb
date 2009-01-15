@@ -1,3 +1,54 @@
-Turaj widzisz wykres/tekst wygenerowanego raportu przepływu<br/>
 
+<h1>Przepływ gotówki - <%=  @report.period_start %> do <%=  @report.period_end %> </h1>
+<br/>
+<h2>Wybrane kategorie</h2>
+<p>
+<% @report.category_report_options.each do |cat| %>
+
+<%= cat.category.name_with_path %> <br/>
+
+<% end %>
+
+<br/>
+Pieniądze do zaznaczonych kategorii przyszły z:<br/>
+
+<% @cash_flow[:in].each do |cat| %>
+
+<%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+
+<% end %>
+<br/>
+<b>W sumie: </b>
+<%  @in_sum.each do |currency, value| %>
+		<%= "#{value} #{currency.symbol}, " -%>
+<% end %>
+<br/>
+
+
+<br/>
+Pieniądze z zaznaczonych kategorii wypłynęły do:<br/>
+
+<% @cash_flow[:out].each do |cat| %>
+
+<%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+
+<% end %>
+
+<br/><br/>
+<b>W sumie: </b>
+<%  @out_sum.each do |currency, value| %>
+		<%= "#{value} #{currency.symbol}, " -%>
+<% end %>
+
+<br/>
+<br/><br/>
+
+<b>Różnica	</b><%  @delta.each do |currency, value| %>
+		<%= "#{value} #{currency.symbol}, " -%>
+<% end %>
+<br/>
+
+
+<br/><br/>
+</p>
 <%= render :partial => 'report_links' %>

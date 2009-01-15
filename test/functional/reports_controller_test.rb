@@ -158,8 +158,16 @@ class ReportsControllerTest < ActionController::TestCase
   
 
   test "should update" do
-
+    
   end
+
+
+  test "should see flow report" do
+    get :show, :id => create_flow_report.id
+    assert_response :success
+  end
+
+
 
 
 

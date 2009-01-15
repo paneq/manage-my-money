@@ -27,12 +27,27 @@ class Money
     return @hash.keys
   end
 
+  #TODO
+  #odejmowanie Money
+  def -(a)
+    c = Money.new
+  end
 
-  def value(currency)
+
+  def value(currency=nil)
+    if !currency && @hash.size == 1
+      return @hash.first[1]
+    end
     return @hash[currency] if currencies.include? currency
     return 0
   end
 
+  def currency
+    if @hash.size == 1
+      return @hash.first[0]
+    end
+    nil
+  end
 
   def values_in_currencies
     return @hash.clone
@@ -52,6 +67,7 @@ class Money
       raise ArgumentError, "Invalid number of arguments"
     end
     remove_zero_currencies
+    self
   end
 
 

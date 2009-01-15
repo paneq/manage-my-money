@@ -369,14 +369,14 @@ class CategoryTest < Test::Unit::TestCase
     save_simple_transfer_item(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
 
     #prosty przykład - jeden przepływ jedna wartosć
-    categories = [category1.id]
+    categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
     assert_equal 100, flow_values[:in].first[:values].value(@zloty)
 
     #przypadek w którym podajemy wszystkie kategorie ktorych dotycza transakcje
-    categories = [category1.id, category2.id]
+    categories = [category1, category2]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 0, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
@@ -384,14 +384,14 @@ class CategoryTest < Test::Unit::TestCase
 
     save_simple_transfer_item(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 44)
 
-    categories = [category1.id]
+    categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
     assert_equal 144, flow_values[:in].first[:values].value(@zloty)
 
 
-    categories = [category1.id, category2.id]
+    categories = [category1, category2]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 0, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
@@ -399,7 +399,7 @@ class CategoryTest < Test::Unit::TestCase
 
     save_simple_transfer_item(:income => category2, :outcome => category1, :day => 1.day.ago, :currency => @zloty, :value => 33)
 
-    categories = [category1.id]
+    categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 1, flow_values[:out].size
@@ -409,7 +409,7 @@ class CategoryTest < Test::Unit::TestCase
 
     category3 = @jarek.categories.find_by_name "child2"
     save_simple_transfer_item(:income => category1, :outcome => category3, :day => 1.day.ago, :currency => @zloty, :value => 66)
-    categories = [category1.id]
+    categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 2, flow_values[:in].size
     assert_equal 1, flow_values[:out].size
@@ -419,13 +419,13 @@ class CategoryTest < Test::Unit::TestCase
 
 
 
-    categories = [category1.id, category2.id, category3.id]
+    categories = [category1, category2, category3]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 0, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
     
 
-    categories = [category1.id, category3.id]
+    categories = [category1, category3]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 1, flow_values[:out].size

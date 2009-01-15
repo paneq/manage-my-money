@@ -14,6 +14,10 @@ class ReportsController < ApplicationController
     format.html do
        @virtual = params[:virtual]
        if @report.flow_report?
+         @cash_flow = Category.calculate_flow_values(@report.categories, @report.period_start, @report.period_end)
+         @in_sum = Report.sum_flow_values(@cash_flow[:in])
+         @out_sum = Report.sum_flow_values(@cash_flow[:out])
+         @delta = @in_sum - @out_sum
         render :template => 'reports/show_flow_report'
        else
         url = {:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json', :virtual => params[:virtual]}

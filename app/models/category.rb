@@ -100,6 +100,14 @@ class Category < ActiveRecord::Base
   end
 
 
+  #TODO
+  #Dla celow widoku przydała by się taka funkcja 
+  #która zwracała by nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
+  #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
+  def name_with_path
+    ':'+name
+  end
+
   def short_name
     name[0,15]
   end
@@ -484,6 +492,7 @@ class Category < ActiveRecord::Base
   # :out => [] }
 
   def self.calculate_flow_values(categories, period_start, period_end)
+    categories.collect! { |cat| cat.id }
     flow_categories = Category.find(
       :all,
       :select =>      'categories.*,
