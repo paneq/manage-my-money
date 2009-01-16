@@ -9,10 +9,21 @@ development:
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
+
 test:
+<% machine_name = `uname -n` %>
+<% unless machine_name == "stallman.rootnode.net" %>
   adapter: sqlite3
   database: db/test.sqlite3
   host: localhost
+<% else %>
+  adapter: mysql
+  database: rupert_3mt
+  host: mysql.rootnode.net
+  username: rupert_3mt
+  password: FUmvAywRkVe2a
+<% end %>
+
 
 production:
   adapter: mysql
