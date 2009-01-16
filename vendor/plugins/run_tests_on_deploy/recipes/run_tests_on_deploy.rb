@@ -93,8 +93,8 @@ namespace :deploy do
        " cap deploy:without_tests or cap -S run_tests=0 deploy" 
   task :run_tests do
    unless fetch(:run_tests, "1") == "0"     
-     run "cd #{release_path} && rake db:test:prepare" 
-     run "cd #{release_path} && nice -n 5 rake db:migrate && nice -n 5 rake test" #Changed by rupert so tests are not run against production database but by test database in another environment than developers have. Also priorite of task changed to 5 so it goes a bit faster.
+     run "cd #{release_path} && nice -n 5 rake db:migrate && nice -n 5 rake db:test:prepare" #Changed
+     run "cd #{release_path} && nice -n 5 rake test" #Changed by rupert so tests are not run against production database but by test database in another environment than developers have. Also priorite of task changed to 5 so it goes a bit faster.
    end
   end
 
