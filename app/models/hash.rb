@@ -41,4 +41,9 @@ class Hash
     tmp
   end
 
+  def first
+    return [ self.keys[0], self[self.keys[0]] ] if self.size > 0
+    return nil
+  end unless method_defined?(:first) #compatibility mode for ruby 1.8.7
+
 end
