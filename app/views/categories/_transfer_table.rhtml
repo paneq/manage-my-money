@@ -1,22 +1,24 @@
+<% current_category ||= nil #We do not know if this variable is given through :locals %>
 <table id="transfers-table" class="width" style="border-collapse: collapse; border: solid 1px #AAD3DB">
   <tr style="background-color: #EAF2F5;">
     <th class="transfer-table-border" width="100">
-      Date
+      Data
     </th>
     <th class="transfer-table-border" width="%">
-      Description
+      Opis
     </th>
     <th class="transfer-table-border" width="130">
-      Destination
+      Kategoria <br />
+      docelowa
     </th>
     <th class="transfer-table-border" width="60">
-      Value
+      Wartość
     </th>
     <th class="transfer-table-border" width="60">
       Saldo
     </th>
     <th class="transfer-table-border" width="50">
-      Details
+      Szczegóły
     </th>
   </tr>
   <tr class="<%= cycle('line-even', 'line-odd') %>" >
@@ -26,8 +28,9 @@
     <td colspan="5">
     </td>
   </tr>
-  <% @transfers_to_show.each do |e| %>
-    <%= render :partial => 'categories/transfer' , :object=> e %>
+  <% @transfers_to_show.each do |transfer_data| %>
+    <% transfer_data.merge!(:current_category => current_category) unless current_category.nil? %>
+    <%= render :partial => 'categories/transfer' , :locals=> transfer_data %>
   <% end %>
   <tr class="<%= cycle('line-even', 'line-odd') %>" >
     <td class="transfer-table-border" >

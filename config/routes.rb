@@ -62,14 +62,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources     :transfers,
     {
     :member => {
-      :show_details=> :post
+      :show_details => :post,
+      :hide_details => :post
     },
     :collection => {
-      :full_transfer_show => :get,
-      :search_show => :get,
-      :quick_transfer_show => :get,
       :quick_transfer => :post,
-      :hide_details => :get
     }
   }
 

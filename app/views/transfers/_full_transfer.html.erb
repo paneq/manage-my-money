@@ -1,8 +1,10 @@
-<% form_remote_for @transfer do |f| %>
 
+<% current_category ||= nil %>
+<% embedded ||= nil %>
+<% form_remote_for transfer do |f| %>
 
-<%= hidden_field_tag :embedded, embedded %>
-<%= hidden_field_tag :current_category, category_id %>
+<%= hidden_field_tag :embedded, embedded unless embedded %>
+<%= hidden_field_tag :current_category, current_category.id unless current_category.nil? %>
 
 <div id="form_errors">
 
@@ -31,7 +33,7 @@
           <td> <span>Wartość</span> </td>
           <td> <span>Waluta</span> </td>
         </tr>
-	    <%= render :partial => 'transfers/transfer_item', :collection => @transfer.transfer_items.select {|ti| ti.transfer_item_type == type[0]} %>
+	    <%= render :partial => 'transfers/transfer_item', :collection => transfer.transfer_items.select {|ti| ti.transfer_item_type == type[0]} %>
 	  </table>
       <%= add_transfer_item(type[0]) %>
   </div>

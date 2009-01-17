@@ -1,13 +1,14 @@
 <% id = transfer_details.id %>
-<% columns_count = 4 %>
-<table id="<%= "transfer_details_id_#{id}" -%>" class="table-transfer-details width">
+<% columns_count = 3 %>
+<% current_category_id ||= nil %>
+<table id="<%= "transfer-details-id-#{id}" -%>" class="table-transfer-details width">
   <tr>
     <td colspan="<%=columns_count-%>" id="flash-notice-<%=id-%>" >
     </td>
   </tr>
   <tr class="line-income-outcome" > 
     <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
-    Outcome:
+    Rozchód:
     </td>
   </tr>
   <%= render :partial => 'transfer_item_details' , :collection => transfer_details.outcome_transfer_items %>
@@ -15,7 +16,7 @@
   
   <tr class="line-income-outcome" > 
     <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
-    Income:
+    Przychód:
     </td>
   </tr>
   <%= render :partial => 'transfer_item_details' , :collection => transfer_details.income_transfer_items %>
@@ -24,13 +25,15 @@
   <tr class="line-income-outcome" > 
     <td colspan="<%=columns_count-%>">
       <span class="what-to-do" >
-        <%= link_to_remote "Hide details", :url => { :action => :hide_details , :controller => :transfers , :id_to_hide => id  } %>
+        <%= link_to_remote "Ukryj szczegóły", :url => hide_details_transfer_path(:id => transfer_details, :current_category => current_category_id) %>
       </span>
+      |
       <span class="what-to-do" >
-        <%= link_to "Edit", :action => :edit_with_items, :controller => :transfers, :id => id %>
+        <%= link_to "Edytuj transfer", :action => :edit_with_items, :controller => :transfers, :id => id, :current_category => current_category_id%>
       </span>
+      |
       <span>
-        <%= link_to_remote "Remove", :url => {:action => :destroy, :controller => :transfers, :id => id}, :method => :delete %>
+        <%= link_to_remote "Usuń", :url => {:action => :destroy, :controller => :transfers, :id => id, :current_category => current_category_id}, :method => :delete %>
       </span>
     </td>
   </tr>

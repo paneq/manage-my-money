@@ -28,15 +28,15 @@
 <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
 
   <div id="form-for-transfer-quick">
-    <%= render :partial => 'transfers/quick_transfer', :object => { :category_id => @choosen_category_id } %>
+    <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
   </div>
 
   <div id="form-for-transfer-full" style="display:none">
-    <%= render :partial => 'transfers/full_transfer', :locals => { :category_id => @choosen_category_id , :embedded => true}  %>
+    <%= render :partial => 'transfers/full_transfer', :locals => { :current_category => current_category , :transfer => transfer, :embedded => true}  %>
   </div>
 
   <div id="form-for-transfer-search" style="display:none">
-    <%= render :partial => 'transfers/search_transfers', :locals => { :category_id => @choosen_category_id } %>
+    <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
   </div>
 
 </div>

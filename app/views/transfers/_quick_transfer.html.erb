@@ -1,5 +1,5 @@
 <% choosen = '' %>
-<% id = quick_transfer[:category_id] %>
+<% id = current_category.id %>
 
 <% form_remote_tag :url => { :action => 'quick_transfer' , :controller => 'transfers'} do %>
   <h3>Rozchód</h3>

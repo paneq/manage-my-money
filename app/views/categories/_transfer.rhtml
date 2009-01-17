@@ -1,34 +1,38 @@
-<% # %>
-<% # %> transfer = { :transfer => 'contains real transfer with id, day, description itp', :money => 'contains value of transfer as Money object', :saldo => 'Saldo as Money object'}
-<% size='15x15' %>
-<tr id="transfer-in-category-line-<%= transfer[:transfer].id -%>" class="<%= cycle('line-even', 'line-odd') %>" >
-<td class="transfer-table-border"> <%= transfer[:transfer].day -%></td>
-<td class="transfer-table-border"> <%= transfer[:transfer].description -%></td>
-<td class="transfer-table-border"> 
-<%= if transfer[:destination] 
-      transfer[:destination].short_name
-    else
-      "<i>Check details</i>"
-    end
--%>
-</td>
-<td class="number transfer-table-border">
-	<% transfer[:money].each do |currency, value| %>
-		<div>
-			<%= "#{value} #{currency.symbol}" -%>
-		</div>
-	<% end %>
-</td>
-<td class="number transfer-table-border">
-	<% transfer[:saldo].each do |currency, value| %>
-		<div>
-			<%= "#{value} #{currency.symbol}" -%>
-		</div>
-	<% end %>
-</td>
-<td class="middle transfer-table-border" id="put-show-details-here-<%= transfer[:transfer].id -%>"> <span id="show-details-<%= transfer[:transfer].id -%>"><%= link_to_remote image_tag("/images/system-search.png", :size => size) , :url => { :action => :show_details , :controller => :transfers , :id => transfer[:transfer].id } -%></span></td>
+<% # transfer => 'contains real transfer with id, day, description itp', %>
+<% # money => 'contains value of transfer as Money object', %>
+<% # saldo => 'Saldo as Money object' %>
+<% # current_category => 'Category to redraw on changes' %>
+
+<% current_category ||= nil %>
+<% size = '15x15' %>
+<% text = 'Pokaż sczegóły' %>
+<tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('line-even', 'line-odd') %>" >
+  <td class="transfer-table-border"> <%= transfer.day -%></td>
+  <td class="transfer-table-border"> <%= transfer.description -%></td>
+  <td class="transfer-table-border">
+      <i>TODO: Check details</i>
+  </td>
+  <td class="number transfer-table-border">
+    <% money.each do |currency, value| %>
+      <div>
+        <%= "#{value} #{currency.symbol}" -%>
+      </div>
+    <% end %>
+  </td>
+  <td class="number transfer-table-border">
+    <% saldo.each do |currency, value| %>
+      <div>
+        <%= "#{value} #{currency.symbol}" -%>
+      </div>
+    <% end %>
+  </td>
+  <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer.id -%>">
+    <span id="show-details-button-<%= transfer.id -%>">
+      <%= link_to_remote image_tag("/images/system-search.png", :size => size, :alt => text) , {:url => show_details_transfer_path(:id => transfer, :current_category => current_category)}, {:title => text} %>
+    </span>
+  </td>
 </tr>
 <tr>
-<td colspan="5" id="transfer-in-category-<%= transfer[:transfer].id -%>">
-</td>
+  <td colspan="5" id="transfer-in-category-<%= transfer.id -%>">
+  </td>
 </tr>

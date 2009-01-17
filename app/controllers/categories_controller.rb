@@ -20,24 +20,8 @@ class CategoriesController < ApplicationController
 
 
   def show
-    @transfer = Transfer.new
-    @transfer.transfer_items.build(:transfer_item_type => :income)
-    @transfer.transfer_items.build(:transfer_item_type => :outcome)
-    
-    session[:category_id] = @category.id
-    session[:how_many] = {:outcome => 0, :income => 0}
-    @start_day = 1.month.ago.to_date
-    @end_day = Date.today
-    @choosen_category_id = session[:category_id]
-    if params['show_with_subcategories']
-      #@transfers_to_show, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
-      #@value = @category.value_with_subcategories
-      raise "test if ever happen"
-    else
-      @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-      @value = @category.saldo_at_end_of_day(@end_day.to_date)
-    end
+    create_empty_transfer
+    set_variables_for_rendering_transfer_table
   end
 
   #TODO: sprawic zeby search dzialał jak show

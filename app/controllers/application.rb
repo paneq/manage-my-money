@@ -36,20 +36,31 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def create_empty_transfer
+    @transfer = Transfer.new(:day => Date.today)
+    @transfer.transfer_items.build(:transfer_item_type => :income)
+    @transfer.transfer_items.build(:transfer_item_type => :outcome)
+  end
 
-  #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work
-  #If exists bloock is yield with page so you can update the page with another way you like
-  def render_transfer_table(&block)
+  
+  def set_variables_for_rendering_transfer_table
     @category ||= self.current_user.categories.find(params['current_category'])
+
     @start_day ||= @transfer.day.beginning_of_month
     @end_day ||= @transfer.day.end_of_month
-    
+
     @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
     @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
     @value = @category.saldo_at_end_of_day(@end_day.to_date)
+  end
 
+  #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work
+  # Updates div with transfers
+  # If exists block is yield with page so you can update the page the way you like
+  def render_transfer_table(&block)
+    set_variables_for_rendering_transfer_table
     render :update do |page|
-      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table'
+      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {:current_category => @category}
       yield page if Kernel.block_given?
     end
   end
