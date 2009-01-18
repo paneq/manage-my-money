@@ -148,19 +148,35 @@ class TransfersController < ApplicationController
   end
 
 
-
-  #TODO
   def edit
+    set_current_category
     @transfer = self.current_user.transfers.find_by_id(params[:id])
-  end
-  
-  #TODO
-  def update
-    params[:transfer][:transfer_items_attributes] ||= {}
-    @transfer = self.current_user.transfers.find_by_id(params[:id])
+    respond_to do |format|
+      format.html {}
+      format.js do
+        render :update do |page|
+          page.replace_html "transfer-in-category-#{@transfer.id}", :partial => 'transfers/full_transfer', :locals => { :current_category => @category , :transfer => @transfer, :embedded => true}
+        end
+      end
+    end
   end
 
-  #TODO: Prztestowac jeszcze tworzenie wszystkich transferow i usuwanie w zlozonym i prostym przypadku
+
+  def update
+    params[:transfer][:existing_transfer_items_attributes] ||= {}
+    @transfer = self.current_user.transfers.find_by_id(params[:id])
+    if @transfer.update_attributes(params[:transfer])
+      respond_to do |format|
+        format.html {}
+        format.js do
+          render_transfer_table() { |page| }
+        end
+      end
+    else
+
+    end
+  end
+
 
   #TODO
   def create

@@ -44,11 +44,24 @@ class ApplicationController < ActionController::Base
 
   
   def set_variables_for_rendering_transfer_table
-    @category ||= self.current_user.categories.find(params['current_category'])
+    set_current_category
+    set_start_end_days
+    set_transfers_and_values
+  end
 
+  
+  def set_current_category
+    @category ||= self.current_user.categories.find(params['current_category'])
+  end
+
+
+  def set_start_end_days
     @start_day ||= @transfer.day.beginning_of_month
     @end_day ||= @transfer.day.end_of_month
+  end
 
+
+  def set_transfers_and_values
     @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
     @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
     @value = @category.saldo_at_end_of_day(@end_day.to_date)

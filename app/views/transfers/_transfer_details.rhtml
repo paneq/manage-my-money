@@ -29,7 +29,7 @@
       </span>
       |
       <span class="what-to-do" >
-        <%= link_to "Edytuj transfer", :action => :edit_with_items, :controller => :transfers, :id => id, :current_category => current_category_id%>
+        <%= link_to_remote "Edytuj transfer", :url => {:action => :edit, :controller => :transfers, :id => id, :current_category => current_category_id}, :method => :get %>
       </span>
       |
       <span>

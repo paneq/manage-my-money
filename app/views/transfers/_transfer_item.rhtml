@@ -1,9 +1,16 @@
 <% hack ||= false %>
 <% if transfer_item.new_record? %>
+  <% # Hack is only used for new items added via JS %>
   <% prefix = "transfer[new_transfer_items_attributes][#{transfer_item.transfer_item_type.to_s}PUT_ID_HERE]" if hack %>
+  
+  <% # If rendered by RoR hack is not required <-> I know it is complicated %>
   <% prefix = "transfer[new_transfer_items_attributes][#{transfer_item.transfer_item_type.to_s}#{transfer_item.object_id.abs}]" unless hack %>
+
+  <% value = nil %>
 <%  else %>
+  <% # The book says that the place in prefix array should be filled by RoR with transfer_item.id %>
   <% prefix = "transfer[existing_transfer_items_attributes][]" %>
+  <% value =  transfer_item.value.abs %>
 <% end %>
 
 <% fields_for prefix, transfer_item do |task_form| -%>
@@ -12,7 +19,7 @@
     <%= task_form.hidden_field :transfer_item_type %>
     <td> <%= task_form.select :category_id, @current_user.categories.map { |c| [c.name, c.id] } %> </td>
     <td> <%= task_form.text_field :description, :size=>40 %> </td>
-    <td> <%= task_form.text_field :value, :size=>5 %> </td>
+    <td> <%= task_form.text_field :value, :size=>5, :value => value %> </td>
     <td> <%= task_form.select :currency_id, @current_user.visible_currencies.map{|c| [c.long_symbol, c.id] } %></td>
     <td> <%= link_to_function "Usuń" , "$(this).up('.transfer-item').remove()" %>  </td>
   </tr>
