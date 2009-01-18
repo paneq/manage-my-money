@@ -2,6 +2,31 @@
 module ApplicationHelper
   include Forms::ApplicationHelper
 
+  # display_if(proc_object)
+  # display_if { 1 == 2 }
+  #
+  # Returns "display:none" if condition is evaluated as false
+  # otherwise returns empty string.
+  def display_if(condition = nil, &block)
+    raise 'Condition as Proc or code block required' if condition.nil? && !Kernel.block_given?
+    condition = block if condition.nil?
+    return '' if condition.call == true
+    return 'display:none'
+  end
+
+
+  # display_if(proc_object)
+  # display_if { 1 == 2 }
+  #
+  # Returns style="display:none" if condition is evaluated as false
+  # otherwise returns style="" string.
+  def style_display_if(condition = nil, &block)
+    raise 'Condition as Proc or code block required' if condition.nil? && !Kernel.block_given?
+    condition = block if condition.nil?
+    return "style=\"#{display_if(condition)}\""
+  end
+
+
   def add_transfer_item(transfer_item_type)
     jsfunction_code = link_to_function 'Nowy element' do |page|
       page.insert_html :bottom, "full-#{transfer_item_type.to_s.downcase}-items", :partial => '/transfers/transfer_item', :locals => {:hack => true}, :object => TransferItem.new(:transfer_item_type => transfer_item_type, :currency_id => @current_user.default_currency.id)
@@ -10,6 +35,7 @@ module ApplicationHelper
     jsfunction_code.gsub! "PUT_ID_HERE", "&quot; + my_uid +&quot;"
     return jsfunction_code
   end
+
 
   def get_periods
     [ :SELECTED,

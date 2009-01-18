@@ -1,0 +1,15 @@
+<div>
+  <h1>Lista transferów</h1>
+  <div id="transfer-table-div">
+    <% unless @transfers.empty? %>
+      <%= render :partial => 'categories/transfer_table', :locals => {:mode => :transfers}%>
+    <% else %>
+      <b>TODO: podaj ten okres. W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>
+    <% end %>
+  </div>
+  <br />
+
+  <div id="kind-of-transfer">
+    <%= render :partial => 'transfers/kind_of_transfer', :locals => { :transfer => @transfer }  %>
+  </div>
+</div>

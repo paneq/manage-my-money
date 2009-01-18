@@ -7,6 +7,12 @@ class TransfersController < ApplicationController
   before_filter :check_perm_for_transfer , :only => [:show_details, :hide_details, :show , :edit_with_items, :destroy]
 
 
+  def index
+    create_empty_transfer
+    set_start_end_days
+    @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
+  end
+  
   # remote
   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
   def quick_transfer
@@ -87,9 +93,11 @@ class TransfersController < ApplicationController
         format.html {}
         format.js do
           render_transfer_table do |page|
-            #same code as show_details but i could not move it into method and i do not know why.
-            page.hide "show-details-button-#{@transfer.id}"
-            page.insert_html :bottom, "transfer-in-category-#{@transfer.id}", :partial => 'transfer_details', :object => @transfer, :locals => {:current_category_id => params[:current_category]}
+            if @category && @category.transfers.find_by_id(@transfer.id)
+              #same code as show_details but i could not move it into method and i do not know why.
+              page.hide "show-details-button-#{@transfer.id}"
+              page.insert_html :bottom, "transfer-in-category-#{@transfer.id}", :partial => 'transfer_details', :object => @transfer, :locals => {:current_category_id => params[:current_category]}
+            end
           end
         end
       end

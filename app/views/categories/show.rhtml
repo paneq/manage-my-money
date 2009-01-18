@@ -7,7 +7,7 @@
   <% end %>
   <br />
   <div id="transfer-table-div">
-	  <% unless @transfers_to_show.empty? %>
+	  <% unless @transfers.empty? %>
 	    <%= render :partial => 'transfer_table', :locals => { :current_category => @category} %>
 	  <% else %>
 	      <b>TODO: podaj ten okres. W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>

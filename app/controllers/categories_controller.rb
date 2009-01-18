@@ -31,10 +31,10 @@ class CategoriesController < ApplicationController
     session[:category_id] = @category.id
     @start_day, @end_day = get_period('transfer_day')
     if params['show_with_subcategories']
-      @transfers_to_show, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
+      @transfers, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
       @value = @category.value_with_subcategories
     else
-      @transfers_to_show, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
+      @transfers, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
       @value = @category.value
     end
     render :action => :show

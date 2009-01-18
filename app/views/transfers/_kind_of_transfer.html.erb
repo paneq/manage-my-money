@@ -1,5 +1,8 @@
 <% all = [['quick', 'Szybki'],['full', 'Pelny'],['search','Wyszukaj']] %>
+<% current_category ||= nil %>
+<% all.shift if current_category.nil? %>
 <% show = all.first %>
+
 <b>
   <span id="kind-of-transfer">
     <% all.each do |active| %>
@@ -26,16 +29,19 @@
 </b>
 
 <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
+  
+  <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
+  <% unless current_category.nil? %>
+    <div id="form-for-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
+      <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
+    </div>
+  <% end %>
 
-  <div id="form-for-transfer-quick">
-    <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
-  </div>
-
-  <div id="form-for-transfer-full" style="display:none">
+  <div id="form-for-transfer-full" <%= style_display_if { show.first == 'full'} %> >
     <%= render :partial => 'transfers/full_transfer', :locals => { :current_category => current_category , :transfer => transfer, :embedded => true}  %>
   </div>
 
-  <div id="form-for-transfer-search" style="display:none">
+  <div id="form-for-transfer-search" <%= style_display_if { show.first == 'search'} %> >
     <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
   </div>
 

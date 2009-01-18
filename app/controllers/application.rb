@@ -51,8 +51,10 @@ class ApplicationController < ActionController::Base
 
   
   def set_current_category
-    @category ||= self.current_user.categories.find(params['current_category'])
+    @category ||= self.current_user.categories.find(params['current_category']) if params['current_category']
   end
+
+
 
 
   def set_start_end_days
@@ -62,18 +64,24 @@ class ApplicationController < ActionController::Base
 
 
   def set_transfers_and_values
-    @transfers_to_show = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-    @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-    @value = @category.saldo_at_end_of_day(@end_day.to_date)
+    if @category
+      @transfers = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
+      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
+      @value = @category.saldo_at_end_of_day(@end_day.to_date)
+      @mode = :category
+    else
+      @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
+      @mode = :transfers
+    end
   end
 
-  #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work
-  # Updates div with transfers
-  # If exists block is yield with page so you can update the page the way you like
+  #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work <br />
+  # Updates div with transfers <br />
+  # If exists block is yield with page so you can update the page the way you like <br />
   def render_transfer_table(&block)
     set_variables_for_rendering_transfer_table
     render :update do |page|
-      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {:current_category => @category}
+      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {:current_category => @category, :mode => @mode }
       yield page if Kernel.block_given?
     end
   end
