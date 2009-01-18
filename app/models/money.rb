@@ -20,6 +20,7 @@ class Money
       raise ArgumentError.new('Invalid number of arguments')
     end
     remove_zero_currencies
+    @hash.default = 0;
   end
 
 
@@ -35,13 +36,11 @@ class Money
 
 
   def value(currency=nil)
-    if !currency && @hash.size == 1
-      return @hash.first[1]
-    end
-    return @hash[currency] if currencies.include? currency
-    return 0
+    currency = @hash.keys.first if currency.nil? && @hash.size == 1
+    return @hash[currency]
   end
 
+  
   def currency
     if @hash.size == 1
       return @hash.first[0]
