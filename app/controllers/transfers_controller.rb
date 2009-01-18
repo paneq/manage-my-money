@@ -86,7 +86,11 @@ class TransfersController < ApplicationController
       respond_to do |format|
         format.html {}
         format.js do
-          render_transfer_table() { |page| }
+          render_transfer_table do |page|
+            #same code as show_details but i could not move it into method and i do not know why.
+            page.hide "show-details-button-#{@transfer.id}"
+            page.insert_html :bottom, "transfer-in-category-#{@transfer.id}", :partial => 'transfer_details', :object => @transfer, :locals => {:current_category_id => params[:current_category]}
+          end
         end
       end
     else
@@ -125,9 +129,8 @@ class TransfersController < ApplicationController
       format.js { render_transfer_table }
     end
   end
+
   
-
-
   private
   
   def check_perm_for_transfer
@@ -140,5 +143,5 @@ class TransfersController < ApplicationController
       #why doesn't it work ? There is no flash ?
     end
   end
-  
+
 end
