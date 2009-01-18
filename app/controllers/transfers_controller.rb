@@ -52,89 +52,6 @@ class TransfersController < ApplicationController
   end
 
 
-  #TODO do wyrzucenie totalnie!
-  #  def make
-  #    if request.get?
-  #      session[:how_many] = {:outcome => 0, :income => 0}
-  #      @choosen_category_id = params[:choosen_category_id].to_i
-  #    else
-  #      if (params[:id].nil?) # we do not check if this user can update this transfer! should be changed somehow
-  #        @transfer = Transfer.new
-  #        @transfer.transfer_items.build
-  #      else
-  #        @transfer = Transfer.find( params[:id])
-  #      end
-  #      @transfer.transfer_items.each {|ti| ti.destroy}
-  #      d = params[:transfer]['day(3i)'].to_i
-  #      m = params[:transfer]['day(2i)'].to_i
-  #      y = params[:transfer]['day(1i)'].to_i
-  #      @transfer.day = Date.new(y , m , d)
-  #      @transfer.user = self.current_user
-  #      @transfer.description = params[:transfer][:description]
-  #      @transfer_items_from = []
-  #      @transfer_items_to = []
-  #      p = params[:outcome]
-  #      (0..session[:how_many][:outcome]+1).each do |i|
-  #        #         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
-  #        unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
-  #          transfer_item = TransferItem.new
-  #          transfer_item.description = p['description-' + i.to_s]
-  #          transfer_item.value = p['value-' + i.to_s].to_i * -1
-  #          category = Category.find( p['category-' + i.to_s].to_i )
-  #          transfer_item.category = category
-  #          transfer_item.currency = Currency.find(p['currency-' + i.to_s].to_i)
-  #          @transfer.transfer_items << transfer_item
-  #          @transfer_items_from << transfer_item
-  #        end
-  #      end
-  #      p = params[:income]
-  #      (0..session[:how_many][:income]+1).each do |i|
-  #        #         unless p['category-' + i.to_s].nil? and p['description-' + i.to_s].nil? and p['value-' + i.to_s].nil?
-  #        unless p['category-' + i.to_s].nil? or p['description-' + i.to_s].nil? or p['value-' + i.to_s].nil? or p['description-' + i.to_s].empty? or p['value-' + i.to_s].empty?
-  #          transfer_item = TransferItem.new
-  #          transfer_item.description = p['description-' + i.to_s]
-  #          transfer_item.value = p['value-' + i.to_s].to_i
-  #          category = Category.find(p['category-' + i.to_s].to_i)
-  #          transfer_item.category = category
-  #          transfer_item.currency = Currency.find(p['currency-' + i.to_s].to_i)
-  #          @transfer.transfer_items << transfer_item
-  #          @transfer_items_to << transfer_item
-  #        end
-  #
-  #      end
-  #
-  #
-  #
-  #      t_description = @transfer.description
-  #      if @transfer.save
-  #        if params[:embedded]=='true'#full transfer w kategorii
-  #          render_transfer_table do |page|
-  #            page.replace_html 'form-for-transfer-full', :partial=>'transfers/full_transfer', :locals => {:category_id => params[:current_category] ,:embedded=>true}
-  #          end
-  #
-  #        elsif session[:back_to_category] # z kategorii wywolalismy edit
-  #          redirect_to :action => :show, :controller => :categories, :id => session[:back_to_category]
-  #
-  #        else
-  #          #po prostu transfer new
-  #          @transfer = nil # dzieki temu przy odrysowywaniu nie nadpiusuje nam desciption poprzednim
-  #          render :update do |page|
-  #            page.replace_html 'form-for-transfer', :partial => 'full_transfer'
-  #            page.replace_html 'form_errors' , :partial => 'sucess_transfer', :object => t_description
-  #          end
-  #
-  #        end
-  #
-  #      else #transfer.save
-  #        @transfer = nil
-  #        render :update do |page|
-  #          page.replace_html 'form_errors' , :partial => 'failed_transfer', :object => t_description
-  #        end
-  #      end  # end of else (@transfer.save)
-  #    end  # end of else (request xhr!)
-  #  end # end of method make
-
-
   ############################
   # @author: Robert Pankowecki
   # half-remote
@@ -178,7 +95,6 @@ class TransfersController < ApplicationController
   end
 
 
-  #TODO
   def create
     @transfer = Transfer.new(params[:transfer])
     @transfer.user = self.current_user
@@ -198,27 +114,6 @@ class TransfersController < ApplicationController
   end
 
 
-  ###################
-  # TODO: WYRZUCIC I NIECH UZYWA EDIT I PARTIAL FULL_TRANSFER DO ODRYSOWANIA ORAZ transfer.update_paramaters zamiast mega make
-  # s 68 w ksiazce
-  # @author: Robert Pankowecki
-  def edit_with_items
-    session[:how_many] = {}
-    @collection = {}
-    @transfer.both_transfer_items do |type , table_of_items|
-      nr = 0
-      @collection[ type ] = []
-      session[:how_many][ type ] = table_of_items.size
-      table_of_items.each do |item|
-        @collection[ type ] << { :type => type.to_s , :number => nr.to_s , :choosen => item.category.id , :description => item.description , :value => item.value}
-        nr += 1
-      end
-    end
-    session[:back_to_category] = session[:category_id]
-  end
-
-
-  #TODO
   def destroy
     # TODO: if else ??
     @transfer.destroy
