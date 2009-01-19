@@ -12,7 +12,14 @@ class TransfersController < ApplicationController
     set_start_end_days
     @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
   end
-  
+
+  def search
+    respond_to do |format|
+      format.html {}
+      format.js {}
+    end
+  end
+
   # remote
   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
   def quick_transfer

@@ -1,14 +1,15 @@
+
 <% current_category ||= nil %>
-<% if current_category.nil? %>
-  <% form_tag url_for(:action => :search, :controller => :transfers), {:method => :post} do %>
-    <%= date_period_fields("transfer_day", @start_day, @end_day) %>
-    <%= submit_tag '&nbsp; Szukaj &nbsp;' %>
-  <% end %>
-<% else %>
-  <% form_tag url_for(:action => :search, :controller => :categories, :id => current_category.id), {:method => :post} do %>
+<% form_remote_tag :url => {:action => :search, :controller => :transfers} do %>
+
+  <% unless current_category.nil? %>
+
     Uwzględnij podkategorie &nbsp;&nbsp;<%= check_box_tag 'show_with_subcategories', true %>
     <%= hidden_field_tag :current_category, current_category.id %>
-    <%= date_period_fields("transfer_day", @start_day, @end_day) %>
-    <%= submit_tag '&nbsp; Szukaj &nbsp;' %>
-  <% end %>
+
+  <%  end %>
+
+  <%= date_period_fields("transfer_day", @start_day, @end_day) %>
+  <%= submit_tag '&nbsp; Szukaj &nbsp;' %>
+
 <% end %>

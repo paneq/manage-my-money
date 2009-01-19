@@ -1,6 +1,15 @@
 # Methods added to this helper will be available to all templates in the application.
+
+require 'date'
+
 module ApplicationHelper
   include Forms::ApplicationHelper
+
+  PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date.PERIODS
+
+  def get_periods
+    return PERIODS
+  end
 
   # display_if(proc_object)
   # display_if { 1 == 2 }
@@ -37,71 +46,62 @@ module ApplicationHelper
   end
 
 
-  def get_periods
-    [ :SELECTED,
-    :THIS_DAY,
-    :LAST_DAY,
-    :THIS_WEEK,
-    :LAST_WEEK,
-    :LAST_7_DAYS,
-    :THIS_MONTH,
-    :LAST_MONTH,
-    :LAST_4_WEEKS,
-    :THIS_QUARTER,
-    :LAST_QUARTER,
-    :LAST_3_MONTHS,
-    :LAST_90_DAYS,
-    :THIS_YEAR,
-    :LAST_YEAR,
-    :LAST_12_MONTHS
-  ]
-  end
 
-
-  def date_period_fields(name, start_day, end_day)
+  # TODO: Using  result += may be a bed solution. At least it is not ellegant
+  # Is there another, better way to do it? Like using erb Templates ?
+  def date_period_fields(name, start_day = Date.today, end_day = Date.today)
 
     name_id = name.gsub(/_/, '-')
     select_name = name+'_period'
-    begin_field_name = get_date_begin_field_name(name)
+    start_field_name = get_date_start_field_name(name)
     end_field_name = get_date_end_field_name(name)
+    computed_name = "#{name_id}-computed"
 
     result = ''
     result += <<-HTML
       <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:</label>
     HTML
-    
-    result += select_tag select_name, options_from_collection_for_select(get_periods, :to_s, :to_s)
 
+    result += select_tag select_name, options_from_collection_for_select(get_periods, :first, :second)
+
+    result += get_date_field_start(name, start_day)
+    result += get_date_field_end(name, end_day)
     result += <<-HTML
       </p>
     HTML
 
-    result += get_date_field_begin(name, start_day)
+    result += <<-HTML
+      <p id="#{computed_name}" style="display:none">KUPA</p>
+    HTML
 
-    result += get_date_field_end(name, end_day)
+    function = <<-JS
+      if (value != 'SELECTED') {
+        Element.hide('#{start_field_name}');
+        Element.hide('#{end_field_name}');
+        Element.show('#{computed_name}');
+      } else {
+        Element.show('#{start_field_name}');
+        Element.show('#{end_field_name}');
+        Element.hide('#{computed_name}');
+      }
+      switch (value) {
+    JS
+
+    Date.PERIODS.each do |period_type, period_name|
+      function << "case '#{period_type.to_s}': "
+      function << "Element.update('#{computed_name}', 'to na #{Date.compute(period_type).to_s}' );"
+      function << 'break;'
+    end
+    function << '}'
 
     result += observe_field select_name,
-        :frequency => 1,
-        :update => begin_field_name ,
-        :on => 'click' ,
-        :with => 'time',
-        :url => {:action => :period_changed_start, :controller => :categories }
-
-    result += observe_field select_name,
-        :frequency => 1,
-        :update => end_field_name ,
-        :on => 'click' ,
-        :with => 'time',
-        :url => {:action => :period_changed_end, :controller => :categories }
-
-    result
-
+      :on => 'click' ,
+      :function => function
   end
 
-  def get_date_field_begin(name, start_day)
-    begin_field_name = get_date_begin_field_name(name)
-    result = ''
-    result += <<-HTML
+  def get_date_field_start(name, start_day = Date.today)
+    begin_field_name = get_date_start_field_name(name)
+    result = <<-HTML
       <p id="#{begin_field_name}"><label for="#{begin_field_name}">Wybierz datę początkową</label>
     HTML
 
@@ -110,15 +110,12 @@ module ApplicationHelper
     result += <<-HTML
       </p>
     HTML
-
-    result
   end
 
 
-  def get_date_field_end(name, end_day)
+  def get_date_field_end(name, end_day = Date.today)
     end_field_name = get_date_end_field_name(name)
-    result = ''
-    result += <<-HTML
+    result = <<-HTML
       <p id="#{end_field_name}"><label for="#{end_field_name}">wybierz datę końcową</label>
     HTML
 
@@ -127,7 +124,6 @@ module ApplicationHelper
     result += <<-HTML
       </p>
     HTML
-
   end
 
   def switch(div_id, name)
@@ -143,7 +139,7 @@ module ApplicationHelper
 
 
   private
-  def get_date_begin_field_name(name)
+  def get_date_start_field_name(name)
     "#{name.gsub(/_/, '-')}-start"
   end
 

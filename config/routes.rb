@@ -50,14 +50,7 @@ ActionController::Routing::Routes.draw do |map|
   }
   map.resources     :exchanges
 
-  map.resources     :transfers_items,
-    {
-    :member => {
-      :edit_remote => [:post, :get],
-      :discard=> [:post, :get],
-      :remove_transfer_item => :get
-    }
-  }
+  map.resources     :transfers_items
 
   map.resources     :transfers,
     {
@@ -67,6 +60,7 @@ ActionController::Routing::Routes.draw do |map|
     },
     :collection => {
       :quick_transfer => :post,
+      :search => :post
     }
   }
 
