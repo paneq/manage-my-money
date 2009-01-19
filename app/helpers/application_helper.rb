@@ -1,12 +1,13 @@
 # Methods added to this helper will be available to all templates in the application.
 
-require 'date'
+require File.expand_path(File.dirname(__FILE__) + '../../../lib/date_extensions')
 
 module ApplicationHelper
   include Forms::ApplicationHelper
 
-  PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date.PERIODS
+  PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date::PERIODS
 
+  #Returns all periods including :Selected which cannote be computed by Date.compute
   def get_periods
     return PERIODS
   end
@@ -87,9 +88,10 @@ module ApplicationHelper
       switch (value) {
     JS
 
-    Date.PERIODS.each do |period_type, period_name|
+    Date::PERIODS.each do |period_type, period_name|
+      range = Date.calculate(period_type)
       function << "case '#{period_type.to_s}': "
-      function << "Element.update('#{computed_name}', 'to na #{Date.compute(period_type).to_s}' );"
+      function << "Element.update('#{computed_name}', '<p><label>Data początkowa: </label> #{range.begin}</p> <p><label>Data końcowa: </label> #{range.end}</p>' );"
       function << 'break;'
     end
     function << '}'
@@ -102,7 +104,7 @@ module ApplicationHelper
   def get_date_field_start(name, start_day = Date.today)
     begin_field_name = get_date_start_field_name(name)
     result = <<-HTML
-      <p id="#{begin_field_name}"><label for="#{begin_field_name}">Wybierz datę początkową</label>
+      <p id="#{begin_field_name}"><label for="#{begin_field_name}">Data początkowa: </label>
     HTML
 
     result += select_date start_day, :prefix => "#{name}_start"
@@ -116,7 +118,7 @@ module ApplicationHelper
   def get_date_field_end(name, end_day = Date.today)
     end_field_name = get_date_end_field_name(name)
     result = <<-HTML
-      <p id="#{end_field_name}"><label for="#{end_field_name}">wybierz datę końcową</label>
+      <p id="#{end_field_name}"><label for="#{end_field_name}">Data końcowa: </label>
     HTML
 
     result += select_date end_day, :prefix => "#{name}_end"
