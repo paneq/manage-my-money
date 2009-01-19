@@ -76,25 +76,35 @@ module ApplicationHelper
     HTML
 
     function = <<-JS
-      if (value != 'SELECTED') {
-        Element.hide('#{start_field_name}');
-        Element.hide('#{end_field_name}');
-        Element.show('#{computed_name}');
-      } else {
+      if (value == 'SELECTED') {
+        Element.hide('#{computed_name}');
+        Element.update('#{computed_name}','');
         Element.show('#{start_field_name}');
         Element.show('#{end_field_name}');
-        Element.hide('#{computed_name}');
+        return;
       }
+      var text1 = '<p><label>Data początkowa: </label> '
+      var text2 = '</p> <p><label>Data końcowa: </label> '
+      var text3 = '</p>'
       switch (value) {
     JS
 
+
     Date::PERIODS.each do |period_type, period_name|
       range = Date.calculate(period_type)
-      function << "case '#{period_type.to_s}': "
-      function << "Element.update('#{computed_name}', '<p><label>Data początkowa: </label> #{range.begin}</p> <p><label>Data końcowa: </label> #{range.end}</p>' );"
-      function << 'break;'
+      function << "case '#{period_type.to_s}': \n"
+      function << "  text1 = text1 + '#{range.begin}' ;\n"
+      function << "  text2 = text2 + '#{range.end}' ;\n"
+      function << "break;\n"
     end
-    function << '}'
+    function += <<-JS
+    }
+    text1 = text1 + text2 + text3
+    Element.update('#{computed_name}', text1);
+    Element.hide('#{start_field_name}');
+    Element.hide('#{end_field_name}');
+    Element.show('#{computed_name}');
+    JS
 
     result += observe_field select_name,
       :on => 'click' ,
