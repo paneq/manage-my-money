@@ -13,10 +13,16 @@ class TransfersController < ApplicationController
     @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
   end
 
-  def search
+  def search    
+    @transfers = self.
+      current_user.
+      transfers.
+      find(:all, :include => :transfer_items, :conditions => conditions ).
+      map { |t| {:transfer => t} }
+      
     respond_to do |format|
       format.html {}
-      format.js {}
+      format.js {render_transfer_table}
     end
   end
 
@@ -158,5 +164,32 @@ class TransfersController < ApplicationController
       #why doesn't it work ? There is no flash ?
     end
   end
+
+
+  def conditions
+    set_current_category
+    condition = 'day >= ? AND day <= ?'
+    symbol = params[:transfer_day_period].to_sym
+    @range = if symbol == :SELECTED
+      start = params[:transfer_day_start]
+      endt = params[:transfer_day_end]
+      Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
+    else
+      Date.calculate(symbol)
+    end
+    parameters = [condition, @range.begin, @range.end]
+
+    #searching for transfers connected via items to one category
+    if @category
+      parameters.first += 'AND category_id IN (?)'
+      parameters << if params[:subcategories]
+        @category.self_and_descendants().map {|c| c.id} #table of subcategories ids
+      else
+        [@category.id] #table with category id
+      end
+    end
+
+    return parameters
+  end #conditions method
 
 end

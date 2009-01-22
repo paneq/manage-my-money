@@ -55,20 +55,22 @@ class ApplicationController < ActionController::Base
 
 
   def set_start_end_days
-    @start_day ||= @transfer.day.beginning_of_month
-    @end_day ||= @transfer.day.end_of_month
+    @start_day ||= @transfer.day.beginning_of_month if @transfer
+    @end_day ||= @transfer.day.end_of_month if @transfer
+    @start_day ||= @range.begin if @range
+    @end_day ||= @range.end if @range
   end
 
 
   def set_transfers_and_values
     if @category
-      @transfers = @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-      @value_between = @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-      @value = @category.saldo_at_end_of_day(@end_day.to_date)
-      @mode = :category
+      @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
+      @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
+      @value ||= @category.saldo_at_end_of_day(@end_day.to_date)
+      @mode ||= :category
     else
-      @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
-      @mode = :transfers
+      @transfers ||= self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
+      @mode ||= :transfers
     end
   end
 
