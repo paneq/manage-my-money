@@ -26,7 +26,7 @@ class Date
   
   # Returns range based on given symbol
   def self.calculate(symbol)
-    raise "Unrecognized period symbol" unless RECOGNIZED_PERIODS.include?(symbol)
+    raise "Unrecognized period symbol: #{symbol}" unless RECOGNIZED_PERIODS.include?(symbol)
     unless @@today == Date.today
       @@cache = {}
       @@today = Date.today
@@ -53,7 +53,7 @@ class Date
     when :LAST_YEAR       then Date.today.years_ago(1).beginning_of_year
     when :LAST_12_MONTHS  then Date.today.months_ago(11).beginning_of_month
     else
-      raise "Unrecognized period symbol"
+      raise "Unrecognized period symbol: #{symbol}"
     end
   end
 
@@ -75,7 +75,7 @@ class Date
     when :LAST_YEAR       then Date.today.years_ago(1).end_of_year
     when :LAST_12_MONTHS  then Date.today.end_of_month
     else
-      raise "Unrecognized period symbol"
+      raise "Unrecognized period symbol: #{symbol}"
     end
   end
 
