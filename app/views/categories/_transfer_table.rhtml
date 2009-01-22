@@ -25,8 +25,9 @@
     </th>
   </tr>
 
-  <% # Start day %>
-  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+  <% # Start day 
+  %>
+  <tr class="<%= cycle('line-even', 'line-odd') -%>" >
     <td class="transfer-table-border">
       <b><%= @start_day.to_date %></b>
     </td>
@@ -34,15 +35,17 @@
     </td>
   </tr>
 
-  <% # List of transfers %>
+  <% # List of transfers 
+  %>
   <% @transfers.each do |transfer_data| %>
     <% transfer_data.merge!(:current_category => current_category) unless current_category.nil? %>
     <% transfer_data.merge!(:mode => mode) %>
     <%= render :partial => 'categories/transfer' , :locals=> transfer_data %>
   <% end %>
 
-  <% # End day %>
-  <tr class="<%= cycle('line-even', 'line-odd') %>" >
+  <% # End day
+  %>
+  <tr class="<%= cycle('line-even', 'line-odd') -%>" >
     <td class="transfer-table-border">
       <b><%= @end_day.to_date %></b>
     </td>
@@ -50,7 +53,8 @@
     </td>
   </tr>
 
-  <% # Show saldo for perdio only when watching transfers for one category %>
+  <% # Show saldo for perdio only when watching transfers for one category
+  %>
   <% if @value_between %>
     <tr class="<%= cycle('line-even', 'line-odd') %>" >
       <td colspan="4" class="value-for-time">
@@ -65,10 +69,12 @@
     </tr>
   <% end %>
 
-  <% # Show current saldo only when watching transfers for one category %>
+  <% # Show current saldo only when watching transfers for one category
+  %>
   <% if @value %>
 
-    <% # Show dots if currently watching transfers from period that does not last until today %>
+    <% # Show dots if currently watching transfers from period that does not last until today
+    %>
     <% if @end_day.to_date < Date.today %>
       <tr class="<%= cycle('line-even', 'line-odd') %>" >
         <td class="dots middle transfer-table-border" >
@@ -81,7 +87,8 @@
       </tr>
     <% end %>
 
-    <% # Show current saldo %>
+    <% # Show current saldo
+    %>
     <tr class="<%= cycle('line-even', 'line-odd') %>" >
       <td class="transfer-table-border" >
         <b>Aktualnie</b>
