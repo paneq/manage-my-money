@@ -85,4 +85,43 @@ class Test::Unit::TestCase
     end
   end
 
+
+  def menu(menu_items, action)
+    assert_select 'div#bottom-menu' do
+      assert_select 'span#kind-of-transfer > span', menu_items.size
+      assert_select 'span#kind-of-transfer' do
+        menu_items.each do |type|
+          assert_select "span#kind-of-transfer-#{type}" do
+            ['active','inactive'].each do |type2|
+              assert_select "span.kind-of-transfer-#{type2}-tab"
+            end
+          end
+        end
+      end
+      assert_select 'div#form-for-transfer' do
+        assert_select 'div#form-for-transfer-full'
+        assert_select 'div#form-for-transfer-search' do
+          assert_select "form[method=post][action=#{action}]" do
+            assert_select 'p#transfer-day-period' do
+              assert_select 'label'
+              assert_select 'select[name=transfer_day_period]' do
+                assert_select 'option[value=SELECTED]'
+                assert_select 'option[value=THIS_DAY]'
+              end
+            end
+            ['start', 'end'].each do |time|
+              assert_select "p\#transfer-day-#{time}" do
+                ['year', 'month', 'day'].each do |period|
+                  #assert_select "select[name~=#{period}]"
+                end
+                assert_select 'select', 3
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  
+
 end

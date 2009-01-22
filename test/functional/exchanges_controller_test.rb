@@ -2,13 +2,13 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'exchanges_controller'
 
 # Re-raise errors caught by the controller.
-class ExchangeController; def rescue_action(e) raise e end; end
+class ExchangesController; def rescue_action(e) raise e end; end
 
-class ExchangeControllerTest < Test::Unit::TestCase
+class ExchangesControllerTest < Test::Unit::TestCase
 #  fixtures :exchanges
 
   def setup
-    @controller = ExchangeController.new
+    @controller = ExchangesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
 

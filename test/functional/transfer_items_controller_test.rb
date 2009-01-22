@@ -2,13 +2,13 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'transfer_items_controller'
 
 # Re-raise errors caught by the controller.
-class TransferItemController; def rescue_action(e) raise e end; end
+class TransferItemsController; def rescue_action(e) raise e end; end
 
-class TransferItemControllerTest < Test::Unit::TestCase
+class TransferItemsControllerTest < Test::Unit::TestCase
 #  fixtures :transfer_items
 
   def setup
-    @controller = TransferItemController.new
+    @controller = TransferItemsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
 

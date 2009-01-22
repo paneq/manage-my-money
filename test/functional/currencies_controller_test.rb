@@ -2,13 +2,13 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'currencies_controller'
 
 # Re-raise errors caught by the controller.
-class CurrencyController; def rescue_action(e) raise e end; end
+class CurrenciesController; def rescue_action(e) raise e end; end
 
-class CurrencyControllerTest < Test::Unit::TestCase
+class CurrenciesControllerTest < Test::Unit::TestCase
  # fixtures :currencies
 
   def setup
-    @controller = CurrencyController.new
+    @controller = CurrenciesController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
 

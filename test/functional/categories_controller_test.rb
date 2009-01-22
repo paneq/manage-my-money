@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'categories_controller'
 
 # Re-raise errors caught by the controller.
-class CategoryController; def rescue_action(e) raise e end; end
+class CategoriesController; def rescue_action(e) raise e end; end
 
-class CategoryControllerTest < Test::Unit::TestCase
+class CategoriesControllerTest < Test::Unit::TestCase
 
   def setup
     @controller = CategoriesController.new
@@ -232,6 +232,10 @@ class CategoryControllerTest < Test::Unit::TestCase
     
   end
 
+  def test_show_menu
+    get :show, :id => @rupert.categories.top_of_type(:EXPENSE)
+    menu ['quick', 'full', 'search'], '/categories/search'
+  end
 
   private
   

@@ -24,20 +24,10 @@ class CategoriesController < ApplicationController
     set_variables_for_rendering_transfer_table
   end
 
-  #TODO: sprawic zeby search dzialał jak show
-  # i wszystko co z tym zwiazanie jak np metody w modelu dla podkategorii
-  # aktualnie leci exception z braku metody
+
   def search
-    session[:category_id] = @category.id
-    @start_day, @end_day = get_period('transfer_day')
-    if params['show_with_subcategories']
-      @transfers, @value_between = @category.transfers_with_subcategories_saldo_between(@start_day.to_date , @end_day.to_date)
-      @value = @category.value_with_subcategories
-    else
-      @transfers, @value_between = @category.transfers_with_saldo_between(@start_day.to_date , @end_day.to_date)
-      @value = @category.value
-    end
-    render :action => :show
+    @category = self.current_user.categories.find(params[:id])
+    
   end
 
   

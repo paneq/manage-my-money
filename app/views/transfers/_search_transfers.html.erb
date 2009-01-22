@@ -1,11 +1,12 @@
 
 <% current_category ||= nil %>
-<% form_remote_tag :url => {:action => :search, :controller => :transfers} do %>
+<% controller = current_category.nil? ? :transfers : :categories %>
+<% form_remote_tag :url => {:action => :search, :controller => controller } do %>
 
   <% unless current_category.nil? %>
 
     Uwzględnij podkategorie &nbsp;&nbsp;<%= check_box_tag 'subcategories', true %>
-    <%= hidden_field_tag :current_category, current_category.id %>
+    <%= hidden_field_tag :id, current_category.id %>
 
   <%  end %>
 

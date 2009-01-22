@@ -39,7 +39,10 @@ ActionController::Routing::Routes.draw do |map|
   {
     :member => {
       :show => [:post, :get],
-    }
+    },
+    :collection => {
+      :search => :post
+      }
   }
     
   map.resources     :currencies

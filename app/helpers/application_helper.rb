@@ -72,7 +72,7 @@ module ApplicationHelper
     HTML
 
     result += <<-HTML
-      <p id="#{computed_name}" style="display:none">KUPA</p>
+      <p id="#{computed_name}" style="display:none"></p>
     HTML
 
     function = <<-JS
