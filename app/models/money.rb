@@ -28,13 +28,7 @@ class Money
     return @hash.keys
   end
 
-  #TODO
-  #odejmowanie Money
-  def -(a)
-    c = Money.new
-  end
-
-
+  
   def value(currency=nil)
     currency = @hash.keys.first if currency.nil? && @hash.size == 1
     return @hash[currency]
@@ -68,6 +62,24 @@ class Money
     remove_zero_currencies
     self
   end
+
+  # add(money)
+  # add(value, currency)
+  def sub(*args)
+    case args.size
+    when 1
+      @hash - args[0].values_in_currencies
+    when 2
+      @hash[args[1]] ||= 0
+      @hash[args[1]] -= args[0]
+    else
+      raise ArgumentError, "Invalid number of arguments"
+    end
+    remove_zero_currencies
+    self
+  end
+
+
 
 
   def is_empty?

@@ -21,6 +21,20 @@ class Hash
       raise "Add only possible for two hashes"
     end
   end
+
+  def -(item)
+    if item.class == Hash
+      item.each_pair do |key, value|
+        if self[key] == nil
+          self[key] = -value
+        else
+          self[key] -= value
+        end
+      end
+    else
+      raise "subtraction only possible for two hashes"
+    end
+  end
   
 
   # lets through the keys in the argument

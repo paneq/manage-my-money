@@ -107,6 +107,63 @@ class MoneyTest < Test::Unit::TestCase
     assert money.currencies.include?(@dolar)
   end
 
+  def test_values_after_subtraction_value
+    money = Money.new(@zloty => 11.1, @dolar =>22.2)
+    money.sub(0.9, @zloty)
+    assert_equal 10.2, money.value(@zloty), "Should properly subtract values"
+    
+    money.sub(-1.2, @dolar)
+    assert_equal 23.4, money.value(@dolar), "Should properly add values"
+    
+    money.sub(1_000_000, @euro)
+    assert_equal(-1_000_000, money.value(@euro), "Should properly subtract value from new currency")
+  end
+  
+  
+  def test_containst_currencies_after_subtraction_value
+    money = Money.new(@zloty => 11)
+    money.sub(0.9, @zloty)
+    assert money.currencies.include?(@zloty)
+    assert 1, money.currencies.size
+    assert !money.currencies.include?(@dolar)
+    
+    money.sub(0.9, @dolar)
+    assert money.currencies.include?(@zloty)
+    assert money.currencies.include?(@dolar)
+    assert 2, money.currencies.size
+    
+    money.sub(123.9, @euro)
+    assert money.currencies.include?(@zloty)
+    assert money.currencies.include?(@dolar)
+    assert money.currencies.include?(@euro)
+    assert 3, money.currencies.size
+  end
+
+
+  def test_subtraction_two_money_objects
+    money = Money.new(@zloty => 11, @euro =>12)
+    assert_nothing_raised do 
+      assert_currencies_list_unchanged money do
+        money.sub(Money.new())
+        assert_equal 11, money.value(@zloty)
+        assert_equal 12, money.value(@euro)
+      end
+    end
+
+    assert_currencies_list_unchanged money do
+      money.sub(Money.new(@zloty => 10, @euro => 20))
+      assert_equal 1, money.value(@zloty)
+      assert_equal(-8, money.value(@euro))
+    end
+
+    money.sub(Money.new(@dolar => 5, @zloty => 10, @euro => 20))
+    assert_equal(-9, money.value(@zloty))
+    assert_equal(-28, money.value(@euro))
+    assert_equal(-5, money.value(@dolar))
+    assert_equal 3, money.currencies.size
+    assert money.currencies.include?(@dolar)
+  end
+
 
   def test_modyfying_returned_all_values_is_not_possible
     money = Money.new()

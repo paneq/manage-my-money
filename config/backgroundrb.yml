@@ -6,5 +6,5 @@
     :delete_temporary_reports:
       :trigger_args:
         :start: <%= Time.now + 5.seconds %>
-        :end: <%= Time.now + 10.minutes %>
-        :repeat_interval: <%= 10.seconds %>
+        :end: <%= Time.now + 5.years %>
+        :repeat_interval: <%= 3.hours %>
