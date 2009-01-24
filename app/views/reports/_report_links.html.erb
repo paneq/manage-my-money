@@ -3,6 +3,7 @@
 <% unless @virtual %>
 
 | <%= link_to "Edytuj", edit_report_url(@report) %>
+<% unless @report.temporary %>
 | <%= link_to "Usun", report_path(@report), :method => :delete, :id => @report.id %>
-
+<% end %>
 <% end %>

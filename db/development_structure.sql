@@ -1,9 +1,11 @@
+CREATE TABLE "bdrb_job_queues" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "args" blob, "worker_name" varchar(255), "worker_method" varchar(255), "job_key" varchar(255), "taken" int, "finished" int, "timeout" int, "priority" int, "submitted_at" datetime, "started_at" datetime, "finished_at" datetime, "archived_at" datetime, "tag" varchar(255), "submitter_info" varchar(255), "runner_info" varchar(255), "worker_key" varchar(255), "scheduled_at" datetime);
 CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "description" varchar(255), "category_type_int" integer, "user_id" integer, "parent_id" integer, "lft" integer, "rgt" integer);
 CREATE TABLE "category_report_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "inclusion_type_int" integer DEFAULT 0 NOT NULL, "report_id" integer NOT NULL, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
 CREATE TABLE "currencies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar(255) NOT NULL, "long_symbol" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "long_name" varchar(255) NOT NULL, "user_id" integer);
 CREATE TABLE "exchanges" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "currency_a" decimal(8,4) NOT NULL, "currency_b" decimal(8,4) NOT NULL, "left_to_right" float NOT NULL, "right_to_left" float NOT NULL, "day" date NOT NULL, "user_id" integer);
 CREATE TABLE "goals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255), "include_subcategories" boolean, "period_type_int" integer, "goal_type_int" integer, "goal_completion_condition_int" integer, "value" float, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
-CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255) NOT NULL, "period_type_int" integer NOT NULL, "period_start" date, "period_end" date, "report_view_type_int" integer NOT NULL, "is_predefined" boolean DEFAULT 'f' NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "share_type_int" integer DEFAULT 0, "depth" integer DEFAULT 0, "max_categories_count" integer DEFAULT 0, "category_id" integer, "period_division_int" integer DEFAULT 2);
+CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255) NOT NULL, "period_type_int" integer NOT NULL, "period_start" date, "period_end" date, "report_view_type_int" integer NOT NULL, "is_predefined" boolean DEFAULT 'f' NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "share_type_int" integer DEFAULT 0, "depth" integer DEFAULT 0, "max_categories_count" integer DEFAULT 0, "category_id" integer, "period_division_int" integer DEFAULT 2, "temporary" boolean DEFAULT '--- :false
+' NOT NULL);
 CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
 CREATE TABLE "sessions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "session_id" varchar(255), "data" text, "updated_at" datetime);
 CREATE TABLE "transfer_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "value" decimal(8,2) NOT NULL, "transfer_id" integer NOT NULL, "category_id" integer NOT NULL, "currency_id" integer DEFAULT 3 NOT NULL);
@@ -40,3 +42,7 @@ INSERT INTO schema_migrations (version) VALUES ('20081208212007');
 INSERT INTO schema_migrations (version) VALUES ('20081208215053');
 
 INSERT INTO schema_migrations (version) VALUES ('20090104123107');
+
+INSERT INTO schema_migrations (version) VALUES ('20090124132402');
+
+INSERT INTO schema_migrations (version) VALUES ('20090124144600');

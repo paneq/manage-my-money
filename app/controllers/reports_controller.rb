@@ -4,7 +4,7 @@ class ReportsController < ApplicationController
  before_filter :login_required
 
  def index
-   @user_reports = Report.find :all, :conditions => ["user_id = ?", self.current_user.id]
+   @user_reports = Report.find :all, :conditions => ["user_id = ? AND temporary = ?", self.current_user.id, false]
    @system_reports = prepare_system_reports
  end
 
@@ -54,13 +54,22 @@ class ReportsController < ApplicationController
    @report.user = @current_user
    @report.period_type = :custom #TODO
    @report.period_start, @report.period_end = get_period('report_day')
+   if params[:commit] == 'Pokaż'
+      @report.temporary = true
+      @report.name = 'Tymczasowy raport' if @report.name.empty?
+   end
 
    if @report.save
-     flash[:notice] = "Twoj raport zostal dodany"
-     if params[:commit] == 'Zapisz i pokaż'
-        redirect_to :action => :show, :id => @report.id
-     else
+     if params[:commit] == 'Zapisz'
+        flash[:notice] = "Twoj raport zostal dodany"
         redirect_to :action => :index
+     else
+       if params[:commit] == 'Pokaż'
+         flash[:notice] = "Jesli chcesz używać tego raportu w przyszłości kliknij 'Edytuj', nadaj temu raportowi znaczącą dla Ciebie nazwę i 'Zapisz'"
+       else
+         flash[:notice] = "Twoj raport zostal dodany"
+       end
+        redirect_to :action => :show, :id => @report.id
      end
    else
      flash[:error]  = "Nie udalo sie dodac raportu"
@@ -89,12 +98,18 @@ class ReportsController < ApplicationController
  def update
    @report = Report.find params[:id]
    @report.period_start, @report.period_end = get_period('report_day')
+   @report.temporary = false if @report.temporary && params[:commit] != 'Pokaż'
    if @report.update_attributes(params[@report.type_str.underscore.intern])
-      flash[:notice] = 'Raport zostal pomyslnie zapisany'
-      if params[:commit] == 'Zapisz i pokaż'
-        redirect_to :action => :show, :id => @report.id
-      else
+      if params[:commit] == 'Zapisz'
+        flash[:notice] = 'Raport zostal pomyslnie zapisany'
         redirect_to :action => :index
+      else
+       if params[:commit] == 'Pokaż' && @report.temporary
+         flash[:notice] = "Jesli chcesz używać tego raportu w przyszłości kliknij 'Edytuj', nadaj temu raportowi znaczącą dla Ciebie nazwę i 'Zapisz'"
+       else
+         flash[:notice] = "Twoj raport zostal dodany"
+       end
+        redirect_to :action => :show, :id => @report.id
       end
    else
      flash[:notice] = 'Raport nie zostal pomyslnie zapisany'
