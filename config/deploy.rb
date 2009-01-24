@@ -24,4 +24,23 @@ task :chmod_files do
   run "chmod -R go= #{latest_release}"
 end
 
+namespace :backgroundrb do
+  desc "stop the backgroundrb server"
+  task :stop, :roles => :app do
+    invoke_command "sh -c 'if [ -a #{current_path}/log/backgroundrb_2000.pid ]; then #{current_path}/script/backgroundrb stop; fi;'", :via => run_method
+  end
+
+  desc "start the backgroundrb server"
+  task :start, :roles => :app do
+    invoke_command "nohup #{current_path}/script/backgroundrb start -d", :via => run_method
+  end
+
+  desc "restart the backgroundrb server"
+  task :restart, :roles => :app do
+    deploy.backgroundrb.stop
+    deploy.backgroundrb.start
+  end
+end
+
+
 after "deploy:symlink", :chmod_files
