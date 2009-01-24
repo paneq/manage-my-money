@@ -23,7 +23,7 @@
 
 class Report < ActiveRecord::Base
   extend HashEnums
-  define_enum :period_type, [:week, :day, :custom] #TODO
+  define_enum :period_type, [:day, :week, :month, :quarter, :year, :custom]
   define_enum :report_view_type, [:pie, :linear, :text, :bar]
 
   belongs_to :user

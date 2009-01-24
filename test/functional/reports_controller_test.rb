@@ -51,8 +51,8 @@ class ReportsControllerTest < ActionController::TestCase
         end
       end
       assert_select "select#value_report_period_division" do
-        assert_select "option", :count => 3
-        ['none','week', 'day'].each do |opt|
+        assert_select "option", :count => 6
+        ['day', 'week', 'month', 'quarter', 'year', 'none'].each do |opt|
           assert_select "option[value=#{opt}]"
         end
       end
@@ -129,8 +129,8 @@ class ReportsControllerTest < ActionController::TestCase
         assert_select "option[value=bar][selected=selected]"
       end
       assert_select "select#value_report_period_division" do
-        assert_select "option", :count => 3
-        ['none','week', 'day'].each do |opt|
+        assert_select "option", :count => 6
+        ['day', 'week', 'month', 'quarter', 'year', 'none'].each do |opt|
           assert_select "option[value=#{opt}]"
         end
         assert_select "option[value=week][selected=selected]"

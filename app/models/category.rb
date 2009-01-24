@@ -466,9 +466,75 @@ class Category < ActiveRecord::Base
   #  [''] dla period_division == :none
   #  sortowanie od etykiety opisujacej najstarsza wartosc
   def self.get_values_labels(period_division, period_start, period_end)
-    ['tydzien1','tydzien2','tydzien3']
+    dates = split_period(period_division, period_start, period_end)
+    case period_division
+    when :day then
+
+    when :week then
+
+    when :month then
+    when :quarter then
+    when :year then
+    when :none then
+      ['']
+    else
+      ['tydzien1','tydzien2','tydzien3']
+    end
   end
 
+
+  #TODO przeniesc to do lib, podzielic na kilka mniejszych metod
+  def self.split_period(period_division, period_start, period_end)
+    result = []
+    act_date = period_start
+    next_date = nil
+    case period_division
+    when :day then
+      while act_date <= period_end do
+        next_date = act_date.advance :days => 1
+        result << [act_date, next_date - 1.day]
+        act_date = next_date
+      end 
+    when :week then
+      while act_date <= period_end do
+        next_date = act_date.advance :days => 6
+        if next_date > period_end
+          next_date = period_end
+        end
+        result << [act_date, next_date]
+        act_date = next_date + 1.day
+      end
+    when :month then
+
+      if period_start.at_end_of_month == period_end.at_end_of_month
+        result << [period_start, period_end]
+      else
+
+        #1. od daty poczatkowej do konca miesiaca
+          result << [period_start, period_start.at_end_of_month]
+
+        #2.srodek
+        if period_start.next_month.at_end_of_month != period_end.at_end_of_month
+          act_date = period_start.next_month.at_beginning_of_month
+          while act_date <= period_end.last_month.at_end_of_month do
+            next_date = act_date.advance :months => 1
+            result << [act_date, act_date.at_end_of_month]
+            act_date = next_date
+          end
+        end
+
+        #3.od poczatku miesiaca do daty koncowej
+          result << [period_end.at_beginning_of_month, period_end]
+      end
+      
+    when :quarter then
+    when :year then
+    when :none then
+      result << period_start
+    end
+
+    result
+  end
 
 
 

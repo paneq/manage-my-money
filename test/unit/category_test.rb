@@ -435,6 +435,110 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
+  #TODO podzielić to na kilka metod
+  def test_split_period
+    dates = Category.split_period(:day, 5.day.ago.to_date, Date.today)
+    assert_equal 6, dates.count
+    assert_equal [
+                  [5.day.ago.to_date,5.day.ago.to_date],
+                  [4.day.ago.to_date,4.day.ago.to_date],
+                  [3.day.ago.to_date,3.day.ago.to_date],
+                  [2.day.ago.to_date,2.day.ago.to_date],
+                  [1.day.ago.to_date,1.day.ago.to_date],
+                  [Date.today,Date.today]
+                  ],
+                  dates
+
+    dates = Category.split_period(:day, Date.yesterday, Date.today)
+    assert_equal 2, dates.count
+    assert_equal [
+                  [Date.yesterday,Date.yesterday],
+                  [Date.today,Date.today]
+                  ],
+                  dates
+
+    dates = Category.split_period(:day, Date.today, Date.today)
+    assert_equal 1, dates.count
+    assert_equal [
+                  [Date.today,Date.today]
+                  ],
+                  dates
+
+
+
+    dates = Category.split_period(:week, 5.days.ago.to_date, Date.today)
+    assert_equal 1, dates.count
+    assert_equal [
+                  [5.day.ago.to_date,Date.today]
+                  ],
+                  dates
+
+
+    dates = Category.split_period(:week, "02.02.2009".to_date, "27.02.2009".to_date)
+    assert_equal 4, dates.count
+    assert_equal [
+                  ["02.02.2009".to_date, "08.02.2009".to_date],
+                  ["09.02.2009".to_date, "15.02.2009".to_date],
+                  ["16.02.2009".to_date, "22.02.2009".to_date],
+                  ["23.02.2009".to_date, "27.02.2009".to_date]
+                  ],
+                  dates
+
+    dates = Category.split_period(:month, "01.02.2009".to_date , "05.02.2009".to_date)
+    assert_equal 1, dates.count
+    assert_equal "01.02.2009".to_date, dates[0][0]
+    assert_equal "05.02.2009".to_date, dates[0][1]
+
+    dates = Category.split_period(:month, "01.02.2009".to_date , "01.02.2009".to_date)
+    assert_equal 1, dates.count
+    assert_equal "01.02.2009".to_date, dates[0][0]
+    assert_equal "01.02.2009".to_date, dates[0][1]
+
+    dates = Category.split_period(:month, "31.01.2009".to_date , "01.02.2009".to_date)
+    assert_equal 2, dates.count
+    assert_equal "31.01.2009".to_date, dates[0][0]
+    assert_equal "31.01.2009".to_date, dates[0][1]
+    assert_equal "01.02.2009".to_date, dates[1][0]
+    assert_equal "01.02.2009".to_date, dates[1][1]
+
+
+    dates = Category.split_period(:month, "04.02.2009".to_date , "18.02.2009".to_date)
+    assert_equal 1, dates.count
+    assert_equal "04.02.2009".to_date, dates[0][0]
+    assert_equal "18.02.2009".to_date, dates[0][1]
+
+    dates = Category.split_period(:month, "13.01.2009".to_date , "18.02.2009".to_date)
+    assert_equal 2, dates.count
+    assert_equal "13.01.2009".to_date, dates[0][0]
+    assert_equal "31.01.2009".to_date, dates[0][1]
+    assert_equal "01.02.2009".to_date, dates[1][0]
+    assert_equal "18.02.2009".to_date, dates[1][1]
+
+    dates = Category.split_period(:month, "01.01.2009".to_date , "28.02.2009".to_date)
+    assert_equal 2, dates.count
+    assert_equal "01.01.2009".to_date, dates[0][0]
+    assert_equal "31.01.2009".to_date, dates[0][1]
+    assert_equal "01.02.2009".to_date, dates[1][0]
+    assert_equal "28.02.2009".to_date, dates[1][1]
+
+
+    dates = Category.split_period(:month, "01.01.2009".to_date , "15.04.2009".to_date)
+    assert_equal 4, dates.count
+    assert_equal "01.01.2009".to_date, dates[0][0]
+    assert_equal "31.01.2009".to_date, dates[0][1]
+    assert_equal "01.02.2009".to_date, dates[1][0]
+    assert_equal "28.02.2009".to_date, dates[1][1]
+    assert_equal "01.03.2009".to_date, dates[2][0]
+    assert_equal "31.03.2009".to_date, dates[2][1]
+    assert_equal "01.04.2009".to_date, dates[3][0]
+    assert_equal "15.04.2009".to_date, dates[3][1]
+
+    dates = Category.split_period(:quarter, 5.day.ago.to_date, Date.today) #TODO
+    dates = Category.split_period(:year, 5.day.ago.to_date, Date.today) #TODO
+
+  end
+
+
   private
 
   def save_simple_transfer_item(hash_with_options)

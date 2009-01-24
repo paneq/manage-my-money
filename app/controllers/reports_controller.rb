@@ -18,7 +18,7 @@ class ReportsController < ApplicationController
          @in_sum = Report.sum_flow_values(@cash_flow[:in])
          @out_sum = Report.sum_flow_values(@cash_flow[:out])
          @delta = @in_sum.sub @out_sum
-        render :template => 'reports/show_flow_report'
+         render :template => 'reports/show_flow_report'
        else
         url = {:controller => 'reports', :action => 'show', :id => @report.id, :format => 'json', :virtual => params[:virtual]}
         @graph = open_flash_chart_object(600,300, url_for(url))
