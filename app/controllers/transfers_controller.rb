@@ -17,7 +17,7 @@ class TransfersController < ApplicationController
     @transfers = self.
       current_user.
       transfers.
-      find(:all, :include => :transfer_items, :conditions => conditions ).
+      find(:all, :order => 'day ASC, id ASC', :include => :transfer_items, :conditions => conditions ).
       map { |t| {:transfer => t} }
       
     respond_to do |format|

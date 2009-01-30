@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
       @value ||= @category.saldo_at_end_of_day(@end_day.to_date)
       @mode ||= :category
     else
-      @transfers ||= self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
+      @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC').map{ |t| {:transfer => t} }
       @mode ||= :transfers
     end
   end
