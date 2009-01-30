@@ -32,8 +32,13 @@ class TransferItem < ActiveRecord::Base
 
   
   def transfer_item_type
-    return :income if (!!@multiply && @multiply == 1) || (self.value &&self.value >= 0)
-    return :outcome if (!!@multiply && @multiply == -1) || (self.value && self.value < 0)
+    if @multiply
+      return :income if @multiply == 1
+      return :outcome if @multiply == -1
+      raise "Unknown situation"
+    end
+    return :income if  (self.value && self.value >= 0)
+    return :outcome if (self.value && self.value < 0)
     raise "Unknown transfer item type"
   end
 
