@@ -46,6 +46,7 @@ class User < ActiveRecord::Base
     end
 
     def top_of_type(type)
+      raise "Unknown category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
       find(:first, :conditions => ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
     end
   end

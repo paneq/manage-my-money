@@ -13,8 +13,8 @@ class TransferItemTest < Test::Unit::TestCase
     end
   end
 
-  def test_type_when_not_set
 
+  def test_type_when_not_set
     assert_raise RuntimeError do
       @ti.transfer_item_type
     end
@@ -82,5 +82,6 @@ class TransferItemTest < Test::Unit::TestCase
     assert_equal 300, @ti.value
     assert_equal :income, @ti.transfer_item_type
   end
+
 
 end
