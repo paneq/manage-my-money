@@ -83,7 +83,7 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
   test "should see edit form for share report" do
-    get :edit, :id => create_share_report.id
+    get :edit, :id => create_share_report(@jarek).id
     assert_response :success
     assert_select "div#share_report_options" do
       assert_date_fields
@@ -116,7 +116,7 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
   test "should see edit form for value report" do
-    get :edit, :id => create_value_report.id
+    get :edit, :id => create_value_report(@jarek).id
     assert_response :success
     assert_select "div#value_report_options" do
       assert_date_fields
@@ -144,7 +144,7 @@ class ReportsControllerTest < ActionController::TestCase
   end
   
   test "should see edit form for flow report" do
-    get :edit, :id => create_flow_report.id
+    get :edit, :id => create_flow_report(@jarek).id
     assert_response :success
     assert_select "div#flow_report_options" do
       assert_date_fields
@@ -163,12 +163,9 @@ class ReportsControllerTest < ActionController::TestCase
 
 
   test "should see flow report" do
-    get :show, :id => create_flow_report.id
+    get :show, :id => create_flow_report(@jarek).id
     assert_response :success
   end
-
-
-
 
 
   private
@@ -193,7 +190,7 @@ class ReportsControllerTest < ActionController::TestCase
           assert_select "div.category-option", :text => /#{cat.name}.*/ do
             assert_select "select[id^=#{report_type}_#{new_or_existing}_category_report_options_]" do
               assert_select "option", :count => 4
-              ['category_only','none', 'both', 'subcategory_only'].each do |opt|
+              ['category_only','none', 'both', 'category_and_subcategories'].each do |opt|
                 assert_select "option[value=#{opt}]"
               end
 #              assert_select "option[value=both][selected=selected]"
@@ -203,38 +200,6 @@ class ReportsControllerTest < ActionController::TestCase
       end
   end
 
-  def create_share_report
-    r = ShareReport.new
-    r.category = @jarek.categories.first
-    r.report_view_type = :pie
-    r.period_type = :week
-    r.share_type = :percentage
-    r.depth = 5
-    r.max_categories_count = 6
-    r.name = "Testowy raport"
-    r.save!
-    r
-  end
-
-  def create_flow_report
-    r = FlowReport.new
-    add_category_options @jarek, r
-    r.report_view_type = :text
-    r.period_type = :week
-    r.name = "Testowy raport"
-    r.save!
-    r
-  end
-
-  def create_value_report
-    r = ValueReport.new
-    add_category_options @jarek, r
-    r.report_view_type = :bar
-    r.period_type = :week
-    r.period_division = :week
-    r.name = "Testowy raport"
-    r.save!
-    r
-  end
+  
 
 end

@@ -87,15 +87,21 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def get_period(period)
-    if params[period + "_period"] == 'SELECTED'
-      start_day = Date.new(params[period+'_start']['year'].to_i, params[period+'_start']['month'].to_i, params[period+'_start']['day'].to_i)
-      end_day = Date.new(params[period+'_end']['year'].to_i, params[period+'_end']['month'].to_i, params[period+'_end']['day'].to_i)
+  def get_period(period, return_range = false)
+    symbol = params[period + "_period"].to_sym
+    range = if symbol == :SELECTED
+      start = params[period+'_start']
+      endt = params[period+'_end']
+      Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
     else
-      start_day = calculate_start_day(params[period])
-      end_day   = calculate_end_day(params[period])
+      Date.calculate(symbol)
     end
-    return start_day, end_day, params[period]
+
+    if return_range
+      return range
+    else
+      return range.begin, range.end
+    end
   end
   
 end

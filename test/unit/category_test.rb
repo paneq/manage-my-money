@@ -435,6 +435,24 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
+
+  def test_name_with_path
+    prepare_sample_catagory_tree_for_jarek
+    category1 = @jarek.categories.top_of_type(:INCOME)
+    category2 = @jarek.categories.find_by_name 'child1'
+
+    assert_equal 'Przychody', category1.name_with_path
+    assert_equal 'Zasoby:test:child1', category2.name_with_path
+
+    category1.name = 'Nazwa'
+    category1.save!
+    assert_equal 'Nazwa', category1.name_with_path
+    category2.name = 'NowaNazwa'
+    category2.save!
+    assert_equal 'Zasoby:test:NowaNazwa', category2.name_with_path
+
+  end
+
   private
 
   def prepare_sample_catagory_tree_for_jarek

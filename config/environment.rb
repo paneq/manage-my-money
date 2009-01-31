@@ -60,7 +60,8 @@ Rails::Initializer.run do |config|
   config.active_record.default_timezone = :utc
   
   config.i18n.default_locale = :pl
-  
+  MEMCACHED_PORT = 11212
+  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}"
 end
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)

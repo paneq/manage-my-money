@@ -166,6 +166,56 @@ class Test::Unit::TestCase
       end
     end
   end
+
+
+  def require_memcached
+    unless `ps aux` =~ Regexp.new("memcached -d -p #{MEMCACHED_PORT}")
+      `memcached -d -p #{MEMCACHED_PORT}`
+    end
+  end
+
+  def create_share_report(user)
+    r = ShareReport.new
+    r.user = user
+    r.category = user.categories.first
+    r.report_view_type = :pie
+    r.period_type = :week
+    r.share_type = :percentage
+    r.depth = 5
+    r.max_categories_count = 6
+    r.name = "Testowy raport"
+    r.save!
+    r
+  end
+
+  def create_flow_report(user)
+    r = FlowReport.new
+    r.user = user
+    add_category_options user, r
+    r.report_view_type = :text
+    r.period_type = :week
+    r.name = "Testowy raport"
+    r.save!
+    r
+  end
+
+  def create_value_report(user)
+    r = ValueReport.new
+    r.user = user
+    add_category_options user, r
+    r.report_view_type = :bar
+    r.period_type = :custom
+    r.period_start = 5.month.ago
+    r.period_end = Date.today.to_date
+    r.period_division = :week
+    r.name = "Testowy raport"
+    r.save!
+    r
+  end
+
+
+
+
   
 
 end

@@ -1,5 +1,18 @@
 <script type="text/javascript" src="/javascripts/swfobject.js"></script>
-<%= @graph %>
+
+<div align="center">
+<%  @graphs.each do |graph| %>
+<%= graph %><br/><br/>
+<%end%>
+</div>
+
+<% if @graphs.size == 0 %>
+
+<h1>Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
+
+<% end %>
+
+
 
 <br/>
 <%= switch("graph_table","Pokaż/ukryj tabelkę danych") %> <br/>

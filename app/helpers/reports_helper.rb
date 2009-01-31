@@ -40,9 +40,9 @@ module ReportsHelper
   def get_desc_for_inclusion_type(code)
     case code
     when :none then 'Nie wybrana'
-    when :both then 'Kategoria i podkategorie'
-    when :category_only then 'Tylko kategoria'
-    when :subcategory_only then 'Tylko podkategoria'
+    when :both then 'Kategoria i podkategorie osobno'
+    when :category_only then 'Kategoria'
+    when :category_and_subcategories then 'Kategoria (+podkategorie)'
     end
   end
 

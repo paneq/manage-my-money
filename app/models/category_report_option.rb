@@ -15,5 +15,5 @@ class CategoryReportOption < ActiveRecord::Base
   extend HashEnums
   belongs_to :multiple_category_report, :foreign_key => :report_id
   belongs_to :category, :foreign_key => :category_id
-  define_enum :inclusion_type, [:category_only, :subcategory_only, :both, :none]
+  define_enum :inclusion_type, [:category_only, :category_and_subcategories, :both, :none]
 end

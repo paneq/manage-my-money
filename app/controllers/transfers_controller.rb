@@ -197,14 +197,8 @@ class TransfersController < ApplicationController
   def conditions
     set_current_category
     condition = 'day >= ? AND day <= ?'
-    symbol = params[:transfer_day_period].to_sym
-    @range = if symbol == :SELECTED
-      start = params[:transfer_day_start]
-      endt = params[:transfer_day_end]
-      Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
-    else
-      Date.calculate(symbol)
-    end
+    @range = get_period('transfer_day', true)
+
     parameters = [condition, @range.begin, @range.end]
 
     #searching for transfers connected via items to one category
