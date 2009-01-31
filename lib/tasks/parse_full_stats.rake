@@ -1,10 +1,19 @@
+require 'socket'
 namespace :stats do
   namespace :full do
     desc 'Saves full stats of project based on every svn revision number'
     task :parse do
 
-      settings_file = '/media/data/develop/rails/3m/svn/stats/file'
-      to_file = '/media/data/develop/rails/3m/svn/stats/like_calc'
+      machine_name = Socket.gethostname
+      case machine_name
+      when 'arachno'
+        settings_file = '/home/jarek/NetBeansProjects/stats/file'
+        to_file = 'home/jarek/NetBeansProjects/stats/like_calc'
+      else
+        settings_file = '/media/data/develop/rails/3m/svn/stats/file'
+        to_file = '/media/data/develop/rails/3m/svn/stats/like_calc'
+      end
+      
 
       #chm fut
       #chml fut
