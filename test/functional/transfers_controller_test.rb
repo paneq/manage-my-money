@@ -81,13 +81,34 @@ class TransfersControllerTest < Test::Unit::TestCase
 
   def test_index_actual_month
     @rupert.update_attribute 'transaction_amount_limit_type', :actual_month
+    transfers = []
+    today = Date.today
+    (today.beginning_of_month..today.end_of_month).each do |day|
+      transfers << save_simple_transfer(:description => day.to_s, :day => day) if (day.day / 4 == 0)
+    end
 
+    save_simple_transfer(:description => 'future', :day => today.end_of_month.tomorrow)
+    save_simple_transfer(:description => 'past', :day => today.beginning_of_month.yesterday)
+
+    get :index
+    assert_transfer_table transfers, :way => :get
   end
 
 
   def test_index_actual_and_last_month
     @rupert.update_attribute 'transaction_amount_limit_type', :actual_and_last_month
+    transfers = []
+    today = Date.today
+    last_month = Date.today.last_month
+    (last_month.beginning_of_month..today.end_of_month).each do |day|
+      transfers << save_simple_transfer(:description => day.to_s, :day => day) if (day.day / 5 == 0)
+    end
 
+    save_simple_transfer(:description => 'future', :day => today.end_of_month.tomorrow)
+    save_simple_transfer(:description => 'past', :day => last_month.beginning_of_month.yesterday)
+
+    get :index
+    assert_transfer_table transfers, :way => :get
   end
 
 
