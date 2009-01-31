@@ -54,115 +54,33 @@ class Transfer < ActiveRecord::Base
     return day <=> other_transfer.day
   end
 
-  
+
+  protected
+
+
   def validate
-    errors.add("Total value of income and outcome are different!") if error_while_validating_io_value
-  end
-  
-
-  def error_while_validating_io_value
-    return !validate_io_values
-  end
-   
-  def validate_io_values
-    return (transfer_items.to_a.sum{|i| i.value} == 0)
-  end
-    
-  def outcome_value
-    sum_by_type :outcome
-  end
-  
-  def income_value
-    sum_by_type :income
-  end
-  
-  def value
-    return income_value, outcome_value
-  end
-  
-  def categories_by_type(type)
-    get_transfer_items_by_type(type).map {|t| t.category}
-  end
-  
-  def outcome_categories
-    categories_by_type :outcome
-  end
-  
-  def income_categories
-    categories_by_type :income
-  end
-  
-  def opposite_categories(category)
-    if income_categories.include?(category) 
-      outcome_categories
-    elsif outcome_categories.include?(category)  
-      income_categories
-    else
-      []
-    end
-  end
-  
-  def single_opposite_category(category)
-    opc = opposite_categories(category)
-    if opc.size == 1 
-      return opc[0]
-    else  
-      return nil
-    end
-  end
-  
-  def outcome_transfer_items
-    get_transfer_items_by_type :outcome
-  end
-  
-  
-  def income_transfer_items
-    get_transfer_items_by_type :income
+    errors.add_to_base("Transfer nie posiada wymaganych conajmniej dwóch elementów.") if transfer_items.size < 2
+    errors.add_to_base("Wartość elementów typu przychód i rozchód jest różna.") if different_income_outcome?
   end
 
-  def both_transfer_items
-    yield(:outcome, outcome_transfer_items)
-    yield(:income, income_transfer_items)
-  end
 
-  # @description: Calculates changes for an array of categories in very naive way.
-  def value_by_categories(categories)
-    h = {}
-    categories.collect{ |c| value_by_category(c) }.each do |hash|
-      hash.each_pair do |currency, value|
-        h[currency] = 0 unless h[currency]
-        h[currency] += value
-      end
-    end
-    return h
-  end
-  
-  ############
-  # @author: Robert Pankowecki
-  def value_by_category( category )
-    #poprawione
-    h = {}
-    currencies.uniq.each {|c| h[c] = 0}
-    transfer_items.in_category(category).each do |ti| 
-      h[ti.currency] += ti.value
-    end
-    return h
-  end #end of value_by_category
-   
-   
   private
-   
-  def sum_by_type (type)
-    tr = get_transfer_items_by_type type
-    return tr.sum { |ti| ti.value }
+  
+  def different_income_outcome?
+    currencies_count = transfer_items.map {|ti| ti.currency_id}.uniq.size
+    return different_income_outcome_one_currency? if currencies_count == 1 # Not working solution: --> if currencies.size == 1
+    return different_income_outcome_many_currencies? if currencies_count > 1
+    return false
   end
-   
-  
-  def get_transfer_items_by_type(type)
-    return transfer_items.select { |item|  item.value >= 0} if type == :income
-    return transfer_items.select { |item|  item.value < 0} if type == :outcome
-    raise 'Unknown type'
+
+
+  def different_income_outcome_one_currency?
+    return transfer_items.map{ |ti| ti.value }.sum != 0.0 # Not working solution: --> ti.sum(:value)
   end
-  
-  
+
+
+  def different_income_outcome_many_currencies?
+    #TODO
+  end
+
 end

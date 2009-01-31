@@ -62,7 +62,20 @@ class TransferTest < Test::Unit::TestCase
   end
 
 
+  def test_validation_one_currency
+    transfer = make_simple_transfer #creates good transfer
+    transfer.transfer_items[0].value += 10 #makes it bad
+    assert !transfer.valid?, "Transfer with two different sum of income and outcome elements should not be valid"
+    assert_match /Wartość.*różna/, transfer.errors.on('base')
+
+    transfer.transfer_items = [transfer.transfer_items.first]
+    assert !transfer.valid?, "Transfer should have at least 2 elements to be valid"
+    assert_match /dwóch.*elementów/, transfer.errors.on('base').join(" ")
+  end
+
+
   private
+
 
   def save_transfer
     @transfer = Transfer.new :day => Date.today, :user => @rupert, :description => 'test',

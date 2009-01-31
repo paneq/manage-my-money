@@ -90,16 +90,8 @@ class Test::Unit::TestCase
     end
   end
 
-  # Save simple transfer with one currency, description and value <br />
-  # Posssible options are: <br />
-  # * day
-  # * description
-  # * user
-  # * currency
-  # * value
-  # * income
-  # * outcome
-  def save_simple_transfer(options)
+
+  def make_simple_transfer(options = {})
     hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.categories.first, :outcome => @rupert.categories.second }
     hash.merge! options
 
@@ -118,7 +110,21 @@ class Test::Unit::TestCase
       :currency => hash[:currency],
       :description => hash[:description],
       :value => -1*hash[:value])
+    return transfer
+  end
 
+
+  # Save simple transfer with one currency, description and value <br />
+  # Posssible options are: <br />
+  # * day
+  # * description
+  # * user
+  # * currency
+  # * value
+  # * income
+  # * outcome
+  def save_simple_transfer(options = {})
+    transfer = make_simple_transfer(options)
     transfer.save!
     return transfer
   end
