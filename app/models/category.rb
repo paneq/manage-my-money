@@ -432,11 +432,12 @@ class Category < ActiveRecord::Base
   
 
   #TODO
+  #TODO co z walutami?
   # Podaje saldo/salda kategorii w podanym czasie
   #
   # Parametry:
   #  inclusion_type to jedno z [:category_only, :subcategory_only, :both]
-  #  period_division to jedno z [:day, :week, :none] (lista niedokończona) podzial podanego zakresu czasu na podokresy
+  #  period_division to jedno z [:day, :week, :none...] podzial podanego zakresu czasu na podokresy
   #  period_start, period_end zakres czasowy
   #
   # Wyjscie:
@@ -446,7 +447,13 @@ class Category < ActiveRecord::Base
   #  sortowanie od najstarszej wartosci
   #
   def calculate_values(inclusion_type, period_division, period_start, period_end)
-    [1,2,3]
+    result = []
+    dates = Date.split_period(period_division, period_start, period_end)
+    dates.each do |date_range|
+      result << saldo_for_period_new(date_range[0], date_range[1]) #TODO inclusion_type???
+    end
+    result
+    [1,2,3] #TODO
   end
 
 
@@ -466,77 +473,21 @@ class Category < ActiveRecord::Base
   #  [''] dla period_division == :none
   #  sortowanie od etykiety opisujacej najstarsza wartosc
   def self.get_values_labels(period_division, period_start, period_end)
-    dates = split_period(period_division, period_start, period_end)
-    case period_division
-    when :day then
-
-    when :week then
-
-    when :month then
-    when :quarter then
-    when :year then
-    when :none then
-      ['']
-    else
+#    dates = Date.split_period(period_division, period_start, period_end)
+#    case period_division
+#    when :day then
+#
+#    when :week then
+#
+#    when :month then
+#    when :quarter then
+#    when :year then
+#    when :none then
+#      ['']
+#    else
       ['tydzien1','tydzien2','tydzien3']
-    end
+#    end
   end
-
-
-  #TODO przeniesc to do lib, podzielic na kilka mniejszych metod
-  def self.split_period(period_division, period_start, period_end)
-    result = []
-    act_date = period_start
-    next_date = nil
-    case period_division
-    when :day then
-      while act_date <= period_end do
-        next_date = act_date.advance :days => 1
-        result << [act_date, next_date - 1.day]
-        act_date = next_date
-      end 
-    when :week then
-      while act_date <= period_end do
-        next_date = act_date.advance :days => 6
-        if next_date > period_end
-          next_date = period_end
-        end
-        result << [act_date, next_date]
-        act_date = next_date + 1.day
-      end
-    when :month then
-
-      if period_start.at_end_of_month == period_end.at_end_of_month
-        result << [period_start, period_end]
-      else
-
-        #1. od daty poczatkowej do konca miesiaca
-          result << [period_start, period_start.at_end_of_month]
-
-        #2.srodek
-        if period_start.next_month.at_end_of_month != period_end.at_end_of_month
-          act_date = period_start.next_month.at_beginning_of_month
-          while act_date <= period_end.last_month.at_end_of_month do
-            next_date = act_date.advance :months => 1
-            result << [act_date, act_date.at_end_of_month]
-            act_date = next_date
-          end
-        end
-
-        #3.od poczatku miesiaca do daty koncowej
-          result << [period_end.at_beginning_of_month, period_end]
-      end
-      
-    when :quarter then
-    when :year then
-    when :none then
-      result << period_start
-    end
-
-    result
-  end
-
-
 
   #
   #

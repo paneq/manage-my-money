@@ -1,5 +1,40 @@
 class Date
 
+  alias old_advance advance
+  #Dodaje do metody advance opcje :weeks i :quarters (dodają odpowiednio po 7 dni i 3 miesiące)
+  def advance(options)
+    if options[:weeks]
+      options[:days] ||= 0
+      options[:days] += options[:weeks]*7
+      options[:weeks] = nil
+    end
+
+    if options[:quarters]
+      options[:months] ||= 0
+      options[:months] += options[:quarters]*3
+      options[:quarters] = nil
+    end
+    old_advance(options)
+  end
+
+  def next_quarter
+    self.at_end_of_quarter.next
+  end
+
+  def last_quarter
+    self.at_beginning_of_quarter.advance(:days => -1).at_beginning_of_quarter
+  end
+
+  def next_week
+    self.at_end_of_week.next
+  end
+
+  def last_week
+    self.at_beginning_of_week.advance(:days => -1).at_beginning_of_week
+  end
+
+
+
   #Periods recognized by calculate
   PERIODS = [
     [:THIS_DAY, 'Dzisiaj'],
@@ -78,5 +113,63 @@ class Date
       raise "Unrecognized period symbol: #{symbol}"
     end
   end
+
+
+  def self.split_period(period_division, period_start, period_end)
+    case period_division
+    when :day then
+      split_into_days(period_start, period_end)
+    when :week, :month, :quarter, :year then
+      meta_split_period(period_division, period_start, period_end)
+    when :none then
+      [[period_start, period_end]]
+    end
+  end
+
+
+  def self.split_into_days(period_start, period_end)
+    result = []
+    act_date = period_start
+    next_date = nil
+    while act_date <= period_end do
+      next_date = act_date.advance :days => 1
+      result << [act_date, next_date - 1.day]
+      act_date = next_date
+    end
+    result
+  end
+
+  private
+  def self.meta_split_period(split_unit, period_start, period_end)
+
+    beginning_method = "at_beginning_of_#{split_unit}"
+    end_method = "at_end_of_#{split_unit}"
+    next_method = "next_#{split_unit}"
+    last_method = "last_#{split_unit}"
+    adv_symbol = split_unit.to_s.pluralize.intern
+
+    result = []
+    act_date = period_start
+    next_date = nil
+    if period_start.send(end_method) == period_end.send(end_method)
+      result << [period_start, period_end]
+    else
+      #1. od daty poczatkowej do konca okresu
+      result << [period_start, period_start.send(end_method)]
+      #2.srodek
+      if period_start.send(next_method).send(end_method) != period_end.send(end_method)
+        act_date = period_start.send(next_method).send(beginning_method)
+        while act_date <= period_end.send(last_method).send(end_method) do
+          next_date = act_date.advance adv_symbol => 1
+          result << [act_date, act_date.send(end_method)]
+          act_date = next_date
+        end
+      end
+      #3.od poczatku okresu do daty koncowej
+      result << [period_end.send(beginning_method), period_end]
+    end
+    result
+  end
+
 
 end
