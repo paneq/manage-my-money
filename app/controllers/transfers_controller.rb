@@ -7,6 +7,7 @@ class TransfersController < ApplicationController
   before_filter :check_perm_for_transfer , :only => [:show_details, :hide_details, :show , :edit_with_items, :destroy]
 
 
+  # TODO: Refactor
   def index
     create_empty_transfer
     options = {:order => 'day ASC, id ASC'}.merge case self.current_user.transaction_amount_limit_type
@@ -15,6 +16,13 @@ class TransfersController < ApplicationController
     when :week_count
       start_day = (self.current_user.transaction_amount_limit_value - 1).weeks.ago.to_date.beginning_of_week
       end_day = Date.today.end_of_week
+      {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
+    when :actual_month
+      range = Date.calculate(:THIS_MONTH)
+      {:conditions => ['day >= ? AND day <= ?', range.begin, range.end]}
+    when :actual_and_last_month
+      start_day = Date.calculate_start(:LAST_MONTH)
+      end_day = Date.calculate_end(:THIS_MONTH)
       {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
     else
       {}
