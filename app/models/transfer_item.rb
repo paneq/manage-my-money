@@ -44,7 +44,7 @@ class TransferItem < ActiveRecord::Base
 
 
   def multiply_depending_of_type
-    (self.value *= @multiply) if @multiply
+    (self.value *= @multiply) if (@multiply && self.value)
     @multiply = nil
   end
 
