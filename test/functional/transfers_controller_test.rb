@@ -153,6 +153,33 @@ class TransfersControllerTest < Test::Unit::TestCase
     assert_transfer_table [transfers.last]
   end
 
+
+  def test_quick_transfer
+    today = Date.today
+    transfers = []
+    @asset = @rupert.categories.top_of_type(:ASSET)
+    save_simple_transfer(:description => 'future', :day => today.end_of_month.tomorrow, :income => @asset)
+    transfers << save_simple_transfer(:description => 'this_month', :day => today, :income => @asset)
+    save_simple_transfer(:description => 'past', :day => today.beginning_of_month.yesterday, :income => @asset)
+
+    xhr :post, :quick_transfer,
+      :current_category => @asset.id.to_s,
+      :data => {
+      'description' => 'test',
+      'day(1i)' => today.year.to_s,
+      'day(2i)' => today.month.to_s,
+      'day(3i)' => today.day.to_s,
+      'category_id' => @asset.id.to_s,
+      'currency_id' => @rupert.default_currency.id.to_s,
+      'value' => '123.45',
+      'from_category_id' => @rupert.categories.top_of_type(:INCOME).id.to_s,
+    }
+    assert_response :success
+    transfers << @rupert.transfers(true).find_by_description('test')
+    assert_transfer_table transfers
+  end
+
+
   private
 
   #checks if transfer table contains all transfers given as first paramters and if they are in proper order
@@ -178,5 +205,7 @@ class TransfersControllerTest < Test::Unit::TestCase
     end
 
   end
+
+
   
 end
