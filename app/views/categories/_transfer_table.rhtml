@@ -29,7 +29,7 @@
   %>
   <tr class="<%= cycle('line-even', 'line-odd') -%>" >
     <td class="transfer-table-border">
-      <b><%= @start_day.to_date %></b>
+      <b><%= @start_day.to_date if @start_day %></b>
     </td>
     <td colspan="5">
     </td>
@@ -47,7 +47,7 @@
   %>
   <tr class="<%= cycle('line-even', 'line-odd') -%>" >
     <td class="transfer-table-border">
-      <b><%= @end_day.to_date %></b>
+      <b><%= @end_day.to_date if @start_day %></b>
     </td>
     <td colspan="5">
     </td>

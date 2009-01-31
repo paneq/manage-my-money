@@ -43,6 +43,7 @@ class Test::Unit::TestCase
     @rupert.activate!
   end
 
+
   def save_jarek
     @jarek = User.new()
     @jarek.active = true
@@ -55,6 +56,7 @@ class Test::Unit::TestCase
     @jarek.activate!
   end
 
+
   def make_currencies
     unless @currencies
       @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
@@ -64,15 +66,18 @@ class Test::Unit::TestCase
     end
   end
 
+
   def save_currencies
     make_currencies
     @currencies.each {|currency| currency.save!}
   end
 
+
   def log_rupert
     #    @request.session[:user_id] = @rupert.id
     log_user(@rupert)
   end
+
 
   def log_user(user)
     @request.session[:user_id] = user.id
@@ -85,8 +90,41 @@ class Test::Unit::TestCase
     end
   end
 
+  # Save simple transfer with one currency, description and value <br />
+  # Posssible options are: <br />
+  # * day
+  # * description
+  # * user
+  # * currency
+  # * value
+  # * income
+  # * outcome
+  def save_simple_transfer(options)
+    hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.categories.first, :outcome => @rupert.categories.second }
+    hash.merge! options
 
-  def menu(menu_items, action)
+    transfer = Transfer.new(:user => hash[:user])
+    transfer.day = hash[:day]
+    transfer.description = hash[:description]
+
+    transfer.transfer_items << TransferItem.new(
+      :category => hash[:income],
+      :currency => hash[:currency],
+      :description => hash[:description],
+      :value => hash[:value])
+
+    transfer.transfer_items << TransferItem.new(
+      :category => hash[:outcome],
+      :currency => hash[:currency],
+      :description => hash[:description],
+      :value => -1*hash[:value])
+
+    transfer.save!
+    return transfer
+  end
+
+  
+  def assert_menu(menu_items, action)
     assert_select 'div#bottom-menu' do
       assert_select 'span#kind-of-transfer > span', menu_items.size
       assert_select 'span#kind-of-transfer' do

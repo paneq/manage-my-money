@@ -27,7 +27,67 @@ class TransfersControllerTest < Test::Unit::TestCase
   
   def test_index_menu
     get :index
-    menu ['full', 'search'], '/transfers/search'
+    assert_menu ['full', 'search'], '/transfers/search'
+  end
+
+
+  def test_index_transaction_count
+    @rupert.update_attributes! :transaction_amount_limit_type => :transaction_count, :transaction_amount_limit_value => 2
+
+    # test when no transfer
+    get :index
+    assert_transfer_table [], :way => :get
+
+    #two transfer and limit is 2
+    transfers = []
+    2.times {|time| transfers << save_simple_transfer(:description => time.to_s) }
+    get :index
+    assert_transfer_table transfers, :way => :get
+
+    #three trnasfers and limit is 3
+    transfers << save_simple_transfer(:description => '3')
+    get :index
+    assert_transfer_table [transfers.second, transfers.third], :way => :get
+  end
+
+
+  def test_index_week_count
+    #only current week
+    @rupert.update_attributes! :transaction_amount_limit_type => :week_count, :transaction_amount_limit_value => 1
+    transfers = []
+
+    #create a transfer for every day of current week
+    today = Date.today
+    (today.beginning_of_week..today.end_of_week).each do |day|
+      transfers << save_simple_transfer(:description => day.to_s, :day => day)
+    end
+
+    #one transfer in the future and one in the past
+    save_simple_transfer(:description => 'future', :day => today.end_of_week.tomorrow)
+    long_past = save_simple_transfer(:description => 'past', :day => today.beginning_of_week.yesterday.beginning_of_week)
+    close_past = save_simple_transfer(:description => 'past', :day => today.beginning_of_week.yesterday)
+
+    #check for transfers from only this week
+    get :index
+    assert_transfer_table transfers, :way => :get
+
+    @rupert.update_attributes! :transaction_amount_limit_value => 2
+    #little hack, otherwise controller remebers currently logged user and his settings are not readed again
+    @controller = TransfersController.new
+    get :index
+    assert_transfer_table [long_past, close_past] + transfers, :way => :get
+  end
+
+
+  def test_index_actual_month
+    @rupert.update_attribute 'transaction_amount_limit_type', :actual_month
+
+  end
+
+
+  def test_index_actual_and_last_month
+    @rupert.update_attribute 'transaction_amount_limit_type', :actual_and_last_month
+
   end
 
 
@@ -59,23 +119,7 @@ class TransfersControllerTest < Test::Unit::TestCase
     times.each_with_index do |time, index|
       xhr :post, :search, :transfer_day_period => time.to_s
       assert_response :success
-      assert_select_rjs :replace_html, 'transfer-table-div' do
-        elements = times.size - index #how many transfers should be visible
-        first = -elements  #negative index of first transfer that should be showed
-        assert_select 'tr[id^=transfer-in-category-line]', elements #check that all elements occures
-        first.upto(-1) do |index|
-          transfer = transfers[index]
-          assert_select "[id=transfer-in-category-#{transfer.id}]"
-
-          [[1, :day], [2, :description]].each do |nr, method|
-            #checks if elements has proper content
-            assert_select "tr#transfer-in-category-line-#{transfer.id} td:nth-child(#{nr})", Regexp.new(transfer.send(method).to_s)
-          end
-
-          # checks if transfers was rendered in valid order
-          assert_select "table#transfers-table tr:nth-child(#{(index + elements)*2 + 1 + 2})", Regexp.new(transfer.description) #index + elements gives you positive index (counting from 0). *2 becuase there are 2 tr per each transfer. + 1 becuase assert counts childes from 1 not from 0. +2 becuase of first 2 rows.
-        end
-      end
+      assert_transfer_table transfers[index..transfers.size]
     end
 
     today = Date.today
@@ -85,10 +129,33 @@ class TransfersControllerTest < Test::Unit::TestCase
       :transfer_day_start => hash,
       :transfer_day_end => hash
     assert_response :success
-    assert_select_rjs :replace_html, 'transfer-table-div' do
-      assert_select 'tr[id^=transfer-in-category-line]', 1
+    assert_transfer_table [transfers.last]
+  end
+
+  private
+
+  #checks if transfer table contains all transfers given as first paramters and if they are in proper order
+  def assert_transfer_table(transfers, options = {:way => :xhr})
+    method = options[:way] == :xhr ? 'assert_select_rjs' : 'assert_select'
+    params = options[:way] == :xhr ? [:replace_html, 'transfer-table-div'] : 'div#transfer-table-div'
+
+    send(method, *params) do
+
+      assert_select 'tr[id^=transfer-in-category-line]', transfers.size #check that all elements occures
+
+      transfers.each_with_index do |transfer, index|
+        assert_select "[id=transfer-in-category-#{transfer.id}]"
+
+        [[1, :day], [2, :description]].each do |nr, method|
+          #checks if elements has proper content
+          assert_select "tr#transfer-in-category-line-#{transfer.id} td:nth-child(#{nr})", Regexp.new(transfer.send(method).to_s)
+        end
+
+        # checks if transfers was rendered in valid order by checking its description
+        assert_select "table#transfers-table tr:nth-child(#{index*2 + 1 + 2})", Regexp.new(transfer.description) # index*2 becuase there are 2 tr per each transfer. + 1 becuase assert counts childes from 1 not from 0. +2 becuase of first 2 rows.
+      end
     end
-    
+
   end
   
 end

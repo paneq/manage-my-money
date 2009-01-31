@@ -9,15 +9,26 @@ class TransfersController < ApplicationController
 
   def index
     create_empty_transfer
-    set_start_end_days
-    @transfers = self.current_user.transfers.find(:all).map{ |t| {:transfer => t} }
+    options = {:order => 'day ASC, id ASC'}.merge case self.current_user.transaction_amount_limit_type
+    when :transaction_count :
+      { :limit => self.current_user.transaction_amount_limit_value, :order => 'day DESC, id DESC', :reverse => true}
+    when :week_count
+      start_day = (self.current_user.transaction_amount_limit_value - 1).weeks.ago.to_date.beginning_of_week
+      end_day = Date.today.end_of_week
+      {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
+    else
+      {}
+    end
+    @transfers = self.current_user.transfers.find(:all, options.block(:reverse)).map{ |t| {:transfer => t} }
+    @transfers.reverse! if options[:reverse]
   end
+
 
   def search    
     @transfers = self.
       current_user.
       transfers.
-      find(:all, :order => 'day ASC, id ASC', :include => :transfer_items, :conditions => conditions ).
+      find(:all, :order => 'day ASC, id ASC', :conditions => conditions ).
       map { |t| {:transfer => t} }
       
     respond_to do |format|
@@ -25,6 +36,7 @@ class TransfersController < ApplicationController
       format.js {render_transfer_table}
     end
   end
+
 
   # remote
   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
