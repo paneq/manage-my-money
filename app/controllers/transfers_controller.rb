@@ -1,6 +1,7 @@
 class TransfersController < ApplicationController
 
   require 'hash'
+  include ActionView::Helpers::ActiveRecordHelper
   
   layout 'main'
   before_filter :login_required
@@ -154,7 +155,14 @@ class TransfersController < ApplicationController
         end
       end
     else
-      throw :a
+      respond_to do |format|
+        format.html {}
+        format.js do
+          render :update do |page|
+            page.replace_html 'transfer-errors', error_messages_for(:transfer, :message => nil)
+          end
+        end
+      end
     end
   end
 

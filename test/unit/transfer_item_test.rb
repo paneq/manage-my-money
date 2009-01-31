@@ -84,4 +84,9 @@ class TransferItemTest < Test::Unit::TestCase
   end
 
 
+  def test_validate_when_no_value_was_set
+    @ti.transfer_item_type=(:outcome)
+    assert_nothing_raised { @ti.valid? }
+  end
+
 end

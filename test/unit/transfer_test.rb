@@ -73,6 +73,15 @@ class TransferTest < Test::Unit::TestCase
     assert_match /dwóch.*elementów/, transfer.errors.on('base').join(" ")
   end
 
+  
+  def test_validation_not_numerical_values
+    transfer = make_simple_transfer
+    transfer.transfer_items[0].value = "aba"
+    transfer.transfer_items[1].value = 0
+    transfer.transfer_items.build(:value => nil, :currency => @rupert.default_currency )
+    assert_nothing_raised { !transfer.valid? }
+    assert !transfer.valid?
+  end
 
   private
 

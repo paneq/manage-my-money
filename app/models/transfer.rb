@@ -75,7 +75,7 @@ class Transfer < ActiveRecord::Base
 
 
   def different_income_outcome_one_currency?
-    return transfer_items.map{ |ti| ti.value }.sum != 0.0 # Not working solution: --> ti.sum(:value)
+    return transfer_items.map{ |ti| (ti.value.nil? || !ti.errors.empty?) ? 0 : ti.value }.sum != 0.0 # Not working solution: --> ti.sum(:value)
   end
 
 

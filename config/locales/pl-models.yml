@@ -3,6 +3,13 @@ pl:
     models:
       user: Użytkownik
       report: Raport
+      transfer_items: Element transferu
+      transfer: Transfer
     attributes:
       report:
         name: Nazwa
+      transfer:
+        description: Opis
+        transfer_items: Element transferu
+      transfer_item:
+        value: Wartość
