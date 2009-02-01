@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090124144600) do
+ActiveRecord::Schema.define(:version => 20090201170116) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -32,13 +32,15 @@ ActiveRecord::Schema.define(:version => 20090124144600) do
   end
 
   create_table "categories", :force => true do |t|
-    t.string  "name",              :null => false
+    t.string  "name",                                 :null => false
     t.string  "description"
     t.integer "category_type_int"
     t.integer "user_id"
     t.integer "parent_id"
     t.integer "lft"
     t.integer "rgt"
+    t.string  "import_guid"
+    t.boolean "imported",          :default => false
   end
 
   create_table "category_report_options", :force => true do |t|
@@ -93,7 +95,7 @@ ActiveRecord::Schema.define(:version => 20090124144600) do
     t.integer  "depth",                :default => 0
     t.integer  "max_categories_count", :default => 0
     t.integer  "category_id"
-    t.integer  "period_division_int",  :default => 2
+    t.integer  "period_division_int",  :default => 5
     t.boolean  "temporary",            :default => false, :null => false
   end
 
@@ -112,12 +114,14 @@ ActiveRecord::Schema.define(:version => 20090124144600) do
     t.integer "transfer_id",                                              :null => false
     t.integer "category_id",                                              :null => false
     t.integer "currency_id",                               :default => 3, :null => false
+    t.string  "import_guid"
   end
 
   create_table "transfers", :force => true do |t|
     t.text    "description", :null => false
     t.date    "day",         :null => false
     t.integer "user_id",     :null => false
+    t.string  "import_guid"
   end
 
   create_table "users", :force => true do |t|

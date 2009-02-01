@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
   has_many :transfers
   has_many :transfer_items, :through => :transfers
   has_many :currencies
+
   has_many :visible_currencies,
     :class_name => 'Currency',
     :finder_sql => 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!

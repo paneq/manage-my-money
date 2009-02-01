@@ -34,15 +34,15 @@ class ReportsController < ApplicationController
 
 
   def get_graph_data
-#    respond_to do |format|
-#      format.html do
-#        render :text => "a"
-#      end
-#      format.json do
-        throw 'No report found' unless get_report_from_params
-        render :text => Rails.cache.read("REPORT##{params[:id]}")[params[:graph]], :layout => false
-#      end
-#    end
+    #    respond_to do |format|
+    #      format.html do
+    #        render :text => "a"
+    #      end
+    #      format.json do
+    throw 'No report found' unless get_report_from_params
+    render :text => Rails.cache.read("REPORT##{params[:id]}")[params[:graph]], :layout => false
+    #      end
+    #    end
   end
 
 
@@ -269,6 +269,11 @@ class ReportsController < ApplicationController
 
   def calculate_and_group_values_by_currencies(report)
     chart_values = {}
+    if self.current_user.multi_currency_balance_calculating_algorithm == :show_all_currencies
+      currencies = Currency.for_user(self.current_user).in_period(report.period_start, report.period_end)
+    else
+      currencies = [self.current_user.default_currency]
+    end
     report.category_report_options.each do |option|
       values = option.category.calculate_values(option.inclusion_type, report.period_division, report.period_start, report.period_end)
       values.each do |value| #pair [type,money]
@@ -277,10 +282,12 @@ class ReportsController < ApplicationController
         if value[0] == :category_and_subcategories
           cat_label += ' (+podkategorie)'
         end
-        money.each do |cur, val|
+
+
+        currencies.each do |cur|
           chart_values[cur] ||= {}
           chart_values[cur][cat_label] ||= []
-          chart_values[cur][cat_label] << val
+          chart_values[cur][cat_label] << money.value(cur)
         end
       end
     end
@@ -313,7 +320,7 @@ class ReportsController < ApplicationController
   end
 
 
-#todo
+  #todo
   def generate_share_report
     title = Title.new(@report.name)
     chart = OpenFlashChart.new

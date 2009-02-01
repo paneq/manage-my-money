@@ -12,7 +12,21 @@
 #
 
 class Currency < ActiveRecord::Base
-  
+
+  named_scope :for_user, lambda { |user|
+    { :conditions => ['(currencies.user_id = ? OR currencies.user_id IS NULL)', user.id],
+      :select => 'DISTINCT currencies.*'
+    }
+  } do
+    def in_period(start_day, end_day)
+      find(:all, 
+        :joins => 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id',
+        :conditions => ['transfers.day >= ? AND transfers.day <= ?', start_day, end_day]
+      )
+    end
+  end
+
+
   has_many  :left_exchanges,
             :class_name => "Exchange",
             :foreign_key => "currency_a"
