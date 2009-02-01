@@ -1,10 +1,30 @@
 pl:
+  types:
+    income: Przychód
+    outcome: Rozchód
   activerecord:
+    errors:
+      models:
+        transfer:
+          attributes:
+            transfer_items:
+              invalid: jest nieprawidłowy
+        transfer_item:
+          attributes:
+            value:
+              not_a_number: `{{value}}` nie jest prawidłową liczbą
+              blank: nie może być pusta
+            category:
+              blank: nie może być pusta
+            currency:
+              blank: nie może być pusta
     models:
       user: Użytkownik
       report: Raport
       transfer_items: Element transferu
       transfer: Transfer
+      category: Kategoria
+      currency: Waluta
     attributes:
       report:
         name: Nazwa
@@ -13,3 +33,10 @@ pl:
         transfer_items: Element transferu
       transfer_item:
         value: Wartość
+
+
+
+
+
+
+#activerecord.errors.models.admin.attributes.title.blank

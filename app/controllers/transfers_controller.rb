@@ -13,7 +13,7 @@ class TransfersController < ApplicationController
     create_empty_transfer
     options = {:order => 'day ASC, id ASC'}.merge case self.current_user.transaction_amount_limit_type
     when :transaction_count :
-      { :limit => self.current_user.transaction_amount_limit_value, :order => 'day DESC, id DESC', :reverse => true}
+        { :limit => self.current_user.transaction_amount_limit_value, :order => 'day DESC, id DESC', :reverse => true}
     when :week_count
       start_day = (self.current_user.transaction_amount_limit_value - 1).weeks.ago.to_date.beginning_of_week
       end_day = Date.today.end_of_week
@@ -136,7 +136,21 @@ class TransfersController < ApplicationController
         end
       end
     else
-
+      respond_to do |format|
+        format.html {}
+        format.js do
+          render :update do |page|
+            page.replace_html "transfer-errors-#{@transfer.id}", error_messages_for(:transfer, :message => nil)
+            @transfer.transfer_items.each do |ti|
+              if ti.valid?
+                page.replace_html "transfer-item-errors-#{ti.error_id}", ''
+              else
+                page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
+              end
+            end
+          end
+        end #format.js
+      end
     end
   end
 
@@ -160,8 +174,16 @@ class TransfersController < ApplicationController
         format.js do
           render :update do |page|
             page.replace_html 'transfer-errors', error_messages_for(:transfer, :message => nil)
+            @transfer.transfer_items.each do |ti|
+              if ti.valid?
+                page.replace_html "transfer-item-errors-#{ti.error_id}", ''
+              else
+                page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
+              end
+            end
           end
-        end
+        end #format.js
+
       end
     end
   end

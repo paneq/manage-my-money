@@ -10,11 +10,15 @@
 #
 
 class Transfer < ActiveRecord::Base
-  validates_associated :transfer_items
   
   has_many :transfer_items, :dependent => :delete_all do
     def in_category(category)
       find :all, :conditions => ['category_id = ?', category.id]
+    end
+
+    def of_type(item_type)
+      conditions = {:income => 'value >= 0', :outcome => 'value <= 0'}
+      find :all, :conditions => conditions[item_type]
     end
   end
 
@@ -23,10 +27,14 @@ class Transfer < ActiveRecord::Base
   has_many :currencies, :through => :transfer_items
   
   after_update :save_transfer_items
-  
+
+  validates_associated :transfer_items
+  validates_presence_of :day
+  validates_presence_of :user
+
   def new_transfer_items_attributes=(transfer_items_attributes)
     transfer_items_attributes.each do |attributes|
-      transfer_items.build(attributes[1])
+      transfer_items.build(attributes[1].merge(:error_id =>attributes[0]))
     end
   end
 

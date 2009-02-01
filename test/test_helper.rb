@@ -92,6 +92,7 @@ class Test::Unit::TestCase
 
 
   def make_simple_transfer(options = {})
+    save_rupert if options[:user].nil? and @rupert.nil?
     hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.categories.first, :outcome => @rupert.categories.second }
     hash.merge! options
 

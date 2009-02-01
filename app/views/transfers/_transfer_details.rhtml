@@ -6,23 +6,17 @@
     <td colspan="<%=columns_count-%>" id="flash-notice-<%=id-%>" >
     </td>
   </tr>
-  <tr class="line-income-outcome" > 
-    <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
-    Rozchód:
-    </td>
-  </tr>
-  <%= render :partial => 'transfer_item_details' , :collection => transfer_details.outcome_transfer_items %>
-  
-  
-  <tr class="line-income-outcome" > 
-    <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
-    Przychód:
-    </td>
-  </tr>
-  <%= render :partial => 'transfer_item_details' , :collection => transfer_details.income_transfer_items %>
-  
-  
-  <tr class="line-income-outcome" > 
+
+  <% [:income, :outcome].each do |type| %>
+    <tr class="line-income-outcome" >
+      <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
+        <%= I18n.t type, :scope => [:types] %>
+      </td>
+    </tr>
+    <%= render :partial => 'transfer_item_details' , :collection => transfer_details.transfer_items.of_type(type) %>
+  <% end %>
+
+  <tr class="line-income-outcome" >
     <td colspan="<%=columns_count-%>">
       <span class="what-to-do" >
         <%= link_to_remote "Ukryj szczegóły", :url => hide_details_transfer_path(:id => transfer_details, :current_category => current_category_id) %>

@@ -16,6 +16,11 @@ class TransferItem < ActiveRecord::Base
 	belongs_to :category
   belongs_to :currency
 
+  validates_presence_of :value
+  #validates_presence_of :transfer
+  validates_presence_of :category
+  validates_presence_of :currency
+  
   validates_numericality_of :value
   before_validation :multiply_depending_of_type
 
@@ -49,4 +54,14 @@ class TransferItem < ActiveRecord::Base
   end
 
 
+  def error_id=(eid)
+    @error_id = eid
+  end
+
+
+  def error_id
+    return @error_id if new_record?
+    return id
+  end
+  
 end
