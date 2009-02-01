@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090104123107
+# Schema version: 20090201170116
 #
 # Table name: goals
 #

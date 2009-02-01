@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090104123107
+# Schema version: 20090201170116
 #
 # Table name: reports
 #
@@ -18,7 +18,8 @@
 #  depth                :integer       default(0)
 #  max_categories_count :integer       default(0)
 #  category_id          :integer       
-#  period_division_int  :integer       default(2)
+#  period_division_int  :integer       default(5)
+#  temporary            :boolean       not null
 #
 
 class Report < ActiveRecord::Base

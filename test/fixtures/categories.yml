@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090104123107
+# Schema version: 20090201170116
 #
 # Table name: categories
 #
@@ -11,6 +11,8 @@
 #  parent_id         :integer       
 #  lft               :integer       
 #  rgt               :integer       
+#  import_guid       :string(255)   
+#  imported          :boolean       
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

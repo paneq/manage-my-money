@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090104123107
+# Schema version: 20090201170116
 #
 # Table name: transfer_items
 #
@@ -9,6 +9,7 @@
 #  transfer_id :integer       not null
 #  category_id :integer       not null
 #  currency_id :integer       default(3), not null
+#  import_guid :string(255)   
 #
 
 class TransferItem < ActiveRecord::Base
