@@ -1,5 +1,5 @@
 CREATE TABLE "bdrb_job_queues" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "args" blob, "worker_name" varchar(255), "worker_method" varchar(255), "job_key" varchar(255), "taken" int, "finished" int, "timeout" int, "priority" int, "submitted_at" datetime, "started_at" datetime, "finished_at" datetime, "archived_at" datetime, "tag" varchar(255), "submitter_info" varchar(255), "runner_info" varchar(255), "worker_key" varchar(255), "scheduled_at" datetime);
-CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "description" varchar(255), "category_type_int" integer, "user_id" integer, "parent_id" integer, "lft" integer, "rgt" integer);
+CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "description" varchar(255), "category_type_int" integer, "user_id" integer, "parent_id" integer, "lft" integer, "rgt" integer, "import_guid" varchar(255), "imported" boolean DEFAULT 'f');
 CREATE TABLE "category_report_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "inclusion_type_int" integer DEFAULT 0 NOT NULL, "report_id" integer NOT NULL, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
 CREATE TABLE "currencies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar(255) NOT NULL, "long_symbol" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "long_name" varchar(255) NOT NULL, "user_id" integer);
 CREATE TABLE "exchanges" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "currency_a" decimal(8,4) NOT NULL, "currency_b" decimal(8,4) NOT NULL, "left_to_right" float NOT NULL, "right_to_left" float NOT NULL, "day" date NOT NULL, "user_id" integer);
@@ -8,8 +8,8 @@ CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" 
 ' NOT NULL);
 CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
 CREATE TABLE "sessions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "session_id" varchar(255), "data" text, "updated_at" datetime);
-CREATE TABLE "transfer_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "value" decimal(8,2) NOT NULL, "transfer_id" integer NOT NULL, "category_id" integer NOT NULL, "currency_id" integer DEFAULT 3 NOT NULL);
-CREATE TABLE "transfers" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "day" date NOT NULL, "user_id" integer NOT NULL);
+CREATE TABLE "transfer_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "value" decimal NOT NULL, "transfer_id" integer NOT NULL, "category_id" integer NOT NULL, "currency_id" integer DEFAULT 3 NOT NULL, "import_guid" varchar(255));
+CREATE TABLE "transfers" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "day" date NOT NULL, "user_id" integer NOT NULL, "import_guid" varchar(255));
 CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "login" varchar(40), "name" varchar(100) DEFAULT '', "email" varchar(100), "crypted_password" varchar(40), "salt" varchar(40), "created_at" datetime, "updated_at" datetime, "remember_token" varchar(40), "remember_token_expires_at" datetime, "activation_code" varchar(40), "activated_at" datetime, "active" boolean DEFAULT 'f' NOT NULL, "transaction_amount_limit_type_int" integer DEFAULT 2 NOT NULL, "transaction_amount_limit_value" integer, "include_transactions_from_subcategories" boolean DEFAULT 'f' NOT NULL, "multi_currency_balance_calculating_algorithm_int" integer DEFAULT 0 NOT NULL, "default_currency_id" integer DEFAULT 1 NOT NULL);
 CREATE INDEX "index_sessions_on_session_id" ON "sessions" ("session_id");
 CREATE INDEX "index_sessions_on_updated_at" ON "sessions" ("updated_at");
@@ -46,3 +46,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090104123107');
 INSERT INTO schema_migrations (version) VALUES ('20090124132402');
 
 INSERT INTO schema_migrations (version) VALUES ('20090124144600');
+
+INSERT INTO schema_migrations (version) VALUES ('20090201170116');
