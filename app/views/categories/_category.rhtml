@@ -14,9 +14,9 @@
 		<%= "#{value} #{currency.symbol}, " -%>
     <% end %>
     <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Remove'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete) } %>
-    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Add subcategory'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Add subcategory' } %>
+    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Add subcategory'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Add subcategory', :id => "add-subc-#{category.id}"} %>
     <%= link_to image_tag('/images/document-new.png', :size => size , :alt => 'Add new transfer'), {:action => :make , :controller => :transfers , :choosen_category_id => category.id}, {:title => 'Add new transfer' } %>
-    <%= link_to image_tag('/images/x-office-spreadsheet.png' , :size => size , :alt => 'Stats') , {:action => :show , :id => category.id}, {:title => 'Stats' } %>
+    <%= link_to image_tag('/images/x-office-spreadsheet.png' , :size => size , :alt => 'Stats') , {:action => :show , :id => category.id}, {:title => 'Stats', :id => "show-category-stats-#{category.id}" } %>
   </span>
   
   

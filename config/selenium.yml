@@ -1,25 +1,30 @@
 # Move this file to your rails apps config directory and rename it to selenium.yml in order to configure the plugin
 
-#
+# These are:
 # General settings
 #
 
 environments:
   - test
+  - selenium
   - development # Uncomment this line to enable in development environment. N.B. your development database will likely be altered/destroyed/abducted
 
 #selenium_path: 'c:\selenium' #path to selenium installation. only needed if you for some reason don't want to use the bundled version of selenium core
 
+# These are settings for task:
+# rake test:acceptance
 #
-# rake test:acceptance settings
-#
+
 
 browsers:
-  firefox: 'script/openfirefox'
+  firefox: 'firefox'
   # safari: '/Applications/Safari.app/Contents/MacOS/Safari'
 
-port_start: 3000
-port_end: 3001
+#should work on stallman too
+port_start: 3031
+port_end: 3031
+start_server: true
+
 #base_url_path: '/'
 #max_browser_duration: 120
 #multi_window: false

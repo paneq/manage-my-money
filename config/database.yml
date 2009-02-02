@@ -25,6 +25,10 @@ test:
   host: localhost
 <% end %>
 
+selenium:
+  adapter: sqlite3
+  database: db/selenium.sqlite3
+  host: localhost
 
 production:
   adapter: mysql

@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(:version => 20090201170116) do
     t.integer  "depth",                :default => 0
     t.integer  "max_categories_count", :default => 0
     t.integer  "category_id"
-    t.integer  "period_division_int",  :default => 2
+    t.integer  "period_division_int",  :default => 5
     t.boolean  "temporary",            :default => false, :null => false
   end
 
@@ -109,11 +109,11 @@ ActiveRecord::Schema.define(:version => 20090201170116) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "transfer_items", :force => true do |t|
-    t.text    "description",                :null => false
-    t.decimal "value",                      :null => false
-    t.integer "transfer_id",                :null => false
-    t.integer "category_id",                :null => false
-    t.integer "currency_id", :default => 3, :null => false
+    t.text    "description",                                              :null => false
+    t.decimal "value",       :precision => 8, :scale => 2,                :null => false
+    t.integer "transfer_id",                                              :null => false
+    t.integer "category_id",                                              :null => false
+    t.integer "currency_id",                               :default => 3, :null => false
     t.string  "import_guid"
   end
 

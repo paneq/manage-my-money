@@ -61,7 +61,7 @@ Rails::Initializer.run do |config|
   
   config.i18n.default_locale = :pl
   MEMCACHED_PORT = 11212
-  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}"
+  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "manage_my_money_#{RAILS_ENV}" }
 end
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)

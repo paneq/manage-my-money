@@ -1,10 +1,14 @@
-ENV["RAILS_ENV"] = "test"
+ENV["RAILS_ENV"] = "test" unless ENV["RAILS_ENV"] == 'selenium'
+
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
+# stallman cannot run selenium test :-)
+TEST_ON_STALLMAN = false
+TEST_ON_STALLMAN = true if Socket.gethostname == "stallman.rootnode.net"
+
 class Test::Unit::TestCase
   include AuthenticatedTestHelper
-  
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
   # test database remains unchanged so your fixtures don't have to be reloaded
@@ -27,13 +31,14 @@ class Test::Unit::TestCase
   self.use_instantiated_fixtures  = false
 
   # Add more helper methods to be used by all tests here...
+
   def save_rupert
     make_currencies
     @zloty.save! if @zloty.id.nil?
     @rupert = User.new()
     @rupert.active = true
     @rupert.email = 'email@example.com'
-    @rupert.login = 'rupert_XYZ_ab'
+    @rupert.login = 'rupert_xyz'
     @rupert.password = @rupert.login
     @rupert.password_confirmation = @rupert.login
     @rupert.transaction_amount_limit_type = :actual_month
@@ -41,6 +46,7 @@ class Test::Unit::TestCase
     @rupert.default_currency = @zloty
     @rupert.save!
     @rupert.activate!
+    @selenium.set_context("Save rupert") if @selenium
   end
 
 
@@ -48,7 +54,7 @@ class Test::Unit::TestCase
     @jarek = User.new()
     @jarek.active = true
     @jarek.email = 'jarek@example.com'
-    @jarek.login = 'jarek_XYZ_ab'
+    @jarek.login = 'jarek_xyz'
     @jarek.password = @jarek.login
     @jarek.password_confirmation = @jarek.login
     @jarek.transaction_amount_limit_type = :actual_month
@@ -74,16 +80,30 @@ class Test::Unit::TestCase
 
 
   def log_rupert
-    #    @request.session[:user_id] = @rupert.id
     log_user(@rupert)
   end
 
 
   def log_user(user)
-    @request.session[:user_id] = user.id
+    if @selenium
+      @selenium.open "/login"
+      @selenium.type "login", user.login
+      @selenium.type "password", user.login
+      @selenium.click "remember_me"
+      @selenium.click "commit"
+      @selenium.wait_for_page_to_load "10000"
+      assert_equal "Witamy w serwisie.", @selenium.get_text("flash_notice")
+    else
+      @request.session[:user_id] = user.id
+    end
   end
-  
 
+
+  def rupert
+    return @rupert
+  end
+
+  
   def add_category_options(user, report)
     user.categories.each do |c|
       report.category_report_options << CategoryReportOption.new({:category => c, :inclusion_type => :both})
@@ -175,6 +195,7 @@ class Test::Unit::TestCase
     end
   end
 
+  
   def create_share_report(user)
     r = ShareReport.new
     r.user = user
@@ -189,6 +210,7 @@ class Test::Unit::TestCase
     r
   end
 
+
   def create_flow_report(user)
     r = FlowReport.new
     r.user = user
@@ -199,6 +221,7 @@ class Test::Unit::TestCase
     r.save!
     r
   end
+
 
   def create_value_report(user)
     r = ValueReport.new
@@ -215,8 +238,28 @@ class Test::Unit::TestCase
   end
 
 
+  TABLES = %w{transfer_items transfers category_report_options reports goals exchanges currencies categories users}
+  def selenium_setup
+    raise 'No selenium test on stallman' if TEST_ON_STALLMAN
+    @verification_errors = []
+    if $selenium
+      @selenium = $selenium
+    else
+      @selenium = Selenium::SeleniumDriver.new("127.0.0.1", 4444, "*konqueror", "http://127.0.0.1:3031/", 10000);
+      @selenium.start
+    end
+    
+
+    #setup
+    @selenium.open	"/selenium/setup?clear_tables=#{TABLES.join(',')}"
+  end
 
 
-  
+  def selenium_teardown
+    @selenium.open	"/selenium/setup?clear_tables=#{TABLES.join(',')}"
+    @selenium.stop unless $selenium
+    assert_equal [], @verification_errors
+    @selenium = nil
+  end
 
 end
