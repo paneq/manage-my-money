@@ -1,19 +1,22 @@
 <h1>Dodaj nową kategorię</h1>
 <div id="category-edit">
   <% form_for :category, :url => {:action => :create } do |form| %>
+
+    <%= error_messages_for :category, :message => nil %>
+
     <p id="name"> Nazwa: <%= form.text_field :name %> </p>
     <p id="description"> Opis: <%= form.text_field :description %></p>
 
     <p id="parent">
     Wybierz kategorię nadrzędną:
-    <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', @parent), :id => 'parent-select'%>
+    <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', (@parent.id if @parent)), :id => 'parent-select' %>
     </p>
 
     <p id="balance">
       Wprowadź bilans otwarcia kategorii:
       <%= form.text_field :opening_balance %>
       <span id="currency">
-        <%= collection_select :category, :opening_balance_currency, @currencies, :id, :long_name, {}, :id =>'currency-select' %>
+        <%= collection_select :category, :opening_balance_currency_id, @currencies, :id, :long_name, {}, :id =>'currency-select' %>
       </span>
     </p>
 

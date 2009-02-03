@@ -86,8 +86,11 @@ class Category < ActiveRecord::Base
   has_many :category_report_options, :foreign_key => :category_id
   has_many :multiple_category_reports, :through => :category_report_options
 
-  validates_presence_of :name
+  attr_reader :opening_balance, :opening_balance_currency
 
+  validates_presence_of :name
+  validates_numericality_of :opening_balance, :allow_nil => true
+  validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
 
   def <=>(category)
     name <=> category.name
@@ -116,6 +119,46 @@ class Category < ActiveRecord::Base
     if @parent_to_save
       self.move_to_child_of(@parent_to_save)
       @parent_to_save = :default
+    end
+  end
+
+
+  #Required for rails validation of fields that are not in database
+  def opening_balance_before_type_cast
+    @opening_balance
+  end
+  #Required for rails validation of fields that are not in database
+  def opening_balance_currency_before_type_cast
+    @opening_balance_currency
+  end
+  def opening_balance=(ob)
+    @opening_balance = ob unless ob.blank? #so => allow_nil works properly
+  end
+  def opening_balance_currency=(obc)
+    @opening_balance_currency = obc unless obc.blank?
+  end
+  def opening_balance_currency_id
+    return @opening_balance_currency.id if @opening_balance_currency.is_a? Currency
+  end
+  def opening_balance_currency_id=(currency_id)
+    self.opening_balance_currency= Currency.find_by_id(currency_id)
+  end
+
+
+
+  def after_create
+    if @opening_balance && @opening_balance_currency
+      currency = @opening_balance_currency
+      value = @opening_balance
+      transfer = Transfer.new(:day =>Date.today, :user => self.user, :description => "Bilans otwarcia")
+
+      transfer.transfer_items.build(:description => transfer.description, :value => value, :category => self, :currency => currency)
+      ti = transfer.transfer_items[0]
+      transfer.transfer_items.build(:description => transfer.description, :value => (-1 * ti.value), :category => self.user.balance, :currency => currency)
+      transfer.save!
+      
+      @opening_balance = nil
+      @opening_balance_currency = nil
     end
   end
 
@@ -148,7 +191,6 @@ class Category < ActiveRecord::Base
       self.description = " " #self.type.to_s + " " + self.name  
     end  
   end
-  
 
   def is_top?
     root?
@@ -259,7 +301,7 @@ class Category < ActiveRecord::Base
     result = []
     dates = Date.split_period(period_division, period_start, period_end)
     
-#    result[:category_only] = []
+    #    result[:category_only] = []
     dates.each do |date_range|
       result << [:category_only, saldo_for_period_new(date_range[0], date_range[1])] if inclusion_type == :category_only || inclusion_type == :both
       result << [:category_and_subcategories, saldo_for_period_with_subcategories(date_range[0], date_range[1])] if inclusion_type == :category_and_subcategories || inclusion_type == :both
@@ -306,7 +348,7 @@ class Category < ActiveRecord::Base
                         and ti2.category_id not in (?)
                         AND t.day >= ?
                         AND t.day <= ?',
-                        categories, categories, period_start, period_end],
+        categories, categories, period_start, period_end],
       :order =>       'categories.category_type_int, categories.lft')
 
     #TODO: cumulate Money walues for one category

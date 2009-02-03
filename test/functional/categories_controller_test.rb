@@ -60,7 +60,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_new_and_proper_selcted_element_when_given_parent_category
-    parent_category = @rupert.categories.top_of_type(:EXPENSE)
+    parent_category = @rupert.expense
     get :new, :parent_category_id => parent_category.id
     assert_response :success
     assert_template 'new'
@@ -71,13 +71,13 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
   
   def test_create
-    parent_category = @rupert.categories.top_of_type(:INCOME)
+    parent_category = @rupert.income
     post :create, :category => {
       :name => 'test name',
       :description => 'test description',
       :parent => parent_category.id,
       :opening_balance => '1 200',
-      :opening_balance_currency => @zloty.id
+      :opening_balance_currency_id => @zloty.id
     }
     assert_redirected_to :action => :index
 
@@ -90,13 +90,13 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_create_with_float_opening_balance
-    parent_category = @rupert.categories.top_of_type(:INCOME)
+    parent_category = @rupert.income
     post :create, :category => {
       :name => 'test name',
       :description => 'test description',
       :parent => parent_category.id,
       :opening_balance => '1234.56',
-      :opening_balance_currency => @zloty.id
+      :opening_balance_currency_id => @zloty.id
     }
     assert_redirected_to :action => :index
 
@@ -107,6 +107,41 @@ class CategoriesControllerTest < Test::Unit::TestCase
     assert_equal 1234.56 , created_category.saldo_at_end_of_day(Date.today).value(@zloty)
   end
 
+
+  def test_create_with_errors
+    parent_category = @rupert.income
+    post :create, :category => {
+      #no name given
+      :description => 'test description',
+      :parent => parent_category.id,
+    }
+    assert_response :success
+    assert_template 'new'
+
+    assert_select "input#category_description[value='test description']", 1
+    assert_select 'div#category-edit' do
+      assert_select 'option[selected=selected]', parent_category.name
+    end
+    assert_match(/Nie udało.*/, flash[:notice])
+
+
+    post :create, :category => {
+      :name => 'test name',
+      :description => 'test description',
+      :parent => parent_category.id,
+      :opening_balance => 'YXZ',
+      :opening_balance_currency_id => @euro.id
+    }
+    assert_response :success
+    assert_template 'new'
+
+    assert_select "input#category_name[value='test name']"
+    assert_select "select#currency-select" do
+      assert_select "option[value=#{@euro.id}][selected=selected]"
+    end
+    assert_match(/Nie udało.*/, flash[:notice])
+
+  end
 
 
   def test_edit_top_category
@@ -212,14 +247,14 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_destroy_top_category
-    delete :destroy, :id => @rupert.categories.top_of_type(:EXPENSE)
+    delete :destroy, :id => @rupert.expense
     assert_redirected_to :action => :index, :controller => :categories
     assert_match("Nie można", flash[:notice])
   end
 
 
   def test_remote_destroy_top_category
-    xhr :delete, :destroy, :id => @rupert.categories.top_of_type(:EXPENSE)
+    xhr :delete, :destroy, :id => @rupert.expense
     assert_response :success
     assert_select_rjs :replace_html, 'flash_notice' do
       assert_select "a", /Nie można/
@@ -232,12 +267,15 @@ class CategoriesControllerTest < Test::Unit::TestCase
     
   end
 
+
   def test_show_menu
     get :show, :id => @rupert.categories.top_of_type(:EXPENSE)
     assert_menu ['quick', 'full', 'search'], '/categories/search'
   end
 
+
   private
+
   
   def create_rupert_expenses_account_structure
     # EXPENSE -            [SELECTED]

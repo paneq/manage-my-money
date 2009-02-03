@@ -288,6 +288,29 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
+  def test_save_with_balance
+    category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty)
+    saldo = category.saldo_new(:default, false)
+    assert_equal 123.4, saldo.value
+    assert_equal @zloty, saldo.currency
+  end
+
+
+  def test_save_with_bad_data
+    category = make_category(:opening_balance => 123.4)
+    assert !category.valid?
+    assert_match(/nie może być pusta/, category.errors.on(:opening_balance_currency) )
+
+    category = make_category(:opening_balance => 'XYZ')
+    assert !category.valid?
+    assert_match(/nie jest prawidłową liczbą/, category.errors.on(:opening_balance) )
+
+    category = make_category(:name => nil)
+    assert !category.valid?
+    assert_match(/nie może być pusta/, category.errors.on(:name) )
+  end
+
+
   def test_moves_child_categories_when_destroyed
     #Asset -
     #      |-test
@@ -338,6 +361,7 @@ class CategoryTest < Test::Unit::TestCase
       assert_throws(:indestructible) {top_category.destroy}
     end
   end
+
 
   def test_moves_transfer_items_when_destroyed
     parent = @rupert.categories.top_of_type(:ASSET)
@@ -455,6 +479,24 @@ class CategoryTest < Test::Unit::TestCase
 
   private
 
-  
+
+
+  def make_category(options = {})
+    category = Category.new({
+      :name => 'test',
+      :description => 'test',
+      :user => @rupert,
+      :parent => @rupert.asset}.
+      merge(options)
+    )
+  end
+
+
+  def save_category(options = {})
+    c = make_category(options)
+    c.save!
+    return c
+  end
+
   
 end

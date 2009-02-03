@@ -6,17 +6,17 @@ class CategoriesController < ApplicationController
 
   # @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
-
-
-  # remote
-  #should not be here!
-  #should be by js hidden and showed
-  def quick
-    where = "form-for-quick-transfer"
-    render :update do |page|
-      page.insert_html :bottom , where , :partial => 'quick_transfer' , :object => { :category_id => params[:category_id] }
-    end
-  end
+  #
+  #
+  #  # remote
+  #  #should not be here!
+  #  #should be by js hidden and showed
+  #  def quick
+  #    where = "form-for-quick-transfer"
+  #    render :update do |page|
+  #      page.insert_html :bottom , where , :partial => 'quick_transfer' , :object => { :category_id => params[:category_id] }
+  #    end
+  #  end
 
 
   def show
@@ -55,25 +55,24 @@ class CategoriesController < ApplicationController
 
 
   def new
-    @parent = params[:parent_category_id].to_i
+    @parent = @current_user.categories.find(params[:parent_category_id].to_i) if params[:parent_category_id]
     @category = Category.new()
-    @categories = self.current_user.categories
-    @currencies = self.current_user.visible_currencies
+    @categories = @current_user.categories
+    @currencies = @current_user.visible_currencies
   end
 
 
   def create
-    params[:category][:parent] = self.current_user.categories.find( params[:category][:parent].to_i )
-    @category = Category.new(params[:category])
-    @category.user = self.current_user
+    @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent].to_i )
+    format_openinig_balance
+    @category = Category.new(params[:category].merge(:user => @current_user))
     if @category.save
-      if params[:category][:opening_balance].to_f != 0
-        make_opening_transfer
-      end
       flash[:notice] ||= 'Utworzono nową kategorię'
       redirect_to categories_url
     else
-      flash[:notice] = 'Category was NOT successfully created.'
+      @categories = @current_user.categories
+      @currencies = @current_user.visible_currencies
+      flash[:notice] = 'Nie udało się utworzyć kategorii.'
       render :action => 'new'
     end
   end
@@ -101,46 +100,8 @@ class CategoriesController < ApplicationController
     #end
   end
 
-
-
-
  
   private
-   
-   
-   
-  def make_opening_transfer
-    #new opening_balance transfer here
-    #category = Category.find(params['data']['category'])
-    currency = self.current_user.visible_currencies.find(params[:category][:opening_balance_currency].to_i)
-    value = params[:category][:opening_balance]
-    value.slice!(" ") #removes all spaces from input data so string like "10 000" will be converted to "10000" and treted well by "to_f" method in next line
-    value = value.to_f
-    transfer = Transfer.new
-    transfer.day = Date.today
-    transfer.user = self.current_user
-    transfer.description = "Bilans otwarcia"
-    
-    t1 = TransferItem.new
-    t1.description = "Bilans otwarcia"
-    t1.value = value
-    t1.category = @category
-    t1.currency = currency
-
-    t2 = TransferItem.new
-    t2.description = t1.description
-    t2.value = -1 * t1.value
-    t2.currency = t1.currency
-    opening_category = self.current_user.categories.top_of_type(:BALANCE)
-      
-    t2.category = opening_category
-    
-    transfer.transfer_items << t2 << t1
-    if transfer.save
-      flash[:notice] = 'Utworzono kategorię wraz z bilansem otwarcia'
-    end
-  end
-
 
   def check_perm
     @category = self.current_user.categories.find(params[:id])
@@ -151,30 +112,11 @@ class CategoriesController < ApplicationController
       #why doesn't it work ? There is no flash ?
     end
   end
-  
-  
-  
-  ########################
-  # @author: Robert Pankowecki
-  def get_date_from_params
-  
-    if params[:transfer].nil? or params[:transfer]['start(1i)'].nil?
-      @start_time = Time.now.years_ago(2).to_date
-    else
-      #       @start_time = params[:start].to_time
-      d = params[:transfer]['start(3i)'].to_i
-      m = params[:transfer]['start(2i)'].to_i
-      y = params[:transfer]['start(1i)'].to_i
-      @start_time = Date.new(y , m , d)
-    end
-    if params[:transfer].nil? or params[:transfer]['end(1i)'].nil?
-      @end_time = Time.now.years_since(2).to_date
-    else
-      d = params[:transfer]['end(3i)'].to_i
-      m = params[:transfer]['end(2i)'].to_i
-      y = params[:transfer]['end(1i)'].to_i
-      @end_time = Date.new(y , m , d)
+
+  def format_openinig_balance
+    if params[:category][:opening_balance]
+      params[:category][:opening_balance].strip!
+      params[:category][:opening_balance].slice!(" ")
     end
   end
-    
 end

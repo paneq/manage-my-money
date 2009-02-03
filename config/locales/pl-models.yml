@@ -18,6 +18,14 @@ pl:
               blank: nie może być pusta
             currency:
               blank: nie może być pusta
+        category:
+          attributes:
+            name:
+              blank: nie może być pusta
+            opening_balance_currency:
+              blank: nie może być pusta
+            opening_balance:
+              not_a_number: `{{value}}` nie jest prawidłową liczbą
     models:
       user: Użytkownik
       report: Raport
@@ -33,6 +41,10 @@ pl:
         transfer_items: Element transferu
       transfer_item:
         value: Wartość
+      category:
+        name: Nazwa
+        opening_balance_currency: Waluta bilansu otwarcia
+        opening_balance: Bilans otwarcia
 
 
 
