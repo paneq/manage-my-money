@@ -12,6 +12,11 @@ module ApplicationHelper
     return PERIODS
   end
 
+  # Returns id='name-#{obj.id}'
+  def obj_id(name, obj)
+    "id='#{name}-#{obj.id}'"
+  end
+
   # display_if(proc_object)
   # display_if { 1 == 2 }
   #
@@ -137,6 +142,7 @@ module ApplicationHelper
       </p>
     HTML
   end
+
 
   def switch(div_id, name)
     result = ''

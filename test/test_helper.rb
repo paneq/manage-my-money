@@ -262,4 +262,14 @@ class Test::Unit::TestCase
     @selenium = nil
   end
 
+  
+  # Yields a block of code and when Assertion Error is caught it is stored in @verification_errors
+  def selenium_assert
+    begin
+      yield if Kernel.block_given?
+    rescue Test::Unit::AssertionFailedError
+      @verification_errors << $!
+    end
+  end
+
 end

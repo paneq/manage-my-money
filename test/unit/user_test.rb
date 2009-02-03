@@ -13,11 +13,13 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
+
   def test_should_initialize_activation_code_upon_creation
     user = create_user
     user.reload
     assert_not_nil user.activation_code
   end
+
 
   def test_should_require_login
     assert_no_difference 'User.count' do
@@ -26,12 +28,14 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
+
   def test_should_require_password
     assert_no_difference 'User.count' do
       u = create_user(:password => nil)
       assert u.errors.on(:password)
     end
   end
+
 
   def test_should_require_password_confirmation
     assert_no_difference 'User.count' do
@@ -40,6 +44,7 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
+
   def test_should_require_email
     assert_no_difference 'User.count' do
       u = create_user(:email => nil)
@@ -47,19 +52,23 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
+
   def test_should_reset_password
     users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
     assert_equal users(:quentin), User.authenticate('quentin', 'new password')
   end
+
 
   def test_should_not_rehash_password
     users(:quentin).update_attributes(:login => 'quentin2')
     assert_equal users(:quentin), User.authenticate('quentin2', 'test')
   end
 
+
   def test_should_authenticate_user
     assert_equal users(:quentin), User.authenticate('quentin', 'test')
   end
+
 
   def test_should_set_remember_token
     users(:quentin).remember_me
@@ -67,12 +76,14 @@ class UserTest < Test::Unit::TestCase
     assert_not_nil users(:quentin).remember_token_expires_at
   end
 
+
   def test_should_unset_remember_token
     users(:quentin).remember_me
     assert_not_nil users(:quentin).remember_token
     users(:quentin).forget_me
     assert_nil users(:quentin).remember_token
   end
+
 
   def test_should_remember_me_for_one_week
     before = 1.week.from_now.utc
@@ -83,6 +94,7 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
 
+
   def test_should_remember_me_until_one_week
     time = 1.week.from_now.utc
     users(:quentin).remember_me_until time
@@ -90,6 +102,7 @@ class UserTest < Test::Unit::TestCase
     assert_not_nil users(:quentin).remember_token_expires_at
     assert_equal users(:quentin).remember_token_expires_at, time
   end
+
 
   def test_should_remember_me_default_two_weeks
     before = 2.weeks.from_now.utc
@@ -149,14 +162,23 @@ class UserTest < Test::Unit::TestCase
     categories_ids.insert(3, category.id)
     assert_equal categories_ids, @rupert.categories(true).map {|c| c.id}
   end
-#  def test_should_not_save_user_with_no_transaction_amount_limit_value_when_needed
-#    test_user = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :week_count})
-#    test_user.save
-#    assert test_user.errors.on(:transaction_amount_limit_value)
-#  end
+  #  def test_should_not_save_user_with_no_transaction_amount_limit_value_when_needed
+  #    test_user = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :week_count})
+  #    test_user.save
+  #    assert test_user.errors.on(:transaction_amount_limit_value)
+  #  end
 
 
-protected
+  def test_top_categories_method
+    save_rupert
+    Category.CATEGORY_TYPES.keys.each do |category_type|
+      assert_equal @rupert.categories.top_of_type(category_type), rupert.send(category_type.to_s.downcase)
+    end
+  end
+
+  protected
+
+
   def create_user(options = {})
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :actual_month }.merge(options))
     record.save

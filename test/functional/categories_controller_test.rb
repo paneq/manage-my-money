@@ -24,7 +24,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
     
     assert_select 'div#categories-index' do
       assert_select 'div#category-tree' do
-        assert_select 'div#category-line', @rupert.categories.count
+        assert_select 'div[id^=category-line]', @rupert.categories.count
       end
       @rupert.categories.count.times do |nr|
         assert_select "div#category-tree div:nth-child(#{nr+1})" do
@@ -203,7 +203,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
     xhr :delete, :destroy, :id => @food
     assert_response :success
     assert_select_rjs :replace_html, 'category-tree' do
-      assert_select 'div#category-line', @rupert.categories.count
+      assert_select 'div[id^=category-line]', @rupert.categories.count
     end
     assert_select_rjs :replace_html, 'flash_notice' do
       assert_select "a", /Usunięto/

@@ -50,16 +50,27 @@ class User < ActiveRecord::Base
       find(:first, :conditions => ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
     end
   end
-  
+
+
+  Category.CATEGORY_TYPES.keys.each do |category_type|
+    define_method(category_type.to_s.downcase.to_sym) do
+      self.categories.top_of_type(category_type)
+    end
+  end
+
+
   has_many :transfers
   has_many :transfer_items, :through => :transfers
   has_many :currencies
 
+  #TODO: To remove
   has_many :visible_currencies,
     :class_name => 'Currency',
     :finder_sql => 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
   has_many :exchanges
+
+  #TODO: To remove
   has_many :visible_exchanges,
     :class_name => 'Exchange',
     :finder_sql => 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!

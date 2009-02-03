@@ -28,16 +28,31 @@ begin
     def test_new_category
       @selenium.open "/categories"
       @selenium.wait_for_page_to_load "10000"
-      @selenium.click "//a[@id='add-subc-#{@rupert.categories.top_of_type(:ASSET).id}']/img"
+
+      @selenium.click "//a[@id='add-subc-#{@rupert.asset.id}']/img"
       @selenium.wait_for_page_to_load "10000"
       @selenium.type "category_name", "Portfel"
       @selenium.type "category_description", "Moj czarny portfel"
       @selenium.type "category_opening_balance", "12"
       @selenium.click "category_submit"
       @selenium.wait_for_page_to_load "10000"
+      
+      @selenium.click "//a[@id='add-subc-#{@rupert.asset.id}']/img"
+      @selenium.wait_for_page_to_load "10000"
+      @selenium.type "category_name", "Bank"
+      @selenium.type "category_description", "Moj wspanialy bank"
+      @selenium.click "category_submit"
+      @selenium.wait_for_page_to_load "10000"
+
+      children_ids = @rupert.asset.children.map{|c| c.id}
+      children_divs = children_ids.map{|id| "//div[@id='category-line-#{id}']"}
+      children_divs.each  do |ch_div|
+        selenium_assert {assert @selenium.is_element_present ch_div}
+      end
+      
+      @selenium.is_ordered children_divs.first, children_divs.second
+      
     end
     
   end
 end unless TEST_ON_STALLMAN
-
-ENV["RAILS_ENV"] = "test"
