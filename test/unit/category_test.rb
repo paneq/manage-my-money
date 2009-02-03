@@ -241,7 +241,7 @@ class CategoryTest < Test::Unit::TestCase
         assert_equal item_number*value, item[:money].value(@euro)
         assert_equal 2, item[:money].currencies.size
 
-        saldo.add(item[:money])
+        saldo.add!(item[:money])
 
         #test saldo
         assert_equal saldo.value(@zloty) + zloty_bonus, item[:saldo].value(@zloty)

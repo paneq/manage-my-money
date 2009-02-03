@@ -204,7 +204,7 @@ class Category < ActiveRecord::Base
     last_transfer = :default
     for t in transfers do
       if last_transfer == t
-        list.last[:money].add(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
+        list.last[:money].add!(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
       else
         list << {:transfer => t, :money => Money.new(Currency.find(t.read_attribute('currency_id')) => t.read_attribute('value_for_currency').to_i )}
       end
@@ -213,7 +213,7 @@ class Category < ActiveRecord::Base
     
     saldo = saldo_at_end_of_day(start_day - 1.day, :show_all_currencies, with_subcategories)
     for t in list do
-      saldo.add(t[:money])
+      saldo.add!(t[:money])
       t[:saldo] = saldo.clone
     end
 
@@ -342,10 +342,10 @@ class Category < ActiveRecord::Base
         # group by currency
         currency, value = set
         currency = Currency.find_by_id(currency)
-        money.add(value, currency)
+        money.add!(value, currency)
       else
         # calculated to one value in default currency
-        money.add(set.to_f, Currency.find_by_id(self.user.default_currency))
+        money.add!(set.to_f, Currency.find_by_id(self.user.default_currency))
       end
     end
     return money

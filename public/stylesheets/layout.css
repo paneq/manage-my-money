@@ -738,3 +738,35 @@ ul.submenu3 a:hover {
 .invisible {
   display: none;
 }
+
+
+.flow-table {
+    border : 3px solid lightgrey;
+    width: 70%;
+    height : 2em;
+    font-size: 1.5em;
+}
+
+.flow-table-header {
+    background-color : #C4E0EE;
+}
+
+.flow-cell {
+    border : 3px solid lightgrey;
+}
+
+.flow-cell-right {
+  border : 3px solid lightgrey;
+  text-align: right;
+  width :20%;
+}
+
+.right {
+  text-align: right;
+}
+
+.flow-summary {
+    font-size: 1.7em;
+}
+
+

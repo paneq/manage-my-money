@@ -52,30 +52,30 @@ class MoneyTest < Test::Unit::TestCase
   
   def test_values_after_adding_value
     money = Money.new(@zloty => 11.1, @dolar =>22.2)
-    money.add(0.9, @zloty)
+    money.add!(0.9, @zloty)
     assert_equal 12, money.value(@zloty), "Should properly add values"
     
-    money.add(-1.2, @dolar)
+    money.add!(-1.2, @dolar)
     assert_equal 21, money.value(@dolar), "Should properly subtract values"
     
-    money.add(1_000_000, @euro)
+    money.add!(1_000_000, @euro)
     assert_equal 1_000_000, money.value(@euro), "Should properly add value from new currency"
   end
   
   
   def test_containst_currencies_after_adding_value
     money = Money.new(@zloty => 11)
-    money.add(0.9, @zloty)
+    money.add!(0.9, @zloty)
     assert money.currencies.include?(@zloty)
     assert 1, money.currencies.size
     assert !money.currencies.include?(@dolar)
     
-    money.add(0.9, @dolar)
+    money.add!(0.9, @dolar)
     assert money.currencies.include?(@zloty)
     assert money.currencies.include?(@dolar)
     assert 2, money.currencies.size
     
-    money.add(123.9, @euro)
+    money.add!(123.9, @euro)
     assert money.currencies.include?(@zloty)
     assert money.currencies.include?(@dolar)
     assert money.currencies.include?(@euro)
@@ -87,19 +87,19 @@ class MoneyTest < Test::Unit::TestCase
     money = Money.new(@zloty => 11, @euro =>12)
     assert_nothing_raised do 
       assert_currencies_list_unchanged money do
-        money.add(Money.new())
+        money.add!(Money.new())
         assert_equal 11, money.value(@zloty)
         assert_equal 12, money.value(@euro)
       end
     end
 
     assert_currencies_list_unchanged money do
-      money.add(Money.new(@zloty => 10, @euro => 20))
+      money.add!(Money.new(@zloty => 10, @euro => 20))
       assert_equal 21, money.value(@zloty)
       assert_equal 32, money.value(@euro)
     end
 
-    money.add(Money.new(@dolar => 5, @zloty => 10, @euro => 20))
+    money.add!(Money.new(@dolar => 5, @zloty => 10, @euro => 20))
     assert_equal 31, money.value(@zloty)
     assert_equal 52, money.value(@euro)
     assert_equal 5, money.value(@dolar)
@@ -109,30 +109,72 @@ class MoneyTest < Test::Unit::TestCase
 
   def test_values_after_subtraction_value
     money = Money.new(@zloty => 11.1, @dolar =>22.2)
-    money.sub(0.9, @zloty)
+    money.sub!(0.9, @zloty)
     assert_equal 10.2, money.value(@zloty), "Should properly subtract values"
     
-    money.sub(-1.2, @dolar)
+    money.sub!(-1.2, @dolar)
     assert_equal 23.4, money.value(@dolar), "Should properly add values"
     
-    money.sub(1_000_000, @euro)
+    money.sub!(1_000_000, @euro)
     assert_equal(-1_000_000, money.value(@euro), "Should properly subtract value from new currency")
   end
-  
+
+
+  def test_adding_two_money_objects_with_plus
+    money = Money.new(@zloty => 11, @euro =>12)
+    money2 = Money.new(@zloty => 1, @euro =>3)
+    assert_no_difference("money2.value(@zloty)") do
+      money+money2
+    end
+
+    assert_no_difference("money.value(@zloty)") do
+      money+money2
+    end
+
+    assert_equal(12, (money+money2).value(@zloty))
+    assert_equal(12, (money2+money).value(@zloty))
+
+    assert_equal(15, (money2+money).value(@euro))
+    assert_equal(15, (money+money2).value(@euro))
+  end
+
+
+  def test_subtraction_two_money_objects_with_minus
+    money = Money.new(@zloty => 11, @euro =>12)
+    money2 = Money.new(@zloty => 1, @euro =>3)
+    assert_no_difference("money2.value(@zloty)") do
+      money-money2
+    end
+
+    assert_no_difference("money.value(@zloty)") do
+      money-money2
+    end
+
+    assert_equal(10, (money-money2).value(@zloty))
+    assert_equal(-10, (money2-money).value(@zloty))
+
+    assert_equal(-9, (money2-money).value(@euro))
+    assert_equal(9, (money-money2).value(@euro))
+
+
+
+  end
+
+
   
   def test_containst_currencies_after_subtraction_value
     money = Money.new(@zloty => 11)
-    money.sub(0.9, @zloty)
+    money.sub!(0.9, @zloty)
     assert money.currencies.include?(@zloty)
     assert 1, money.currencies.size
     assert !money.currencies.include?(@dolar)
     
-    money.sub(0.9, @dolar)
+    money.sub!(0.9, @dolar)
     assert money.currencies.include?(@zloty)
     assert money.currencies.include?(@dolar)
     assert 2, money.currencies.size
     
-    money.sub(123.9, @euro)
+    money.sub!(123.9, @euro)
     assert money.currencies.include?(@zloty)
     assert money.currencies.include?(@dolar)
     assert money.currencies.include?(@euro)
@@ -144,24 +186,37 @@ class MoneyTest < Test::Unit::TestCase
     money = Money.new(@zloty => 11, @euro =>12)
     assert_nothing_raised do 
       assert_currencies_list_unchanged money do
-        money.sub(Money.new())
+        money.sub!(Money.new())
         assert_equal 11, money.value(@zloty)
         assert_equal 12, money.value(@euro)
       end
     end
 
     assert_currencies_list_unchanged money do
-      money.sub(Money.new(@zloty => 10, @euro => 20))
+      money.sub!(Money.new(@zloty => 10, @euro => 20))
       assert_equal 1, money.value(@zloty)
       assert_equal(-8, money.value(@euro))
     end
 
-    money.sub(Money.new(@dolar => 5, @zloty => 10, @euro => 20))
+    money.sub!(Money.new(@dolar => 5, @zloty => 10, @euro => 20))
     assert_equal(-9, money.value(@zloty))
     assert_equal(-28, money.value(@euro))
     assert_equal(-5, money.value(@dolar))
     assert_equal 3, money.currencies.size
     assert money.currencies.include?(@dolar)
+
+    money = Money.new(@zloty => 11, @euro =>12)
+    money2 = Money.new(@zloty => 1, @euro =>2)
+
+    assert_no_difference("money2.value(@zloty)") do
+      money.sub! money2
+    end
+
+    assert_no_difference("money2.value(@euro)") do
+      money.sub! money2
+    end
+
+
   end
 
 
@@ -175,11 +230,11 @@ class MoneyTest < Test::Unit::TestCase
     money = Money.new(@zloty => 0)
     assert_equal 0, money.currencies.size, "Should not contains currency which value is 0"
     
-    money.add(10, @zloty)
+    money.add!(10, @zloty)
     assert_equal 1, money.currencies.size
     assert money.currencies.include?(@zloty)
     
-    money.add(-10, @zloty)
+    money.add!(-10, @zloty)
     assert_equal 0, money.currencies.size, "Should not contains currency which value is 0"
     assert !money.currencies.include?(@zloty)
   end
@@ -189,10 +244,10 @@ class MoneyTest < Test::Unit::TestCase
     money = Money.new()
     assert money.is_empty?
     
-    money.add(10, @zloty)
+    money.add!(10, @zloty)
     assert !money.is_empty?
     
-    money.add(-10, @zloty)
+    money.add!(-10, @zloty)
     assert money.is_empty?
   end
 
@@ -211,7 +266,7 @@ class MoneyTest < Test::Unit::TestCase
     clonned = money.clone()
     assert_equal money, clonned
 
-    clonned.add(10, @euro)
+    clonned.add!(10, @euro)
     assert_not_equal money, clonned
   end
 
@@ -219,7 +274,7 @@ class MoneyTest < Test::Unit::TestCase
   def test_each
     money = Money.new(@euro => 10, @zloty => 20)
     money2 = Money.new()
-    money.each { |currency, value| money2.add(value, currency) }
+    money.each { |currency, value| money2.add!(value, currency) }
     assert_equal(money, money2)
   end
 

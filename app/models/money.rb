@@ -46,10 +46,14 @@ class Money
     return @hash.clone
   end
 
+  def +(money)
+    self.clone.add!(money)
+  end
+
 
   # add(money)
   # add(value, currency)
-  def add(*args)
+  def add!(*args)
     case args.size
     when 1
       @hash + args[0].values_in_currencies
@@ -63,9 +67,13 @@ class Money
     self
   end
 
-  # add(money)
-  # add(value, currency)
-  def sub(*args)
+  # sub(money)
+  # sub(value, currency)
+  def -(money)
+    self.clone.sub!(money)
+  end
+
+  def sub!(*args)
     case args.size
     when 1
       @hash - args[0].values_in_currencies
@@ -78,8 +86,6 @@ class Money
     remove_zero_currencies
     self
   end
-
-
 
 
   def is_empty?

@@ -1,16 +1,18 @@
 
 <h1>Przepływ gotówki - <%=  @report.period_start %> do <%=  @report.period_end %> </h1>
 <br/>
-<h2>Wybrane kategorie</h2>
-<p>
+<h2>Kategorie wybrane do zestawienia:</h2>
+<p><ul>
 <% @report.category_report_options.each do |cat| %>
 
-<%= cat.category.name_with_path %> <br/>
+<li><%= cat.category.name_with_path %> </li>
 
 <% end %>
-
+</ul>
 <br/>
-Pieniądze do zaznaczonych kategorii przyszły z:<br/>
+
+<table class="flow-table">
+<tr><th colspan="2" class="flow-table-header">Pieniądze do zaznaczonych kategorii przyszły z:</th></tr>
 
 <% @cash_flow[:in].each do |cat| %>
 
@@ -18,15 +20,17 @@ Pieniądze do zaznaczonych kategorii przyszły z:<br/>
 
 <% end %>
 <br/>
-<b>W sumie: </b>
+<tr><td><b>W sumie: </b></td><td class="right"><b>
 <%  @in_sum.each do |currency, value| %>
 		<%= "#{value} #{currency.symbol}, " -%>
 <% end %>
-<br/>
+</b>
+</td></tr>
 
-
-<br/>
-Pieniądze z zaznaczonych kategorii wypłynęły do:<br/>
+</table>
+<table class="flow-table">
+<tr><th colspan="2" class="flow-table-header">
+Pieniądze z zaznaczonych kategorii wypłynęły do:</th></tr>
 
 <% @cash_flow[:out].each do |cat| %>
 
@@ -35,17 +39,22 @@ Pieniądze z zaznaczonych kategorii wypłynęły do:<br/>
 <% end %>
 
 <br/><br/>
-<b>W sumie: </b>
+<tr><td><b>W sumie: </b></td><td class="right"><b>
 <%  @out_sum.each do |currency, value| %>
 		<%= "#{value} #{currency.symbol}, " -%>
-<% end %>
+<% end %></b>
+</td></tr>
+
+</table>
 
 <br/>
-<br/><br/>
 
-<b>Różnica	</b><%  @delta.each do |currency, value| %>
+<div class="flow-summary">
+<b>Różnica:	</b><%  @delta.each do |currency, value| %>
 		<%= "#{value} #{currency.symbol}, " -%>
 <% end %>
+</div>
+
 <br/>
 
 

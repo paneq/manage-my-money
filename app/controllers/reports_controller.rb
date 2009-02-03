@@ -17,7 +17,7 @@ class ReportsController < ApplicationController
           @cash_flow = Category.calculate_flow_values(@report.categories, @report.period_start, @report.period_end)
           @in_sum = Report.sum_flow_values(@cash_flow[:in])
           @out_sum = Report.sum_flow_values(@cash_flow[:out])
-          @delta = @in_sum.sub @out_sum
+          @delta = @in_sum - @out_sum
           render :template => 'reports/show_flow_report'
         else
           @graphs_currencies = cache_graph_data
@@ -34,15 +34,8 @@ class ReportsController < ApplicationController
 
 
   def get_graph_data
-    #    respond_to do |format|
-    #      format.html do
-    #        render :text => "a"
-    #      end
-    #      format.json do
     throw 'No report found' unless get_report_from_params
     render :text => Rails.cache.read("REPORT##{params[:id]}")[params[:graph]], :layout => false
-    #      end
-    #    end
   end
 
 

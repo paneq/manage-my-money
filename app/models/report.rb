@@ -57,7 +57,7 @@ class Report < ActiveRecord::Base
   def self.sum_flow_values(values)
     if !values.empty? && values.size > 0
       values.inject(Money.new) do |mem, i|
-        mem.add(i[:values])
+        mem.add!(i[:values])
       end
     else
       Money.new
