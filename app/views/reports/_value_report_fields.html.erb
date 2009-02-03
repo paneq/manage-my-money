@@ -6,9 +6,18 @@
 <%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %> <br/>
 <%= form.label :report_view_type, "Wyglad raportu: " %><%= form.enum_select :report_view_type, :values => [:bar, :linear] %> <br/>
 
+<br />
+<% if  (@value_report || @report).category_report_options.size > 10 %>
+  <%= form.submit 'Zapisz'%>
+  <%= form.submit 'Zapisz i pokaż'%>
+  <%= form.submit 'Pokaż'%>
+  <%= link_to 'Anuluj', reports_url %>
+<% end %>
+
+
 <div id="categories-options">
-  <fieldset style="margin-top: 1em">
-  <legend>Kategorie uwzględnione na raporcie</legend>
+  <fieldset style="margin-top: 1em" class="width73" >
+  <legend>Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania</legend>
   <%= render :partial => 'category_option', :collection => (@value_report || @report).category_report_options, :locals => {:report_type => 'value_report'} %>
   </fieldset>
 </div>

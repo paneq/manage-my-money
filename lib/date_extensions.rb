@@ -139,7 +139,67 @@ class Date
     result
   end
 
+
+  #
+  # Podaje tablice etykiet dla zakresu daty z podziałem
+  #
+  # Parametry:
+  #  period_division podział, moze być :day, :week, :month :quarter :year :none, domyślnie :none
+  #  period_start, period_end zakres
+  #
+  # Wyjście:
+  #  tablica stringów
+  #  sortowanie od etykiety opisujacej najstarsza wartosc
+  def self.get_date_range_labels(period_start, period_end, period_division = :none)
+    dates = Date.split_period(period_division, period_start, period_end)
+    result = []
+    case period_division
+    when :day then
+      dates.each do |range|
+        result << "#{range[0].to_s}"
+      end
+    when :week then
+      dates.each do |range|
+        result << "#{range[0].to_s} do #{range[1].to_s}"
+      end
+    when :month then
+      dates.each do |range|
+        result << I18n.l(range[0], :format => '%Y %b ')
+      end
+    when :quarter then
+      dates.each do |range|
+        result << "#{quarter_number(range[0])} kwartał #{range[0].strftime('%Y')}"
+      end
+    when :year then
+      dates.each do |range|
+        result << range[0].strftime('%Y')
+      end
+    when :none then
+      dates.each do |range|
+        result << "#{range[0].to_s} do #{range[1].to_s}"
+      end
+    end
+    result
+  end
+
+
+
+
+
+
   private
+
+  #numer kwartału po rzymsku
+  def self.quarter_number(date)
+    case (date.at_beginning_of_quarter.month)
+    when 1 then "I"
+    when 4 then "II"
+    when 7 then "III"
+    when 10 then "IV"
+    end
+  end
+
+
   def self.meta_split_period(split_unit, period_start, period_end)
 
     beginning_method = "at_beginning_of_#{split_unit}"

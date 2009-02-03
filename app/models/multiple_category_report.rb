@@ -23,8 +23,8 @@
 #
 
 class MultipleCategoryReport < Report
-  has_many :category_report_options, :foreign_key => :report_id, :dependent => :destroy
-  has_many :categories, :through => :category_report_options
+  has_many :category_report_options, :foreign_key => :report_id, :dependent => :destroy, :include => :category, :order => 'categories.category_type_int, categories.lft'
+  has_many :categories, :through => :category_report_options# 
 
   validate :has_at_least_one_category?
 

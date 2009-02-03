@@ -269,63 +269,6 @@ class Category < ActiveRecord::Base
   end
 
 
-  #TODO
-  # Uwaga: powinno sie znalezc w jakims bardziej uniwersalnym miejscu (module/klasie)
-  # Podaje etykiety dla wartosci generowanych przez metode calculate_values
-  #
-  # Parametry:
-  #  takie jak w calculate_values
-  #
-  # Wyjście:
-  #  tablica wartosci postaci:
-  #  ['tydzien1','tydzien2','tydzien3']
-  #  ['Styczen','Luty','Marzec']
-  #  ['Poniedzialek', 'Wtorek']
-  #  ['2007','2008']
-  #  [''] dla period_division == :none
-  #  sortowanie od etykiety opisujacej najstarsza wartosc
-  def self.get_values_labels(period_division, period_start, period_end)
-    dates = Date.split_period(period_division, period_start, period_end)
-    result = []
-    case period_division
-    when :day then
-      dates.each do |range|
-        result << "#{range[0].to_s}"
-      end
-    when :week then
-      dates.each do |range|
-        result << "#{range[0].to_s} do #{range[1].to_s}"
-      end
-    when :month then
-      dates.each do |range|
-        result << I18n.l(range[0], :format => '%Y %b ')
-      end
-    when :quarter then
-      dates.each do |range|
-        result << "#{quarter_number(range[0])} kwartał #{range[0].strftime('%Y')}"
-      end
-    when :year then
-      dates.each do |range|
-        result << range[0].strftime('%Y')
-      end
-    when :none then
-      dates.each do |range|
-        result << "#{range[0].to_s} do #{range[1].to_s}"
-      end
-    end
-    result
-  end
-
-  def self.quarter_number(date)
-    case (date.at_beginning_of_quarter.month)
-    when 1 then "I"
-    when 4 then "II"
-    when 7 then "III"
-    when 10 then "IV"
-    end
-  end
-
-
   #
   #
   # Wyjście:

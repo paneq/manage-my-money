@@ -237,6 +237,37 @@ class Test::Unit::TestCase
     r
   end
 
+def prepare_sample_catagory_tree_for_jarek
+    parent1 = @jarek.categories.top_of_type(:ASSET)
+    category = Category.new(
+      :name => 'test',
+      :description => 'test',
+      :user => @jarek,
+      :parent => parent1
+    )
+
+    @jarek.categories << category
+    @jarek.save!
+
+    child1 = Category.new(
+      :name => 'child1',
+      :description => 'child1',
+      :user => @jarek,
+      :parent => category
+    )
+
+    child2 = Category.new(
+      :name => 'child2',
+      :description => 'child2',
+      :user => @jarek,
+      :parent => category
+    )
+
+    @jarek.categories << child1 << child2
+    @jarek.save!
+  end
+
+
 
   TABLES = %w{transfer_items transfers category_report_options reports goals exchanges currencies categories users}
   def selenium_setup

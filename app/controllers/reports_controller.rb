@@ -240,7 +240,7 @@ class ReportsController < ApplicationController
   def generate_value_report
     charts = {}
     colours = get_colors
-    labels = Category.get_values_labels @report.period_division, @report.period_start, @report.period_end
+    labels = Date.get_date_range_labels @report.period_start, @report.period_end, @report.period_division
     chart_values = calculate_and_group_values_by_currencies(@report)
     chart_values.each do |currency, categories|
       max = 0

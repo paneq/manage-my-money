@@ -7,6 +7,7 @@ class ReportsControllerTest < ActionController::TestCase
 
   def setup
     save_jarek
+    prepare_sample_catagory_tree_for_jarek
     log_user(@jarek)
   end
 
@@ -184,15 +185,31 @@ class ReportsControllerTest < ActionController::TestCase
 
 
   def assert_category_options(report_type, new_or_existing)
-    assert_select "div#categories-options" do
-        assert_select "div.category-option", :count => @jarek.categories.count
+    assert_select 'div#categories-options' do
+        assert_select 'div#category-option', :count => @jarek.categories.size
         @jarek.categories.each do |cat|
-          assert_select "div.category-option", :text => /#{cat.name}.*/ do
+          assert_select "div#category-option", :text => /#{cat.name}.*/ do
             assert_select "select[id^=#{report_type}_#{new_or_existing}_category_report_options_]" do
-              assert_select "option", :count => 4
-              ['category_only','none', 'both', 'category_and_subcategories'].each do |opt|
+              case report_type
+              when 'flow_report'
+                assert_select "option", :count => 2
+                ['category_only','none'].each do |opt|
                 assert_select "option[value=#{opt}]"
               end
+              when 'value_report'
+                if cat.name != 'Zasoby' && cat.name != 'test'
+                  assert_select "option", :count => 2
+                  ['category_only','none'].each do |opt|
+                    assert_select "option[value=#{opt}]"
+                  end
+                else
+                  assert_select "option", :count => 4
+                  ['category_only','none', 'both', 'category_and_subcategories'].each do |opt|
+                    assert_select "option[value=#{opt}]"
+                  end
+                end
+              end
+              
 #              assert_select "option[value=both][selected=selected]"
             end
           end

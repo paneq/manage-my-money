@@ -2,9 +2,16 @@
 <%  form_for report do |form|%>
 <%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'FlowReport', :report => report}  %>
 <%= form.hidden_field :report_view_type %>
+<br />
+<% if  (@flow_report || @report).category_report_options.size > 10 %>
+  <%= form.submit 'Zapisz'%>
+  <%= form.submit 'Zapisz i pokaż'%>
+  <%= form.submit 'Pokaż'%>
+  <%= link_to 'Anuluj', reports_url %>
+<% end %>
 
 <div id="categories-options">
-  <fieldset style="margin-top: 1em">
+  <fieldset style="margin-top: 1em" class="width73">
   <legend>Kategorie uwzględnione na raporcie</legend>
   <%= render :partial => 'category_option', :collection => (@flow_report || @report).category_report_options, :locals => {:report_type => 'flow_report'} %>
   </fieldset>

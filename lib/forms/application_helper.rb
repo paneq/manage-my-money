@@ -6,13 +6,15 @@
   # Parametry:
   # method - nazwa pola w klasie
   # options - standardowe hash z opcjami, Uwaga: opcje html nalezy przekazac w hashu options pod kluczem :html_options, a nie jako dodatkowy parametr helpera
+  # options[:values] - tablica symboli dostępnych wyborów, mozna tez podac hash postaci {:symbol => 'opis'}
   #
   # Założenia
-  #  - dla widoku dostepna jest zmienna instancji zawierajaca kody dostepnych opcji, o nazwie wskazanej w parametrze 'method' ale w liczbie mnogiej
+  #  - jesli options[:values] nie jest podane metoda próbuje znaleźć listę wyboru ze zmiennej instancji kontrolera, o nazwie wskazanej w parametrze 'method' ale w liczbie mnogiej
   #    Jeśli zmienna nie jest dostępna używane są wszystkie wartoścu enum zdefiniowane w danej klasie modelu (zdognie z dokumentacja HashEnums)
   #  - dla widoku dostepna jest metoda zwracajaca opis dla kazdej opcji, postaci
   #       def get_desc_for_#{method}(option_name)
   #       end
+  #    (taka metoda moze znalezc sie w helperze danego kontrolera, lub ApplicationHelperze)
   #    Jesli metoda nie jest dostepna, wartosc danej opcji staje sie jednoczesnie jej opisem.
   #
   # Przyklad:
@@ -30,7 +32,9 @@
     description_method = "get_desc_for_#{method.to_s}".intern
     should_get_description = respond_to? description_method
 
-    choices = if should_get_description
+    choices = if enum_values.is_a? Hash
+        enum_values.collect { |key, desc|  [desc, key] }
+      elsif should_get_description
         enum_values.map do |type|
           [send(description_method, type), type]
         end

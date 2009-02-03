@@ -1,3 +1,5 @@
+require 'collections/sequenced_hash'
+
 module HashEnums
   protected
   ## definiuje pole typu enum w klasie modelu (getter i setter w obiekcie, oraz stala na poziomie klasy z dostepnymi typami
@@ -54,7 +56,7 @@ module HashEnums
     #konwertowanie tabeli na hash
     types = nil
     if types_array_or_hash.instance_of?(Array)
-      types = {}
+      types = SequencedHash.new
       types_array_or_hash.each_with_index { |type_name, type_value| types[type_name] = type_value }
     else
       types = types_array_or_hash
