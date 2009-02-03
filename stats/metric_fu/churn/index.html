@@ -1,0 +1,180 @@
+<html>
+<head>
+	<title>Source Control Churn Results</title>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}	
+	</style>
+</head>
+
+<body>
+	<h1>Source Control Churn Results</h1>
+	<p>Files that change a lot in your project may be bad a sign.
+	  This task uses your source control log to identify those files.
+	  </p>
+	<table>
+		<tr><th>File Path</th><th>Times Changed</th></tr>
+		
+		<tr><td>/code/app/models/category.rb</td><td class='warning'>39</td></tr>
+		
+		<tr><td>/code/test/unit/category_test.rb</td><td class='warning'>30</td></tr>
+		
+		<tr><td>/code/app/controllers/transfers_controller.rb</td><td class='warning'>27</td></tr>
+		
+		<tr><td>/code/db/schema.rb</td><td class='warning'>25</td></tr>
+		
+		<tr><td>/code/app/controllers/categories_controller.rb</td><td class='warning'>19</td></tr>
+		
+		<tr><td>/code/app/models/user.rb</td><td class='warning'>19</td></tr>
+		
+		<tr><td>/code/test/test_helper.rb</td><td class='warning'>18</td></tr>
+		
+		<tr><td>/code/app/controllers/reports_controller.rb</td><td class='warning'>17</td></tr>
+		
+		<tr><td>/code/app/controllers/application.rb</td><td class='warning'>15</td></tr>
+		
+		<tr><td>/code/test/functional/category_controller_test.rb</td><td class='warning'>15</td></tr>
+		
+		<tr><td>/code/app/views/layouts/main.rhtml</td><td class='warning'>14</td></tr>
+		
+		<tr><td>/code/app/models/transfer_item.rb</td><td class='warning'>12</td></tr>
+		
+		<tr><td>/code/app/controllers/users_controller.rb</td><td class='warning'>12</td></tr>
+		
+		<tr><td>/code/app/models/transfer.rb</td><td class='warning'>12</td></tr>
+		
+		<tr><td>/code/config/routes.rb</td><td class='warning'>10</td></tr>
+		
+		<tr><td>/code/test/unit/money_test.rb</td><td class='warning'>10</td></tr>
+		
+		<tr><td>/code/app/models/money.rb</td><td class='warning'>10</td></tr>
+		
+		<tr><td>/code/test/fixtures/users.yml</td><td class='warning'>10</td></tr>
+		
+		<tr><td>/code/app/helpers/application_helper.rb</td><td class='warning'>10</td></tr>
+		
+		<tr><td>/code/app/models/goal.rb</td><td class='warning'>9</td></tr>
+		
+		<tr><td>/code/app/views/reports/new.html.erb</td><td class='warning'>9</td></tr>
+		
+		<tr><td>/code/app/models/exchange.rb</td><td class='warning'>8</td></tr>
+		
+		<tr><td>/code/test/functional/reports_controller_test.rb</td><td class='warning'>8</td></tr>
+		
+		<tr><td>/code/db/development_structure.sql</td><td class='warning'>8</td></tr>
+		
+		<tr><td>/code/app/models/report.rb</td><td class='warning'>8</td></tr>
+		
+		<tr><td>/code/config/database.yml</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/app/models/currency.rb</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/test/fixtures/goals.yml</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/test/fixtures/exchanges.yml</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/config/deploy.rb</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/test/functional/users_controller_test.rb</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/lib/hash_enums.rb</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/test/fixtures/categories.yml</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/test/fixtures/transfer_items.yml</td><td class='warning'>7</td></tr>
+		
+		<tr><td>/code/config/environment.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/test/fixtures/currencies.yml</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/views/reports/_share_report_fields.html.erb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/test/unit/transfer_item_test.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/test/functional/transfers_controller_test.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/test/fixtures/transfers.yml</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/views/categories/show.rhtml</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/models/value_report.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/views/users/edit.html.erb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/views/categories/index.rhtml</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/views/categories/_transfer_table.rhtml</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/helpers/reports_helper.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/test/unit/transfer_test.rb</td><td class='warning'>6</td></tr>
+		
+		<tr><td>/code/app/controllers/sessions_controller.rb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/reports/_value_report_fields.html.erb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/reports/_flow_report_fields.html.erb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/categories/_category.rhtml</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/models/share_report.rb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/transfers/_full_transfer.html.erb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/models/category_report_option.rb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/db</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/reports/edit.html.erb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/test/unit/user_test.rb</td><td class='warning'>5</td></tr>
+		
+		<tr><td>/code/app/views/transfers/_transfer_item.rhtml</td><td class='warning'>5</td></tr>
+		
+	</table>
+	<p>Generated on Tue Feb 03 01:19:51 +0100 2009</p>	
+</body>
+</html>

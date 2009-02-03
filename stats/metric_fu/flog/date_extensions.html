@@ -1,0 +1,277 @@
+<html>
+<head>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}
+	</style>
+</head>
+<body>
+	<p>Score: 262.3</p>
+	
+  <p><strong>Date#meta_split_period (79.4)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>61.20</td>
+        <td class='score'>send</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>14.80</td>
+        <td class='score'>assignment</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>5.90</td>
+        <td class='score'><<</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>4.20</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.60</td>
+        <td class='score'>==</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.80</td>
+        <td class='score'>advance</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.70</td>
+        <td class='score'><=</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>to_s</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.40</td>
+        <td class='score'>pluralize</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.20</td>
+        <td class='score'>intern</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>0.50</td>
+        <td class='score'>lit_fixnum</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>Date#calculate_start (71.7)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>20.70</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>19.00</td>
+        <td class='score'>today</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>6.00</td>
+        <td class='score'>beginning_of_week</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>5.60</td>
+        <td class='score'>beginning_of_month</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>5.00</td>
+        <td class='score'>ago</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>4.80</td>
+        <td class='score'>months_ago</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>4.60</td>
+        <td class='score'>yesterday</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>4.60</td>
+        <td class='score'>beginning_of_quarter</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>4.40</td>
+        <td class='score'>to_date</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>3.60</td>
+        <td class='score'>days</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>3.40</td>
+        <td class='score'>lit_fixnum</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>2.80</td>
+        <td class='score'>beginning_of_year</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.00</td>
+        <td class='score'>weeks</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>years_ago</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.30</td>
+        <td class='score'>raise</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>Date#calculate_end (52.6)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>22.60</td>
+        <td class='score'>today</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>20.70</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>5.60</td>
+        <td class='score'>end_of_month</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>4.40</td>
+        <td class='score'>yesterday</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.80</td>
+        <td class='score'>end_of_year</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>2.80</td>
+        <td class='score'>end_of_week</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.80</td>
+        <td class='score'>beginning_of_week</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>months_ago</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.60</td>
+        <td class='score'>years_ago</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>beginning_of_quarter</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.40</td>
+        <td class='score'>end_of_quarter</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.30</td>
+        <td class='score'>raise</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>0.90</td>
+        <td class='score'>lit_fixnum</td>
+      </tr>
+    
+  </table>
+ 
+</body>
+</html>

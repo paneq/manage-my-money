@@ -1,0 +1,25 @@
+Total Flog = 75.7 (12.6 flog / method)
+MultipleCategoryReport#existing_category_report_options=: (25.7)
+     8.0: to_proc_normal
+     4.2: assignment
+     4.0: branch
+     3.3: category_report_options
+     3.1: []
+     1.8: id
+     1.6: to_s
+     1.6: block_pass
+     1.5: ==
+     1.5: delete
+     1.4: reject
+     1.2: each
+MultipleCategoryReport#new_category_report_options=: (20.8)
+     6.6: []
+     4.3: assignment
+     3.9: branch
+     3.3: category_report_options
+     2.8: ==
+     1.7: category_id
+     1.5: find
+     1.5: build
+     1.4: delete_if
+     1.2: each

@@ -1,0 +1,6 @@
+Total Flog = 8.4 (8.4 flog / method)
+RegisterMailer#sent: (8.4)
+     7.7: assignment
+     1.1: now
+     1.1: email
+     1.1: to_hash

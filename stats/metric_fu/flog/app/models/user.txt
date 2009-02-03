@@ -1,0 +1,41 @@
+Total Flog = 127.6 (9.1 flog / method)
+User#none: (60.4)
+     9.6: has_many
+     7.2: include
+     3.6: validates_format_of
+     3.6: validates_length_of
+     3.6: validates_presence_of
+     2.8: values
+     2.4: validates_uniqueness_of
+     2.4: validates_inclusion_of
+     2.4: before_create
+     2.4: extend
+     2.4: define_enum
+     1.6: TRANSACTION_AMOUNT_LIMIT_TYPES
+     1.6: MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS
+     1.4: bad_name_message
+     1.4: name_regex
+     1.4: bad_email_message
+     1.4: bad_login_message
+     1.4: login_regex
+     1.4: email_regex
+     1.2: before_destroy
+     1.2: validates_numericality_of
+     1.2: belongs_to
+     1.2: attr_accessible
+     1.2: protected
+     0.4: lit_fixnum
+User#remove_all_data: (14.0)
+     6.5: delete_all
+     1.5: transfer_items
+     1.5: transfers
+     1.5: categories
+     1.5: exchanges
+     1.5: currencies
+User#create_top_categories: (11.6)
+     9.5: assignment
+     2.9: branch
+     1.6: categories
+     1.6: new
+     1.4: <<
+     1.3: each

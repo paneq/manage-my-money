@@ -1,0 +1,128 @@
+<html>
+<head>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}
+	</style>
+</head>
+<body>
+	<p>Score: 38.6</p>
+	
+  <p><strong>TransferItem#transfer_item_type (16.5)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>8.80</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>5.60</td>
+        <td class='score'>value</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.80</td>
+        <td class='score'>==</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>2.60</td>
+        <td class='score'>raise</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.30</td>
+        <td class='score'>>=</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.30</td>
+        <td class='score'><</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>0.40</td>
+        <td class='score'>lit_fixnum</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>TransferItem#none (8.8)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>3.30</td>
+        <td class='score'>validates_presence_of</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>3.30</td>
+        <td class='score'>belongs_to</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.10</td>
+        <td class='score'>validates_numericality_of</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.10</td>
+        <td class='score'>before_validation</td>
+      </tr>
+    
+  </table>
+ 
+</body>
+</html>

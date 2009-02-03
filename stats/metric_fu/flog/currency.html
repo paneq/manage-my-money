@@ -1,0 +1,153 @@
+<html>
+<head>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}
+	</style>
+</head>
+<body>
+	<p>Score: 48.9</p>
+	
+  <p><strong>Currency#not_filled_fields (28.9)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>8.50</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>5.60</td>
+        <td class='score'>size</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>5.20</td>
+        <td class='score'>call</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>5.20</td>
+        <td class='score'>assignment</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>4.80</td>
+        <td class='score'>==</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>2.40</td>
+        <td class='score'>block_given?</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.60</td>
+        <td class='score'>long_name</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>long_symbol</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.60</td>
+        <td class='score'>symbol</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>name</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.40</td>
+        <td class='score'><<</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.30</td>
+        <td class='score'>new</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>Currency#exchanges (5.8)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.60</td>
+        <td class='score'>right_exchanges</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.60</td>
+        <td class='score'>left_exchanges</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.40</td>
+        <td class='score'>+</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.20</td>
+        <td class='score'>uniq</td>
+      </tr>
+    
+  </table>
+ 
+</body>
+</html>

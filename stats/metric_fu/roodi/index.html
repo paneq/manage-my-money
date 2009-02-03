@@ -1,0 +1,190 @@
+<html>
+<head>
+	<title>Roodi Results</title>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}	
+	</style>
+</head>
+
+<body>
+	<h1>Roodi Results</h1>
+  <p><a href="http://roodi.rubyforge.org/">Roodi</a> parses your Ruby code and warns you about design issues you have based on the checks that is has configured.</p>
+	<table>
+		<tr>
+		  <th>File Path</th>
+		  <th>Warning</th>
+		</tr>	  
+		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/reports_controller.rb">app/controllers/reports_controller.rb:</a></td>
+  		  <td>Method name "create" has a cyclomatic complexity is 10.  It should be 8 or less.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/reports_controller.rb">app/controllers/reports_controller.rb:</a></td>
+  		  <td>Method name "update" has a cyclomatic complexity is 9.  It should be 8 or less.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/lib/hash_enums.rb">lib/hash_enums.rb:</a></td>
+  		  <td>Method name "define_enum" has a cyclomatic complexity is 9.  It should be 8 or less.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/users_helper.rb">app/helpers/users_helper.rb:</a></td>
+  		  <td>Found = in conditional.  It should probably be an ==</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/category.rb">app/models/category.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/category.rb">app/models/category.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/reports_controller.rb">app/controllers/reports_controller.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/reports_helper.rb">app/helpers/reports_helper.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/reports_helper.rb">app/helpers/reports_helper.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/reports_helper.rb">app/helpers/reports_helper.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/reports_helper.rb">app/helpers/reports_helper.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/reports_helper.rb">app/helpers/reports_helper.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/lib/date_extensions.rb">lib/date_extensions.rb:</a></td>
+  		  <td>Case statement is missing an else clause.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/category.rb">app/models/category.rb:</a></td>
+  		  <td>Block cyclomatic complexity is 5.  It should be 4 or less.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/users_helper.rb">app/helpers/users_helper.rb:</a></td>
+  		  <td>Method name "link_to_login_with_IP" should match pattern /^[_a-z<>=\[\]|+-\/\*`]+[_a-z0-9_<>=~@\[\]]*[=!\?]?$/</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/reports_controller.rb">app/controllers/reports_controller.rb:</a></td>
+  		  <td>Method "create" has 26 lines.  It should have 20 or less.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/reports_controller.rb">app/controllers/reports_controller.rb:</a></td>
+  		  <td>Method "generate_value_report" has 24 lines.  It should have 20 or less.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/controllers/categories_controller.rb">app/controllers/categories_controller.rb:</a></td>
+  		  <td>Method "make_opening_transfer" has 22 lines.  It should have 20 or less.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/helpers/application_helper.rb">app/helpers/application_helper.rb:</a></td>
+  		  <td>Method "date_period_fields" has 21 lines.  It should have 20 or less.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/lib/hash_enums.rb">lib/hash_enums.rb:</a></td>
+  		  <td>Method "define_enum" has 28 lines.  It should have 20 or less.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/money.rb">app/models/money.rb:</a></td>
+  		  <td>Don't use 'for' loops. Use Enumerable.each instead.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/category.rb">app/models/category.rb:</a></td>
+  		  <td>Don't use 'for' loops. Use Enumerable.each instead.</td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/app/models/category.rb">app/models/category.rb:</a></td>
+  		  <td>Don't use 'for' loops. Use Enumerable.each instead.</td>
+  		</tr>
+  		
+  		<tr class='dark'>
+  		  <td></td>
+  		  <td></td>
+  		</tr>
+  		
+  		<tr class='light'>
+  		  <td><a href="file:///home/jarek/NetBeansProjects/code/Found 23 errors.">Found 23 errors.:</a></td>
+  		  <td></td>
+  		</tr>
+  		
+	</table>
+	<p>Generated on Tue Feb 03 01:19:58 +0100 2009</p>	
+</body>
+</html>

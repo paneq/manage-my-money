@@ -1,0 +1,3 @@
+Total Flog = 1.1 (1.1 flog / method)
+FlowReport#none: (1.1)
+     1.1: validates_inclusion_of

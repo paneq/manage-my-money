@@ -1,0 +1,232 @@
+<html>
+<head>
+	<style>
+	body {
+	background-color: #efefef;
+	margin: 20px;
+	padding: 0;
+	font: 12px verdana, arial, helvetica;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #666;
+	background: #fff;
+	margin-bottom: 20px;	
+}
+
+	table tr.light {
+	 	background: #fff;
+	}
+
+	table tr.dark {
+		background: #f9f9f9;
+	}
+
+	table td, table th {
+		padding: 4px 10px;
+		font-size: 13px;
+	}
+	table th {
+		text-align: center;
+		color: #fc0;
+		background: #336;		
+		font-weight: bold;
+		border: #d0d0d0 1px solid;
+	}
+
+	table td {
+		border: #d0d0d0 1px solid;
+	}
+	
+		table td.score {
+			text-align: right;
+		}	
+
+.warning {
+	background: yellow;
+}
+	</style>
+</head>
+<body>
+	<p>Score: 142.3</p>
+	
+  <p><strong>ApplicationController#get_period (50.9)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>17.10</td>
+        <td class='score'>[]</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>11.40</td>
+        <td class='score'>to_i</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>6.90</td>
+        <td class='score'>assignment</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>5.10</td>
+        <td class='score'>+</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>5.10</td>
+        <td class='score'>params</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>4.90</td>
+        <td class='score'>new</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.60</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.40</td>
+        <td class='score'>calculate</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.40</td>
+        <td class='score'>end</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.40</td>
+        <td class='score'>begin</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.30</td>
+        <td class='score'>==</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.30</td>
+        <td class='score'>to_sym</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>ApplicationController#set_transfers_and_values (23.0)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>10.60</td>
+        <td class='score'>assignment</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>8.50</td>
+        <td class='score'>to_date</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>2.80</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>2.10</td>
+        <td class='score'>current_user</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.90</td>
+        <td class='score'>transfers</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.70</td>
+        <td class='score'>find</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.50</td>
+        <td class='score'>saldo_for_period_new</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.50</td>
+        <td class='score'>transfers_with_saldo_for_period_new</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.50</td>
+        <td class='score'>saldo_at_end_of_day</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.50</td>
+        <td class='score'>map</td>
+      </tr>
+    
+  </table>
+ 
+  <p><strong>ApplicationController#none (12.4)</strong></p>
+  <table>
+    <tr>
+      <th>Score</th>
+      <th>Operator</th>
+    </tr>
+    
+      <tr class='light'>
+        <td class='score'>4.80</td>
+        <td class='score'>include</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.40</td>
+        <td class='score'>[]</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.30</td>
+        <td class='score'>protect_from_forgery</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.20</td>
+        <td class='score'>branch</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.20</td>
+        <td class='score'>filter_parameter_logging</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.20</td>
+        <td class='score'>session</td>
+      </tr>
+    
+      <tr class='light'>
+        <td class='score'>1.20</td>
+        <td class='score'>==</td>
+      </tr>
+    
+      <tr class='dark'>
+        <td class='score'>1.20</td>
+        <td class='score'>private</td>
+      </tr>
+    
+  </table>
+ 
+</body>
+</html>
