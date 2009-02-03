@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
           @graphs = []
           @graphs_currencies.each do |currency|
             url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
-            @graphs << open_flash_chart_object(600,300, url_for(url))
+            @graphs << open_flash_chart_object(600,500, url_for(url))
           end
           render :template => 'reports/show_graph_report'
         end
@@ -236,14 +236,16 @@ class ReportsController < ApplicationController
     labels = Date.get_date_range_labels @report.period_start, @report.period_end, @report.period_division
     chart_values = calculate_and_group_values_by_currencies(@report)
     chart_values.each do |currency, categories|
-      max = 0
-      min = 0
       chart = OpenFlashChart.new
       chart.bg_colour = 0xffffff
       title = Title.new("Raport '#{@report.name}' dla waluty #{currency.long_symbol}")
       chart.title = title
+      min = nil
+      max = nil
       categories.each do |label, values|
         graph = get_graph_object @report
+        max ||= values.max
+        min ||= values.min
         max = values.max if max < values.max
         min = values.min if min > values.min
         graph.values = values
@@ -308,7 +310,44 @@ class ReportsController < ApplicationController
 
   def get_y_axis_for_value_report(min,max)
     y_axis = YAxis.new
-    y_axis.set_range(min*1.2, max*1.2, (max-min).abs/10 )
+
+    #steps 1 5 10 25 50 100
+    #13
+
+
+#    step = ((max-min).abs/10).roundMath.log10((max-min).abs) )
+
+    calc_max = lambda {|x| (( x.to_f / (10**(Math.log10(x).round-1)) ).ceil)*(10**(Math.log10(x).round-1))    }
+
+    #max_max = calc_max.call(max)
+    #min_min = -calc_max.call(min.abs)
+
+    distance = (max - min).abs
+    distance = 10 if distance < 10
+    step = 10**( ( Math.log10( distance ) ).ceil() -1)
+
+    steps = distance.to_f/step.to_f
+
+    step /= case steps
+    when 1...3 then 4
+    when 3..6 then 2
+    else 1
+    end
+
+    liczba = max.abs / step
+    liczba = liczba.ceil if max >= 0
+    liczba = libcza.floor if max < 0
+    max_max = liczba * step
+    max_max *= -1 if max < 0
+
+    liczba = min.abs / step
+    liczba = liczba.floor if min >= 0
+    liczba = liczba.ceil if min < 0
+    min_min = liczba * step
+    min_min *= -1 if min < 0
+
+    logger.info(min)
+    y_axis.set_range(min_min, max_max, step)
     y_axis
   end
 
