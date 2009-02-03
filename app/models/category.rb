@@ -384,10 +384,10 @@ class Category < ActiveRecord::Base
         # group by currency
         currency, value = set
         currency = Currency.find_by_id(currency)
-        money.add!(value, currency)
+        money.add!(value.round(2), currency)
       else
         # calculated to one value in default currency
-        money.add!(set.to_f, Currency.find_by_id(self.user.default_currency))
+        money.add!(set.to_f.round(2), Currency.find_by_id(self.user.default_currency))
       end
     end
     return money
