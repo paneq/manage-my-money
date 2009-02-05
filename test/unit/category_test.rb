@@ -382,6 +382,19 @@ class CategoryTest < Test::Unit::TestCase
   end
 
 
+
+  #TODO
+  def test_calculate_flow_values
+    
+  end
+
+  #TODO
+  def test_calculate_values
+    
+  end
+
+
+
   #przykłady na jednej walucie i prostych transferach
   def test_calculate_flow_values
     

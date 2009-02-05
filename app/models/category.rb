@@ -267,22 +267,54 @@ class Category < ActiveRecord::Base
   # Oblicza udzial wartosci podkategorii w kategorii
   # 
   # Parametry:
-  #  share_type to jedno z [:percentage, :value]
-  #  max_categories_count liczba podkategorii do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'
+  #  share_type to jedno z [:percentage, :value] do usuniecia - nie obliczaj procentow, zawsze podawaj wartosci
+  #  max_values_count liczba największych wartości do uwzględnienia do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'
   #  depth stopien zaglebienia w podkategorie w obliczeniach
+  #    mozliwe wartosci: 0,1,2,3,4,5,6, :all
+  #    0 oznacza zerowe zaglebienie, tzn pokaz oblicz tylko te kategorie z podkategoriami
+  #    :all oznacza
   #  period_start, period_end zakres czasowy
   #
   # Wyjscie:
-  #  tablica tablic postaci:
-  #  [[wartosc1,nazwa1],[wartosc2,nazwa2]]
-  #  sortowanie od najwiekszej wartosci
-  def calculate_share_values(max_categories_count, depth, period_start, period_end, share_type)
-    [[9,'Nazwa1'],[7,'Nazwa2'],[2,'Nazwa3'],[1,'Nazwa4'],[5,'Pozostale']]
-  end
-  
+  #  hash tablicy hashy postaci
+  #  {currency => [{category=>a_category,with_subcategories => true/false, value => 123.21}, (...) ]}
+  #  sortowanie od najwiekszej wartosci waramch waluty
+  def calculate_max_share_values(max_values_count, depth, period_start, period_end)
+    values = calculate_share_values(depth, period_start, period_end)
 
-  #TODO
-  #TODO co z walutami?
+    values_in_currencies = {}
+
+    values.map{|v| v[:value].currencies}.flatten.uniq.each do |cur|
+      values.sort! {|one,two| two[:value].value(cur)<=>one[:value].value(cur)} #sort from biggest to lowest
+      min_value = values.map{|a| a[:value].value(cur)}.uniq[0..(max_values_count-1)].last
+
+      values_to_show, other_values = values.partition {|v| v[:value].value(cur) >= min_value}
+      values_to_show << {:category => nil, :value => other_values.sum{|v| v[:value]}, :without_subcategories => false}
+      values_in_currencies[cur] = values_to_show
+    end
+    values_in_currencies
+  end
+
+  #
+  def calculate_share_values(depth, period_start, period_end)
+    result = []
+    if self.leaf? || depth == 0
+      result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period_with_subcategories(period_start, period_end)}
+    elsif depth == :all
+      self.children.each do |sub_category|
+        result += sub_category.calculate_share_values(depth, period_start, period_end)
+      end
+    elsif depth > 0
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
+      self.children.each do |sub_category|
+        result += sub_category.calculate_share_values(depth-1, period_start, period_end)
+      end
+    end
+    result
+  end
+
+
+
   # Podaje saldo/salda kategorii w podanym czasie
   #
   # Parametry:
