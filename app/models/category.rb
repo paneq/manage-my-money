@@ -104,6 +104,15 @@ class Category < ActiveRecord::Base
     path[0,path.size-1]
   end
 
+  def name_with_indentation
+    '.'*level + name
+  end
+
+  def short_name_with_indentation
+    '&nbsp;'*level*2 + name[0,15]
+  end
+
+
   def short_name
     name[0,15]
   end
@@ -289,7 +298,8 @@ class Category < ActiveRecord::Base
       min_value = values.map{|a| a[:value].value(cur)}.uniq[0..(max_values_count-1)].last
 
       values_to_show, other_values = values.partition {|v| v[:value].value(cur) >= min_value}
-      values_to_show << {:category => nil, :value => other_values.sum{|v| v[:value]}, :without_subcategories => false}
+      values_to_show << {:category => nil, :value => other_values.sum(Money.new){|v| v[:value]}, :without_subcategories => false}
+      values_to_show.delete_if {|el| el[:value].value(cur) == 0}
       values_in_currencies[cur] = values_to_show
     end
     values_in_currencies
@@ -301,6 +311,7 @@ class Category < ActiveRecord::Base
     if self.leaf? || depth == 0
       result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period_with_subcategories(period_start, period_end)}
     elsif depth == :all
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
       self.children.each do |sub_category|
         result += sub_category.calculate_share_values(depth, period_start, period_end)
       end

@@ -17,7 +17,19 @@
 <br/>
 <%= switch("graph_table","Pokaż/ukryj tabelkę danych") %> <br/>
 
-<br/><div id="graph_table">[jakas smieszna tabelka tu] </div><br/><br/>
+<br/><div id="graph_table">
+
+
+<table class="flow-table">
+<tr class="flow-table-header"><th >Kategoria</th><th>Saldo</th><th>%</th></tr>
+
+<%=render :partial => "show_share_category"%>
+
+  <tr><td><b>W sumie: </b></td><td class="right"></td><td class="right"></td></tr>
+
+</table>
+
+   </div><br/><br/>
 
 <%= render :partial => 'report_links' %>
 

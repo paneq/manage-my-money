@@ -11,7 +11,7 @@ class ShareReportTest < ActiveSupport::TestCase
     r.category = @jarek.categories.first
     r.report_view_type = :pie
     r.period_type = :week
-    r.share_type = :percentage
+    r.max_categories_count = 1
     r.name = "Testowy raport"
     assert r.save!
   end
@@ -20,12 +20,14 @@ class ShareReportTest < ActiveSupport::TestCase
     r = ShareReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
+    r.max_categories_count = -10
     r.category = nil
     assert !r.save
     assert r.errors.on(:category)
     assert r.errors.on(:report_view_type)
     assert r.errors.on(:period_type)
-    assert_equal 3, r.errors.count
+    assert r.errors.on(:max_categories_count)
+    assert_equal 4, r.errors.count
   end
 
 end 

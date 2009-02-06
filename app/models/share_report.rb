@@ -24,13 +24,12 @@
 
 class ShareReport < Report
   belongs_to :category
-  define_enum :share_type, [:percentage, :value]
 
-  validates_presence_of :report_view_type, :share_type, :category
+  validates_presence_of :report_view_type, :category
   validates_inclusion_of :report_view_type, :in => [:pie, :bar]
 
-  validates_numericality_of  :max_categories_count, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_numericality_of  :depth, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of  :max_categories_count, :only_integer => true, :greater_than_or_equal_to => 1
+  validates_numericality_of  :depth, :only_integer => true, :greater_than_or_equal_to => -1, :less_than_or_equal_to => 6
 
   def share_report?
     true

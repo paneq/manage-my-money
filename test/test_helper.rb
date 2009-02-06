@@ -202,7 +202,6 @@ class Test::Unit::TestCase
     r.category = user.categories.first
     r.report_view_type = :pie
     r.period_type = :week
-    r.share_type = :percentage
     r.depth = 5
     r.max_categories_count = 6
     r.name = "Testowy raport"

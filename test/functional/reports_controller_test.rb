@@ -25,18 +25,17 @@ class ReportsControllerTest < ActionController::TestCase
           assert_select "option[value=#{opt}]"
         end
       end
-      assert_select "select#share_report_share_type" do
-        assert_select "option", :count => 2
-        ['percentage','value'].each do |opt|
+      assert_select "select#share_report_depth" do
+        assert_select "option", :count => 7
+        ['1','2','3','4','5','6','-1'].each do |opt|
           assert_select "option[value=#{opt}]"
         end
       end
-      assert_select "input#share_report_depth"
       assert_select "input#share_report_max_categories_count"
       assert_select "select#share_report_category_id" do
         assert_select "option", :count => @jarek.categories.count
         @jarek.categories.each do |category|
-          assert_select "option", category.name
+          assert_select "option", category.name_with_indentation
         end
       end
       assert_select "input#share_report_submit[type=submit]"
@@ -96,19 +95,18 @@ class ReportsControllerTest < ActionController::TestCase
         end
         assert_select "option[value=pie][selected=selected]"
       end
-      assert_select "select#share_report_share_type" do
-        assert_select "option", :count => 2
-        ['percentage','value'].each do |opt|
+      assert_select "select#share_report_depth" do
+        assert_select "option", :count => 7
+        ['1','2','3','4','5','6','-1'].each do |opt|
           assert_select "option[value=#{opt}]"
         end
-        assert_select "option[value=percentage][selected=selected]"
+        assert_select "option[value=5][selected=selected]"
       end
-      assert_select "input#share_report_depth[value=5]"
       assert_select "input#share_report_max_categories_count[value=6]"
       assert_select "select#share_report_category_id" do
         assert_select "option", :count => @jarek.categories.count
         @jarek.categories.each do |category|
-          assert_select "option", category.name
+          assert_select "option", category.name_with_indentation
         end
         assert_select "option[selected=selected]", @jarek.categories.first.name
       end

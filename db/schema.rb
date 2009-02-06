@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090201170116) do
+ActiveRecord::Schema.define(:version => 20090206222509) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -91,7 +91,6 @@ ActiveRecord::Schema.define(:version => 20090201170116) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "share_type_int",       :default => 0
     t.integer  "depth",                :default => 0
     t.integer  "max_categories_count", :default => 0
     t.integer  "category_id"
