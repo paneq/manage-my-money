@@ -127,9 +127,9 @@
               <h2>My Money <span class="dark">Menu</span></h2>
               <p><b>
                   <% unless logged_in? -%>
-                    please login
+                    Zaloguj się!
                   <% else -%>
-                    Logged as <%= self.current_user.login -%>
+                    Zalogowany: <%= self.current_user.login -%>
                   <% end -%>
               </b></p>
               <ul class="submenu1">
@@ -147,6 +147,7 @@
                   <li><%= link_to 'Kursy', exchanges_path %></li>
                   <li><%= link_to 'Raporty', reports_path %></li>
 
+
                   <br />
                   <li id="logout"><%= link_to 'Wyloguj', logout_url %></li>
                   <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user) %></li>
@@ -156,7 +157,7 @@
               </ul>
 
               <% if logged_in? %>
-                <p><b>Quick acces:</b></p>
+                <p><b>Szybki dostęp:</b></p>
                 <ul class="submenu3">
                   <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.categories %>
                 </ul>

@@ -4,28 +4,28 @@
 <% form_for @currency do |f| %>
   <p>
     <label for="currency_symbol">
-    Symbol ex. '$'
+    Symbol np. '$'
     </label>
     <%= f.text_field :symbol, :size => 5  %>
   </p>
   
   <p>
     <label for="currency_long_symbol">
-    Long symbol ex. 'USD'
+    Długi symbol np. 'USD'
     </label>
     <%= f.text_field :long_symbol, :size => 7  %>
   </p>
   
   <p>
     <label for="currency_name">
-    Name ex. 'Dollar'
+    Nazwa np. 'Dollar'
     </label>
     <%= f.text_field :name, :size => 12  %>
   </p>
   
   <p>
     <label for="currency_long_name">
-    Long name ex. 'American dollar'
+    Długa nazwa np. 'American dollar'
     </label>
     <%= f.text_field :long_name, :size => 20  %>
   </p>

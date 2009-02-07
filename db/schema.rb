@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090207121136) do
+ActiveRecord::Schema.define(:version => 20090207162724) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(:version => 20090207121136) do
     t.boolean  "include_transactions_from_subcategories",                         :default => false, :null => false
     t.integer  "multi_currency_balance_calculating_algorithm_int",                :default => 0,     :null => false
     t.integer  "default_currency_id",                                             :default => 1,     :null => false
+    t.boolean  "invert_saldo_for_assets",                                         :default => true,  :null => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

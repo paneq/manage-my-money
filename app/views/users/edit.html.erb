@@ -33,6 +33,10 @@
 <p><%= f.label 'include_transactions_from_subcategories', 'W kategoriach pokazuj transakcje z podkategorii: ' %><br/>
 <%= f.check_box :include_transactions_from_subcategories %></p>
 
+<p><%= f.label 'invert_saldo_for_assets', 'Odwróć wartość salda dla kategorii typu "Przychody": ' %><br/>
+<%= f.check_box :invert_saldo_for_assets %></p>
+
+
 <fieldset id='user_multi_currency_balance_calculating_algorithms'>
 <legend>Algorytm przeliczania walut</legend>
 <% @multi_currency_balance_calculating_algorithms.each do |option| -%>
@@ -41,5 +45,5 @@
 </fieldset>
 
 </fieldset>
-<p><%= f.submit 'Update' %></p>
+<p><%= f.submit 'Zapisz' %></p>
 <% end -%>
