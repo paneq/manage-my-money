@@ -1,0 +1,3 @@
+# PSM Certificate Override Settings file
+# This is a generated file!  Do not edit.
+addons.mozilla.org:443	OID.2.16.840.1.101.3.4.2.1	44:08:D4:B0:B1:47:8B:8D:2B:9F:A6:5D:CB:D8:BD:71:C6:7B:04:DA:E4:B3:7B:3F:AF:9A:72:98:1A:32:03:04	U	AAAAAAAAAAAAAAAGAAAAWwEfUhOeBTBZMRowGAYDVQQKDBFDeWJlclZpbGxpYW5z  LmNvbTEuMCwGA1UECwwlQ3liZXJWaWxsaWFucyBDZXJ0aWZpY2F0aW9uIEF1dGhv  cml0eTELMAkGA1UEBhMCVVM=
