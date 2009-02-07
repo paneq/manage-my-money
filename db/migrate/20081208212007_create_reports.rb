@@ -15,7 +15,7 @@ class CreateReports < ActiveRecord::Migration
       t.timestamps
 
       # attributes for type=ShareReport
-      t.integer :share_type_int, :default => ShareReport.SHARE_TYPES[:percentage]
+      t.integer :share_type_int #, :default => ShareReport.SHARE_TYPES[:percentage]
       t.integer :depth, :default => 0
       t.integer :max_categories_count, :default => 0
       t.integer :category_id
