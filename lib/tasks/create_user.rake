@@ -8,7 +8,7 @@ namespace :user do
       u.login = 'admin'
       u.password = u.password_confirmation = '123456'
       u.email = 'admin@admin.com'
-      u.active = true
+      #u.active = true
       u.save!
       u.activate!
     end

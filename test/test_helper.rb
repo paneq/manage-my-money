@@ -36,7 +36,6 @@ class Test::Unit::TestCase
     make_currencies
     @zloty.save! if @zloty.id.nil?
     @rupert = User.new()
-    @rupert.active = true
     @rupert.email = 'email@example.com'
     @rupert.login = 'rupert_xyz'
     @rupert.password = @rupert.login
@@ -52,7 +51,6 @@ class Test::Unit::TestCase
 
   def save_jarek
     @jarek = User.new()
-    @jarek.active = true
     @jarek.email = 'jarek@example.com'
     @jarek.login = 'jarek_xyz'
     @jarek.password = @jarek.login

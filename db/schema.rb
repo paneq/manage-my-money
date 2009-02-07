@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090206222509) do
+ActiveRecord::Schema.define(:version => 20090207121136) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -135,7 +135,6 @@ ActiveRecord::Schema.define(:version => 20090206222509) do
     t.datetime "remember_token_expires_at"
     t.string   "activation_code",                                  :limit => 40
     t.datetime "activated_at"
-    t.boolean  "active",                                                          :default => false, :null => false
     t.integer  "transaction_amount_limit_type_int",                               :default => 2,     :null => false
     t.integer  "transaction_amount_limit_value"
     t.boolean  "include_transactions_from_subcategories",                         :default => false, :null => false
