@@ -1,35 +1,53 @@
 <script type="text/javascript" src="/javascripts/swfobject.js"></script>
 
 <div align="center">
-<%  @graphs.each do |graph| %>
-<%= graph %><br/><br/>
-<%end%>
+  <%  @graphs.each do |currency, graph| %>
+    <%= graph %><br/>
+    <br/>
+
+    <%= switch("graph_table_for_#{currency}","Pokaż/ukryj tabelkę danych") %> <br/>
+    <div id="graph_table_for_<%=currency%>">
+      <% if @report.share_report? %>
+
+        <table class="flow-table">
+          <tr class="flow-table-header"><th >Kategoria</th><th>Saldo <%= currency%></th><th>%</th></tr>
+          <%  @values[currency][:values].each do |val| %>
+          <%=render :partial => "show_share_category", :locals => {:val => val}%>
+          <% end %>
+          <tr><td><b>W sumie: </b></td><td class="right"><%= @values[currency][:sum] %></td><td class="right">100</td></tr>
+        </table>
+
+      <% else %>
+
+        <table class="flow-table">
+          <tr class="flow-table-header"><th>Saldo <%= currency%></th>
+          <% @values[:date_labels].each do |label| %>
+          <th><%= label %></th>
+          <% end -%>
+          </tr>
+          <% @values[:values][currency].each do |label, values| %>
+          <%=render :partial => "show_value_category", :locals => {:label => label, :values => values}%>
+          <% end %>
+        </table>
+
+      <% end #end of if -%>
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+
+  <% end #end of each -%>
+
+
 </div>
 
 <% if @graphs.size == 0 %>
-
-<h1>Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
-
+  <h1>Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
 <% end %>
 
 
-
 <br/>
-<%= switch("graph_table","Pokaż/ukryj tabelkę danych") %> <br/>
-
-<br/><div id="graph_table">
-
-
-<table class="flow-table">
-<tr class="flow-table-header"><th >Kategoria</th><th>Saldo</th><th>%</th></tr>
-
-<%=render :partial => "show_share_category"%>
-
-  <tr><td><b>W sumie: </b></td><td class="right"></td><td class="right"></td></tr>
-
-</table>
-
-   </div><br/><br/>
 
 <%= render :partial => 'report_links' %>
 

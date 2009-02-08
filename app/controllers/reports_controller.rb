@@ -20,11 +20,11 @@ class ReportsController < ApplicationController
           @delta = @in_sum - @out_sum
           render :template => 'reports/show_flow_report'
         else
-          @graphs_currencies = cache_graph_data
-          @graphs = []
-          @graphs_currencies.keys.each do |currency|
+          @values = calculate_and_cache_graph_data
+          @graphs = {}
+          @values[:values].keys.each do |currency|
             url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
-            @graphs << open_flash_chart_object(600,500, url_for(url))
+            @graphs[currency] = open_flash_chart_object(600,500, url_for(url))
           end
           render :template => 'reports/show_graph_report'
         end
@@ -190,17 +190,17 @@ class ReportsController < ApplicationController
   # dobre kolorki do ustawienia: fdd84e, 6886b4, 72ae6e, d1695e, 8a6eaf, efaa43,
   # tlo: 4a465a
 
-  def cache_graph_data
+  def calculate_and_cache_graph_data
     charts = nil
     if @report.share_report?
-      charts = generate_share_report
+      charts, values = generate_share_report
     elsif @report.value_report?
-      charts = generate_value_report
+      charts, values = generate_value_report
     else
       throw 'Wrong report type'
     end
     Rails.cache.write("REPORT##{@report.id}", charts, :expires_in => 10.minutes)
-    charts
+    return values
   end
 
   def get_graph_object report
@@ -259,7 +259,15 @@ class ReportsController < ApplicationController
       chart.y_axis = get_y_axis_for_report(min, max)
       charts[currency.long_symbol] = chart
     end
-    charts
+
+    pure_values = {}
+    pure_values[:values] = {}
+    pure_values[:date_labels] = labels
+    chart_values.each do |currency, v|
+      pure_values[:values][currency.long_symbol] = v
+    end
+
+    return charts, pure_values
   end
 
 
@@ -353,7 +361,7 @@ class ReportsController < ApplicationController
     else
       @report.depth
     end
-    values_in_currencies = @report.category.calculate_max_share_values @report.max_categories_count, depth, @report.period_start, @report.period_end
+    values_in_currencies = @report.category.calculate_max_share_values @report.max_categories_values_count, depth, @report.period_start, @report.period_end
 
     get_label = lambda {|hash|
             if hash[:category].nil?
@@ -364,6 +372,7 @@ class ReportsController < ApplicationController
         }
 
     charts = {}
+    pure_values = {}
     values_in_currencies.each do |cur, values|
       title = Title.new("Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}")
 #      title.style = 'font-size: 22px;'
@@ -373,6 +382,16 @@ class ReportsController < ApplicationController
       graph = get_graph_object @report
 
       sum = values.sum{|val| val[:value].value(cur)}
+
+      pure_values[cur.long_symbol] = {}
+      pure_values[cur.long_symbol][:values] = []
+      values.each do |category_hash|
+        value = category_hash[:value].value(cur)
+        pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => (value/sum*100).round(2)}
+      end
+
+      pure_values[cur.long_symbol][:sum] = sum
+
 
       if @report.report_view_type == :pie
         graph.values = values.map do |val|
@@ -409,7 +428,7 @@ class ReportsController < ApplicationController
       chart << graph
       charts[cur.long_symbol] = chart
     end
-    charts
+    return charts, pure_values
   end
 
 
