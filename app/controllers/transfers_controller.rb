@@ -33,11 +33,12 @@ class TransfersController < ApplicationController
   end
 
 
-  def search    
+  def search
+    @range = get_period('transfer_day', true)
     @transfers = self.
       current_user.
       transfers.
-      find(:all, :order => 'day ASC, id ASC', :conditions => conditions ).
+      find(:all, :order => 'day ASC, id ASC', :conditions => ['day >= ? AND day <= ?', @range.begin, @range.end] ).
       map { |t| {:transfer => t} }
       
     respond_to do |format|
@@ -78,12 +79,17 @@ class TransfersController < ApplicationController
   def show_details
     render :update do |page|
       page.hide "show-details-button-#{@transfer.id}"
-      page.insert_html :bottom, "transfer-in-category-#{@transfer.id}", :partial => 'transfer_details', :object => @transfer, :locals => {:current_category_id => params[:current_category]}
+      page.insert_html :bottom,
+        "transfer-in-category-#{@transfer.id}",
+        :partial => 'transfer_details',
+        :object => @transfer,
+        :locals => {:current_category_id => params[:current_category], :include_subcategories => params[:include_subcategories]}
     end
   end
 
   
   #remote
+  #TODO: Make it JS only, no request to server required
   def hide_details
     render :update do |page|
       page.remove "transfer-details-id-#{@transfer.id}"
@@ -112,7 +118,9 @@ class TransfersController < ApplicationController
       format.html {}
       format.js do
         render :update do |page|
-          page.replace_html "transfer-in-category-#{@transfer.id}", :partial => 'transfers/full_transfer', :locals => { :current_category => @category , :transfer => @transfer, :embedded => true}
+          page.replace_html "transfer-in-category-#{@transfer.id}",
+            :partial => 'transfers/full_transfer',
+            :locals => { :current_category => @category , :transfer => @transfer, :embedded => true, :include_subcategories => @include_subcategories }
         end
       end
     end
@@ -130,7 +138,11 @@ class TransfersController < ApplicationController
             if @category && @category.transfers.find_by_id(@transfer.id)
               #same code as show_details but i could not move it into method and i do not know why.
               page.hide "show-details-button-#{@transfer.id}"
-              page.insert_html :bottom, "transfer-in-category-#{@transfer.id}", :partial => 'transfer_details', :object => @transfer, :locals => {:current_category_id => params[:current_category]}
+              page.insert_html :bottom,
+                "transfer-in-category-#{@transfer.id}",
+                :partial => 'transfer_details',
+                :object => @transfer,
+                :locals => {:current_category_id => params[:current_category], :include_subcategories => params[:include_subcategories]}
             end
           end
         end
@@ -214,26 +226,5 @@ class TransfersController < ApplicationController
       #why doesn't it work ? There is no flash ?
     end
   end
-
-
-  def conditions
-    set_current_category
-    condition = 'day >= ? AND day <= ?'
-    @range = get_period('transfer_day', true)
-
-    parameters = [condition, @range.begin, @range.end]
-
-    #searching for transfers connected via items to one category
-    if @category
-      parameters.first += 'AND category_id IN (?)'
-      parameters << if params[:subcategories]
-        @category.self_and_descendants().map {|c| c.id} #table of subcategories ids
-      else
-        [@category.id] #table with category id
-      end
-    end
-
-    return parameters
-  end #conditions method
 
 end

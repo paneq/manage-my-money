@@ -5,7 +5,7 @@
 
   <% unless current_category.nil? %>
 
-    Uwzględnij podkategorie &nbsp;&nbsp;<%= check_box_tag 'subcategories', true %>
+    Uwzględnij podkategorie &nbsp;&nbsp;<%= check_box_tag 'include_subcategories', true %>
     <%= hidden_field_tag :id, current_category.id %>
 
   <%  end %>

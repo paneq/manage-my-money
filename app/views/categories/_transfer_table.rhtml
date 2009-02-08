@@ -1,4 +1,5 @@
 <% current_category ||= nil #We do not know if this variable is given through :locals %>
+<% include_subcategories ||= nil #We do not know if this variable is given through :locals %>
 <% mode ||= :category %>
 <table id="transfers-table" class="width" style="border-collapse: collapse; border: solid 1px #AAD3DB">
   <tr style="background-color: #EAF2F5;">
@@ -39,6 +40,7 @@
   %>
   <% @transfers.each do |transfer_data| %>
     <% transfer_data.merge!(:current_category => current_category) unless current_category.nil? %>
+    <% transfer_data.merge!(:include_subcategories => include_subcategories) unless include_subcategories.nil? %>
     <% transfer_data.merge!(:mode => mode) %>
     <%= render :partial => 'categories/transfer' , :locals=> transfer_data %>
   <% end %>

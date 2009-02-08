@@ -50,7 +50,8 @@ class ApplicationController < ActionController::Base
 
   
   def set_current_category
-    @category ||= self.current_user.categories.find(params['current_category']) if params['current_category']
+    @category ||= self.current_user.categories.find(params[:current_category]) if params[:current_category]
+    @include_subcategories = params[:include_subcategories] if params[:include_subcategories]
   end
 
 
@@ -64,9 +65,10 @@ class ApplicationController < ActionController::Base
 
   def set_transfers_and_values
     if @category
-      @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-      @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-      @value ||= @category.saldo_at_end_of_day(@end_day.to_date)
+      @include_subcategories = !!@include_subcategories
+      @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date, @include_subcategories)
+      @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date, :show_all_currencies, @include_subcategories)
+      @value ||= @category.saldo_at_end_of_day(Date.today.to_date, :show_all_currencies, @include_subcategories)
       @mode ||= :category
     else
       @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC').map{ |t| {:transfer => t} }
@@ -81,7 +83,11 @@ class ApplicationController < ActionController::Base
   def render_transfer_table(&block)
     set_variables_for_rendering_transfer_table
     render :update do |page|
-      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {:current_category => @category, :mode => @mode }
+      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {
+        :current_category => @category,
+        :mode => @mode,
+        :include_subcategories => @include_subcategories
+      }
       yield page if Kernel.block_given?
     end
   end

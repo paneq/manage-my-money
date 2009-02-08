@@ -1,6 +1,9 @@
 <% id = transfer_details.id %>
 <% columns_count = 3 %>
 <% current_category_id ||= nil %>
+<% include_subcategories ||= nil %>
+<% options = {:current_category => current_category_id, :include_subcategories => include_subcategories} %>
+
 <table id="<%= "transfer-details-id-#{id}" -%>" class="table-transfer-details width">
   <tr>
     <td colspan="<%=columns_count-%>" id="flash-notice-<%=id-%>" >
@@ -19,15 +22,15 @@
   <tr class="line-income-outcome" >
     <td colspan="<%=columns_count-%>">
       <span class="what-to-do" >
-        <%= link_to_remote "Ukryj szczegóły", :url => hide_details_transfer_path(:id => transfer_details, :current_category => current_category_id) %>
+        <%= link_to_remote "Ukryj szczegóły", :url => hide_details_transfer_path({:id => transfer_details}.merge(options)) %>
       </span>
       |
       <span class="what-to-do" >
-        <%= link_to_remote "Edytuj transfer", :url => {:action => :edit, :controller => :transfers, :id => id, :current_category => current_category_id}, :method => :get %>
+        <%= link_to_remote "Edytuj transfer", :url => {:action => :edit, :controller => :transfers, :id => id}.merge(options), :method => :get %>
       </span>
       |
       <span>
-        <%= link_to_remote "Usuń", :url => {:action => :destroy, :controller => :transfers, :id => id, :current_category => current_category_id}, :method => :delete %>
+        <%= link_to_remote "Usuń", :url => {:action => :destroy, :controller => :transfers, :id => id}.merge(options), :method => :delete %>
       </span>
     </td>
   </tr>

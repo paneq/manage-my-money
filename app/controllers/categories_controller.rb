@@ -27,7 +27,12 @@ class CategoriesController < ApplicationController
 
   def search
     @category = self.current_user.categories.find(params[:id])
-    
+    @range = get_period('transfer_day', true)
+    @include_subcategories = !!params[:include_subcategories]
+    respond_to do |format|
+      format.html {}
+      format.js {render_transfer_table}
+    end
   end
 
   

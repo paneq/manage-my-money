@@ -2,8 +2,10 @@
 <% # money => 'contains value of transfer as Money object', %>
 <% # saldo => 'Saldo as Money object' %>
 <% # current_category => 'Category to redraw on changes' %>
+<% # include_subcategories => 'Redraw current_category with subcategories?' %>
 
 <% current_category ||= nil %>
+<% include_subcategories ||= nil %>
 <% mode ||= nil %>
 <% size = '15x15' %>
 <% text = 'Pokaż sczegóły' %>
@@ -39,7 +41,12 @@
 
   <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer.id -%>">
     <span id="show-details-button-<%= transfer.id -%>">
-      <%= link_to_remote image_tag("/images/system-search.png", :size => size, :alt => text) , {:url => show_details_transfer_path(:id => transfer, :current_category => current_category)}, {:title => text} %>
+      <%= link_to_remote image_tag("/images/system-search.png", :size => size, :alt => text),
+        {:url => show_details_transfer_path(:id => transfer,
+          :current_category => current_category,
+          :include_subcategories => include_subcategories)
+        },
+        {:title => text} %>
     </span>
   </td>
 
