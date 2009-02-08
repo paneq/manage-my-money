@@ -109,7 +109,7 @@ class Category < ActiveRecord::Base
   end
 
   def short_name_with_indentation
-    '&nbsp;'*level*2 + name[0,15]
+    '&nbsp;'*level*2 + short_name
   end
 
 
@@ -254,11 +254,20 @@ class Category < ActiveRecord::Base
     list = []
     last_transfer = :default
     for t in transfers do
-      if last_transfer == t
-        list.last[:money].add!(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
-      else
-        list << {:transfer => t, :money => Money.new(Currency.find(t.read_attribute('currency_id')) => t.read_attribute('value_for_currency').to_i )}
+
+      value = t.read_attribute('value_for_currency').to_f
+
+      if self.user.invert_saldo_for_income && self.category_type == :INCOME
+        value = -value
       end
+
+
+      currency = Currency.find(t.read_attribute('currency_id'))
+
+      if last_transfer != t
+        list << {:transfer => t, :money => Money.new()}
+      end
+      list.last[:money].add!(value, currency)
       last_transfer = t
     end
     
@@ -433,6 +442,11 @@ class Category < ActiveRecord::Base
         money.add!(set.to_f.round(2), Currency.find_by_id(self.user.default_currency))
       end
     end
+
+    if self.user.invert_saldo_for_income && self.category_type == :INCOME
+      money = Money.new - money
+    end
+
     return money
 
   end

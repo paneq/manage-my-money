@@ -31,7 +31,7 @@ class ReportsControllerTest < ActionController::TestCase
           assert_select "option[value=#{opt}]"
         end
       end
-      assert_select "input#share_report_max_categories_count"
+      assert_select "input#share_report_max_categories_values_count"
       assert_select "select#share_report_category_id" do
         assert_select "option", :count => @jarek.categories.count
         @jarek.categories.each do |category|
@@ -102,7 +102,7 @@ class ReportsControllerTest < ActionController::TestCase
         end
         assert_select "option[value=5][selected=selected]"
       end
-      assert_select "input#share_report_max_categories_count[value=6]"
+      assert_select "input#share_report_max_categories_values_count[value=6]"
       assert_select "select#share_report_category_id" do
         assert_select "option", :count => @jarek.categories.count
         @jarek.categories.each do |category|

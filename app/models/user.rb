@@ -150,7 +150,8 @@ class User < ActiveRecord::Base
                   :include_transactions_from_subcategories,
                   :transaction_amount_limit_value,
                   :transaction_amount_limit_type,
-                  :default_currency_id
+                  :default_currency_id,
+                  :invert_saldo_for_income
 
 
   # Activates the user in the database.

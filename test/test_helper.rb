@@ -43,6 +43,7 @@ class Test::Unit::TestCase
     @rupert.transaction_amount_limit_type = :actual_month
     @rupert.multi_currency_balance_calculating_algorithm = :show_all_currencies
     @rupert.default_currency = @zloty
+    @rupert.invert_saldo_for_income = false
     @rupert.save!
     @rupert.activate!
     @selenium.set_context("Save rupert") if @selenium
@@ -201,7 +202,7 @@ class Test::Unit::TestCase
     r.report_view_type = :pie
     r.period_type = :week
     r.depth = 5
-    r.max_categories_count = 6
+    r.max_categories_values_count = 6
     r.name = "Testowy raport"
     r.save!
     r

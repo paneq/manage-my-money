@@ -331,7 +331,7 @@ class ReportsController < ApplicationController
 
     liczba = max.abs / step
     liczba = liczba.ceil if max >= 0
-    liczba = libcza.floor if max < 0
+    liczba = liczba.floor if max < 0
     max_max = liczba * step
     max_max *= -1 if max < 0
 

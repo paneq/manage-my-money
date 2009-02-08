@@ -7,7 +7,7 @@
   depth_list['Maksymalne'] = -1
 %>
 <%= form.label :depth, 'Zagłębienie:' %><%= form.select :depth, depth_list  %> <br/>
-<%= form.label :max_categories_count, 'Maksymalna ilość wyników:' %><%= form.text_field :max_categories_count  %> <br/>
+<%= form.label :max_categories_values_count, 'Maksymalna ilość wyników:' %><%= form.text_field :max_categories_values_count  %> <br/>
 <%= form.label :category, 'Kategoria:' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %>
 <br/>
 <br/>

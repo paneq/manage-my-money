@@ -59,6 +59,27 @@ class CategoryTest < Test::Unit::TestCase
     assert outcome_income_category.saldo_new.currencies.include?(@zloty)
     assert outcome_income_category.saldo_new.currencies.include?(@euro)
   end
+
+
+  def test_inverting_income_saldo
+    income_category = @rupert.income
+    outcome_income_category = @rupert.asset
+
+    save_simple_transfer(:income => income_category, :outcome => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
+
+    assert_equal(100, income_category.saldo_new.value(@zloty))
+    @rupert.invert_saldo_for_income = true
+    @rupert.save!
+    income_category = @rupert.income
+    assert_equal(-100, income_category.saldo_new.value(@zloty))
+    @rupert.invert_saldo_for_income = false
+    @rupert.save!
+    income_category = @rupert.income
+    assert_equal(100, income_category.saldo_new.value(@zloty))
+
+  end
+
+
   
   
   def test_saldo_at_end_of_days

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090207162724) do
+ActiveRecord::Schema.define(:version => 20090208112934) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -82,20 +82,20 @@ ActiveRecord::Schema.define(:version => 20090207162724) do
 
   create_table "reports", :force => true do |t|
     t.string   "type"
-    t.string   "name",                                    :null => false
-    t.integer  "period_type_int",                         :null => false
+    t.string   "name",                                           :null => false
+    t.integer  "period_type_int",                                :null => false
     t.date     "period_start"
     t.date     "period_end"
-    t.integer  "report_view_type_int",                    :null => false
-    t.boolean  "is_predefined",        :default => false, :null => false
+    t.integer  "report_view_type_int",                           :null => false
+    t.boolean  "is_predefined",               :default => false, :null => false
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "depth",                :default => 0
-    t.integer  "max_categories_count", :default => 0
+    t.integer  "depth",                       :default => 0
+    t.integer  "max_categories_values_count", :default => 0
     t.integer  "category_id"
-    t.integer  "period_division_int",  :default => 5
-    t.boolean  "temporary",            :default => false, :null => false
+    t.integer  "period_division_int",         :default => 5
+    t.boolean  "temporary",                   :default => false, :null => false
   end
 
   create_table "sessions", :force => true do |t|
@@ -140,7 +140,7 @@ ActiveRecord::Schema.define(:version => 20090207162724) do
     t.boolean  "include_transactions_from_subcategories",                         :default => false, :null => false
     t.integer  "multi_currency_balance_calculating_algorithm_int",                :default => 0,     :null => false
     t.integer  "default_currency_id",                                             :default => 1,     :null => false
-    t.boolean  "invert_saldo_for_assets",                                         :default => true,  :null => false
+    t.boolean  "invert_saldo_for_income",                                         :default => true,  :null => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
