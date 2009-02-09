@@ -17,6 +17,11 @@ module ApplicationHelper
     "id='#{name}-#{obj.id}'"
   end
 
+  # Returns hash { :id => 'name-#{obj.id}' }
+  def obj_hash_id(name, obj)
+    {:id => "#{name}-#{obj.id}"}
+  end
+
   # display_if(proc_object)
   # display_if { 1 == 2 }
   #

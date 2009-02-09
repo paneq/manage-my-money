@@ -85,7 +85,7 @@ class CategoriesController < ApplicationController
     @category.description = params[:category][:description]
     @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
     @category.save!
-    flash[:notice] = 'Category was successfully updated.'
+    flash[:notice] = 'Zapisano zmiany.'
     redirect_to categories_url
     #rescue Exception
     # thr

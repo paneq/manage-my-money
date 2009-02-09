@@ -18,22 +18,32 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_index
+    #Test page rendered
     get :index
     assert_response :success
     assert_template 'index'
-    
+
+
     assert_select 'div#categories-index' do
       assert_select 'div#category-tree' do
         assert_select 'div[id^=category-line]', @rupert.categories.count
       end
       @rupert.categories.count.times do |nr|
         category = @rupert.categories[nr]
+
+        #test categories in valid order
         assert_select "div#category-tree div:nth-child(#{nr+1})" do
           assert_select "span#category-link" do
             assert_select "a > a", Regexp.new("#{category.name}")
           end
+
+          #test options
           assert_select "span#category-options" do
+
+            #test place for saldo
             assert_select "span#category-saldo-#{category.id}"
+
+            #add subcategory link
             assert_select "a#add-subc-#{category.id}"
           end
         end
@@ -42,6 +52,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
   end
 
 
+  #Test that only non top categories have link to delete them
   def test_index_del_elements
     create_rupert_expenses_account_structure
     get :index
@@ -60,10 +71,14 @@ class CategoriesControllerTest < Test::Unit::TestCase
   end
 
 
+
   def test_new
+    #Test page rendered
     get :new 
     assert_response :success
     assert_template 'new'
+
+    #test fields for editing
     assert_select 'div#category-edit' do
       assert_select 'p#name', 1
       assert_select 'p#description', 1
@@ -73,15 +88,20 @@ class CategoriesControllerTest < Test::Unit::TestCase
       end
       assert_select 'p#create', 1
     end
+
+    #test all already existing categories can be choosen for parent
     @rupert.categories.count.times do |nr|
       assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.categories[nr].name}")
     end
+
+    #test all currencies can be choosen
     @rupert.visible_currencies.count.times do |nr|
       assert_select "select#currency-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.visible_currencies[nr].long_name}")
     end
   end
 
-
+  # test if proper parent_category is selected when user came to the site
+  # from link to create subcategory of some category
   def test_new_and_proper_selcted_element_when_given_parent_category
     parent_category = @rupert.expense
     get :new, :parent_category_id => parent_category.id
@@ -168,7 +188,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_edit_top_category
-    get :edit, :id => @rupert.categories.top_of_type(:INCOME)
+    get :edit, :id => @rupert.income
     assert_response :success
     assert_template 'edit'
     assert_select 'div#category-edit' do
@@ -177,6 +197,8 @@ class CategoriesControllerTest < Test::Unit::TestCase
       assert_select 'p#parent', 0
       assert_select 'p#update', 1
     end
+    assert_select "input#category_name[value='#{@rupert.income.name}']"
+    assert_select "input#category_description[value='#{@rupert.income.description}']"
   end
 
 
@@ -234,6 +256,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
     }
 
     assert_redirected_to :action => :index
+    assert_match /Zapisano/, flash[:notice]
 
     #changing name, description and parent should pass
     @healthy = @rupert.categories.find(@healthy.id) #newset version of category

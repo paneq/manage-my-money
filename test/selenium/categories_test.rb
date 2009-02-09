@@ -121,5 +121,80 @@ begin
       assert_match(Regexp.new(@zloty.symbol), saldo)
     end
     
+    # Edycja kategorii
+    # nr 1.2.4 main
+    # test version 1.2
+    def test_edit_update_category
+      #prepare
+      create_rupert_expenses_account_structure
+
+      # Step 1
+      # Show categories
+      @selenium.open "/categories"
+      @selenium.wait_for_page_to_load "10000"
+
+      # Step 2
+      # Move to category 'food'
+      @selenium.click "//a[@id='show-category-stats-#{@food.id}']"
+      @selenium.wait_for_page_to_load "10000"
+
+      # Step 3
+      # Edit category
+      @selenium.click "//a[@id='edit-cat-#{@food.id}']"
+
+      # Step 4
+      # Form appears
+      @selenium.wait_for_page_to_load "10000"
+      # Testing for valid options already covered by functional test:
+      # CategoriesControllerTest
+      # * test_edit_top_category
+      # * test_edit_non_top_category
+
+
+      # Step 5
+      # User makes changes
+      #
+      # Step 5a - change name
+      @selenium.type "category_name", "Jedzonko"
+      # Step 5b - change description
+      @selenium.type "category_description", "Moje wydatki na smaczne jedzonko"
+      # Step 5c - change parent
+      # move food to house, I know this is silly :-)
+      @selenium.select 'parent-select', @house.name
+
+      # Step 6
+      # Submit changes
+      @selenium.click "category_submit"
+
+      # Results:
+      # R1
+      # -> categories
+      @selenium.wait_for_page_to_load "10000"
+
+      # R2
+      # flash that was saved
+      flash = @selenium.get_text 'flash_notice'
+      assert_match(/Zapisano/, flash)
+
+      # R3
+      # Changed name
+      @selenium.get_text "show-category-stats-#{@food.id}"
+
+      # R4
+      # Category is child of valid category
+      @selenium.is_ordered "//div[@id='category-line-#{@rent.id}']", "//div[@id='category-line-#{@food.id}']"
+
+      # R5
+      # Changed description
+      assert_not_nil @rupert.categories.find_by_name_and_description 'Jedzonko', 'Moje wydatki na smaczne jedzonko'
+    end
+
+    # Edycja kategorii
+    # nr 1.2.4 alternative a
+    # test version 1.2
+    #def test_edit_update_category_with_errors
+    #
+    #end
+
   end
 end unless TEST_ON_STALLMAN

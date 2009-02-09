@@ -1,5 +1,5 @@
 <div>
-  <h1><%= @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', :action => 'edit', :id => @category %></a></h1>
+  <h1><%= @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', edit_category_path(@category), obj_hash_id('edit-cat', @category)%></a></h1>
   
   <% unless @category.description.blank? %>
     <p><b>Opis:</b> <%= @category.description %>
