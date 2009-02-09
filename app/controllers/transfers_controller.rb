@@ -98,19 +98,6 @@ class TransfersController < ApplicationController
   end
 
 
-  ############################
-  # @author: Robert Pankowecki
-  # half-remote
-  # currently not in use
-  # currently i do not know how to make it working
-  def add_form_error (error)
-    render :update do |page|
-      page.remove 'error_in_form'
-      page.insert_html :bottom, 'form_erros', :partial=>'error_in_form', :object => error
-    end
-  end
-
-
   def edit
     set_current_category
     @transfer = self.current_user.transfers.find_by_id(params[:id])

@@ -28,47 +28,28 @@ class Currency < ActiveRecord::Base
 
 
   has_many  :left_exchanges,
-            :class_name => "Exchange",
-            :foreign_key => "currency_a"
+    :class_name => "Exchange",
+    :foreign_key => "currency_a"
             
   has_many  :right_exchanges,
-            :class_name => "Exchange",
-            :foreign_key => "currency_b"            
-             
+    :class_name => "Exchange",
+    :foreign_key => "currency_b"
+
+
   belongs_to  :user
-  
+
+
   has_many :transfer_items
-  
-  ##############################
-  # @author: Robert Pankowecki
+
+
+  validates_presence_of :symbol, :long_symbol, :name, :long_name
+  validates_uniqueness_of :long_symbol, :scope => :user_id
+  validates_uniqueness_of :long_name, :scope => :user_id
+  validates_length_of :long_symbol, :is => 3
+  validates_format_of :long_symbol, :with => /\A[A-Z]{3}\Z/
+
   def exchanges
     return (left_exchanges + right_exchanges).uniq
   end
-  
-  ##############################
-  # @author: Robert Pankowecki
-  def validate
-    not_filled_fields { |error_message| errors.add(error_message) } 
-  end
-  
-  ##############################
-  # @author: Robert Pankowecki
-  # @desctiption : I block is given yields an error message for each
-  #                field that is empty, otherwise returns an array of error messages
-  def not_filled_fields(&proc)
-    tb = []
-    unless Kernel.block_given?
-      block = Proc.new { |message| tb << message }
-    else
-      block = proc
-    end
-    
-    block.call('Symbol') if symbol.size == 0
-    block.call('Long symbol') if long_symbol.size == 0
-    block.call('Name') if name.size == 0
-    block.call('Long name') if long_name.size == 0
-    
-    return if Kernel.block_given?
-    return tb
-  end
+
 end

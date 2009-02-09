@@ -149,7 +149,24 @@ class Test::Unit::TestCase
     return transfer
   end
 
-  
+
+  # Returns currency with OK fieldsif no options given.
+  # Options overrieds currency fields
+  def make_currency(options = {})
+    save_rupert if options[:user].nil? and @rupert.nil?
+    default = {:name =>'new', :long_name => 'new new new currency', :symbol => 'cr', :long_symbol => 'SYM', :user => @rupert}
+    default.merge!(options)
+    return Currency.new(default)
+  end
+
+  # Saves currency with given options for overriding default fields
+  def save_currency(options = {})
+    currency = make_currency(options)
+    currency.save!
+    return currency
+  end
+
+
   def assert_menu(menu_items, action)
     assert_select 'div#bottom-menu' do
       assert_select 'span#kind-of-transfer > span', menu_items.size
