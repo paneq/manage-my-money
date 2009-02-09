@@ -1,26 +1,25 @@
 <% size = '20x20' %>
 
-<div <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>" title="<%= category.id -%>" >
+<div <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>" title="<%= category.name_with_path -%>" >
 
   <span id="category-link" class="floatLeft category verticalCenter" style="">
     <a style="padding-left : <%= ( category.level  + 1 ) * 20 %>px;">
       <%= image_tag "/images/bg/submenu1.gif", :style => 'align: left;' -%>
-      <a><%= h category.name %></a>
+      <a><%= link_to h(category.name), category_path(category), {:id => "show-category-stats-#{category.id}" } %></a>
     </a>
   </span>
 
-  <span class="floatRight category verticalCenter" style="">
+  <span id="category-options" class="floatRight category verticalCenter" style="">
     <span id="category-saldo-<%= category.id -%>">
       <% category.current_saldo.each do |currency, value| %>
         <%= "#{value} #{currency.symbol}, " -%>
       <% end %>
     </span>
-    <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Remove'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete) } %>
-    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Add subcategory'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Add subcategory', :id => "add-subc-#{category.id}"} %>
-    <%= link_to image_tag('/images/document-new.png', :size => size , :alt => 'Add new transfer'), {:action => :make , :controller => :transfers , :choosen_category_id => category.id}, {:title => 'Add new transfer' } %>
-    <%= link_to image_tag('/images/x-office-spreadsheet.png' , :size => size , :alt => 'Stats') , {:action => :show , :id => category.id}, {:title => 'Stats', :id => "show-category-stats-#{category.id}" } %>
+    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Dodaj podkategorię'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
+    <% unless category.is_top? %>
+      <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Usuń'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete), :title => 'Usuń', :id => "del-subc-#{category.id}" } %>
+    <% end %>
   </span>
-
 
 </div>
 

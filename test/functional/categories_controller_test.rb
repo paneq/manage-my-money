@@ -27,10 +27,33 @@ class CategoriesControllerTest < Test::Unit::TestCase
         assert_select 'div[id^=category-line]', @rupert.categories.count
       end
       @rupert.categories.count.times do |nr|
+        category = @rupert.categories[nr]
         assert_select "div#category-tree div:nth-child(#{nr+1})" do
           assert_select "span#category-link" do
-            assert_select "a > a", Regexp.new("#{@rupert.categories[nr].name}")
+            assert_select "a > a", Regexp.new("#{category.name}")
           end
+          assert_select "span#category-options" do
+            assert_select "span#category-saldo-#{category.id}"
+            assert_select "a#add-subc-#{category.id}"
+          end
+        end
+      end
+    end
+  end
+
+
+  def test_index_del_elements
+    create_rupert_expenses_account_structure
+    get :index
+    assert_response :success
+    assert_template 'index'
+    assert_select 'a[id^=del-subc]', rupert.categories.count - 5
+    @rupert.categories.count.times do |nr|
+      category = @rupert.categories[nr]
+      assert_select "div#category-tree div:nth-child(#{nr+1})" do
+        occures = category.is_top? ? 0 : 1
+        assert_select "span#category-options" do
+          assert_select "a#del-subc-#{category.id}", occures
         end
       end
     end
@@ -272,57 +295,5 @@ class CategoriesControllerTest < Test::Unit::TestCase
     get :show, :id => @rupert.categories.top_of_type(:EXPENSE)
     assert_menu ['quick', 'full', 'search'], '/categories/search'
   end
-
-
-  private
-
   
-  def create_rupert_expenses_account_structure
-    # EXPENSE -            [SELECTED]
-    #         |- food      [EDITED]
-    #            |- healthy
-    #         |- house
-    #            |- rent
-    #         |- clothes
-
-    @expense_category = @rupert.categories.top_of_type(:EXPENSE)
-    @loan_category = @rupert.categories.top_of_type(:LOAN)
-
-    @food = Category.new(
-      :name => 'food',
-      :parent => @expense_category,
-      :user => @rupert
-    )
-    @house = Category.new(
-      :name => 'house',
-      :parent => @expense_category,
-      :user => @rupert
-    )
-    @clothes = Category.new(
-      :name => 'clothes',
-      :parent => @expense_category,
-      :user => @rupert
-    )
-    @healthy = Category.new(
-      :name => 'healthy',
-      :parent => @food,
-      :user => @rupert
-    )
-    @rent = Category.new(
-      :name => 'rent',
-      :parent => @house,
-      :user => @rupert
-    )
-    @rupert.categories << @food << @house << @clothes << @healthy << @rent
-    @rupert.save!
-
-    assert_equal @expense_category, @food.parent
-    assert_equal @food, @healthy.parent
-    assert_equal @expense_category, @house.parent
-    assert_equal @house, @rent.parent
-    assert_equal @expense_category, @clothes.parent
-    categories_types = [@expense_category, @food, @house, @clothes, @healthy, @rent].map { |c| c.category_type}.uniq!
-    assert_equal 1, categories_types.size
-    assert_equal :EXPENSE, categories_types.first
-  end
 end

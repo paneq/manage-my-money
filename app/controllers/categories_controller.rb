@@ -6,18 +6,6 @@ class CategoriesController < ApplicationController
 
   # @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
-  #
-  #
-  #  # remote
-  #  #should not be here!
-  #  #should be by js hidden and showed
-  #  def quick
-  #    where = "form-for-quick-transfer"
-  #    render :update do |page|
-  #      page.insert_html :bottom , where , :partial => 'quick_transfer' , :object => { :category_id => params[:category_id] }
-  #    end
-  #  end
-
 
   def show
     create_empty_transfer

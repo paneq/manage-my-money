@@ -112,7 +112,7 @@ class Test::Unit::TestCase
 
   def make_simple_transfer(options = {})
     save_rupert if options[:user].nil? and @rupert.nil?
-    hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.categories.first, :outcome => @rupert.categories.second }
+    hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.expense, :outcome => @rupert.asset }
     hash.merge! options
 
     transfer = Transfer.new(:user => hash[:user])
@@ -235,7 +235,7 @@ class Test::Unit::TestCase
     r
   end
 
-def prepare_sample_catagory_tree_for_jarek
+  def prepare_sample_catagory_tree_for_jarek
     parent1 = @jarek.categories.top_of_type(:ASSET)
     category = Category.new(
       :name => 'test',
@@ -265,6 +265,56 @@ def prepare_sample_catagory_tree_for_jarek
     @jarek.save!
   end
 
+
+  def create_rupert_expenses_account_structure
+    # EXPENSE -            [SELECTED]
+    #         |- food      [EDITED]
+    #            |- healthy
+    #         |- house
+    #            |- rent
+    #         |- clothes
+
+    @expense_category = @rupert.expense
+    @loan_category = @rupert.loan
+
+    @food = Category.new(
+      :name => 'food',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @house = Category.new(
+      :name => 'house',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @clothes = Category.new(
+      :name => 'clothes',
+      :parent => @expense_category,
+      :user => @rupert
+    )
+    @healthy = Category.new(
+      :name => 'healthy',
+      :parent => @food,
+      :user => @rupert
+    )
+    @rent = Category.new(
+      :name => 'rent',
+      :parent => @house,
+      :user => @rupert
+    )
+    @rupert.categories << @food << @house << @clothes << @healthy << @rent
+    @rupert.save!
+    @rupert.categories(true) #very important!
+
+    assert_equal @expense_category, @food.parent
+    assert_equal @food, @healthy.parent
+    assert_equal @expense_category, @house.parent
+    assert_equal @house, @rent.parent
+    assert_equal @expense_category, @clothes.parent
+    categories_types = [@expense_category, @food, @house, @clothes, @healthy, @rent].map { |c| c.category_type}.uniq!
+    assert_equal 1, categories_types.size
+    assert_equal :EXPENSE, categories_types.first
+  end
 
 
   TABLES = %w{transfer_items transfers category_report_options reports goals exchanges currencies categories users}
