@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class CurrencyTest < Test::Unit::TestCase
 
   def setup
+    save_rupert
     save_currencies
   end
 
@@ -29,10 +30,13 @@ class CurrencyTest < Test::Unit::TestCase
   end
 
 
-  def test_validation_long_symbol
+  def test_validation_long_symbol_and_name
+    save_jarek
+    
     c = make_currency(:long_symbol => 'x')
     c.valid? #assumes call validation
     assert_not_nil c.errors.on(:long_symbol)
+
 
     c = make_currency(:long_symbol => 'ABCD')
     c.valid? #assumes call validation
@@ -41,5 +45,56 @@ class CurrencyTest < Test::Unit::TestCase
     c = make_currency(:long_symbol => 'XyZ')
     c.valid? #assumes call validation
     assert_not_nil c.errors.on(:long_symbol)
+
+    assert_nothing_raised do
+      #same long_symbols, different users
+      save_currency(:user => @rupert)
+      save_currency(:user => @jarek)
+    end
+
+    c = make_currency(:user => @rupert)
+    c.valid?
+    assert_not_nil c.errors.on(:long_symbol) #already in use
+    assert_not_nil c.errors.on(:long_name) #already in use
+
+    assert_nil Currency.find(:first, :conditions => ['user_id IS NULL AND long_symbol = ?', make_currency().long_symbol])
+    assert_nothing_raised do
+      save_currency(:user => nil) # used by users but not by the system
+    end
+
+
+    save_currency(:user => nil, :long_symbol => 'XYZ', :long_name => 'XYZ')
+    c = make_currency(:user => @rupert, :long_symbol => 'XYZ', :long_name => 'XYZ')
+    c.valid?
+    assert_not_nil c.errors.on(:long_symbol) #already in use by the system
+    assert_not_nil c.errors.on(:long_name) #already in use by the system
+  end
+
+
+  def test_currencies_for_user
+    save_jarek
+    assert_equal @currencies.size, Currency.for_user(@rupert).size
+    assert_equal @currencies.size, Currency.for_user(@jarek).size
+
+    save_currency(:user => @rupert)
+    assert_equal @currencies.size + 1, Currency.for_user(@rupert).size
+    assert_equal @currencies.size, Currency.for_user(@jarek).size
+  end
+
+
+  def test_currencies_for_user_in_period
+    save_jarek
+    assert_equal [], Currency.for_user_period(@rupert, Date.today, Date.today)
+    assert_equal [], Currency.for_user_period(@jarek, Date.today, Date.today)
+
+    save_simple_transfer(:user => @rupert, :day => Date.today, :currency => @zloty)
+    assert_equal [@zloty], Currency.for_user_period(@rupert, Date.today, Date.today)
+    assert_equal [], Currency.for_user_period(@jarek, Date.today, Date.today)
+
+    assert_equal [@zloty], Currency.for_user_period(@rupert, Date.yesterday, Date.tomorrow)
+    assert_equal [], Currency.for_user_period(@jarek, Date.yesterday, Date.tomorrow)
+
+    assert_equal [], Currency.for_user_period(@rupert, Date.tomorrow, Date.tomorrow)
+    assert_equal [], Currency.for_user_period(@jarek, Date.tomorrow, Date.tomorrow)
   end
 end

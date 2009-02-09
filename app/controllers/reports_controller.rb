@@ -274,7 +274,7 @@ class ReportsController < ApplicationController
   def calculate_and_group_values_by_currencies(report)
     chart_values = {}
     if self.current_user.multi_currency_balance_calculating_algorithm == :show_all_currencies
-      currencies = Currency.for_user(self.current_user).in_period(report.period_start, report.period_end)
+      currencies = Currency.for_user_period(self.current_user, report.period_start, report.period_end)
     else
       currencies = [self.current_user.default_currency]
     end

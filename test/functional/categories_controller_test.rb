@@ -256,7 +256,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
     }
 
     assert_redirected_to :action => :index
-    assert_match /Zapisano/, flash[:notice]
+    assert_match(/Zapisano/, flash[:notice])
 
     #changing name, description and parent should pass
     @healthy = @rupert.categories.find(@healthy.id) #newset version of category

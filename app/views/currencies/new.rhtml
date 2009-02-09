@@ -1,35 +1,35 @@
-<%= error_messages_for :currency %>
-<h1>New currency</h1>
+<h1>Nowa waluta</h1>
 
 <% form_for @currency do |f| %>
+  <%= error_messages_for :currency %>
   <p>
     <label for="currency_symbol">
-    Symbol ex. '$'
+      Krótki symbol waluty np. '$'
     </label>
     <%= f.text_field :symbol, :size => 5  %>
   </p>
-  
+
   <p>
     <label for="currency_long_symbol">
-    Long symbol ex. 'USD'
+      Długi symbol waluty np. 'USD'
     </label>
     <%= f.text_field :long_symbol, :size => 7  %>
   </p>
-  
+
   <p>
     <label for="currency_name">
-    Name ex. 'Dollar'
+      Krótka nazwa np. 'Dolar'
     </label>
     <%= f.text_field :name, :size => 12  %>
   </p>
-  
+
   <p>
     <label for="currency_long_name">
-    Long name ex. 'American dollar'
+      Długa nazwa np. 'Dolar amerykański'
     </label>
     <%= f.text_field :long_name, :size => 20  %>
   </p>
-  <%= f.submit "Create" %>
+  <%= f.submit "Utwórz" %>
 <% end %>
 
-<%= link_to 'Back', :action => 'list' %>
+<%= link_to 'Lista walut', categories_path %>
