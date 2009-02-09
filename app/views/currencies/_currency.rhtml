@@ -1,12 +1,13 @@
 <% size = '20x20' %>
 <tr id="currency-<%= currency.id -%>" class="<%= cycle('line-even', 'line-odd')-%>" >
-  <td><%=h currency.name %></td>
-  <td><%=h currency.symbol %></td>
-  <td><%=h currency.long_name %></td>
-  <td><%=h currency.long_symbol %></td>
-  <td style="text-align: center; ">
-    <%= link_to image_tag('/images/system-search.png',:alt => 'View', :size => size, :style => 'margin-right: 10px;'), :action => 'show', :id => currency %> 
-    <%= link_to image_tag('/images/edit-copy.png', :alt => 'Edit', :size => size, :style => 'margin-right: 10px;'), :action => 'edit', :id => currency %>
-    <%= link_to image_tag('/images/user-trash-full.png', :alt => 'Destroy', :size => size, :style => 'margin-right: 10px;'), { :action => 'destroy', :id => currency }, :confirm => 'Are you sure?', :method => :delete %>
+  <td id="name"><%=h currency.name %></td>
+  <td id="symbol"><%=h currency.symbol %></td>
+  <td id="long_name"><%=h currency.long_name %></td>
+  <td id="long_symbol"><%=h currency.long_symbol %></td>
+  <td id="system"><%=  currency.user_id.nil? ? 'Tak' : 'Nie' -%></td>
+  <td id="options" style="text-align: center; ">
+    <%= link_to image_tag('/images/system-search.png',:alt => 'Pokaż', :size => size, :style => 'margin: 3px;'), currency_path(currency), obj_hash_id('show-cur', currency).merge(:title => 'Pokaż') %>
+    <%= link_to image_tag('/images/edit-copy.png', :alt => 'Edytuj', :size => size, :style => 'margin: 3px;'), edit_currency_path(currency), obj_hash_id('edit-cur', currency).merge(:title => 'Edytuj')  %>
+    <%= link_to image_tag('/images/user-trash-full.png', :alt => 'Usuń', :size => size, :style => 'margin: 3px;'), currency_path(currency), obj_hash_id('del-cur', currency).merge(:confirm => 'Czy na pewno usunąć ?', :method => :delete, :title => 'Usuń') %>
   </td>
 </tr>

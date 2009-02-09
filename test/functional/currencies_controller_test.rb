@@ -28,9 +28,23 @@ class CurrenciesControllerTest < Test::Unit::TestCase
     assert_template 'index'
     assert_select 'div#currencies-index' do
       assert_select 'table#currencies-list' do
-        assert_select 'th', 5
+        assert_select 'th', 6
         assert_select 'tr[id^=currency]', @currencies.size + 1 # created for rupert
+        Currency.for_user(@rupert).each do |c|
+          assert_select "tr#currency-#{c.id}" do
+            [:name, :symbol, :long_name, :long_symbol].each do |field|
+              assert_select "td##{field}", c.send(field)
+            end
+            assert_select "td#system"
+            assert_select "td#options" do
+              ['show', 'edit', 'del'].each do |action|
+                  assert_select "a##{action}-cur-#{c.id}"
+              end
+            end
+          end
+        end
       end
+      assert_select 'a#add-cur'
     end
 
   end

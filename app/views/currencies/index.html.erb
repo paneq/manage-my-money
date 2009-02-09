@@ -21,6 +21,10 @@
       </th>
 
       <th>
+        Systemowa
+      </th>
+
+      <th>
         Akcje
       </th>
     </tr>
@@ -28,5 +32,5 @@
     <%= render :partial => 'currency', :collection => @currencies %>
 
   </table>
+  <%= link_to 'Dodaj nową walutę', new_currency_path, :id => 'add-cur' -%>
 </div>
-<%= link_to 'Dodaj nową walutę', new_currency_path -%>
