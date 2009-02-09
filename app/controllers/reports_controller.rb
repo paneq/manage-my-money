@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
         else
           @values = calculate_and_cache_graph_data
           @graphs = {}
-          @values[:values].keys.each do |currency|
+          @values.keys.each do |currency|
             url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
             @graphs[currency] = open_flash_chart_object(600,500, url_for(url))
           end
@@ -35,7 +35,12 @@ class ReportsController < ApplicationController
 
   def get_graph_data
     throw 'No report found' unless get_report_from_params
-    render :text => Rails.cache.read("REPORT##{params[:id]}")[params[:graph]], :layout => false
+    report_from_cache = Rails.cache.read("REPORT##{params[:id]}")
+    unless report_from_cache.nil?
+      render :text => report_from_cache[params[:graph]], :layout => false
+    else
+      render :text => create_empty_graph, :layout => false
+    end
   end
 
 
@@ -107,7 +112,7 @@ class ReportsController < ApplicationController
 
   def update
     @report = self.current_user.reports.find params[:id]
-    @report.period_start, @report.period_end = get_period('report_day')
+    @report.period_start, @report.period_end = get_period("report_day_#{@report.type_str}")
     @report.temporary = false if @report.temporary && params[:commit] != 'Pokaż'
     if @report.update_attributes(params[@report.type_str.underscore.intern])
       if params[:commit] == 'Zapisz'
@@ -239,8 +244,8 @@ class ReportsController < ApplicationController
     chart_values.each do |currency, categories|
       chart = OpenFlashChart.new
       chart.bg_colour = 0xffffff
-      title = Title.new("Raport '#{@report.name}' dla waluty #{currency.long_symbol}")
-      chart.title = title
+#      title = Title.new("Raport '#{@report.name}' dla waluty #{currency.long_symbol}")
+#      chart.title = title
       min = nil
       max = nil
       categories.each do |label, values|
@@ -261,10 +266,11 @@ class ReportsController < ApplicationController
     end
 
     pure_values = {}
-    pure_values[:values] = {}
-    pure_values[:date_labels] = labels
     chart_values.each do |currency, v|
-      pure_values[:values][currency.long_symbol] = v
+      pure_values[currency.long_symbol] = {}
+      pure_values[currency.long_symbol][:title] = "Raport '#{@report.name}' dla waluty #{currency.long_symbol} w okresie #{@report.period_start} do #{@report.period_end}"
+      pure_values[currency.long_symbol][:values] = v
+      pure_values[currency.long_symbol][:date_labels] = labels
     end
 
     return charts, pure_values
@@ -374,17 +380,20 @@ class ReportsController < ApplicationController
     charts = {}
     pure_values = {}
     values_in_currencies.each do |cur, values|
-      title = Title.new("Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}")
+#      title = Title.new("Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}")
+      title = "Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}<br/>dla waluty #{cur.long_symbol}"
+#      title.style = '{font-size: 20px; font-family: Times New Roman; font-weight: bold; color: #A2ACBA; text-align: center; width: 50%; height: 200%;}'
 #      title.style = 'font-size: 22px;'
       chart = OpenFlashChart.new
       chart.bg_colour = 0xffffff
-      chart.title = title
+#      chart.title = title
       graph = get_graph_object @report
 
       sum = values.sum{|val| val[:value].value(cur)}
 
       pure_values[cur.long_symbol] = {}
       pure_values[cur.long_symbol][:values] = []
+      pure_values[cur.long_symbol][:title] = title
       values.each do |category_hash|
         value = category_hash[:value].value(cur)
         pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => (value/sum*100).round(2)}
@@ -430,6 +439,17 @@ class ReportsController < ApplicationController
     end
     return charts, pure_values
   end
+
+  def create_empty_graph
+    chart = OpenFlashChart.new
+    chart.bg_colour = 0xeeeeee
+    title = Title.new("\n\n\n\n\nSzukany raport przedawnił się, \n przeładuj stronę.")
+    title.style = '{font-size: 30px;}'
+    chart.title = title
+    chart << Pie.new
+    chart.to_s
+  end
+
 
 
 end

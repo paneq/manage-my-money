@@ -2,6 +2,7 @@
 
 <div align="center">
   <%  @graphs.each do |currency, graph| %>
+    <h1><%=@values[currency][:title]%></h1>
     <%= graph %><br/>
     <br/>
 
@@ -21,11 +22,11 @@
 
         <table class="flow-table">
           <tr class="flow-table-header"><th>Saldo <%= currency%></th>
-          <% @values[:date_labels].each do |label| %>
+          <% @values[currency][:date_labels].each do |label| %>
           <th><%= label %></th>
           <% end -%>
           </tr>
-          <% @values[:values][currency].each do |label, values| %>
+          <% @values[currency][:values].each do |label, values| %>
           <%=render :partial => "show_value_category", :locals => {:label => label, :values => values}%>
           <% end %>
         </table>
@@ -39,15 +40,21 @@
 
   <% end #end of each -%>
 
-
-</div>
-
 <% if @graphs.size == 0 %>
   <h1>Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
 <% end %>
 
-
+<br/>
 <br/>
 
 <%= render :partial => 'report_links' %>
+
+</div>
+
+
+
+
+<br/>
+
+
 

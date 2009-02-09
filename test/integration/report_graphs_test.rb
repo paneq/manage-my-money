@@ -19,7 +19,7 @@ class ReportGraphsTest < ActionController::IntegrationTest
     assert_response :success
     get "/reports/get_graph_data/#{report_id}.json?graph=PLN", :format => :json
     assert_response :success
-    assert_match(/dla waluty PLN/, response.body)
+    assert_match(/elements/, response.body)
   end
 
 end
