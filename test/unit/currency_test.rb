@@ -97,4 +97,10 @@ class CurrencyTest < Test::Unit::TestCase
     assert_equal [], Currency.for_user_period(@rupert, Date.tomorrow, Date.tomorrow)
     assert_equal [], Currency.for_user_period(@jarek, Date.tomorrow, Date.tomorrow)
   end
+
+
+  def test_is_system
+    assert @zloty.is_system?
+    assert !save_currency().is_system?
+  end
 end

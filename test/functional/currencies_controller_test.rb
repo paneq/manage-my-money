@@ -38,7 +38,7 @@ class CurrenciesControllerTest < Test::Unit::TestCase
             assert_select "td#system"
             assert_select "td#options" do
               ['show', 'edit', 'del'].each do |action|
-                  assert_select "a##{action}-cur-#{c.id}"
+                assert_select "a##{action}-cur-#{c.id}"
               end
             end
           end
@@ -49,26 +49,34 @@ class CurrenciesControllerTest < Test::Unit::TestCase
 
   end
 
-  #
-  #  def test_list
-  #    get :list
-  #
-  #    assert_response :success
-  #    assert_template 'list'
-  #
-  #    assert_not_nil assigns(:currencies)
-  #  end
-  #
-  #  def test_show
-  #    get :show, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'show'
-  #
-  #    assert_not_nil assigns(:currency)
-  #    assert assigns(:currency).valid?
-  #  end
-  #
+  
+  def test_show_currency
+    get :show, :id => @zloty.id
+
+    assert_response :success
+    assert_template 'show'
+
+    assert_select "div#show-currency-#{@zloty.id}" do
+      [:name, :long_name, :symbol, :long_symbol].each do |field|
+        assert_select "p##{field}", Regexp.new(@zloty.send(field))
+      end
+    end
+
+    assert_select "a#currencies-list"
+    assert_select "a#edit-cur-#{@zloty.id}", 0 #Be sure there is no link to edit it
+  end
+
+
+  def test_show_non_system_currency
+    id = save_currency(:user => @rupert).id
+    get :show, :id => id
+
+    assert_response :success
+    assert_template 'show'
+
+    assert_select "a#edit-cur-#{id}" #Be sure there is link to edit it
+  end
+  
   #  def test_new
   #    get :new
   #

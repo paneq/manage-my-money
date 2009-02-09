@@ -1,7 +1,15 @@
-<% for column in Currency.content_columns %>
-<p>
-  <b><%= column.human_name %>:</b> <%=h @currency.send(column.name) %>
-</p>
-<% end %>
+<div <%= obj_id('show-currency', @currency) -%> >
+  <h1>Podgląd waluty: <%= @currency.long_name -%> </h1>
+  <% for column in Currency.content_columns %>
+    <p id="<%= column.name -%>" >
+      <b><%= I18n.translate column.name, :scope => 'activerecord.attributes.currency' %>:</b> <%=h @currency.send(column.name) %>
+    </p>
+  <% end %>
+  <p <%= obj_id('system', @currency) -%> >
+    <b><%= I18n.translate :system, :scope => 'activerecord.attributes.currency' %>:</b> <%=h @currency.user_id.nil? ? 'Tak' : 'Nie' %>
+  </p>
 
-<%= link_to 'Edit', :action => 'edit', :id => @currency %>
+  <%= link_to 'Lista walut', currencies_path, :id => 'currencies-list' %> |
+  <%= link_to 'Edytuj', edit_currency_path(@currency), obj_hash_id('edit-cur', @currency) unless @currency.is_system? %>
+
+</div>

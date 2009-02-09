@@ -45,6 +45,12 @@ pl:
         name: Nazwa
         opening_balance_currency: Waluta bilansu otwarcia
         opening_balance: Bilans otwarcia
+      currency:
+        symbol: Krótki symbol
+        long_symbol: Długi symbol
+        name: Krótka nazwa
+        long_name: Długa nazwa
+        system: Systemowa
 
 
 

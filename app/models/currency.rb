@@ -56,6 +56,11 @@ class Currency < ActiveRecord::Base
   end
 
 
+  def is_system?
+    return self.user_id.nil?
+  end
+
+
   def exchanges
     return (left_exchanges + right_exchanges).uniq
   end
