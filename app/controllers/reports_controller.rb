@@ -380,13 +380,14 @@ class ReportsController < ApplicationController
     charts = {}
     pure_values = {}
     values_in_currencies.each do |cur, values|
-#      title = Title.new("Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}")
       title = "Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}<br/>dla waluty #{cur.long_symbol}"
-#      title.style = '{font-size: 20px; font-family: Times New Roman; font-weight: bold; color: #A2ACBA; text-align: center; width: 50%; height: 200%;}'
-#      title.style = 'font-size: 22px;'
       chart = OpenFlashChart.new
       chart.bg_colour = 0xffffff
-#      chart.title = title
+
+      unless values.all? {|val| val[:value].value(cur) >= 0 } || values.all? {|val| val[:value].value(cur) <= 0 }
+        values.delete_if {|val| val[:value].value(cur) < 0 }
+      end
+
       graph = get_graph_object @report
 
       sum = values.sum{|val| val[:value].value(cur)}
