@@ -17,7 +17,7 @@ class ReportsControllerTest < ActionController::TestCase
     assert_response :success
     assert_select "input[type=radio]", :count => 3
     assert_select "div#share_report_options[style='display:none']" do
-      assert_date_fields
+      assert_date_fields('ShareReport')
       assert_select "input#share_report_name"
       assert_select "select#share_report_report_view_type" do
         assert_select "option", :count => 2
@@ -42,7 +42,7 @@ class ReportsControllerTest < ActionController::TestCase
     end
 
     assert_select "div#value_report_options[style='display:none']" do
-      assert_date_fields
+      assert_date_fields('ValueReport')
       assert_select "input#value_report_name"
       assert_select "select#value_report_report_view_type" do
         assert_select "option", :count => 2
@@ -64,7 +64,7 @@ class ReportsControllerTest < ActionController::TestCase
     end
 
     assert_select "div#flow_report_options[style='display:none']" do
-      assert_date_fields
+      assert_date_fields('FlowReport')
       assert_select "input#flow_report_name"
       assert_category_options 'flow_report', 'new'
       assert_select "input#flow_report_submit[type=submit]"
@@ -86,7 +86,7 @@ class ReportsControllerTest < ActionController::TestCase
     get :edit, :id => create_share_report(@jarek).id
     assert_response :success
     assert_select "div#share_report_options" do
-      assert_date_fields
+      assert_date_fields('ShareReport')
       assert_select "input#share_report_name[value='Testowy raport']"
       assert_select "select#share_report_report_view_type" do
         assert_select "option", :count => 2
@@ -118,7 +118,7 @@ class ReportsControllerTest < ActionController::TestCase
     get :edit, :id => create_value_report(@jarek).id
     assert_response :success
     assert_select "div#value_report_options" do
-      assert_date_fields
+      assert_date_fields('ValueReport')
       assert_select "input#value_report_name"
       assert_select "select#value_report_report_view_type" do
         assert_select "option", :count => 2
@@ -146,7 +146,7 @@ class ReportsControllerTest < ActionController::TestCase
     get :edit, :id => create_flow_report(@jarek).id
     assert_response :success
     assert_select "div#flow_report_options" do
-      assert_date_fields
+      assert_date_fields('FlowReport')
       assert_select "input#flow_report_name"
       assert_category_options 'flow_report', 'existing'
       assert_select "input#flow_report_submit[type=submit]"
@@ -169,16 +169,16 @@ class ReportsControllerTest < ActionController::TestCase
 
   private
 
-  def assert_date_fields
-    assert_select "select#report_day_period" do
+  def assert_date_fields(type)
+    assert_select "select#report_day_#{type}_period" do
       assert_select "option", :count => 16
     end
-    assert_select "select#report_day_start_year"
-    assert_select "select#report_day_start_month"
-    assert_select "select#report_day_start_day"
-    assert_select "select#report_day_end_year"
-    assert_select "select#report_day_end_month"
-    assert_select "select#report_day_end_day"
+    assert_select "select#report_day_#{type}_start_year"
+    assert_select "select#report_day_#{type}_start_month"
+    assert_select "select#report_day_#{type}_start_day"
+    assert_select "select#report_day_#{type}_end_year"
+    assert_select "select#report_day_#{type}_end_month"
+    assert_select "select#report_day_#{type}_end_day"
   end
 
 

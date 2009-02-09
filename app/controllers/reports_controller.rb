@@ -63,7 +63,7 @@ class ReportsController < ApplicationController
 
     @report.user = @current_user
     @report.period_type = :custom #TODO
-    @report.period_start, @report.period_end = get_period('report_day')
+    @report.period_start, @report.period_end = get_period("report_day_#{params[:report_type]}")
     if params[:commit] == 'Pokaż'
       @report.temporary = true
       @report.name = 'Tymczasowy raport' if @report.name.empty?
