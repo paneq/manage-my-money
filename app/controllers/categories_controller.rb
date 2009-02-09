@@ -79,18 +79,19 @@ class CategoriesController < ApplicationController
 
   
   def update
-    #begin
     @category = self.current_user.categories.find(params[:id])
     @category.name = params[:category][:name]
     @category.description = params[:category][:description]
     @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
-    @category.save!
-    flash[:notice] = 'Zapisano zmiany.'
-    redirect_to categories_url
-    #rescue Exception
-    # thr
-    #render :action => 'edit'
-    #end
+    if @category.save
+      flash[:notice] = 'Zapisano zmiany.'
+      redirect_to categories_url
+    else
+      @parent = @category.parent
+      @top = self.current_user.categories.top_of_type(@category.category_type)
+      flash[:notice] = 'Nie udało się utworzyć kategorii.'
+      render :action => 'edit'
+    end
   end
 
  

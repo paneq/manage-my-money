@@ -189,12 +189,44 @@ begin
       assert_not_nil @rupert.categories.find_by_name_and_description 'Jedzonko', 'Moje wydatki na smaczne jedzonko'
     end
 
+
     # Edycja kategorii
     # nr 1.2.4 alternative a
     # test version 1.2
-    #def test_edit_update_category_with_errors
-    #
-    #end
+    def test_edit_update_category_with_errors
+      # Step 1
+      # Show categories
+      @selenium.open "/categories"
+      @selenium.wait_for_page_to_load "10000"
+
+      # Step 2
+      # Move to category 'food'
+      @selenium.click "//a[@id='show-category-stats-#{@rupert.expense.id}']"
+      @selenium.wait_for_page_to_load "10000"
+
+      # Step 3
+      # Edit category
+      @selenium.click "//a[@id='edit-cat-#{@rupert.expense.id}']"
+
+      # Step 4
+      # Form appears
+      @selenium.wait_for_page_to_load "10000"
+
+      # Step 5
+      # User makes changes
+      #
+      # Step 5a - empty name
+      @selenium.type "category_name", ""
+
+      # Step 6
+      # Submit changes
+      @selenium.click "category_submit"
+      @selenium.wait_for_page_to_load "10000"
+
+      # Results :
+      # R1
+      selenium_assert {assert @selenium.is_element_present 'errorExplanation'}
+    end
 
   end
 end unless TEST_ON_STALLMAN

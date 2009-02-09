@@ -1,20 +1,23 @@
 <h1>Edycja kategorii</h1>
 <div id="category-edit">
-<% form_for @category do |form| %>
-  <p id="name"> Nazwa: <%= form.text_field :name %> </p>
-  <p id="description"> Opis: <%= form.text_field :description %></p>
+  <% form_for @category do |form| %>
 
-  <% if !@category.is_top? %>
-    <p id="parent">
-      Wybierz kategorię nadrzędną:
-      <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+    <%= error_messages_for :category, :message => nil %>
+
+    <p id="name"> Nazwa: <%= form.text_field :name %> </p>
+    <p id="description"> Opis: <%= form.text_field :description %></p>
+
+    <% if !@category.is_top? %>
+      <p id="parent">
+        Wybierz kategorię nadrzędną:
+        <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+      </p>
+
+    <% end %>
+    <p id="update">
+      <%= form.submit "Zapisz zmiany" %>
     </p>
-
   <% end %>
-  <p id="update">
-    <%= form.submit "Zapisz zmiany" %>
-  </p>
-<% end %>
 </div>
 
 
