@@ -14,7 +14,7 @@ class ReportsController < ApplicationController
       format.html do
         @virtual = params[:virtual]
         if @report.flow_report?
-          @cash_flow = Category.calculate_flow_values(@report.categories, @report.period_start, @report.period_end)
+          @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
           @in_sum = Report.sum_flow_values(@cash_flow[:in])
           @out_sum = Report.sum_flow_values(@cash_flow[:out])
           @delta = @in_sum - @out_sum
@@ -152,26 +152,50 @@ class ReportsController < ApplicationController
   private
   def prepare_system_reports
     reports = []
+
+    #Struktura wydatków na pierwszym poziomie
     r = ShareReport.new
-    r.user = @current_user
-    r.category = self.current_user.categories.top_of_type :ASSET
+    r.user = self.current_user
+    r.category = self.current_user.expense
     r.report_view_type = :pie
-    r.period_type = :week
-    r.name = "Systemowy raport 1"
+    r.period_type = :custom
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.depth = 1
+    r.max_categories_values_count = 10
+    r.name = "Struktura wydatków w ostatnim roku"
     r.id = 0
-    #   r.save!
     reports[r.id] = r
 
-    #   r = ValueReport.new
-    #   self.current_user.categories.top.each do |c|
-    #     r.categories << c
-    #   end
-    #   r.report_view_type = :bar
-    #   r.period_type = :week
-    #   r.period_division = :none
-    #   r.name = "Systemowy raport 2"
-    #   r.save!
-    #   reports << r
+    #Wydatki vs. Własności vs. Przychody
+    r = ValueReport.new
+    [self.current_user.expense, self.current_user.asset, self.current_user.income].each do |cat|
+      r.category_report_options << CategoryReportOption.new(:category => cat, :inclusion_type => :category_and_subcategories, :multiple_category_report => r)
+    end
+    r.user = self.current_user
+    r.period_type = :custom
+    r.report_view_type = :linear
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.period_division = :month
+    r.name = "Wydatki vs. Własności vs. Przychody"
+    r.id = 1
+    reports[r.id] = r
+
+
+    #Przepływ gotówki
+    r = FlowReport.new
+    r.user = self.current_user
+    r.category_report_options << CategoryReportOption.new(:category => self.current_user.income, :inclusion_type => :category_only, :multiple_category_report => r)
+#    r.categories << self.current_user.income
+    r.period_type = :custom
+    r.report_view_type = :text
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.name = "Przepływ gotówki"
+    r.id = 2
+    reports[r.id] = r
+
 
 
     reports
@@ -384,8 +408,9 @@ class ReportsController < ApplicationController
       chart = OpenFlashChart.new
       chart.bg_colour = 0xffffff
 
+      rejected_values = []
       unless values.all? {|val| val[:value].value(cur) >= 0 } || values.all? {|val| val[:value].value(cur) <= 0 }
-        values.delete_if {|val| val[:value].value(cur) < 0 }
+        rejected_values, values  = values.partition {|val| val[:value].value(cur) < 0 }
       end
 
       graph = get_graph_object @report
@@ -399,6 +424,13 @@ class ReportsController < ApplicationController
         value = category_hash[:value].value(cur)
         pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => (value/sum*100).round(2)}
       end
+
+      rejected_values.each do |category_hash|
+        value = category_hash[:value].value(cur)
+        pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => 0}
+      end
+
+
 
       pure_values[cur.long_symbol][:sum] = sum
 

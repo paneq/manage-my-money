@@ -1,20 +1,21 @@
 <h1>Raporty</h1>
-
-<h2>Moje raporty</h2><br/>
-<b>  <%= link_to "Nowy raport", new_report_url %> </b>
-<br/>
-<br/>
-<table>
-<tr><td><b>Nazwa</b></td><td><b>Akcje</b></td></tr>
-<%  @user_reports.each do |report| %>
-  <tr class="<%= cycle('line-even', 'line-odd') %>"><td><%=report.name%></td><td><%= link_to "Pokaz", report_url(report) %> | <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", report_path(report), :method => :delete, :id => report.id %></td></tr>
-<% end %>
-</table>
-<br/>
-<h2>Raporty predefiniowane</h2><br/>
-<table>
-<tr><td><b>Nazwa</b></td><td><b>Akcje</b></td></tr>
+<br />
+<br />
+<table class="flow-table">
+  <tr><th colspan="2">Raporty standardowe</th></tr>
 <%  @system_reports.each do |report| %>
-  <tr class="<%= cycle('line-even', 'line-odd') %>"><td><%=report.name%></td><td><%= link_to "Pokaz", report_url(report, :virtual=>true) %> | <%= link_to "Kopiuj do moich raportow", url_for(:controller => 'reports', :action => 'copy_report', :id => report.id) %></td></tr>
+  <tr ><td style="width:65%"><b><%= link_to report.name, report_url(report, :virtual=>true) %></b></td><td> <%= link_to "Kopiuj do moich raportow", url_for(:controller => 'reports', :action => 'copy_report', :id => report.id) %></td></tr>
 <% end %>
 </table>
+
+
+<br/>
+<table class="flow-table">
+  <tr><th colspan="2">Moje raporty</th></tr>
+<%  @user_reports.each do |report| %>
+  <tr><td style="width:65%"><%= link_to report.name, report_url(report) %> </td> <td> <%= link_to "Edytuj", edit_report_url(report) %> | <%= link_to "Usun", report_path(report), :method => :delete, :id => report.id %></td></tr>
+<% end %>
+</table>
+<br/>
+
+<b>  <%= link_to "Nowy raport", new_report_url, :style=>'font-size:2em' %> </b>
