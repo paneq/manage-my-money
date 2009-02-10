@@ -183,6 +183,8 @@ class CurrenciesControllerTest < Test::Unit::TestCase
 
     assert_nil @rupert.currencies.find_by_symbol(old_symbol)
     assert_not_nil @rupert.currencies.find_by_symbol('CUR')
+
+    assert_match(/Zmiany.*zapisane/, flash[:notice])
   end
 
 
@@ -199,6 +201,8 @@ class CurrenciesControllerTest < Test::Unit::TestCase
 
     assert_not_nil @rupert.currencies.find_by_symbol(currency.symbol)
     assert_nil @rupert.currencies.find_by_symbol('CUR')
+
+    assert_match(/Zmiany nie.*zapisane/, flash[:notice])
 
     #Check if fields are set with previously send values
     CURRENCY_FIELDS.each do |field|

@@ -47,10 +47,11 @@ class CurrenciesController < ApplicationController
 
   def update
     if @currency.update_attributes(params[:currency])
-      flash[:notice] = 'Currency was successfully updated.'
+      flash[:notice] = 'Zmiany zostały zapisane.'
       redirect_to :action => 'show', :id => @currency
     else
       render :action => 'edit'
+      flash[:notice] = 'Zmiany nie zostały zapisane.'
     end
   end
 
