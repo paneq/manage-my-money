@@ -1,7 +1,9 @@
 # SECURITY
+#
 # verifaction tested for:
 # edit
 # update
+# destroy
 
 require File.dirname(__FILE__) + '/../test_helper'
 require 'currencies_controller'
@@ -148,20 +150,6 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  # SECURITY
-  def test_edit_system_or_someone_currency
-    save_jarek
-    currency = save_currency(:user => @jarek)
-    [currency, @zloty].each do |bad_currency|
-      get :edit, :id => bad_currency.id
-  
-      assert_response :redirect
-      assert_redirected_to :action => :index
-      assert_match(/Brak uprawnień/, flash[:notice])
-    end
-  end
-
-
   def test_edit_my_currency
     currency = save_currency
     get :edit, :id => currency.id
@@ -179,20 +167,6 @@ class CurrenciesControllerTest < Test::Unit::TestCase
       end
     end
     assert_select "a#currencies-list"
-  end
-
-
-  # SECURITY
-  def test_update_system_or_someone_currency
-    save_jarek
-    currency = save_currency(:user => @jarek)
-    [currency, @zloty].each do |bad_currency|
-      put :update, :id => bad_currency.id
-
-      assert_response :redirect
-      assert_redirected_to :action => :index
-      assert_match(/Brak uprawnień/, flash[:notice])
-    end
   end
 
 
@@ -237,18 +211,43 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  #
-  #  def test_destroy
-  #    assert_nothing_raised {
-  #      Currency.find(@first_id)
-  #    }
-  #
-  #    post :destroy, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'list'
-  #
-  #    assert_raise(ActiveRecord::RecordNotFound) {
-  #      Currency.find(@first_id)
-  #    }
-  #  end
+  def test_destroy
+    currency = save_currency
+    post :destroy, :id => currency.id
+    
+    assert_response :redirect
+    assert_redirected_to :action => :index
+    assert_nil Currency.find_by_id(currency.id)
+  end
+
+
+  def test_destroy_currency_with_items
+    currency = save_currency
+    save_simple_transfer(:currency => currency)
+    post :destroy, :id => currency.id
+
+    assert_response :redirect
+    assert_redirected_to :action => :index
+
+    assert_not_nil Currency.find_by_id(currency.id)
+
+    assert_match(/Nie można/, flash[:notice])
+  end
+
+
+  # SECURITY
+  def test_security_destroy_update_edit_system_or_someone_currency
+    save_jarek
+    currency = save_currency(:user => @jarek)
+    [[:delete, :destroy], [:put, :update], [:get, :edit]].each do |method, action|
+      [currency, @zloty].each do |bad_currency|
+        send method, action, :id => bad_currency.id
+
+        assert_response :redirect
+        assert_redirected_to :action => :index
+        assert_match(/Brak uprawnień/, flash[:notice])
+      end
+    end
+  end
+
 end

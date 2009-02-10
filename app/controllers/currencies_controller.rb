@@ -56,7 +56,13 @@ class CurrenciesController < ApplicationController
 
 
   def destroy
-    @currency.destroy
+    unless @currency.destroy
+      flash[:notice] = if @currency.why_not_destroyed == :has_transfer_items
+        'Nie można usunąć waluty, gdyż istnieją w systemie transakcje korzystające z niej'
+      else
+        'Nie udało się usunąć waluty'
+      end
+    end
     redirect_to currencies_url
   end
   

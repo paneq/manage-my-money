@@ -103,4 +103,17 @@ class CurrencyTest < Test::Unit::TestCase
     assert @zloty.is_system?
     assert !save_currency().is_system?
   end
+
+
+  def test_indestructible
+    save_simple_transfer(:currency => @zloty)
+    assert !@zloty.destroy # Cannot be destroyed when used be at least 1 transfer item
+    assert_equal :has_transfer_items, @zloty.why_not_destroyed
+  end
+
+
+  def test_destructible
+    assert @zloty.destroy
+    assert_nil @zloty.why_not_destroyed
+  end
 end

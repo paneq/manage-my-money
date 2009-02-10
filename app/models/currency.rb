@@ -38,7 +38,7 @@ class Currency < ActiveRecord::Base
 
 
   has_many :transfer_items
-
+  before_destroy :check_for_transfer_items
 
   validates_presence_of :symbol, :long_symbol, :name, :long_name
   validates_uniqueness_of :long_symbol, :scope => :user_id
@@ -63,6 +63,24 @@ class Currency < ActiveRecord::Base
 
   def exchanges
     return (left_exchanges + right_exchanges).uniq
+  end
+
+
+  def why_not_destroyed
+    @reason
+  end
+
+
+  private
+
+
+  def check_for_transfer_items
+    if self.transfer_items(true).count > 0
+      @reason = :has_transfer_items
+      return false
+    else
+      @reason = nil
+    end
   end
 
 end
