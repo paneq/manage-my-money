@@ -26,6 +26,17 @@ pl:
               blank: nie może być pusta
             opening_balance:
               not_a_number: `{{value}}` nie jest prawidłową liczbą
+        currency:
+          attributes:
+            symbol:
+              blank: nie może być pusty
+            long_symbol:
+              blank: nie może być pusty
+              invalid: jest nieprawidłowy
+            name:
+              blank: nie może być pusta
+            long_name:
+              blank: nie może być pusta
     models:
       user: Użytkownik
       report: Raport

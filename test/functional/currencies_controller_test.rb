@@ -100,17 +100,49 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  #  def test_create
-  #    num_currencies = Currency.count
-  #
-  #    post :create, :currency => {}
-  #
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'list'
-  #
-  #    assert_equal num_currencies + 1, Currency.count
-  #  end
-  #
+  def test_create_no_errors
+    num_currencies = Currency.count
+    post_data = {}
+    CURRENCY_FIELDS.each do |field|
+      post_data[field] = 'CUR'
+    end
+    post :create, :currency => post_data
+
+    assert_response :redirect
+    assert_redirected_to :action => :index
+
+    assert_equal num_currencies + 1, Currency.count
+    assert_not_nil @rupert.currencies.find_by_symbol('CUR')
+  end
+
+
+  def test_create_with_errors
+    num_currencies = Currency.count
+    post_data = {}
+    (CURRENCY_FIELDS - [:long_symbol]).each do |field|
+      post_data[field] = 'CUR'
+    end
+    post_data[:long_symbol] = 'ABCD' #Wrong symbol. Must be 3 letters
+    post :create, :currency => post_data
+
+    assert_response :success
+    assert_template 'new'
+
+    assert_equal num_currencies, Currency.count
+
+    assert_select 'div#errorExplanation'
+
+    #check that previously inputed values was an input to correct
+    CURRENCY_FIELDS.each do |field|
+      assert_select "p##{field}" do
+        assert_select "label[for=currency_#{field}]"
+        assert_select "input[id=currency_#{field}][value=#{post_data[field]}]"
+      end
+    end
+    assert_select "a#currencies-list"
+  end
+
+
   #  def test_edit
   #    get :edit, :id => @first_id
   #

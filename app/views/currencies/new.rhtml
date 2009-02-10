@@ -2,7 +2,7 @@
 
 <% form_for @currency do |f| %>
 
-  <%= error_messages_for :currency %>
+  <%= error_messages_for :currency, :message => nil %>
 
   <p id="symbol">
     <label for="currency_symbol">
