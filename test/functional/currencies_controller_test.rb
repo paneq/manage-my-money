@@ -1,3 +1,8 @@
+# SECURITY
+# verifaction tested for:
+# edit
+# update
+
 require File.dirname(__FILE__) + '/../test_helper'
 require 'currencies_controller'
 
@@ -143,24 +148,17 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  #SECURITY
-  def test_edit_system_currency
-    get :edit, :id => @zloty.id
-  
-    assert_response :redirect
-    assert_redirected_to :action => :index
-    assert_match(/Brak uprawnień/, flash[:notice])
-  end
-
-  #SECURITY
-  def test_edit_someone_currency
+  # SECURITY
+  def test_edit_system_or_someone_currency
     save_jarek
     currency = save_currency(:user => @jarek)
-    get :edit, :id => currency.id
-
-    assert_response :redirect
-    assert_redirected_to :action => :index
-    assert_match(/Brak uprawnień/, flash[:notice])
+    [currency, @zloty].each do |bad_currency|
+      get :edit, :id => bad_currency.id
+  
+      assert_response :redirect
+      assert_redirected_to :action => :index
+      assert_match(/Brak uprawnień/, flash[:notice])
+    end
   end
 
 
@@ -184,11 +182,61 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  #  def test_update
-  #    post :update, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'show', :id => @first_id
-  #  end
+  # SECURITY
+  def test_update_system_or_someone_currency
+    save_jarek
+    currency = save_currency(:user => @jarek)
+    [currency, @zloty].each do |bad_currency|
+      put :update, :id => bad_currency.id
+
+      assert_response :redirect
+      assert_redirected_to :action => :index
+      assert_match(/Brak uprawnień/, flash[:notice])
+    end
+  end
+
+
+  def test_update_my_currency
+    currency = save_currency(:user => @rupert)
+    old_symbol = currency.symbol
+    post_data = {}
+    CURRENCY_FIELDS.each { |field| post_data[field] = 'CUR' }
+
+    put :update, :id => currency.id, :currency => post_data
+
+    assert_response :redirect
+    assert_redirected_to :action => :show, :id => currency.id
+
+    assert_nil @rupert.currencies.find_by_symbol(old_symbol)
+    assert_not_nil @rupert.currencies.find_by_symbol('CUR')
+  end
+
+
+  def test_update_my_currency_with_errors
+    currency = save_currency(:user => @rupert)
+    post_data = {}
+    CURRENCY_FIELDS.each { |field| post_data[field] = 'CUR' }
+    post_data[:long_symbol] = 'ABCD' #too long symbol
+
+    put :update, :id => currency.id, :currency => post_data
+
+    assert_response :success
+    assert_template 'edit'
+
+    assert_not_nil @rupert.currencies.find_by_symbol(currency.symbol)
+    assert_nil @rupert.currencies.find_by_symbol('CUR')
+
+    #Check if fields are set with previously send values
+    CURRENCY_FIELDS.each do |field|
+      assert_select "p##{field}" do
+        assert_select "label[for=currency_#{field}]"
+        assert_select "input[id=currency_#{field}][value=#{post_data[field]}]"
+      end
+    end
+    assert_select "a#currencies-list"
+  end
+
+
   #
   #  def test_destroy
   #    assert_nothing_raised {

@@ -33,10 +33,12 @@ pl:
             long_symbol:
               blank: nie może być pusty
               invalid: jest nieprawidłowy
+              taken: został już zajęty
             name:
               blank: nie może być pusta
             long_name:
               blank: nie może być pusta
+              taken: została już zajęta
     models:
       user: Użytkownik
       report: Raport
