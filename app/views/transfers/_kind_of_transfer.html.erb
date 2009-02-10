@@ -3,30 +3,7 @@
 <% all.shift if current_category.nil? %>
 <% show = all.first %>
 
-<b>
-  <span id="kind-of-transfer">
-    <% all.each do |active| %>
-      <span id="kind-of-transfer-<%= active[0] -%>" <%= " style='display:none'" unless active == show %> >
-
-        <% all.each do |element| %>
-
-          <%if active == element%>
-            <span class="kind-of-transfer-active-tab">
-              <%= element[1] -%>
-            </span>
-          <% else %>
-            <span class="kind-of-transfer-inactive-tab">
-              <a href="#" onclick="Element.show('form-for-transfer-<%= element[0] %>'); Element.hide('form-for-transfer-<%= active[0] %>'); Element.show('kind-of-transfer-<%= element[0] %>'); Element.hide('kind-of-transfer-<%= active[0] %>');">
-                <%= element[1] %>
-              </a>
-            </span>
-          <% end %>
-
-        <% end %>
-      </span>
-    <% end %>
-  </span>
-</b>
+<%= tab all, :name => :transfer %>
 
 <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
   

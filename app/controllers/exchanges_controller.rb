@@ -6,12 +6,17 @@ class ExchangesController < ApplicationController
   before_filter :check_perm_read, :only => [:show]
   before_filter :check_perm_write, :only => [:edit, :update, :destroy]
   
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  # verify :method => :post, :only => [ :destroy, :create, :update ],
-  #        :redirect_to => { :action => :list }
 
   def index
-    @exchanges = self.current_user.visible_exchanges
+    @currencies = (Currency.used_by(@current_user) + Currency.exchanged_by(@current_user)).uniq
+    @exchanges = {}
+    @currencies.each do |c1|
+      @exchanges[c1] = {}
+      @currencies.each do |c2|
+       next if c1 == c2
+       @exchanges[c1][c2] = [] #tutaj policz tabele
+      end
+    end
   end
 
 
@@ -47,12 +52,12 @@ class ExchangesController < ApplicationController
     where_error = 'flash_notice'
     if @exchange.save
       render :update do |page|
-      page.remove where_replace
-      page.insert_html :bottom, where_insert, :partial => 'exchanges/exchange', :object => @exchange
-      page.visual_effect :highlight, "exchange-#{@exchange.id}"
-      @exchange = nil
-      page.insert_html :bottom, where_insert, :partial => 'exchanges/new_exchange'
-      page.replace_html where_error, :partial => 'currencies/empty'
+        page.remove where_replace
+        page.insert_html :bottom, where_insert, :partial => 'exchanges/exchange', :object => @exchange
+        page.visual_effect :highlight, "exchange-#{@exchange.id}"
+        @exchange = nil
+        page.insert_html :bottom, where_insert, :partial => 'exchanges/new_exchange'
+        page.replace_html where_error, :partial => 'currencies/empty'
       end
     else
       render :update do |page|
@@ -81,25 +86,25 @@ class ExchangesController < ApplicationController
     redirect_to exchanges_path
   end
   
-    private
+  private
   
-    def find_and_set_exchange
-      @exchange = Exchange.find(params[:id])
-    end
+  def find_and_set_exchange
+    @exchange = Exchange.find(params[:id])
+  end
   
-    def check_perm_read
-      if @exchange.user != nil and @exchange.user.id != self.current_user.id
-        flash[:notice] = 'You do not have permission to view this exchange'
-        @exchange= nil
-        redirect_to exchanges_path
-      end
+  def check_perm_read
+    if @exchange.user != nil and @exchange.user.id != self.current_user.id
+      flash[:notice] = 'You do not have permission to view this exchange'
+      @exchange= nil
+      redirect_to exchanges_path
     end
+  end
     
-    def check_perm_write
-      if @exchange.user == nil or @exchange.user.id != self.current_user.id
-        flash[:notice] = 'You do not have permission to modify this exchange'
-        @exchange = nil
-        redirect_to exchanges_path
-      end
+  def check_perm_write
+    if @exchange.user == nil or @exchange.user.id != self.current_user.id
+      flash[:notice] = 'You do not have permission to modify this exchange'
+      @exchange = nil
+      redirect_to exchanges_path
     end
+  end
 end

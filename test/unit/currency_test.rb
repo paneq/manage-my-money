@@ -99,6 +99,65 @@ class CurrencyTest < Test::Unit::TestCase
   end
 
 
+  def test_currencies_used_by
+    save_jarek
+
+    assert_equal [], Currency.used_by(@rupert)
+    assert_equal [], Currency.used_by(@jarek)
+
+    transfers = []
+    transfers << save_simple_transfer(:user => @rupert, :currency => @zloty)
+
+    assert_equal [@zloty], Currency.used_by(@rupert)
+    assert_equal [], Currency.used_by(@jarek)
+
+    transfers << save_simple_transfer(:user => @rupert, :currency => @euro)
+    
+    assert Currency.used_by(@rupert).include?(@zloty)
+    assert Currency.used_by(@rupert).include?(@euro)
+    assert_equal [], Currency.used_by(@jarek)
+
+    transfers << save_simple_transfer(:user => @jarek, :currency => @euro)
+
+    assert Currency.used_by(@rupert).include?(@zloty)
+    assert Currency.used_by(@rupert).include?(@euro)
+    assert_equal [@euro], Currency.used_by(@jarek)
+
+    transfers.each {|t| t.destroy}
+    assert_equal [], Currency.used_by(@rupert)
+    assert_equal [], Currency.used_by(@jarek)
+  end
+
+
+  def test_currencies_exchanged_by
+    save_jarek
+    rupert_currency = save_currency(:user => @rupert)
+    jarek_currency = save_currency(:user => @jarek)
+
+    assert_equal [], Currency.exchanged_by(@rupert)
+    assert_equal [], Currency.exchanged_by(@jarek)
+
+    Exchange.new(:left_currency =>@zloty, :right_currency => @euro, :left_to_right => 1.0, :right_to_left => 1.0, :user => @rupert, :day => Date.today).save!
+
+    assert Currency.exchanged_by(@rupert).include?(@euro)
+    assert Currency.exchanged_by(@rupert).include?(@zloty)
+    assert_equal [], Currency.exchanged_by(@jarek)
+
+    Exchange.new(:left_currency =>rupert_currency, :right_currency => @euro, :left_to_right => 1.0, :right_to_left => 1.0, :user => @rupert, :day => Date.tomorrow).save!
+    
+    assert Currency.exchanged_by(@rupert).include?(@euro)
+    assert Currency.exchanged_by(@rupert).include?(@zloty)
+    assert Currency.exchanged_by(@rupert).include?(rupert_currency)
+
+    Exchange.new(:left_currency =>jarek_currency, :right_currency => @euro, :left_to_right => 1.0, :right_to_left => 1.0, :user => @rupert, :day => Date.yesterday).save!
+    
+    assert_equal [jarek_currency], Currency.exchanged_by(@jarek)
+    assert Currency.exchanged_by(@rupert).include?(@euro)
+    assert Currency.exchanged_by(@rupert).include?(@zloty)
+    assert Currency.exchanged_by(@rupert).include?(rupert_currency)
+  end
+
+
   def test_is_system
     assert @zloty.is_system?
     assert !save_currency().is_system?

@@ -14,7 +14,7 @@
 class Currency < ActiveRecord::Base
 
   named_scope :for_user_period, lambda { |user, start_day, end_day|
-    { :conditions => ['(currencies.user_id = ? OR currencies.user_id IS NULL AND transfers.user_id = ? AND transfers.day >= ? AND transfers.day <= ?)', user.id, user.id, start_day, end_day],
+    { :conditions => ['((currencies.user_id = ? OR currencies.user_id IS NULL) AND transfers.user_id = ? AND transfers.day >= ? AND transfers.day <= ?)', user.id, user.id, start_day, end_day],
       :select => 'DISTINCT currencies.*',
       :joins => 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id'
     }
@@ -24,6 +24,20 @@ class Currency < ActiveRecord::Base
     { :conditions => ['(currencies.user_id = ? OR currencies.user_id IS NULL)', user.id]}
   }
 
+
+  named_scope :used_by, lambda { |user|
+    { :conditions => ['((currencies.user_id = ? OR currencies.user_id IS NULL) AND transfers.user_id = ?)', user.id, user.id],
+      :select => 'DISTINCT currencies.*',
+      :joins => 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id'
+    }
+  }
+
+  named_scope :exchanged_by, lambda { |user|
+    { :conditions => ['(currencies.user_id = ? OR currencies.user_id IS NULL AND exchanges.user_id = ?)', user.id, user.id],
+      :select => 'DISTINCT currencies.*',
+      :joins => 'INNER JOIN exchanges ON (currencies.id = exchanges.currency_a OR currencies.id = exchanges.currency_b)'
+    }
+  }
 
   has_many  :left_exchanges,
     :class_name => "Exchange",

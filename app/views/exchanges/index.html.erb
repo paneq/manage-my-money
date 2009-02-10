@@ -35,3 +35,7 @@
 <br />
 
 <%= link_to 'Nowy kurs', new_exchange_path %>
+<br />
+<% @currencies.map %>
+
+<%= tab [[:quick, 'Wolny'], [:slow, 'Szybkie']], :name => :transfer, :active => :slow %>
