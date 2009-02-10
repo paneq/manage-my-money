@@ -7,6 +7,7 @@ class CurrenciesController; def rescue_action(e) raise e end; end
 class CurrenciesControllerTest < Test::Unit::TestCase
   # fixtures :currencies
 
+  CURRENCY_FIELDS = [:name, :symbol, :long_name, :long_symbol]
   def setup
     @controller = CurrenciesController.new
     @request    = ActionController::TestRequest.new
@@ -26,13 +27,15 @@ class CurrenciesControllerTest < Test::Unit::TestCase
     get :index
     assert_response :success
     assert_template 'index'
+    assert_not_nil assigns(:currencies)
+    
     assert_select 'div#currencies-index' do
       assert_select 'table#currencies-list' do
         assert_select 'th', 6
         assert_select 'tr[id^=currency]', @currencies.size + 1 # created for rupert
         Currency.for_user(@rupert).each do |c|
           assert_select "tr#currency-#{c.id}" do
-            [:name, :symbol, :long_name, :long_symbol].each do |field|
+            CURRENCY_FIELDS.each do |field|
               assert_select "td##{field}", c.send(field)
             end
             assert_select "td#system"
@@ -55,9 +58,10 @@ class CurrenciesControllerTest < Test::Unit::TestCase
 
     assert_response :success
     assert_template 'show'
+    assert_not_nil assigns(:currency)
 
     assert_select "div#show-currency-#{@zloty.id}" do
-      [:name, :long_name, :symbol, :long_symbol].each do |field|
+      CURRENCY_FIELDS.each do |field|
         assert_select "p##{field}", Regexp.new(@zloty.send(field))
       end
     end
@@ -76,16 +80,26 @@ class CurrenciesControllerTest < Test::Unit::TestCase
 
     assert_select "a#edit-cur-#{id}" #Be sure there is link to edit it
   end
-  
-  #  def test_new
-  #    get :new
-  #
-  #    assert_response :success
-  #    assert_template 'new'
-  #
-  #    assert_not_nil assigns(:currency)
-  #  end
-  #
+
+
+  def test_new
+    get :new
+
+    assert_response :success
+    assert_template 'new'
+
+    assert_not_nil assigns(:currency)
+
+    CURRENCY_FIELDS.each do |field|
+      assert_select "p##{field}" do
+        assert_select "label[for=currency_#{field}]"
+        assert_select "input#currency_#{field}"
+      end
+    end
+    assert_select "a#currencies-list"
+  end
+
+
   #  def test_create
   #    num_currencies = Currency.count
   #
