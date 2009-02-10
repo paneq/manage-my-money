@@ -69,18 +69,18 @@ class CurrenciesController < ApplicationController
 
   def check_perm_read
     if @currency.user != nil and @currency.user.id != self.current_user.id
-      flash[:notice] = 'You do not have permission to view this currency'
+      flash[:notice] = 'Brak uprawnień do oglądania tej waluty.'
       @currency = nil
-      redirect_to :action => :index , :controller => :currencies
+      redirect_to currencies_path
     end
   end
     
 
   def check_perm_write
     if @currency.user == nil or @currency.user.id != self.current_user.id
-      flash[:notice] = 'You do not have permission to modify this currency'
+      flash[:notice] = 'Brak uprawnień do modyfikacji tej waluty.'
       @currency = nil
-      redirect_to :action => :index , :controller => :currencies
+      redirect_to currencies_path
     end
   end
 end

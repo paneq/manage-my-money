@@ -143,16 +143,47 @@ class CurrenciesControllerTest < Test::Unit::TestCase
   end
 
 
-  #  def test_edit
-  #    get :edit, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'edit'
-  #
-  #    assert_not_nil assigns(:currency)
-  #    assert assigns(:currency).valid?
-  #  end
-  #
+  #SECURITY
+  def test_edit_system_currency
+    get :edit, :id => @zloty.id
+  
+    assert_response :redirect
+    assert_redirected_to :action => :index
+    assert_match(/Brak uprawnień/, flash[:notice])
+  end
+
+  #SECURITY
+  def test_edit_someone_currency
+    save_jarek
+    currency = save_currency(:user => @jarek)
+    get :edit, :id => currency.id
+
+    assert_response :redirect
+    assert_redirected_to :action => :index
+    assert_match(/Brak uprawnień/, flash[:notice])
+  end
+
+
+  def test_edit_my_currency
+    currency = save_currency
+    get :edit, :id => currency.id
+
+    assert_response :success
+    assert_template 'edit'
+
+    assert_not_nil assigns(:currency)
+    assert assigns(:currency).valid?
+
+    CURRENCY_FIELDS.each do |field|
+      assert_select "p##{field}" do
+        assert_select "label[for=currency_#{field}]"
+        assert_select "input[id=currency_#{field}][value=#{currency.send(field)}]"
+      end
+    end
+    assert_select "a#currencies-list"
+  end
+
+
   #  def test_update
   #    post :update, :id => @first_id
   #    assert_response :redirect

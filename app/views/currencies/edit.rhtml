@@ -1,35 +1,40 @@
-<%= error_messages_for :currency %>
-<h1>Editing currency</h1>
+
+<h1>Edycja waluty: <%= h @currency.long_name -%></h1>
 
 <% form_for @currency do |f| %>
-  <p>
+
+  <%= error_messages_for :currency %>
+
+  <p id="symbol">
     <label for="currency_symbol">
-    Symbol np. '$'
+      Symbol np. '$'
     </label>
     <%= f.text_field :symbol, :size => 5  %>
   </p>
-  
-  <p>
+
+  <p id="long_symbol">
     <label for="currency_long_symbol">
-    Długi symbol np. 'USD'
+      Długi symbol np. 'USD'
     </label>
     <%= f.text_field :long_symbol, :size => 7  %>
   </p>
-  
-  <p>
+
+  <p id="name">
     <label for="currency_name">
-    Nazwa np. 'Dollar'
+      Nazwa np. 'Dollar'
     </label>
     <%= f.text_field :name, :size => 12  %>
   </p>
-  
-  <p>
+
+  <p id="long_name">
     <label for="currency_long_name">
-    Długa nazwa np. 'American dollar'
+      Długa nazwa np. 'American dollar'
     </label>
     <%= f.text_field :long_name, :size => 20  %>
   </p>
-  <%= f.submit "Update" %>
+
+  <%= f.submit "Aktualizuj" %>
+
 <% end %>
 
-<%= link_to 'Show', :action => 'show', :id => @currency %>
+<%= link_to 'Lista walut', currencies_path, :id => 'currencies-list' %>
