@@ -39,6 +39,20 @@ pl:
             long_name:
               blank: nie może być pusta
               taken: została już zajęta
+        exchange:
+          wrong_order: Nieprawidłowa kolejność walut. Zamień je miejscami wraz z kursami.
+          attributes:
+            left_currency:
+              blank: nie może być pusta
+            right_currency:
+              blank: nie może być pusta
+              same_as_left: nie może być taka sama jak pierwsza
+            left_to_right:
+              blank: nie może być pusty
+              not_a_number: `{{value}}` nie jest prawidłową liczbą
+            right_to_left:
+              blank: nie może być pusty
+              not_a_number: `{{value}}` nie jest prawidłową liczbą
     models:
       user: Użytkownik
       report: Raport
@@ -64,6 +78,12 @@ pl:
         name: Krótka nazwa
         long_name: Długa nazwa
         system: Systemowa
+      exchanges:
+        left_currency: Pierwsza waluta
+        right_currency: Druga waluta
+        left_to_right: Kurs zamiany pierwszej waluty na drugą
+        right_to_left: Kurs zamiany drugiej waluty na pierwszą
+
 
 
 
