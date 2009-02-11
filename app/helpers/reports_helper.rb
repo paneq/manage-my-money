@@ -51,7 +51,7 @@ module ReportsHelper
     when :day then 'Dzień'
     when :week then 'Tydzień'
     when :month then 'Miesiąc'
-    when :quarter then 'Kwartał"'
+    when :quarter then 'Kwartał'
     when :year then 'Rok'
     when :custom then 'Dowolny'
     end
@@ -62,7 +62,7 @@ module ReportsHelper
     when :day then 'Dzień'
     when :week then 'Tydzień'
     when :month then 'Miesiąc'
-    when :quarter then 'Kwartał"'
+    when :quarter then 'Kwartał'
     when :year then 'Rok'
     when :none then 'Bez podziału'
     end

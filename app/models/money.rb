@@ -31,7 +31,7 @@ class Money
   
   def value(currency=nil)
     currency = @hash.keys.first if currency.nil? && @hash.size == 1
-    return @hash[currency]
+    return @hash[currency].round(2)
   end
 
   
