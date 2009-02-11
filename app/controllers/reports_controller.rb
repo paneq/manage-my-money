@@ -49,6 +49,7 @@ class ReportsController < ApplicationController
   def new
     prepare_reports
     @report = Report.new
+
   end
 
   def create
@@ -212,6 +213,9 @@ class ReportsController < ApplicationController
     @value_report.prepare_category_report_options @current_user.categories
     @flow_report.prepare_category_report_options @current_user.categories
     @flow_report.report_view_type = :text
+    @flow_report.period_start = @value_report.period_start = @share_report.period_start = 1.year.ago.at_beginning_of_year.to_date
+    @flow_report.period_end = @value_report.period_end = @share_report.period_end = Date.today
+    @share_report.max_categories_values_count = 10
   end
 
 
