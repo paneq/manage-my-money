@@ -18,6 +18,12 @@ namespace :selenium do
   desc 'Runs selenium test'
   task :test do
     puts "Do napisania! Poki co sprobuj: ruby -Ilib:test test/selenium/*"
+    `ruby -Ilib:test test/selenium/reports_test.rb`
+    `ruby -Ilib:test test/selenium/menu_test.rb`
+    `ruby -Ilib:test test/selenium/categories_test.rb`
     #`rake test:acceptance`
   end
 end
+
+
+

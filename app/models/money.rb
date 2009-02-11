@@ -117,7 +117,7 @@ class Money
 
 
   def each
-    @hash.each_pair { |key, val|  yield key, val}
+    @hash.each_pair { |key, val|  yield key, val.round(2)}
   end
 
 

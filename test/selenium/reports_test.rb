@@ -130,7 +130,7 @@ begin
       @selenium.click "//input[@id='share_report_submit' and @name='commit' and @value='Pokaż']"
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
-          assert @selenium.is_text_present("jeśli")
+          assert @selenium.is_text_present("chcesz używać tego raportu w przyszłości")
       }
       @selenium.click "switch_for_graph_table_for_PLN"
       @selenium.click "switch_for_graph_table_for_PLN"
