@@ -27,7 +27,7 @@
     </th>
   </tr>
   
-  <%= render :partial => 'exchanges/exchange', :collection => @exchanges %>
+  <% #  render :partial => 'exchanges/exchange', :collection => @exchanges -%>
   <%= render :partial => 'exchanges/new_exchange' %>
 
 </table>
@@ -38,4 +38,4 @@
 <br />
 <% @currencies.map %>
 
-<%= tab [[:quick, 'Wolny'], [:slow, 'Szybkie']], :name => :transfer, :active => :slow %>
+<% # tab [[:quick, 'Wolny'], [:slow, 'Szybkie']], :name => :transfer, :active => :slow -%>
