@@ -31,7 +31,7 @@ class Money
   
   def value(currency=nil)
     currency = @hash.keys.first if currency.nil? && @hash.size == 1
-    return @hash[currency].round(2)
+    return @hash[currency].to_f.round(2)
   end
 
   
@@ -42,6 +42,7 @@ class Money
     nil
   end
 
+  #TODO should be private, IMHO jp
   def values_in_currencies
     return @hash.clone
   end
@@ -117,7 +118,7 @@ class Money
 
 
   def each
-    @hash.each_pair { |key, val|  yield key, val.round(2)}
+    @hash.each_pair { |key, val|  yield key, val.to_f.round(2)}
   end
 
 
