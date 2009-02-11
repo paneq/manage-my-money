@@ -101,70 +101,48 @@ begin
 
       edit_and_show_user_reports
 
-#
-#
-#      @selenium.click "reports-index"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "copy-report-0"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport zostal pomyslnie skopiowany")
-#      }
-#      @selenium.click "show-report-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport 'Struktura wydatków w ostatnim roku'")
-#      }
-#      @selenium.click "switch_for_graph_table_for_PLN"
-#      @selenium.click "switch_for_graph_table_for_PLN"
-#      @selenium.click "reports-index"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "show-report-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "report-edit-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.select "report_day_ShareReport_period", "label=Poprzedni kwartał"
-#      
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport 'Struktura wydatków w ostatnim roku'")
-#      }
-#      @selenium.click "report-edit-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "//input[@id='share_report_submit' and @name='commit' and @value='Zapisz i pokaż']"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("udziału podkategorii w kategorii")
-#      }
-#      @selenium.click "report-edit-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "share_report_submit"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport zostal pomyslnie zapisany")
-#      }
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raporty")
-#      }
-#      @selenium.click "edit-report-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.type "share_report_max_categories_values_count", "0"
-#      @selenium.click "share_report_submit"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport nie został zachowany z powodu jednego błędu")
-#      }
-#      @selenium.type "share_report_max_categories_values_count", "1"
-#      @selenium.click "share_report_submit"
-#      @selenium.wait_for_page_to_load "30000"
-#      @selenium.click "delete-22"
-#      @selenium.wait_for_page_to_load "30000"
-#      selenium_assert {
-#        assert @selenium.is_text_present("Raport zostal pomyslnie usuniety")
-#      }
+    end if false
 
+
+    def test_new_share_report
+
+      make_my_transfers
+      @selenium.click "raporty-menu-link"
+      @selenium.wait_for_page_to_load "30000"
       
+      @selenium.click "new_report"
+      @selenium.wait_for_page_to_load "30000"
+      selenium_assert {
+          assert @selenium.is_text_present("Dodawanie nowego raportu")
+      }
+      @selenium.click "report_type_sharereport"
+
+      selenium_assert {
+          assert @selenium.is_visible("//div[@id='share_report_options']")
+      }
+
+      @selenium.click "share_report_submit"
+      @selenium.wait_for_page_to_load "30000"
+      selenium_assert {
+          assert @selenium.is_text_present("Raport nie został zachowany z powodu jednego błędu")
+      }
+      @selenium.type "share_report_name", "Mój nowy raport udziału"
+      @selenium.click "//input[@id='share_report_submit' and @name='commit' and @value='Pokaż']"
+      @selenium.wait_for_page_to_load "30000"
+      selenium_assert {
+          assert @selenium.is_text_present("jeśli")
+      }
+      @selenium.click "switch_for_graph_table_for_PLN"
+      @selenium.click "switch_for_graph_table_for_PLN"
+      @selenium.click "reports-index"
+      @selenium.wait_for_page_to_load "30000"
+      selenium_assert {
+          assert !@selenium.is_text_present("Mój nowy raport udziału")
+      }
     end
+
+   
+
 
 
     private
