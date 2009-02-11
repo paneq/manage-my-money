@@ -39,7 +39,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Twoje kategorie")
-          assert !@selenium.is_text_present("Error")
       }
 
       go_home
@@ -47,7 +46,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Lista transferów")
-          assert !@selenium.is_text_present("Error")
       }
 
       go_home
@@ -55,7 +53,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Waluty")
-          assert !@selenium.is_text_present("Error")
       }
 
       go_home
@@ -63,7 +60,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Raporty")
-          assert !@selenium.is_text_present("Error")
       }
 
       go_home
@@ -71,7 +67,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Edycja ustawień")
-          assert !@selenium.is_text_present("Error")
       }
 
       go_home
@@ -79,11 +74,9 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Twoje kategorie")
-          assert !@selenium.is_text_present("Error")
       }
       selenium_assert {
           assert @selenium.is_text_present("Zalogowany: #{@rupert.login}")
-          assert !@selenium.is_text_present("Error")
       }
 
 
@@ -93,7 +86,6 @@ begin
         @selenium.wait_for_page_to_load "30000"
         selenium_assert {
             assert @selenium.is_text_present("#{cat.name} [Edycja]")
-            assert !@selenium.is_text_present("Error")
         }
       end
 
@@ -102,7 +94,6 @@ begin
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
           assert @selenium.is_text_present("Logowanie")
-          assert !@selenium.is_text_present("Error")
       }
       selenium_assert {
           assert @selenium.is_text_present("Zaloguj się!")

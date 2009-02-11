@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090208112934) do
+ActiveRecord::Schema.define(:version => 20090211155039) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -43,6 +43,10 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.boolean "imported",          :default => false
   end
 
+  add_index "categories", ["id", "user_id", "category_type_int"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
+  add_index "categories", ["lft", "rgt"], :name => "index_categories_on_lft_and_rgt"
+  add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
+
   create_table "category_report_options", :force => true do |t|
     t.integer  "inclusion_type_int", :default => 0, :null => false
     t.integer  "report_id",                         :null => false
@@ -50,6 +54,8 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "category_report_options", ["report_id", "category_id"], :name => "index_category_report_options_on_report_id_and_category_id"
 
   create_table "currencies", :force => true do |t|
     t.string  "symbol",      :null => false
@@ -59,6 +65,8 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.integer "user_id"
   end
 
+  add_index "currencies", ["id", "user_id"], :name => "index_currencies_on_id_and_user_id"
+
   create_table "exchanges", :force => true do |t|
     t.decimal "currency_a",    :precision => 8, :scale => 4, :null => false
     t.decimal "currency_b",    :precision => 8, :scale => 4, :null => false
@@ -67,6 +75,8 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.date    "day",                                         :null => false
     t.integer "user_id"
   end
+
+  add_index "exchanges", ["day"], :name => "index_exchanges_on_day"
 
   create_table "goals", :force => true do |t|
     t.string   "description"
@@ -79,6 +89,9 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "goals", ["category_id"], :name => "index_goals_on_category_id"
+  add_index "goals", ["id"], :name => "index_goals_on_id"
 
   create_table "reports", :force => true do |t|
     t.string   "type"
@@ -98,6 +111,10 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.boolean  "temporary",                   :default => false, :null => false
   end
 
+  add_index "reports", ["category_id"], :name => "index_reports_on_category_id"
+  add_index "reports", ["id"], :name => "index_reports_on_id"
+  add_index "reports", ["user_id"], :name => "index_reports_on_user_id"
+
   create_table "sessions", :force => true do |t|
     t.string   "session_id"
     t.text     "data"
@@ -116,12 +133,21 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.string  "import_guid"
   end
 
+  add_index "transfer_items", ["category_id"], :name => "index_transfer_items_on_category_id"
+  add_index "transfer_items", ["currency_id"], :name => "index_transfer_items_on_currency_id"
+  add_index "transfer_items", ["id"], :name => "index_transfer_items_on_id"
+  add_index "transfer_items", ["transfer_id"], :name => "index_transfer_items_on_transfer_id"
+
   create_table "transfers", :force => true do |t|
     t.text    "description", :null => false
     t.date    "day",         :null => false
     t.integer "user_id",     :null => false
     t.string  "import_guid"
   end
+
+  add_index "transfers", ["day"], :name => "index_transfers_on_day"
+  add_index "transfers", ["id", "user_id"], :name => "index_transfers_on_id_and_user_id"
+  add_index "transfers", ["user_id"], :name => "index_transfers_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                                            :limit => 40
@@ -143,6 +169,7 @@ ActiveRecord::Schema.define(:version => 20090208112934) do
     t.boolean  "invert_saldo_for_income",                                         :default => true,  :null => false
   end
 
+  add_index "users", ["id"], :name => "index_users_on_id", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end

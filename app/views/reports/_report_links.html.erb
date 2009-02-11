@@ -1,9 +1,7 @@
-<%= link_to 'Wszystkie raporty', reports_url %>
-
+<%= link_to 'Wszystkie raporty', reports_url, :id => 'reports-index' %>
 <% unless @virtual %>
-
-| <%= link_to "Edytuj", edit_report_url(@report) %>
-<% unless @report.temporary %>
-| <%= link_to "Usun", report_path(@report), :method => :delete, :id => @report.id %>
-<% end %>
+| <%= link_to "Edytuj", edit_report_url(@report), obj_hash_id('report-edit', @report) %>
+  <% unless @report.temporary %>
+  | <%= link_to "Usun", report_path(@report), {:method => :delete}.merge(obj_hash_id('report-delete', @report)) %>
+  <% end %>
 <% end %>
