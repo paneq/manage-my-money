@@ -44,8 +44,6 @@ ActiveRecord::Schema.define(:version => 20090211155039) do
   end
 
   add_index "categories", ["id", "user_id", "category_type_int"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
-  add_index "categories", ["lft", "rgt"], :name => "index_categories_on_lft_and_rgt"
-  add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
 
   create_table "category_report_options", :force => true do |t|
     t.integer  "inclusion_type_int", :default => 0, :null => false
