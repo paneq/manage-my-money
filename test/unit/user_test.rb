@@ -168,6 +168,67 @@ class UserTest < Test::Unit::TestCase
   #    assert test_user.errors.on(:transaction_amount_limit_value)
   #  end
 
+  def test_should_destroy_user
+    save_rupert
+    save_currencies
+    rupert_id = @rupert.id
+
+    @parent = @rupert.expense
+    category = Category.new(:name => 'test', :description => 'test', :category_type => :EXPENSE, :user => @rupert, :parent => @parent)
+    @rupert.categories << category
+
+
+    create_share_report(@rupert)
+    create_value_report(@rupert)
+    create_flow_report(@rupert)
+
+    user_currency = Currency.new(:symbol => 'A', :long_symbol => 'AAA', :name => 'aaaa', :long_name =>'aaaa aa')
+    user_currency.user = @rupert
+    user_currency.save!
+
+
+    e = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => @euro, :right_currency => @zloty, :day => Date.today, :user => @rupert)
+    e.save!
+
+
+    save_simple_transfer(:user => @rupert)
+
+    @rupert.save!
+    @rupert.reload
+
+    elements = {}
+    elements[:categories] = @rupert.categories.map{|cat| cat.id}
+    elements[:transfers] = @rupert.transfers.map{|tr| tr.id}
+    elements[:transfer_items] = @rupert.transfer_items.map{|ti| ti.id}
+    elements[:reports] = @rupert.reports.map{|r| r.id}
+    elements[:category_report_options] = []
+    @rupert.reports.map do |r|
+      if r.is_a? MultipleCategoryReport
+        r.category_report_options.each { |cro| elements[:category_report_options] << cro.id }
+      end
+    end
+#    elements[:goals] = @rupert.goals.map{|g| g.id} NOT IMLEMENTED YET
+    elements[:currencies] = @rupert.currencies.map{|cur| cur.id}
+    elements[:exchanges] = @rupert.exchanges.map{|exc| exc.id}
+
+    elements.each do |key, value|
+      assert value.size > 0, "Przed testem usunięcia User powinien mieć choć jeden #{key.to_s}"
+    end
+
+    assert @rupert.destroy
+
+    assert_equal nil, User.find(:first, :conditions => {:id => rupert_id})
+
+    elements.each do |key, value|
+      model_class = key.to_s.singularize.camelcase.constantize
+      values = model_class.send(:find, :all, :conditions => ['id IN (?)', value])
+      assert_equal [], values, "Should destroy all #{key.to_s}"
+    end
+
+
+  end
+
+
 
   def test_top_categories_method
     save_rupert

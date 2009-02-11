@@ -154,7 +154,7 @@
                   <br />
                   <li id="logout"><%= link_to 'Wyloguj', logout_url, :id => 'wyloguj-menu-link'  %></li>
                   <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user), :id => 'edycja-ustawien-menu-link'  %></li>
-                  <li><%= link_to 'Usuń konto', { :action => :destroy, :controller => :users }, :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
+                  <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
                 <% end %>
 
               </ul>

@@ -56,9 +56,14 @@ class UsersController < ApplicationController
     end
   end
 
-  #todo
   def destroy
-    self.current_user.destroy
+    if self.current_user.destroy
+      flash[:notice]  = "Twoje konto i wszystkie dane zostały usunięte"
+      redirect_to logout_path
+    else
+      flash[:notice]  = "Nie udało się usunąć konta, skontaktuj się z administratorem"
+      redirect_to('/')
+    end
   end
 
 

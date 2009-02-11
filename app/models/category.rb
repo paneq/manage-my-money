@@ -125,7 +125,7 @@ class Category < ActiveRecord::Base
 
 
   def after_save
-    if @parent_to_save
+    if @parent_to_save && @parent_to_save != self.parent
       self.move_to_child_of(@parent_to_save)
       @parent_to_save = :default
     end
@@ -255,7 +255,7 @@ class Category < ActiveRecord::Base
     last_transfer = :default
     for t in transfers do
 
-      value = t.read_attribute('value_for_currency').to_f
+      value = t.read_attribute('value_for_currency').to_f.round(2)
 
       if self.user.invert_saldo_for_income && self.category_type == :INCOME
         value = -value

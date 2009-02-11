@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
                                                               :calculate_with_exchanges_closest_to_transaction_but
                                                               ]
 
-  has_many :categories, :order => 'category_type_int, lft' do
+  has_many :categories, :order => 'category_type_int, lft', :dependent => :delete_all do
     def top
       find(:all, :conditions => ['parent_id IS NULL'])
     end
@@ -59,30 +59,30 @@ class User < ActiveRecord::Base
   end
 
 
-  has_many :transfers
+  has_many :transfers, :dependent => :destroy
   has_many :transfer_items, :through => :transfers
-  has_many :currencies
+  has_many :currencies, :dependent => :destroy
 
   #TODO: To remove
   has_many :visible_currencies,
     :class_name => 'Currency',
     :finder_sql => 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
-  has_many :exchanges
+  has_many :exchanges, :dependent => :destroy
 
   #TODO: To remove
   has_many :visible_exchanges,
     :class_name => 'Exchange',
     :finder_sql => 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
 
-  has_many :goals, :through => :categories
-  has_many :reports
+  has_many :goals, :through => :categories, :dependent => :destroy
+  has_many :reports, :dependent => :destroy
 
   belongs_to :default_currency, :class_name => "Currency"
 
 
   before_create :create_top_categories
-  before_destroy :remove_all_data
+#  before_destroy :remove_all_data
 
   
   def create_top_categories
