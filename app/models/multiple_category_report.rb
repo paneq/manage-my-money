@@ -68,7 +68,6 @@ class MultipleCategoryReport < Report
 
 
 
-
   #dla kazdej category na liscie categories i dla ktorej nie ma category_report_option
   #tworzy category_report_option i ustawia mu inclusion_type na :none
   #

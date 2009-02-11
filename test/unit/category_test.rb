@@ -405,7 +405,7 @@ class CategoryTest < Test::Unit::TestCase
 
 
   #TODO
-  def test_calculate_flow_values
+  def test_calculate_share_values
     
   end
 
@@ -431,7 +431,7 @@ class CategoryTest < Test::Unit::TestCase
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
-    assert_equal 100, flow_values[:in].first[:values].value(@zloty)
+    assert_equal 100, flow_values[:in].first[:value].value(@zloty)
 
     #przypadek w którym podajemy wszystkie kategorie ktorych dotycza transakcje
     categories = [category1, category2]
@@ -446,7 +446,7 @@ class CategoryTest < Test::Unit::TestCase
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 0, flow_values[:out].size
-    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
+    assert_equal 144, flow_values[:in].first[:value].value(@zloty)
 
 
     categories = [category1, category2]
@@ -461,8 +461,8 @@ class CategoryTest < Test::Unit::TestCase
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 1, flow_values[:out].size
-    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
-    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+    assert_equal 144, flow_values[:in].first[:value].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:value].value(@zloty)
 
 
     category3 = @jarek.categories.find_by_name "child2"
@@ -471,9 +471,9 @@ class CategoryTest < Test::Unit::TestCase
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 2, flow_values[:in].size
     assert_equal 1, flow_values[:out].size
-    assert_equal 144, flow_values[:in].find{|el| el[:category].name == "child1"}[:values].value(@zloty)
-    assert_equal 66, flow_values[:in].find{|el| el[:category].name == "child2"}[:values].value(@zloty)
-    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+    assert_equal 144, flow_values[:in].find{|el| el[:category].name == "child1"}[:value].value(@zloty)
+    assert_equal 66, flow_values[:in].find{|el| el[:category].name == "child2"}[:value].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:value].value(@zloty)
 
 
 
@@ -487,8 +487,8 @@ class CategoryTest < Test::Unit::TestCase
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 1, flow_values[:in].size
     assert_equal 1, flow_values[:out].size
-    assert_equal 144, flow_values[:in].first[:values].value(@zloty)
-    assert_equal 33, flow_values[:out].first[:values].value(@zloty)
+    assert_equal 144, flow_values[:in].first[:value].value(@zloty)
+    assert_equal 33, flow_values[:out].first[:value].value(@zloty)
 
   end
 

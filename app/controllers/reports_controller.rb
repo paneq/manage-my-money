@@ -13,12 +13,19 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html do
         @virtual = params[:virtual]
+        if (@report.is_a?(MultipleCategoryReport) && @report.category_report_options.empty?) || (@report.share_report? && @report.category == nil)
+          flash[:notice] = 'Nie można pokazać raportu, musisz wybrać kategorię. (Kategoria związana z tym raportem musiała zostać usunięta)'
+          redirect_to edit_report_path(@report.id)
+          return
+        end
+
         if @report.flow_report?
-          @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
-          @in_sum = Report.sum_flow_values(@cash_flow[:in])
-          @out_sum = Report.sum_flow_values(@cash_flow[:out])
-          @delta = @in_sum - @out_sum
-          render :template => 'reports/show_flow_report'
+            @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
+            @in_sum = Report.sum_flow_values(@cash_flow[:in])
+            @out_sum = Report.sum_flow_values(@cash_flow[:out])
+            @delta = @in_sum - @out_sum
+            @currencies = (@cash_flow[:in] + @cash_flow[:out]).map {|h| h[:currency]}.uniq
+            render :template => 'reports/show_flow_report'
         else
           @values = calculate_and_cache_graph_data
           @graphs = {}

@@ -29,7 +29,7 @@ class Category < ActiveRecord::Base
 
   attr_accessor :opening_balance, :opening_balance_currency
 
-  attr_accessor :parent_guid #for importing
+  attr_accessor :parent_guid #for importing, not saved in db
 
   belongs_to :user
 
@@ -83,7 +83,7 @@ class Category < ActiveRecord::Base
 
   has_many :goals
 
-  has_many :category_report_options, :foreign_key => :category_id
+  has_many :category_report_options, :foreign_key => :category_id, :dependent => :destroy
   has_many :multiple_category_reports, :through => :category_report_options
 
   attr_reader :opening_balance, :opening_balance_currency
@@ -403,12 +403,12 @@ class Category < ActiveRecord::Base
         categories, categories, period_start, period_end],
       :order =>       'categories.category_type_int, categories.lft')
 
-    #TODO: cumulate Money walues for one category
-
-    flow_categories.collect! do |cat|
+    flow_categories.map! do |cat|
+      cur = Currency.find(cat.read_attribute('currency_id'))
       {
         :category => cat,
-        :values => Money.new( Currency.find(cat.read_attribute('currency_id') ), cat.read_attribute('sum_value').to_f )
+        :currency => cur,
+        :value => Money.new(cur, cat.read_attribute('sum_value').to_f.round(2))
       }
     end
 
