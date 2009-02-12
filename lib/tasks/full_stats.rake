@@ -5,8 +5,8 @@ namespace :stats do
   task :full do
     
     #settings
-    start_rev = 216
-    end_rev = 225
+    start_rev = 226
+    end_rev = 311
     machine_name = Socket.gethostname
     case machine_name
     when 'arachno'
@@ -24,6 +24,7 @@ namespace :stats do
       puts `ls -al`
       Range.new(start_rev, end_rev).each do |rev|
         `svn update -r #{rev}`
+        `svn update lib/tasks/rspec.rake` #to newest version so it does not change rake stats task
         `echo REV: #{rev} >> #{settings_file}`
         `rake stats >> #{settings_file}`
         Kernel.print '.'
