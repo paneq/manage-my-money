@@ -101,7 +101,7 @@ begin
 
       edit_and_show_user_reports
 
-    end if false
+    end
 
 
     def test_new_share_report
