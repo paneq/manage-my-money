@@ -23,7 +23,7 @@ begin
   end
 
   task :default => :spec
-  task :stats => "spec:statsetup"
+  #task :stats => "spec:statsetup"
 
   desc "Run all specs in spec directory (excluding plugin specs)"
   Spec::Rake::SpecTask.new(:spec => spec_prereq) do |t|
