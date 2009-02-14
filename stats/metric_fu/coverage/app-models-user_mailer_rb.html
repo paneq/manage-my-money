@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:09 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -598,30 +598,30 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a> 1 class UserMailer &lt; ActionMailer::Base
-</span><span class="marked0"><a name="line2"></a> 2   def signup_notification(user)
-</span><span class="marked1"><a name="line3"></a> 3     setup_email(user)
-</span><span class="marked0"><a name="line4"></a> 4     @subject    += 'Dokonaj aktywacji konta'
-</span><span class="inferred1"><a name="line5"></a> 5   
-</span><span class="marked0"><a name="line6"></a> 6     @body[:url]  = &quot;http://localhost:3000/activate/#{user.activation_code}&quot;
-</span><span class="inferred1"><a name="line7"></a> 7   
-</span><span class="inferred0"><a name="line8"></a> 8   end
-</span><span class="inferred1"><a name="line9"></a> 9   
-</span><span class="marked0"><a name="line10"></a>10   def activation(user)
-</span><span class="marked1"><a name="line11"></a>11     setup_email(user)
-</span><span class="marked0"><a name="line12"></a>12     @subject    += 'Twoje konto zostało aktywowane!'
-</span><span class="marked1"><a name="line13"></a>13     @body[:url]  = &quot;http://localhost:3000/&quot;
-</span><span class="inferred0"><a name="line14"></a>14   end
-</span><span class="inferred1"><a name="line15"></a>15   
-</span><span class="marked0"><a name="line16"></a>16   protected
-</span><span class="marked1"><a name="line17"></a>17     def setup_email(user)
-</span><span class="marked0"><a name="line18"></a>18       @recipients  = &quot;#{user.email}&quot;
-</span><span class="marked1"><a name="line19"></a>19       @from        = &quot;robert.pankowecki@gmail.com&quot;
-</span><span class="marked0"><a name="line20"></a>20       @subject     = &quot;[co-do-grosza.pl] &quot;
-</span><span class="marked1"><a name="line21"></a>21       @sent_on     = Time.now
-</span><span class="marked0"><a name="line22"></a>22       @body[:user] = user
-</span><span class="inferred1"><a name="line23"></a>23     end
-</span><span class="inferred0"><a name="line24"></a>24 end
+<pre><span class="marked0"><a name="line1"></a> 1 class UserMailer &lt; ActionMailer::Base
+</span><span class="marked1"><a name="line2"></a> 2   def signup_notification(user)
+</span><span class="marked0"><a name="line3"></a> 3     setup_email(user)
+</span><span class="marked1"><a name="line4"></a> 4     @subject    += 'Dokonaj aktywacji konta'
+</span><span class="inferred0"><a name="line5"></a> 5   
+</span><span class="marked1"><a name="line6"></a> 6     @body[:url]  = &quot;http://localhost:3000/activate/#{user.activation_code}&quot;
+</span><span class="inferred0"><a name="line7"></a> 7   
+</span><span class="inferred1"><a name="line8"></a> 8   end
+</span><span class="inferred0"><a name="line9"></a> 9   
+</span><span class="marked1"><a name="line10"></a>10   def activation(user)
+</span><span class="marked0"><a name="line11"></a>11     setup_email(user)
+</span><span class="marked1"><a name="line12"></a>12     @subject    += 'Twoje konto zostało aktywowane!'
+</span><span class="marked0"><a name="line13"></a>13     @body[:url]  = &quot;http://localhost:3000/&quot;
+</span><span class="inferred1"><a name="line14"></a>14   end
+</span><span class="inferred0"><a name="line15"></a>15   
+</span><span class="marked1"><a name="line16"></a>16   protected
+</span><span class="marked0"><a name="line17"></a>17     def setup_email(user)
+</span><span class="marked1"><a name="line18"></a>18       @recipients  = &quot;#{user.email}&quot;
+</span><span class="marked0"><a name="line19"></a>19       @from        = &quot;robert.pankowecki@gmail.com&quot;
+</span><span class="marked1"><a name="line20"></a>20       @subject     = &quot;[co-do-grosza.pl] &quot;
+</span><span class="marked0"><a name="line21"></a>21       @sent_on     = Time.now
+</span><span class="marked1"><a name="line22"></a>22       @body[:user] = user
+</span><span class="inferred0"><a name="line23"></a>23     end
+</span><span class="inferred1"><a name="line24"></a>24 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

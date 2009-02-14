@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:07 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-controllers-users_controller_rb.html'>app/controllers/users_controller.rb</a>
         </td>
-      <td class='lines_total'><tt>85</tt>
+      <td class='lines_total'><tt>90</tt>
         </td>
-      <td class='lines_code'><tt>65</tt>
+      <td class='lines_code'><tt>71</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>88.2%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>82.2%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='88'/>
-                  <td class='uncovered' width='12'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='82'/>
+                  <td class='uncovered' width='18'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>84.6%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>77.5%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='85'/>
-                  <td class='uncovered' width='15'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='77'/>
+                  <td class='uncovered' width='23'/>
                   </tr>
                 </table>
               </td>
@@ -598,91 +598,96 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a> 1 class UsersController &lt; ApplicationController
-</span><span class="inferred0"><a name="line2"></a> 2 
-</span><span class="marked1"><a name="line3"></a> 3   layout 'main'
-</span><span class="marked0"><a name="line4"></a> 4   before_filter :login_required, :only =&gt; [:edit, :destroy, :update]
-</span><span class="marked1"><a name="line5"></a> 5   before_filter :check_perm, :only =&gt; [:edit, :destroy, :update]
-</span><span class="inferred0"><a name="line6"></a> 6   # render new.rhtml
-</span><span class="marked1"><a name="line7"></a> 7   def new
-</span><span class="marked0"><a name="line8"></a> 8     @user = User.new
-</span><span class="inferred1"><a name="line9"></a> 9   end
-</span><span class="inferred0"><a name="line10"></a>10 
-</span><span class="inferred1"><a name="line11"></a>11   
-</span><span class="marked0"><a name="line12"></a>12   def create
-</span><span class="marked1"><a name="line13"></a>13     logout_keeping_session!
-</span><span class="marked0"><a name="line14"></a>14     @user = User.new(params[:user])
-</span><span class="marked1"><a name="line15"></a>15     success = @user &amp;&amp; @user.save
-</span><span class="marked0"><a name="line16"></a>16     if success &amp;&amp; @user.errors.empty?
-</span><span class="marked1"><a name="line17"></a>17       redirect_back_or_default('/')
-</span><span class="marked0"><a name="line18"></a>18       flash[:notice] = &quot;Thanks for signing up!  We're sending you an email with your activation code.&quot;
-</span><span class="inferred1"><a name="line19"></a>19     else
-</span><span class="marked0"><a name="line20"></a>20       flash[:error]  = &quot;We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above).&quot;
-</span><span class="marked1"><a name="line21"></a>21       render :action =&gt; 'new'
-</span><span class="inferred0"><a name="line22"></a>22     end
-</span><span class="inferred1"><a name="line23"></a>23   end
-</span><span class="inferred0"><a name="line24"></a>24 
-</span><span class="inferred1"><a name="line25"></a>25 
-</span><span class="marked0"><a name="line26"></a>26   def activate
-</span><span class="marked1"><a name="line27"></a>27     logout_keeping_session!
-</span><span class="marked0"><a name="line28"></a>28     user = User.find_by_activation_code(params[:activation_code]) unless params[:activation_code].blank?
-</span><span class="inferred1"><a name="line29"></a>29     case
-</span><span class="marked0"><a name="line30"></a>30     when (!params[:activation_code].blank?) &amp;&amp; user &amp;&amp; !user.active?
-</span><span class="marked1"><a name="line31"></a>31       user.activate!
-</span><span class="marked0"><a name="line32"></a>32       flash[:notice] = &quot;Signup complete! Please sign in to continue.&quot;
-</span><span class="marked1"><a name="line33"></a>33       redirect_to login_path
-</span><span class="marked0"><a name="line34"></a>34     when params[:activation_code].blank?
-</span><span class="marked1"><a name="line35"></a>35       flash[:error] = &quot;The activation code was missing.  Please follow the URL from your email.&quot;
-</span><span class="marked0"><a name="line36"></a>36       redirect_back_or_default('/')
-</span><span class="uncovered1"><a name="line37"></a>37     else 
-</span><span class="uncovered0"><a name="line38"></a>38       flash[:error]  = &quot;We couldn't find a user with that activation code -- check your email? Or maybe you've already activated -- try signing in.&quot;
-</span><span class="uncovered1"><a name="line39"></a>39       redirect_back_or_default('/')
-</span><span class="marked0"><a name="line40"></a>40     end
-</span><span class="inferred1"><a name="line41"></a>41   end
-</span><span class="inferred0"><a name="line42"></a>42 
-</span><span class="inferred1"><a name="line43"></a>43 
-</span><span class="marked0"><a name="line44"></a>44   def edit
-</span><span class="marked1"><a name="line45"></a>45     prepare_arrays_for_view
-</span><span class="inferred0"><a name="line46"></a>46   end
-</span><span class="inferred1"><a name="line47"></a>47 
-</span><span class="inferred0"><a name="line48"></a>48 
-</span><span class="marked1"><a name="line49"></a>49   def update
-</span><span class="marked0"><a name="line50"></a>50     if self.current_user.update_attributes(params[:user])
-</span><span class="marked1"><a name="line51"></a>51       flash[:notice] = 'User was successfully updated.'
-</span><span class="marked0"><a name="line52"></a>52       redirect_to :controller =&gt; 'sessions', :action =&gt; 'default'
-</span><span class="uncovered1"><a name="line53"></a>53     else
-</span><span class="uncovered0"><a name="line54"></a>54       prepare_arrays_for_view
-</span><span class="uncovered1"><a name="line55"></a>55       render :action =&gt; 'edit'
-</span><span class="uncovered0"><a name="line56"></a>56     end
-</span><span class="uncovered1"><a name="line57"></a>57   end
-</span><span class="inferred0"><a name="line58"></a>58 
-</span><span class="inferred1"><a name="line59"></a>59   #todo
-</span><span class="marked0"><a name="line60"></a>60   def destroy
-</span><span class="uncovered1"><a name="line61"></a>61     self.current_user.destroy
-</span><span class="uncovered0"><a name="line62"></a>62   end
-</span><span class="inferred1"><a name="line63"></a>63 
-</span><span class="inferred0"><a name="line64"></a>64 
-</span><span class="marked1"><a name="line65"></a>65   private
-</span><span class="inferred0"><a name="line66"></a>66 
-</span><span class="inferred1"><a name="line67"></a>67   
-</span><span class="marked0"><a name="line68"></a>68   def check_perm
-</span><span class="marked1"><a name="line69"></a>69     user_id_from_request = params[:id]
-</span><span class="marked0"><a name="line70"></a>70     unless self.current_user.id == user_id_from_request.to_i
-</span><span class="marked1"><a name="line71"></a>71       flash[:error]  = &quot;Thou shall not do this with this user&quot;
-</span><span class="marked0"><a name="line72"></a>72       redirect_back_or_default('/')
-</span><span class="marked1"><a name="line73"></a>73       return false
-</span><span class="inferred0"><a name="line74"></a>74     end
-</span><span class="marked1"><a name="line75"></a>75     return true
-</span><span class="inferred0"><a name="line76"></a>76   end
-</span><span class="inferred1"><a name="line77"></a>77 
-</span><span class="marked0"><a name="line78"></a>78   def prepare_arrays_for_view
-</span><span class="inferred1"><a name="line79"></a>79 #    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
-</span><span class="marked0"><a name="line80"></a>80     @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
-</span><span class="marked1"><a name="line81"></a>81     @currencies_for_select = @current_user.visible_currencies
-</span><span class="inferred0"><a name="line82"></a>82   end
-</span><span class="inferred1"><a name="line83"></a>83 
-</span><span class="inferred0"><a name="line84"></a>84 
-</span><span class="inferred1"><a name="line85"></a>85 end
+<pre><span class="marked0"><a name="line1"></a> 1 class UsersController &lt; ApplicationController
+</span><span class="inferred1"><a name="line2"></a> 2 
+</span><span class="marked0"><a name="line3"></a> 3   layout 'main'
+</span><span class="marked1"><a name="line4"></a> 4   before_filter :login_required, :only =&gt; [:edit, :destroy, :update]
+</span><span class="marked0"><a name="line5"></a> 5   before_filter :check_perm, :only =&gt; [:edit, :destroy, :update]
+</span><span class="inferred1"><a name="line6"></a> 6   # render new.rhtml
+</span><span class="marked0"><a name="line7"></a> 7   def new
+</span><span class="marked1"><a name="line8"></a> 8     @user = User.new
+</span><span class="inferred0"><a name="line9"></a> 9   end
+</span><span class="inferred1"><a name="line10"></a>10 
+</span><span class="inferred0"><a name="line11"></a>11   
+</span><span class="marked1"><a name="line12"></a>12   def create
+</span><span class="marked0"><a name="line13"></a>13     logout_keeping_session!
+</span><span class="marked1"><a name="line14"></a>14     @user = User.new(params[:user])
+</span><span class="marked0"><a name="line15"></a>15     success = @user &amp;&amp; @user.save
+</span><span class="marked1"><a name="line16"></a>16     if success &amp;&amp; @user.errors.empty?
+</span><span class="marked0"><a name="line17"></a>17       redirect_back_or_default('/')
+</span><span class="marked1"><a name="line18"></a>18       flash[:notice] = &quot;Thanks for signing up!  We're sending you an email with your activation code.&quot;
+</span><span class="inferred0"><a name="line19"></a>19     else
+</span><span class="marked1"><a name="line20"></a>20       flash[:error]  = &quot;We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above).&quot;
+</span><span class="marked0"><a name="line21"></a>21       render :action =&gt; 'new'
+</span><span class="inferred1"><a name="line22"></a>22     end
+</span><span class="inferred0"><a name="line23"></a>23   end
+</span><span class="inferred1"><a name="line24"></a>24 
+</span><span class="inferred0"><a name="line25"></a>25 
+</span><span class="marked1"><a name="line26"></a>26   def activate
+</span><span class="marked0"><a name="line27"></a>27     logout_keeping_session!
+</span><span class="marked1"><a name="line28"></a>28     user = User.find_by_activation_code(params[:activation_code]) unless params[:activation_code].blank?
+</span><span class="inferred0"><a name="line29"></a>29     case
+</span><span class="marked1"><a name="line30"></a>30     when (!params[:activation_code].blank?) &amp;&amp; user &amp;&amp; !user.active?
+</span><span class="marked0"><a name="line31"></a>31       user.activate!
+</span><span class="marked1"><a name="line32"></a>32       flash[:notice] = &quot;Signup complete! Please sign in to continue.&quot;
+</span><span class="marked0"><a name="line33"></a>33       redirect_to login_path
+</span><span class="marked1"><a name="line34"></a>34     when params[:activation_code].blank?
+</span><span class="marked0"><a name="line35"></a>35       flash[:error] = &quot;The activation code was missing.  Please follow the URL from your email.&quot;
+</span><span class="marked1"><a name="line36"></a>36       redirect_back_or_default('/')
+</span><span class="uncovered0"><a name="line37"></a>37     else 
+</span><span class="uncovered1"><a name="line38"></a>38       flash[:error]  = &quot;We couldn't find a user with that activation code -- check your email? Or maybe you've already activated -- try signing in.&quot;
+</span><span class="uncovered0"><a name="line39"></a>39       redirect_back_or_default('/')
+</span><span class="marked1"><a name="line40"></a>40     end
+</span><span class="inferred0"><a name="line41"></a>41   end
+</span><span class="inferred1"><a name="line42"></a>42 
+</span><span class="inferred0"><a name="line43"></a>43 
+</span><span class="marked1"><a name="line44"></a>44   def edit
+</span><span class="marked0"><a name="line45"></a>45     prepare_arrays_for_view
+</span><span class="inferred1"><a name="line46"></a>46   end
+</span><span class="inferred0"><a name="line47"></a>47 
+</span><span class="inferred1"><a name="line48"></a>48 
+</span><span class="marked0"><a name="line49"></a>49   def update
+</span><span class="marked1"><a name="line50"></a>50     if self.current_user.update_attributes(params[:user])
+</span><span class="marked0"><a name="line51"></a>51       flash[:notice] = 'User was successfully updated.'
+</span><span class="marked1"><a name="line52"></a>52       redirect_to :controller =&gt; 'sessions', :action =&gt; 'default'
+</span><span class="uncovered0"><a name="line53"></a>53     else
+</span><span class="uncovered1"><a name="line54"></a>54       prepare_arrays_for_view
+</span><span class="uncovered0"><a name="line55"></a>55       render :action =&gt; 'edit'
+</span><span class="uncovered1"><a name="line56"></a>56     end
+</span><span class="uncovered0"><a name="line57"></a>57   end
+</span><span class="inferred1"><a name="line58"></a>58 
+</span><span class="marked0"><a name="line59"></a>59   def destroy
+</span><span class="uncovered1"><a name="line60"></a>60     if self.current_user.destroy
+</span><span class="uncovered0"><a name="line61"></a>61       flash[:notice]  = &quot;Twoje konto i wszystkie dane zostały usunięte&quot;
+</span><span class="uncovered1"><a name="line62"></a>62       redirect_to logout_path
+</span><span class="uncovered0"><a name="line63"></a>63     else
+</span><span class="uncovered1"><a name="line64"></a>64       flash[:notice]  = &quot;Nie udało się usunąć konta, skontaktuj się z administratorem&quot;
+</span><span class="uncovered0"><a name="line65"></a>65       redirect_to('/')
+</span><span class="uncovered1"><a name="line66"></a>66     end
+</span><span class="uncovered0"><a name="line67"></a>67   end
+</span><span class="inferred1"><a name="line68"></a>68 
+</span><span class="inferred0"><a name="line69"></a>69 
+</span><span class="marked1"><a name="line70"></a>70   private
+</span><span class="inferred0"><a name="line71"></a>71 
+</span><span class="inferred1"><a name="line72"></a>72   
+</span><span class="marked0"><a name="line73"></a>73   def check_perm
+</span><span class="marked1"><a name="line74"></a>74     user_id_from_request = params[:id]
+</span><span class="marked0"><a name="line75"></a>75     unless self.current_user.id == user_id_from_request.to_i
+</span><span class="marked1"><a name="line76"></a>76       flash[:error]  = &quot;Thou shall not do this with this user&quot;
+</span><span class="marked0"><a name="line77"></a>77       redirect_back_or_default('/')
+</span><span class="marked1"><a name="line78"></a>78       return false
+</span><span class="inferred0"><a name="line79"></a>79     end
+</span><span class="marked1"><a name="line80"></a>80     return true
+</span><span class="inferred0"><a name="line81"></a>81   end
+</span><span class="inferred1"><a name="line82"></a>82 
+</span><span class="marked0"><a name="line83"></a>83   def prepare_arrays_for_view
+</span><span class="inferred1"><a name="line84"></a>84 #    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
+</span><span class="marked0"><a name="line85"></a>85     @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
+</span><span class="marked1"><a name="line86"></a>86     @currencies_for_select = @current_user.visible_currencies
+</span><span class="inferred0"><a name="line87"></a>87   end
+</span><span class="inferred1"><a name="line88"></a>88 
+</span><span class="inferred0"><a name="line89"></a>89 
+</span><span class="inferred1"><a name="line90"></a>90 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

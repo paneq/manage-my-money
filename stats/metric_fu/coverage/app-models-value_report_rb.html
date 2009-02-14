@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:09 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -598,39 +598,39 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred0"><a name="line1"></a> 1 # == Schema Information
-</span><span class="inferred1"><a name="line2"></a> 2 # Schema version: 20090201170116
-</span><span class="inferred0"><a name="line3"></a> 3 #
-</span><span class="inferred1"><a name="line4"></a> 4 # Table name: reports
-</span><span class="inferred0"><a name="line5"></a> 5 #
-</span><span class="inferred1"><a name="line6"></a> 6 #  id                   :integer       not null, primary key
-</span><span class="inferred0"><a name="line7"></a> 7 #  type                 :string(255)   
-</span><span class="inferred1"><a name="line8"></a> 8 #  name                 :string(255)   not null
-</span><span class="inferred0"><a name="line9"></a> 9 #  period_type_int      :integer       not null
-</span><span class="inferred1"><a name="line10"></a>10 #  period_start         :date          
-</span><span class="inferred0"><a name="line11"></a>11 #  period_end           :date          
-</span><span class="inferred1"><a name="line12"></a>12 #  report_view_type_int :integer       not null
-</span><span class="inferred0"><a name="line13"></a>13 #  is_predefined        :boolean       not null
-</span><span class="inferred1"><a name="line14"></a>14 #  user_id              :integer       
-</span><span class="inferred0"><a name="line15"></a>15 #  created_at           :datetime      
-</span><span class="inferred1"><a name="line16"></a>16 #  updated_at           :datetime      
-</span><span class="inferred0"><a name="line17"></a>17 #  share_type_int       :integer       default(0)
-</span><span class="inferred1"><a name="line18"></a>18 #  depth                :integer       default(0)
-</span><span class="inferred0"><a name="line19"></a>19 #  max_categories_count :integer       default(0)
-</span><span class="inferred1"><a name="line20"></a>20 #  category_id          :integer       
-</span><span class="inferred0"><a name="line21"></a>21 #  period_division_int  :integer       default(5)
-</span><span class="inferred1"><a name="line22"></a>22 #  temporary            :boolean       not null
-</span><span class="inferred0"><a name="line23"></a>23 #
-</span><span class="inferred1"><a name="line24"></a>24 
-</span><span class="marked0"><a name="line25"></a>25 class ValueReport &lt; MultipleCategoryReport
-</span><span class="marked1"><a name="line26"></a>26   define_enum :period_division, [:day, :week, :month, :quarter, :year, :none]
-</span><span class="marked0"><a name="line27"></a>27   validates_inclusion_of :report_view_type, :in =&gt; [:bar, :linear]
-</span><span class="inferred1"><a name="line28"></a>28 
-</span><span class="marked0"><a name="line29"></a>29   def value_report?
-</span><span class="marked1"><a name="line30"></a>30     true
-</span><span class="inferred0"><a name="line31"></a>31   end
-</span><span class="inferred1"><a name="line32"></a>32 
-</span><span class="inferred0"><a name="line33"></a>33 end
+<pre><span class="inferred1"><a name="line1"></a> 1 # == Schema Information
+</span><span class="inferred0"><a name="line2"></a> 2 # Schema version: 20090201170116
+</span><span class="inferred1"><a name="line3"></a> 3 #
+</span><span class="inferred0"><a name="line4"></a> 4 # Table name: reports
+</span><span class="inferred1"><a name="line5"></a> 5 #
+</span><span class="inferred0"><a name="line6"></a> 6 #  id                   :integer       not null, primary key
+</span><span class="inferred1"><a name="line7"></a> 7 #  type                 :string(255)   
+</span><span class="inferred0"><a name="line8"></a> 8 #  name                 :string(255)   not null
+</span><span class="inferred1"><a name="line9"></a> 9 #  period_type_int      :integer       not null
+</span><span class="inferred0"><a name="line10"></a>10 #  period_start         :date          
+</span><span class="inferred1"><a name="line11"></a>11 #  period_end           :date          
+</span><span class="inferred0"><a name="line12"></a>12 #  report_view_type_int :integer       not null
+</span><span class="inferred1"><a name="line13"></a>13 #  is_predefined        :boolean       not null
+</span><span class="inferred0"><a name="line14"></a>14 #  user_id              :integer       
+</span><span class="inferred1"><a name="line15"></a>15 #  created_at           :datetime      
+</span><span class="inferred0"><a name="line16"></a>16 #  updated_at           :datetime      
+</span><span class="inferred1"><a name="line17"></a>17 #  share_type_int       :integer       default(0)
+</span><span class="inferred0"><a name="line18"></a>18 #  depth                :integer       default(0)
+</span><span class="inferred1"><a name="line19"></a>19 #  max_categories_count :integer       default(0)
+</span><span class="inferred0"><a name="line20"></a>20 #  category_id          :integer       
+</span><span class="inferred1"><a name="line21"></a>21 #  period_division_int  :integer       default(5)
+</span><span class="inferred0"><a name="line22"></a>22 #  temporary            :boolean       not null
+</span><span class="inferred1"><a name="line23"></a>23 #
+</span><span class="inferred0"><a name="line24"></a>24 
+</span><span class="marked1"><a name="line25"></a>25 class ValueReport &lt; MultipleCategoryReport
+</span><span class="marked0"><a name="line26"></a>26   define_enum :period_division, [:day, :week, :month, :quarter, :year, :none]
+</span><span class="marked1"><a name="line27"></a>27   validates_inclusion_of :report_view_type, :in =&gt; [:bar, :linear]
+</span><span class="inferred0"><a name="line28"></a>28 
+</span><span class="marked1"><a name="line29"></a>29   def value_report?
+</span><span class="marked0"><a name="line30"></a>30     true
+</span><span class="inferred1"><a name="line31"></a>31   end
+</span><span class="inferred0"><a name="line32"></a>32 
+</span><span class="inferred1"><a name="line33"></a>33 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

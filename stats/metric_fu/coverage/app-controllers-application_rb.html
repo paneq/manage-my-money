@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-controllers-application_rb.html'>app/controllers/application.rb</a>
         </td>
-      <td class='lines_total'><tt>107</tt>
+      <td class='lines_total'><tt>113</tt>
         </td>
-      <td class='lines_code'><tt>69</tt>
+      <td class='lines_code'><tt>75</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>88.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>94.7%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='89'/>
-                  <td class='uncovered' width='11'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='95'/>
+                  <td class='uncovered' width='5'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>84.1%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>92.0%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='84'/>
-                  <td class='uncovered' width='16'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='92'/>
+                  <td class='uncovered' width='8'/>
                   </tr>
                 </table>
               </td>
@@ -650,61 +650,67 @@ span.run100 {
 </span><span class="inferred1"><a name="line50"></a> 50 
 </span><span class="inferred0"><a name="line51"></a> 51   
 </span><span class="marked1"><a name="line52"></a> 52   def set_current_category
-</span><span class="marked0"><a name="line53"></a> 53     @category ||= self.current_user.categories.find(params['current_category']) if params['current_category']
-</span><span class="inferred1"><a name="line54"></a> 54   end
-</span><span class="inferred0"><a name="line55"></a> 55 
+</span><span class="marked0"><a name="line53"></a> 53     @category ||= self.current_user.categories.find(params[:current_category]) if params[:current_category]
+</span><span class="marked1"><a name="line54"></a> 54     @include_subcategories = params[:include_subcategories] if params[:include_subcategories]
+</span><span class="inferred0"><a name="line55"></a> 55   end
 </span><span class="inferred1"><a name="line56"></a> 56 
-</span><span class="marked0"><a name="line57"></a> 57   def set_start_end_days
-</span><span class="marked1"><a name="line58"></a> 58     @start_day ||= @transfer.day.beginning_of_month if @transfer
-</span><span class="marked0"><a name="line59"></a> 59     @end_day ||= @transfer.day.end_of_month if @transfer
-</span><span class="marked1"><a name="line60"></a> 60     @start_day ||= @range.begin if @range
-</span><span class="marked0"><a name="line61"></a> 61     @end_day ||= @range.end if @range
-</span><span class="inferred1"><a name="line62"></a> 62   end
-</span><span class="inferred0"><a name="line63"></a> 63 
+</span><span class="inferred0"><a name="line57"></a> 57 
+</span><span class="marked1"><a name="line58"></a> 58   def set_start_end_days
+</span><span class="marked0"><a name="line59"></a> 59     @start_day ||= @transfer.day.beginning_of_month if @transfer
+</span><span class="marked1"><a name="line60"></a> 60     @end_day ||= @transfer.day.end_of_month if @transfer
+</span><span class="marked0"><a name="line61"></a> 61     @start_day ||= @range.begin if @range
+</span><span class="marked1"><a name="line62"></a> 62     @end_day ||= @range.end if @range
+</span><span class="inferred0"><a name="line63"></a> 63   end
 </span><span class="inferred1"><a name="line64"></a> 64 
-</span><span class="marked0"><a name="line65"></a> 65   def set_transfers_and_values
-</span><span class="marked1"><a name="line66"></a> 66     if @category
-</span><span class="marked0"><a name="line67"></a> 67       @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date)
-</span><span class="marked1"><a name="line68"></a> 68       @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date)
-</span><span class="marked0"><a name="line69"></a> 69       @value ||= @category.saldo_at_end_of_day(@end_day.to_date)
-</span><span class="marked1"><a name="line70"></a> 70       @mode ||= :category
-</span><span class="inferred0"><a name="line71"></a> 71     else
-</span><span class="marked1"><a name="line72"></a> 72       @transfers ||= self.current_user.transfers.find(:all, :order =&gt; 'day ASC').map{ |t| {:transfer =&gt; t} }
-</span><span class="marked0"><a name="line73"></a> 73       @mode ||= :transfers
-</span><span class="inferred1"><a name="line74"></a> 74     end
-</span><span class="inferred0"><a name="line75"></a> 75   end
-</span><span class="inferred1"><a name="line76"></a> 76 
-</span><span class="inferred0"><a name="line77"></a> 77   
-</span><span class="inferred1"><a name="line78"></a> 78   #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work &lt;br /&gt;
-</span><span class="inferred0"><a name="line79"></a> 79   # Updates div with transfers &lt;br /&gt;
-</span><span class="inferred1"><a name="line80"></a> 80   # If exists block is yield with page so you can update the page the way you like &lt;br /&gt;
-</span><span class="marked0"><a name="line81"></a> 81   def render_transfer_table(&amp;block)
-</span><span class="marked1"><a name="line82"></a> 82     set_variables_for_rendering_transfer_table
-</span><span class="marked0"><a name="line83"></a> 83     render :update do |page|
-</span><span class="marked1"><a name="line84"></a> 84       page.replace_html 'transfer-table-div', :partial =&gt; 'categories/transfer_table', :locals =&gt; {:current_category =&gt; @category, :mode =&gt; @mode }
-</span><span class="marked0"><a name="line85"></a> 85       yield page if Kernel.block_given?
-</span><span class="inferred1"><a name="line86"></a> 86     end
-</span><span class="inferred0"><a name="line87"></a> 87   end
-</span><span class="inferred1"><a name="line88"></a> 88 
-</span><span class="inferred0"><a name="line89"></a> 89 
-</span><span class="marked1"><a name="line90"></a> 90   def get_period(period, return_range = false)
-</span><span class="marked0"><a name="line91"></a> 91     symbol = params[period + &quot;_period&quot;].to_sym
-</span><span class="marked1"><a name="line92"></a> 92     range = if symbol == :SELECTED
-</span><span class="marked0"><a name="line93"></a> 93       start = params[period+'_start']
-</span><span class="marked1"><a name="line94"></a> 94       endt = params[period+'_end']
-</span><span class="marked0"><a name="line95"></a> 95       Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
-</span><span class="inferred1"><a name="line96"></a> 96     else
-</span><span class="marked0"><a name="line97"></a> 97       Date.calculate(symbol)
-</span><span class="inferred1"><a name="line98"></a> 98     end
-</span><span class="inferred0"><a name="line99"></a> 99 
-</span><span class="marked1"><a name="line100"></a>100     if return_range
-</span><span class="marked0"><a name="line101"></a>101       return range
-</span><span class="uncovered1"><a name="line102"></a>102     else
-</span><span class="uncovered0"><a name="line103"></a>103       return range.begin, range.end
-</span><span class="uncovered1"><a name="line104"></a>104     end
-</span><span class="uncovered0"><a name="line105"></a>105   end
-</span><span class="uncovered1"><a name="line106"></a>106   
-</span><span class="uncovered0"><a name="line107"></a>107 end
+</span><span class="inferred0"><a name="line65"></a> 65 
+</span><span class="marked1"><a name="line66"></a> 66   def set_transfers_and_values
+</span><span class="marked0"><a name="line67"></a> 67     if @category
+</span><span class="marked1"><a name="line68"></a> 68       @include_subcategories = !!@include_subcategories
+</span><span class="marked0"><a name="line69"></a> 69       @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date, @include_subcategories)
+</span><span class="marked1"><a name="line70"></a> 70       @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date, :show_all_currencies, @include_subcategories)
+</span><span class="marked0"><a name="line71"></a> 71       @value ||= @category.saldo_at_end_of_day(Date.today.to_date, :show_all_currencies, @include_subcategories)
+</span><span class="marked1"><a name="line72"></a> 72       @mode ||= :category
+</span><span class="inferred0"><a name="line73"></a> 73     else
+</span><span class="marked1"><a name="line74"></a> 74       @transfers ||= self.current_user.transfers.find(:all, :order =&gt; 'day ASC').map{ |t| {:transfer =&gt; t} }
+</span><span class="marked0"><a name="line75"></a> 75       @mode ||= :transfers
+</span><span class="inferred1"><a name="line76"></a> 76     end
+</span><span class="inferred0"><a name="line77"></a> 77   end
+</span><span class="inferred1"><a name="line78"></a> 78 
+</span><span class="inferred0"><a name="line79"></a> 79   
+</span><span class="inferred1"><a name="line80"></a> 80   #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work &lt;br /&gt;
+</span><span class="inferred0"><a name="line81"></a> 81   # Updates div with transfers &lt;br /&gt;
+</span><span class="inferred1"><a name="line82"></a> 82   # If exists block is yield with page so you can update the page the way you like &lt;br /&gt;
+</span><span class="marked0"><a name="line83"></a> 83   def render_transfer_table(&amp;block)
+</span><span class="marked1"><a name="line84"></a> 84     set_variables_for_rendering_transfer_table
+</span><span class="marked0"><a name="line85"></a> 85     render :update do |page|
+</span><span class="marked1"><a name="line86"></a> 86       page.replace_html 'transfer-table-div', :partial =&gt; 'categories/transfer_table', :locals =&gt; {
+</span><span class="inferred0"><a name="line87"></a> 87         :current_category =&gt; @category,
+</span><span class="inferred1"><a name="line88"></a> 88         :mode =&gt; @mode,
+</span><span class="inferred0"><a name="line89"></a> 89         :include_subcategories =&gt; @include_subcategories
+</span><span class="inferred1"><a name="line90"></a> 90       }
+</span><span class="marked0"><a name="line91"></a> 91       yield page if Kernel.block_given?
+</span><span class="inferred1"><a name="line92"></a> 92     end
+</span><span class="inferred0"><a name="line93"></a> 93   end
+</span><span class="inferred1"><a name="line94"></a> 94 
+</span><span class="inferred0"><a name="line95"></a> 95 
+</span><span class="marked1"><a name="line96"></a> 96   def get_period(period, return_range = false)
+</span><span class="marked0"><a name="line97"></a> 97     symbol = params[period + &quot;_period&quot;].to_sym
+</span><span class="marked1"><a name="line98"></a> 98     range = if symbol == :SELECTED
+</span><span class="marked0"><a name="line99"></a> 99       start = params[period+'_start']
+</span><span class="marked1"><a name="line100"></a>100       endt = params[period+'_end']
+</span><span class="marked0"><a name="line101"></a>101       Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
+</span><span class="inferred1"><a name="line102"></a>102     else
+</span><span class="marked0"><a name="line103"></a>103       Date.calculate(symbol)
+</span><span class="inferred1"><a name="line104"></a>104     end
+</span><span class="inferred0"><a name="line105"></a>105 
+</span><span class="marked1"><a name="line106"></a>106     if return_range
+</span><span class="marked0"><a name="line107"></a>107       return range
+</span><span class="inferred1"><a name="line108"></a>108     else
+</span><span class="marked0"><a name="line109"></a>109       return range.begin, range.end
+</span><span class="inferred1"><a name="line110"></a>110     end
+</span><span class="inferred0"><a name="line111"></a>111   end
+</span><span class="inferred1"><a name="line112"></a>112   
+</span><span class="inferred0"><a name="line113"></a>113 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

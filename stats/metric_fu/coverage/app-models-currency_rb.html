@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:09 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-currency_rb.html'>app/models/currency.rb</a>
         </td>
-      <td class='lines_total'><tt>74</tt>
+      <td class='lines_total'><tt>100</tt>
         </td>
-      <td class='lines_code'><tt>42</tt>
+      <td class='lines_code'><tt>61</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>91.9%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>98.0%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='92'/>
-                  <td class='uncovered' width='8'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='98'/>
+                  <td class='uncovered' width='2'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>85.7%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>96.7%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='86'/>
-                  <td class='uncovered' width='14'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='97'/>
+                  <td class='uncovered' width='3'/>
                   </tr>
                 </table>
               </td>
@@ -598,80 +598,106 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred0"><a name="line1"></a> 1 # == Schema Information
-</span><span class="inferred1"><a name="line2"></a> 2 # Schema version: 20090201170116
-</span><span class="inferred0"><a name="line3"></a> 3 #
-</span><span class="inferred1"><a name="line4"></a> 4 # Table name: currencies
-</span><span class="inferred0"><a name="line5"></a> 5 #
-</span><span class="inferred1"><a name="line6"></a> 6 #  id          :integer       not null, primary key
-</span><span class="inferred0"><a name="line7"></a> 7 #  symbol      :string(255)   not null
-</span><span class="inferred1"><a name="line8"></a> 8 #  long_symbol :string(255)   not null
-</span><span class="inferred0"><a name="line9"></a> 9 #  name        :string(255)   not null
-</span><span class="inferred1"><a name="line10"></a>10 #  long_name   :string(255)   not null
-</span><span class="inferred0"><a name="line11"></a>11 #  user_id     :integer       
-</span><span class="inferred1"><a name="line12"></a>12 #
-</span><span class="inferred0"><a name="line13"></a>13 
-</span><span class="marked1"><a name="line14"></a>14 class Currency &lt; ActiveRecord::Base
-</span><span class="inferred0"><a name="line15"></a>15 
-</span><span class="marked1"><a name="line16"></a>16   named_scope :for_user, lambda { |user|
-</span><span class="marked0"><a name="line17"></a>17     { :conditions =&gt; ['(currencies.user_id = ? OR currencies.user_id IS NULL)', user.id],
-</span><span class="inferred1"><a name="line18"></a>18       :select =&gt; 'DISTINCT currencies.*'
-</span><span class="marked0"><a name="line19"></a>19     }
-</span><span class="inferred1"><a name="line20"></a>20   } do
-</span><span class="marked0"><a name="line21"></a>21     def in_period(start_day, end_day)
-</span><span class="marked1"><a name="line22"></a>22       find(:all, 
-</span><span class="inferred0"><a name="line23"></a>23         :joins =&gt; 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id',
-</span><span class="inferred1"><a name="line24"></a>24         :conditions =&gt; ['transfers.day &gt;= ? AND transfers.day &lt;= ?', start_day, end_day]
-</span><span class="inferred0"><a name="line25"></a>25       )
-</span><span class="inferred1"><a name="line26"></a>26     end
-</span><span class="inferred0"><a name="line27"></a>27   end
-</span><span class="inferred1"><a name="line28"></a>28 
-</span><span class="inferred0"><a name="line29"></a>29 
-</span><span class="marked1"><a name="line30"></a>30   has_many  :left_exchanges,
-</span><span class="inferred0"><a name="line31"></a>31             :class_name =&gt; &quot;Exchange&quot;,
-</span><span class="inferred1"><a name="line32"></a>32             :foreign_key =&gt; &quot;currency_a&quot;
-</span><span class="inferred0"><a name="line33"></a>33             
-</span><span class="marked1"><a name="line34"></a>34   has_many  :right_exchanges,
-</span><span class="inferred0"><a name="line35"></a>35             :class_name =&gt; &quot;Exchange&quot;,
-</span><span class="inferred1"><a name="line36"></a>36             :foreign_key =&gt; &quot;currency_b&quot;            
-</span><span class="inferred0"><a name="line37"></a>37              
-</span><span class="marked1"><a name="line38"></a>38   belongs_to  :user
-</span><span class="inferred0"><a name="line39"></a>39   
-</span><span class="marked1"><a name="line40"></a>40   has_many :transfer_items
-</span><span class="inferred0"><a name="line41"></a>41   
-</span><span class="inferred1"><a name="line42"></a>42   ##############################
-</span><span class="inferred0"><a name="line43"></a>43   # @author: Robert Pankowecki
-</span><span class="marked1"><a name="line44"></a>44   def exchanges
-</span><span class="uncovered0"><a name="line45"></a>45     return (left_exchanges + right_exchanges).uniq
-</span><span class="uncovered1"><a name="line46"></a>46   end
-</span><span class="inferred0"><a name="line47"></a>47   
-</span><span class="inferred1"><a name="line48"></a>48   ##############################
-</span><span class="inferred0"><a name="line49"></a>49   # @author: Robert Pankowecki
-</span><span class="marked1"><a name="line50"></a>50   def validate
-</span><span class="marked0"><a name="line51"></a>51     not_filled_fields { |error_message| errors.add(error_message) } 
-</span><span class="inferred1"><a name="line52"></a>52   end
-</span><span class="inferred0"><a name="line53"></a>53   
-</span><span class="inferred1"><a name="line54"></a>54   ##############################
-</span><span class="inferred0"><a name="line55"></a>55   # @author: Robert Pankowecki
-</span><span class="inferred1"><a name="line56"></a>56   # @desctiption : I block is given yields an error message for each
-</span><span class="inferred0"><a name="line57"></a>57   #                field that is empty, otherwise returns an array of error messages
-</span><span class="marked1"><a name="line58"></a>58   def not_filled_fields(&amp;proc)
-</span><span class="marked0"><a name="line59"></a>59     tb = []
-</span><span class="marked1"><a name="line60"></a>60     unless Kernel.block_given?
-</span><span class="uncovered0"><a name="line61"></a>61       block = Proc.new { |message| tb &lt;&lt; message }
-</span><span class="inferred1"><a name="line62"></a>62     else
-</span><span class="marked0"><a name="line63"></a>63       block = proc
-</span><span class="inferred1"><a name="line64"></a>64     end
-</span><span class="inferred0"><a name="line65"></a>65     
-</span><span class="marked1"><a name="line66"></a>66     block.call('Symbol') if symbol.size == 0
-</span><span class="marked0"><a name="line67"></a>67     block.call('Long symbol') if long_symbol.size == 0
-</span><span class="marked1"><a name="line68"></a>68     block.call('Name') if name.size == 0
-</span><span class="marked0"><a name="line69"></a>69     block.call('Long name') if long_name.size == 0
-</span><span class="inferred1"><a name="line70"></a>70     
-</span><span class="marked0"><a name="line71"></a>71     return if Kernel.block_given?
-</span><span class="uncovered1"><a name="line72"></a>72     return tb
-</span><span class="uncovered0"><a name="line73"></a>73   end
-</span><span class="uncovered1"><a name="line74"></a>74 end
+<pre><span class="inferred1"><a name="line1"></a>  1 # == Schema Information
+</span><span class="inferred0"><a name="line2"></a>  2 # Schema version: 20090201170116
+</span><span class="inferred1"><a name="line3"></a>  3 #
+</span><span class="inferred0"><a name="line4"></a>  4 # Table name: currencies
+</span><span class="inferred1"><a name="line5"></a>  5 #
+</span><span class="inferred0"><a name="line6"></a>  6 #  id          :integer       not null, primary key
+</span><span class="inferred1"><a name="line7"></a>  7 #  symbol      :string(255)   not null
+</span><span class="inferred0"><a name="line8"></a>  8 #  long_symbol :string(255)   not null
+</span><span class="inferred1"><a name="line9"></a>  9 #  name        :string(255)   not null
+</span><span class="inferred0"><a name="line10"></a> 10 #  long_name   :string(255)   not null
+</span><span class="inferred1"><a name="line11"></a> 11 #  user_id     :integer       
+</span><span class="inferred0"><a name="line12"></a> 12 #
+</span><span class="inferred1"><a name="line13"></a> 13 
+</span><span class="marked0"><a name="line14"></a> 14 class Currency &lt; ActiveRecord::Base
+</span><span class="inferred1"><a name="line15"></a> 15 
+</span><span class="marked0"><a name="line16"></a> 16   named_scope :for_user_period, lambda { |user, start_day, end_day|
+</span><span class="marked1"><a name="line17"></a> 17     { :conditions =&gt; ['((currencies.user_id = ? OR currencies.user_id IS NULL) AND transfers.user_id = ? AND transfers.day &gt;= ? AND transfers.day &lt;= ?)', user.id, user.id, start_day, end_day],
+</span><span class="inferred0"><a name="line18"></a> 18       :select =&gt; 'DISTINCT currencies.*',
+</span><span class="inferred1"><a name="line19"></a> 19       :joins =&gt; 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id'
+</span><span class="marked0"><a name="line20"></a> 20     }
+</span><span class="inferred1"><a name="line21"></a> 21   }
+</span><span class="inferred0"><a name="line22"></a> 22 
+</span><span class="marked1"><a name="line23"></a> 23   named_scope :for_user, lambda { |user|
+</span><span class="marked0"><a name="line24"></a> 24     { :conditions =&gt; ['(currencies.user_id = ? OR currencies.user_id IS NULL)', user.id]}
+</span><span class="inferred1"><a name="line25"></a> 25   }
+</span><span class="inferred0"><a name="line26"></a> 26 
+</span><span class="inferred1"><a name="line27"></a> 27 
+</span><span class="marked0"><a name="line28"></a> 28   named_scope :used_by, lambda { |user|
+</span><span class="marked1"><a name="line29"></a> 29     { :conditions =&gt; ['((currencies.user_id = ? OR currencies.user_id IS NULL) AND transfers.user_id = ?)', user.id, user.id],
+</span><span class="inferred0"><a name="line30"></a> 30       :select =&gt; 'DISTINCT currencies.*',
+</span><span class="inferred1"><a name="line31"></a> 31       :joins =&gt; 'INNER JOIN transfer_items ON currencies.id = transfer_items.currency_id INNER JOIN transfers ON transfers.id = transfer_items.transfer_id'
+</span><span class="marked0"><a name="line32"></a> 32     }
+</span><span class="inferred1"><a name="line33"></a> 33   }
+</span><span class="inferred0"><a name="line34"></a> 34 
+</span><span class="marked1"><a name="line35"></a> 35   named_scope :exchanged_by, lambda { |user|
+</span><span class="marked0"><a name="line36"></a> 36     { :conditions =&gt; ['(currencies.user_id = ? OR currencies.user_id IS NULL AND exchanges.user_id = ?)', user.id, user.id],
+</span><span class="inferred1"><a name="line37"></a> 37       :select =&gt; 'DISTINCT currencies.*',
+</span><span class="inferred0"><a name="line38"></a> 38       :joins =&gt; 'INNER JOIN exchanges ON (currencies.id = exchanges.currency_a OR currencies.id = exchanges.currency_b)'
+</span><span class="marked1"><a name="line39"></a> 39     }
+</span><span class="inferred0"><a name="line40"></a> 40   }
+</span><span class="inferred1"><a name="line41"></a> 41 
+</span><span class="marked0"><a name="line42"></a> 42   has_many  :left_exchanges,
+</span><span class="inferred1"><a name="line43"></a> 43     :class_name =&gt; &quot;Exchange&quot;,
+</span><span class="inferred0"><a name="line44"></a> 44     :foreign_key =&gt; &quot;currency_a&quot;
+</span><span class="inferred1"><a name="line45"></a> 45             
+</span><span class="marked0"><a name="line46"></a> 46   has_many  :right_exchanges,
+</span><span class="inferred1"><a name="line47"></a> 47     :class_name =&gt; &quot;Exchange&quot;,
+</span><span class="inferred0"><a name="line48"></a> 48     :foreign_key =&gt; &quot;currency_b&quot;
+</span><span class="inferred1"><a name="line49"></a> 49 
+</span><span class="inferred0"><a name="line50"></a> 50 
+</span><span class="marked1"><a name="line51"></a> 51   belongs_to  :user
+</span><span class="inferred0"><a name="line52"></a> 52 
+</span><span class="inferred1"><a name="line53"></a> 53 
+</span><span class="marked0"><a name="line54"></a> 54   has_many :transfer_items
+</span><span class="marked1"><a name="line55"></a> 55   before_destroy :check_for_transfer_items
+</span><span class="inferred0"><a name="line56"></a> 56 
+</span><span class="marked1"><a name="line57"></a> 57   validates_presence_of :symbol, :long_symbol, :name, :long_name
+</span><span class="marked0"><a name="line58"></a> 58   validates_uniqueness_of :long_symbol, :scope =&gt; :user_id
+</span><span class="marked1"><a name="line59"></a> 59   validates_uniqueness_of :long_name, :scope =&gt; :user_id
+</span><span class="marked0"><a name="line60"></a> 60   validates_length_of :long_symbol, :is =&gt; 3
+</span><span class="marked1"><a name="line61"></a> 61   validates_format_of :long_symbol, :with =&gt; /\A[A-Z]{3}\Z/
+</span><span class="inferred0"><a name="line62"></a> 62 
+</span><span class="inferred1"><a name="line63"></a> 63 
+</span><span class="marked0"><a name="line64"></a> 64   def validate
+</span><span class="inferred1"><a name="line65"></a> 65     # check if long name and long symbol are not take by the system currencies
+</span><span class="marked0"><a name="line66"></a> 66     [:long_symbol, :long_name].each do |field|
+</span><span class="marked1"><a name="line67"></a> 67       value = self.send(field)
+</span><span class="marked0"><a name="line68"></a> 68       errors.add(field, :taken, :value =&gt; value) if self.user_id != nil &amp;&amp; Currency.find(:first, :conditions =&gt; [&quot;user_id IS NULL AND #{field.to_s} = ?&quot;, value])
+</span><span class="inferred1"><a name="line69"></a> 69     end
+</span><span class="inferred0"><a name="line70"></a> 70   end
+</span><span class="inferred1"><a name="line71"></a> 71 
+</span><span class="inferred0"><a name="line72"></a> 72 
+</span><span class="marked1"><a name="line73"></a> 73   def is_system?
+</span><span class="marked0"><a name="line74"></a> 74     return self.user_id.nil?
+</span><span class="inferred1"><a name="line75"></a> 75   end
+</span><span class="inferred0"><a name="line76"></a> 76 
+</span><span class="inferred1"><a name="line77"></a> 77 
+</span><span class="marked0"><a name="line78"></a> 78   def exchanges
+</span><span class="uncovered1"><a name="line79"></a> 79     return (left_exchanges + right_exchanges).uniq
+</span><span class="uncovered0"><a name="line80"></a> 80   end
+</span><span class="inferred1"><a name="line81"></a> 81 
+</span><span class="inferred0"><a name="line82"></a> 82 
+</span><span class="marked1"><a name="line83"></a> 83   def why_not_destroyed
+</span><span class="marked0"><a name="line84"></a> 84     @reason
+</span><span class="inferred1"><a name="line85"></a> 85   end
+</span><span class="inferred0"><a name="line86"></a> 86 
+</span><span class="inferred1"><a name="line87"></a> 87 
+</span><span class="marked0"><a name="line88"></a> 88   private
+</span><span class="inferred1"><a name="line89"></a> 89 
+</span><span class="inferred0"><a name="line90"></a> 90 
+</span><span class="marked1"><a name="line91"></a> 91   def check_for_transfer_items
+</span><span class="marked0"><a name="line92"></a> 92     if self.transfer_items(true).count &gt; 0
+</span><span class="marked1"><a name="line93"></a> 93       @reason = :has_transfer_items
+</span><span class="marked0"><a name="line94"></a> 94       return false
+</span><span class="inferred1"><a name="line95"></a> 95     else
+</span><span class="marked0"><a name="line96"></a> 96       @reason = nil
+</span><span class="inferred1"><a name="line97"></a> 97     end
+</span><span class="inferred0"><a name="line98"></a> 98   end
+</span><span class="inferred1"><a name="line99"></a> 99 
+</span><span class="inferred0"><a name="line100"></a>100 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

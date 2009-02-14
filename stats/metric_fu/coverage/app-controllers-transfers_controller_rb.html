@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:45 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:05 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-controllers-transfers_controller_rb.html'>app/controllers/transfers_controller.rb</a>
         </td>
-      <td class='lines_total'><tt>239</tt>
+      <td class='lines_total'><tt>217</tt>
         </td>
-      <td class='lines_code'><tt>189</tt>
+      <td class='lines_code'><tt>179</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>46.9%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>41.5%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='47'/>
-                  <td class='uncovered' width='53'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='41'/>
+                  <td class='uncovered' width='59'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>35.4%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>32.4%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='35'/>
-                  <td class='uncovered' width='65'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='32'/>
+                  <td class='uncovered' width='68'/>
                   </tr>
                 </table>
               </td>
@@ -633,210 +633,188 @@ span.run100 {
 </span><span class="inferred0"><a name="line33"></a> 33   end
 </span><span class="inferred1"><a name="line34"></a> 34 
 </span><span class="inferred0"><a name="line35"></a> 35 
-</span><span class="marked1"><a name="line36"></a> 36   def search    
-</span><span class="marked0"><a name="line37"></a> 37     @transfers = self.
-</span><span class="inferred1"><a name="line38"></a> 38       current_user.
-</span><span class="inferred0"><a name="line39"></a> 39       transfers.
-</span><span class="marked1"><a name="line40"></a> 40       find(:all, :order =&gt; 'day ASC, id ASC', :conditions =&gt; conditions ).
-</span><span class="marked0"><a name="line41"></a> 41       map { |t| {:transfer =&gt; t} }
-</span><span class="inferred1"><a name="line42"></a> 42       
-</span><span class="marked0"><a name="line43"></a> 43     respond_to do |format|
-</span><span class="marked1"><a name="line44"></a> 44       format.html {}
-</span><span class="marked0"><a name="line45"></a> 45       format.js {render_transfer_table}
-</span><span class="inferred1"><a name="line46"></a> 46     end
-</span><span class="inferred0"><a name="line47"></a> 47   end
-</span><span class="inferred1"><a name="line48"></a> 48 
+</span><span class="marked1"><a name="line36"></a> 36   def search
+</span><span class="marked0"><a name="line37"></a> 37     @range = get_period('transfer_day', true)
+</span><span class="marked1"><a name="line38"></a> 38     @transfers = self.
+</span><span class="inferred0"><a name="line39"></a> 39       current_user.
+</span><span class="inferred1"><a name="line40"></a> 40       transfers.
+</span><span class="inferred0"><a name="line41"></a> 41       find(:all, :order =&gt; 'day ASC, id ASC', :conditions =&gt; ['day &gt;= ? AND day &lt;= ?', @range.begin, @range.end] ).
+</span><span class="marked1"><a name="line42"></a> 42       map { |t| {:transfer =&gt; t} }
+</span><span class="inferred0"><a name="line43"></a> 43       
+</span><span class="marked1"><a name="line44"></a> 44     respond_to do |format|
+</span><span class="marked0"><a name="line45"></a> 45       format.html {}
+</span><span class="marked1"><a name="line46"></a> 46       format.js {render_transfer_table}
+</span><span class="inferred0"><a name="line47"></a> 47     end
+</span><span class="inferred1"><a name="line48"></a> 48   end
 </span><span class="inferred0"><a name="line49"></a> 49 
-</span><span class="inferred1"><a name="line50"></a> 50   # remote
-</span><span class="inferred0"><a name="line51"></a> 51   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
-</span><span class="marked1"><a name="line52"></a> 52   def quick_transfer
-</span><span class="marked0"><a name="line53"></a> 53     data = params['data'].to_hash
-</span><span class="marked1"><a name="line54"></a> 54     @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
-</span><span class="marked0"><a name="line55"></a> 55     @transfer.user = self.current_user
-</span><span class="inferred1"><a name="line56"></a> 56     
-</span><span class="marked0"><a name="line57"></a> 57     ti1 = TransferItem.new(data.pass('description','category_id', 'currency_id', 'value'))
-</span><span class="marked1"><a name="line58"></a> 58     ti2 = TransferItem.new(data.pass('description', 'currency_id'))
-</span><span class="marked0"><a name="line59"></a> 59     ti2.value = -1* ti1.value
-</span><span class="marked1"><a name="line60"></a> 60     ti2.category = self.current_user.categories.find(data['from_category_id'])
-</span><span class="marked0"><a name="line61"></a> 61     @transfer.transfer_items &lt;&lt; ti2 &lt;&lt; ti1
-</span><span class="inferred1"><a name="line62"></a> 62     
-</span><span class="marked0"><a name="line63"></a> 63     if @transfer.save
-</span><span class="marked1"><a name="line64"></a> 64       render_transfer_table do |page|
-</span><span class="marked0"><a name="line65"></a> 65         page.replace_html 'form-for-transfer-quick', :partial=&gt;'transfers/quick_transfer', :locals =&gt; { :current_category =&gt; @category }
-</span><span class="inferred1"><a name="line66"></a> 66       end
-</span><span class="uncovered0"><a name="line67"></a> 67     else
-</span><span class="uncovered1"><a name="line68"></a> 68       # TODO: change it so there will be a notice that something went wrong
-</span><span class="uncovered0"><a name="line69"></a> 69       where = 'quick-transfers'
-</span><span class="uncovered1"><a name="line70"></a> 70       render :update do |page|
-</span><span class="uncovered0"><a name="line71"></a> 71         page.insert_html :bottom , where , :partial =&gt; '' , :object =&gt; @transfer
-</span><span class="uncovered1"><a name="line72"></a> 72       end
-</span><span class="uncovered0"><a name="line73"></a> 73     end
-</span><span class="uncovered1"><a name="line74"></a> 74   end
-</span><span class="inferred0"><a name="line75"></a> 75 
+</span><span class="inferred1"><a name="line50"></a> 50 
+</span><span class="inferred0"><a name="line51"></a> 51   # remote
+</span><span class="inferred1"><a name="line52"></a> 52   # TODO: sprawdzenie czy kategorie i waluty naleza do usera
+</span><span class="marked0"><a name="line53"></a> 53   def quick_transfer
+</span><span class="marked1"><a name="line54"></a> 54     data = params['data'].to_hash
+</span><span class="marked0"><a name="line55"></a> 55     @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
+</span><span class="marked1"><a name="line56"></a> 56     @transfer.user = self.current_user
+</span><span class="inferred0"><a name="line57"></a> 57     
+</span><span class="marked1"><a name="line58"></a> 58     ti1 = TransferItem.new(data.pass('description','category_id', 'currency_id', 'value'))
+</span><span class="marked0"><a name="line59"></a> 59     ti2 = TransferItem.new(data.pass('description', 'currency_id'))
+</span><span class="marked1"><a name="line60"></a> 60     ti2.value = -1* ti1.value
+</span><span class="marked0"><a name="line61"></a> 61     ti2.category = self.current_user.categories.find(data['from_category_id'])
+</span><span class="marked1"><a name="line62"></a> 62     @transfer.transfer_items &lt;&lt; ti2 &lt;&lt; ti1
+</span><span class="inferred0"><a name="line63"></a> 63     
+</span><span class="marked1"><a name="line64"></a> 64     if @transfer.save
+</span><span class="marked0"><a name="line65"></a> 65       render_transfer_table do |page|
+</span><span class="marked1"><a name="line66"></a> 66         page.replace_html 'form-for-transfer-quick', :partial=&gt;'transfers/quick_transfer', :locals =&gt; { :current_category =&gt; @category }
+</span><span class="inferred0"><a name="line67"></a> 67       end
+</span><span class="uncovered1"><a name="line68"></a> 68     else
+</span><span class="uncovered0"><a name="line69"></a> 69       # TODO: change it so there will be a notice that something went wrong
+</span><span class="uncovered1"><a name="line70"></a> 70       where = 'quick-transfers'
+</span><span class="uncovered0"><a name="line71"></a> 71       render :update do |page|
+</span><span class="uncovered1"><a name="line72"></a> 72         page.insert_html :bottom , where , :partial =&gt; '' , :object =&gt; @transfer
+</span><span class="uncovered0"><a name="line73"></a> 73       end
+</span><span class="uncovered1"><a name="line74"></a> 74     end
+</span><span class="uncovered0"><a name="line75"></a> 75   end
 </span><span class="inferred1"><a name="line76"></a> 76 
-</span><span class="inferred0"><a name="line77"></a> 77   #remote
-</span><span class="marked1"><a name="line78"></a> 78   def show_details
-</span><span class="uncovered0"><a name="line79"></a> 79     render :update do |page|
-</span><span class="uncovered1"><a name="line80"></a> 80       page.hide &quot;show-details-button-#{@transfer.id}&quot;
-</span><span class="uncovered0"><a name="line81"></a> 81       page.insert_html :bottom, &quot;transfer-in-category-#{@transfer.id}&quot;, :partial =&gt; 'transfer_details', :object =&gt; @transfer, :locals =&gt; {:current_category_id =&gt; params[:current_category]}
-</span><span class="uncovered1"><a name="line82"></a> 82     end
-</span><span class="uncovered0"><a name="line83"></a> 83   end
-</span><span class="inferred1"><a name="line84"></a> 84 
-</span><span class="inferred0"><a name="line85"></a> 85   
-</span><span class="inferred1"><a name="line86"></a> 86   #remote
-</span><span class="marked0"><a name="line87"></a> 87   def hide_details
-</span><span class="uncovered1"><a name="line88"></a> 88     render :update do |page|
-</span><span class="uncovered0"><a name="line89"></a> 89       page.remove &quot;transfer-details-id-#{@transfer.id}&quot;
-</span><span class="uncovered1"><a name="line90"></a> 90       page.show &quot;show-details-button-#{@transfer.id}&quot;
-</span><span class="uncovered0"><a name="line91"></a> 91     end
-</span><span class="uncovered1"><a name="line92"></a> 92   end
-</span><span class="inferred0"><a name="line93"></a> 93 
-</span><span class="inferred1"><a name="line94"></a> 94 
-</span><span class="inferred0"><a name="line95"></a> 95   ############################
-</span><span class="inferred1"><a name="line96"></a> 96   # @author: Robert Pankowecki
-</span><span class="inferred0"><a name="line97"></a> 97   # half-remote
-</span><span class="inferred1"><a name="line98"></a> 98   # currently not in use
-</span><span class="inferred0"><a name="line99"></a> 99   # currently i do not know how to make it working
-</span><span class="marked1"><a name="line100"></a>100   def add_form_error (error)
-</span><span class="uncovered0"><a name="line101"></a>101     render :update do |page|
-</span><span class="uncovered1"><a name="line102"></a>102       page.remove 'error_in_form'
-</span><span class="uncovered0"><a name="line103"></a>103       page.insert_html :bottom, 'form_erros', :partial=&gt;'error_in_form', :object =&gt; error
-</span><span class="uncovered1"><a name="line104"></a>104     end
-</span><span class="uncovered0"><a name="line105"></a>105   end
-</span><span class="inferred1"><a name="line106"></a>106 
-</span><span class="inferred0"><a name="line107"></a>107 
-</span><span class="marked1"><a name="line108"></a>108   def edit
-</span><span class="uncovered0"><a name="line109"></a>109     set_current_category
-</span><span class="uncovered1"><a name="line110"></a>110     @transfer = self.current_user.transfers.find_by_id(params[:id])
-</span><span class="uncovered0"><a name="line111"></a>111     respond_to do |format|
-</span><span class="uncovered1"><a name="line112"></a>112       format.html {}
-</span><span class="uncovered0"><a name="line113"></a>113       format.js do
-</span><span class="uncovered1"><a name="line114"></a>114         render :update do |page|
-</span><span class="uncovered0"><a name="line115"></a>115           page.replace_html &quot;transfer-in-category-#{@transfer.id}&quot;, :partial =&gt; 'transfers/full_transfer', :locals =&gt; { :current_category =&gt; @category , :transfer =&gt; @transfer, :embedded =&gt; true}
-</span><span class="uncovered1"><a name="line116"></a>116         end
-</span><span class="uncovered0"><a name="line117"></a>117       end
-</span><span class="uncovered1"><a name="line118"></a>118     end
-</span><span class="uncovered0"><a name="line119"></a>119   end
-</span><span class="inferred1"><a name="line120"></a>120 
-</span><span class="inferred0"><a name="line121"></a>121 
-</span><span class="marked1"><a name="line122"></a>122   def update
-</span><span class="uncovered0"><a name="line123"></a>123     params[:transfer][:existing_transfer_items_attributes] ||= {}
-</span><span class="uncovered1"><a name="line124"></a>124     @transfer = self.current_user.transfers.find_by_id(params[:id])
-</span><span class="uncovered0"><a name="line125"></a>125     if @transfer.update_attributes(params[:transfer])
-</span><span class="uncovered1"><a name="line126"></a>126       respond_to do |format|
-</span><span class="uncovered0"><a name="line127"></a>127         format.html {}
-</span><span class="uncovered1"><a name="line128"></a>128         format.js do
-</span><span class="uncovered0"><a name="line129"></a>129           render_transfer_table do |page|
-</span><span class="uncovered1"><a name="line130"></a>130             if @category &amp;&amp; @category.transfers.find_by_id(@transfer.id)
-</span><span class="uncovered0"><a name="line131"></a>131               #same code as show_details but i could not move it into method and i do not know why.
-</span><span class="uncovered1"><a name="line132"></a>132               page.hide &quot;show-details-button-#{@transfer.id}&quot;
-</span><span class="uncovered0"><a name="line133"></a>133               page.insert_html :bottom, &quot;transfer-in-category-#{@transfer.id}&quot;, :partial =&gt; 'transfer_details', :object =&gt; @transfer, :locals =&gt; {:current_category_id =&gt; params[:current_category]}
-</span><span class="uncovered1"><a name="line134"></a>134             end
-</span><span class="uncovered0"><a name="line135"></a>135           end
-</span><span class="uncovered1"><a name="line136"></a>136         end
-</span><span class="uncovered0"><a name="line137"></a>137       end
-</span><span class="uncovered1"><a name="line138"></a>138     else
-</span><span class="uncovered0"><a name="line139"></a>139       respond_to do |format|
-</span><span class="uncovered1"><a name="line140"></a>140         format.html {}
-</span><span class="uncovered0"><a name="line141"></a>141         format.js do
-</span><span class="uncovered1"><a name="line142"></a>142           render :update do |page|
-</span><span class="uncovered0"><a name="line143"></a>143             page.replace_html &quot;transfer-errors-#{@transfer.id}&quot;, error_messages_for(:transfer, :message =&gt; nil)
-</span><span class="uncovered1"><a name="line144"></a>144             @transfer.transfer_items.each do |ti|
-</span><span class="uncovered0"><a name="line145"></a>145               if ti.valid?
-</span><span class="uncovered1"><a name="line146"></a>146                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, ''
-</span><span class="uncovered0"><a name="line147"></a>147               else
-</span><span class="uncovered1"><a name="line148"></a>148                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, error_messages_for(:transfer_item, :object =&gt; ti, :message =&gt; nil, :header_message =&gt; nil, :id =&gt;'small', :class =&gt; 'smallerror')
-</span><span class="uncovered0"><a name="line149"></a>149               end
-</span><span class="uncovered1"><a name="line150"></a>150             end
-</span><span class="uncovered0"><a name="line151"></a>151           end
-</span><span class="uncovered1"><a name="line152"></a>152         end #format.js
-</span><span class="uncovered0"><a name="line153"></a>153       end
-</span><span class="uncovered1"><a name="line154"></a>154     end
-</span><span class="uncovered0"><a name="line155"></a>155   end
+</span><span class="inferred0"><a name="line77"></a> 77 
+</span><span class="inferred1"><a name="line78"></a> 78   #remote
+</span><span class="marked0"><a name="line79"></a> 79   def show_details
+</span><span class="uncovered1"><a name="line80"></a> 80     render :update do |page|
+</span><span class="uncovered0"><a name="line81"></a> 81       page.hide &quot;show-details-button-#{@transfer.id}&quot;
+</span><span class="uncovered1"><a name="line82"></a> 82       page.insert_html :bottom,
+</span><span class="uncovered0"><a name="line83"></a> 83         &quot;transfer-in-category-#{@transfer.id}&quot;,
+</span><span class="uncovered1"><a name="line84"></a> 84         :partial =&gt; 'transfer_details',
+</span><span class="uncovered0"><a name="line85"></a> 85         :object =&gt; @transfer,
+</span><span class="uncovered1"><a name="line86"></a> 86         :locals =&gt; {:current_category_id =&gt; params[:current_category], :include_subcategories =&gt; params[:include_subcategories]}
+</span><span class="uncovered0"><a name="line87"></a> 87     end
+</span><span class="uncovered1"><a name="line88"></a> 88   end
+</span><span class="inferred0"><a name="line89"></a> 89 
+</span><span class="inferred1"><a name="line90"></a> 90   
+</span><span class="inferred0"><a name="line91"></a> 91   #remote
+</span><span class="inferred1"><a name="line92"></a> 92   #TODO: Make it JS only, no request to server required
+</span><span class="marked0"><a name="line93"></a> 93   def hide_details
+</span><span class="uncovered1"><a name="line94"></a> 94     render :update do |page|
+</span><span class="uncovered0"><a name="line95"></a> 95       page.remove &quot;transfer-details-id-#{@transfer.id}&quot;
+</span><span class="uncovered1"><a name="line96"></a> 96       page.show &quot;show-details-button-#{@transfer.id}&quot;
+</span><span class="uncovered0"><a name="line97"></a> 97     end
+</span><span class="uncovered1"><a name="line98"></a> 98   end
+</span><span class="inferred0"><a name="line99"></a> 99 
+</span><span class="inferred1"><a name="line100"></a>100 
+</span><span class="marked0"><a name="line101"></a>101   def edit
+</span><span class="uncovered1"><a name="line102"></a>102     set_current_category
+</span><span class="uncovered0"><a name="line103"></a>103     @transfer = self.current_user.transfers.find_by_id(params[:id])
+</span><span class="uncovered1"><a name="line104"></a>104     respond_to do |format|
+</span><span class="uncovered0"><a name="line105"></a>105       format.html {}
+</span><span class="uncovered1"><a name="line106"></a>106       format.js do
+</span><span class="uncovered0"><a name="line107"></a>107         render :update do |page|
+</span><span class="uncovered1"><a name="line108"></a>108           page.replace_html &quot;transfer-in-category-#{@transfer.id}&quot;,
+</span><span class="uncovered0"><a name="line109"></a>109             :partial =&gt; 'transfers/full_transfer',
+</span><span class="uncovered1"><a name="line110"></a>110             :locals =&gt; { :current_category =&gt; @category , :transfer =&gt; @transfer, :embedded =&gt; true, :include_subcategories =&gt; @include_subcategories }
+</span><span class="uncovered0"><a name="line111"></a>111         end
+</span><span class="uncovered1"><a name="line112"></a>112       end
+</span><span class="uncovered0"><a name="line113"></a>113     end
+</span><span class="uncovered1"><a name="line114"></a>114   end
+</span><span class="inferred0"><a name="line115"></a>115 
+</span><span class="inferred1"><a name="line116"></a>116 
+</span><span class="marked0"><a name="line117"></a>117   def update
+</span><span class="uncovered1"><a name="line118"></a>118     params[:transfer][:existing_transfer_items_attributes] ||= {}
+</span><span class="uncovered0"><a name="line119"></a>119     @transfer = self.current_user.transfers.find_by_id(params[:id])
+</span><span class="uncovered1"><a name="line120"></a>120     if @transfer.update_attributes(params[:transfer])
+</span><span class="uncovered0"><a name="line121"></a>121       respond_to do |format|
+</span><span class="uncovered1"><a name="line122"></a>122         format.html {}
+</span><span class="uncovered0"><a name="line123"></a>123         format.js do
+</span><span class="uncovered1"><a name="line124"></a>124           render_transfer_table do |page|
+</span><span class="uncovered0"><a name="line125"></a>125             if @category &amp;&amp; @category.transfers.find_by_id(@transfer.id)
+</span><span class="uncovered1"><a name="line126"></a>126               #same code as show_details but i could not move it into method and i do not know why.
+</span><span class="uncovered0"><a name="line127"></a>127               page.hide &quot;show-details-button-#{@transfer.id}&quot;
+</span><span class="uncovered1"><a name="line128"></a>128               page.insert_html :bottom,
+</span><span class="uncovered0"><a name="line129"></a>129                 &quot;transfer-in-category-#{@transfer.id}&quot;,
+</span><span class="uncovered1"><a name="line130"></a>130                 :partial =&gt; 'transfer_details',
+</span><span class="uncovered0"><a name="line131"></a>131                 :object =&gt; @transfer,
+</span><span class="uncovered1"><a name="line132"></a>132                 :locals =&gt; {:current_category_id =&gt; params[:current_category], :include_subcategories =&gt; params[:include_subcategories]}
+</span><span class="uncovered0"><a name="line133"></a>133             end
+</span><span class="uncovered1"><a name="line134"></a>134           end
+</span><span class="uncovered0"><a name="line135"></a>135         end
+</span><span class="uncovered1"><a name="line136"></a>136       end
+</span><span class="uncovered0"><a name="line137"></a>137     else
+</span><span class="uncovered1"><a name="line138"></a>138       respond_to do |format|
+</span><span class="uncovered0"><a name="line139"></a>139         format.html {}
+</span><span class="uncovered1"><a name="line140"></a>140         format.js do
+</span><span class="uncovered0"><a name="line141"></a>141           render :update do |page|
+</span><span class="uncovered1"><a name="line142"></a>142             page.replace_html &quot;transfer-errors-#{@transfer.id}&quot;, error_messages_for(:transfer, :message =&gt; nil)
+</span><span class="uncovered0"><a name="line143"></a>143             @transfer.transfer_items.each do |ti|
+</span><span class="uncovered1"><a name="line144"></a>144               if ti.valid?
+</span><span class="uncovered0"><a name="line145"></a>145                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, ''
+</span><span class="uncovered1"><a name="line146"></a>146               else
+</span><span class="uncovered0"><a name="line147"></a>147                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, error_messages_for(:transfer_item, :object =&gt; ti, :message =&gt; nil, :header_message =&gt; nil, :id =&gt;'small', :class =&gt; 'smallerror')
+</span><span class="uncovered1"><a name="line148"></a>148               end
+</span><span class="uncovered0"><a name="line149"></a>149             end
+</span><span class="uncovered1"><a name="line150"></a>150           end
+</span><span class="uncovered0"><a name="line151"></a>151         end #format.js
+</span><span class="uncovered1"><a name="line152"></a>152       end
+</span><span class="uncovered0"><a name="line153"></a>153     end
+</span><span class="uncovered1"><a name="line154"></a>154   end
+</span><span class="inferred0"><a name="line155"></a>155 
 </span><span class="inferred1"><a name="line156"></a>156 
-</span><span class="inferred0"><a name="line157"></a>157 
-</span><span class="marked1"><a name="line158"></a>158   def create
-</span><span class="uncovered0"><a name="line159"></a>159     @transfer = Transfer.new(params[:transfer])
-</span><span class="uncovered1"><a name="line160"></a>160     @transfer.user = self.current_user
-</span><span class="uncovered0"><a name="line161"></a>161     if @transfer.save
-</span><span class="uncovered1"><a name="line162"></a>162       respond_to do |format|
-</span><span class="uncovered0"><a name="line163"></a>163         format.html {}
-</span><span class="uncovered1"><a name="line164"></a>164         format.js do
-</span><span class="uncovered0"><a name="line165"></a>165           render_transfer_table do |page|
-</span><span class="uncovered1"><a name="line166"></a>166             create_empty_transfer
-</span><span class="uncovered0"><a name="line167"></a>167             page.replace_html 'form-for-transfer-full', :partial=&gt;'transfers/full_transfer', :locals =&gt; {:current_category =&gt; @category, :embedded =&gt; true, :transfer =&gt; @transfer}
-</span><span class="uncovered1"><a name="line168"></a>168           end
-</span><span class="uncovered0"><a name="line169"></a>169         end
-</span><span class="uncovered1"><a name="line170"></a>170       end
-</span><span class="uncovered0"><a name="line171"></a>171     else
-</span><span class="uncovered1"><a name="line172"></a>172       respond_to do |format|
-</span><span class="uncovered0"><a name="line173"></a>173         format.html {}
-</span><span class="uncovered1"><a name="line174"></a>174         format.js do
-</span><span class="uncovered0"><a name="line175"></a>175           render :update do |page|
-</span><span class="uncovered1"><a name="line176"></a>176             page.replace_html 'transfer-errors', error_messages_for(:transfer, :message =&gt; nil)
-</span><span class="uncovered0"><a name="line177"></a>177             @transfer.transfer_items.each do |ti|
-</span><span class="uncovered1"><a name="line178"></a>178               if ti.valid?
-</span><span class="uncovered0"><a name="line179"></a>179                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, ''
-</span><span class="uncovered1"><a name="line180"></a>180               else
-</span><span class="uncovered0"><a name="line181"></a>181                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, error_messages_for(:transfer_item, :object =&gt; ti, :message =&gt; nil, :header_message =&gt; nil, :id =&gt;'small', :class =&gt; 'smallerror')
-</span><span class="uncovered1"><a name="line182"></a>182               end
-</span><span class="uncovered0"><a name="line183"></a>183             end
-</span><span class="uncovered1"><a name="line184"></a>184           end
-</span><span class="uncovered0"><a name="line185"></a>185         end #format.js
-</span><span class="uncovered1"><a name="line186"></a>186 
-</span><span class="uncovered0"><a name="line187"></a>187       end
-</span><span class="uncovered1"><a name="line188"></a>188     end
-</span><span class="uncovered0"><a name="line189"></a>189   end
+</span><span class="marked0"><a name="line157"></a>157   def create
+</span><span class="uncovered1"><a name="line158"></a>158     @transfer = Transfer.new(params[:transfer])
+</span><span class="uncovered0"><a name="line159"></a>159     @transfer.user = self.current_user
+</span><span class="uncovered1"><a name="line160"></a>160     if @transfer.save
+</span><span class="uncovered0"><a name="line161"></a>161       respond_to do |format|
+</span><span class="uncovered1"><a name="line162"></a>162         format.html {}
+</span><span class="uncovered0"><a name="line163"></a>163         format.js do
+</span><span class="uncovered1"><a name="line164"></a>164           render_transfer_table do |page|
+</span><span class="uncovered0"><a name="line165"></a>165             create_empty_transfer
+</span><span class="uncovered1"><a name="line166"></a>166             page.replace_html 'form-for-transfer-full', :partial=&gt;'transfers/full_transfer', :locals =&gt; {:current_category =&gt; @category, :embedded =&gt; true, :transfer =&gt; @transfer}
+</span><span class="uncovered0"><a name="line167"></a>167           end
+</span><span class="uncovered1"><a name="line168"></a>168         end
+</span><span class="uncovered0"><a name="line169"></a>169       end
+</span><span class="uncovered1"><a name="line170"></a>170     else
+</span><span class="uncovered0"><a name="line171"></a>171       respond_to do |format|
+</span><span class="uncovered1"><a name="line172"></a>172         format.html {}
+</span><span class="uncovered0"><a name="line173"></a>173         format.js do
+</span><span class="uncovered1"><a name="line174"></a>174           render :update do |page|
+</span><span class="uncovered0"><a name="line175"></a>175             page.replace_html 'transfer-errors', error_messages_for(:transfer, :message =&gt; nil)
+</span><span class="uncovered1"><a name="line176"></a>176             @transfer.transfer_items.each do |ti|
+</span><span class="uncovered0"><a name="line177"></a>177               if ti.valid?
+</span><span class="uncovered1"><a name="line178"></a>178                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, ''
+</span><span class="uncovered0"><a name="line179"></a>179               else
+</span><span class="uncovered1"><a name="line180"></a>180                 page.replace_html &quot;transfer-item-errors-#{ti.error_id}&quot;, error_messages_for(:transfer_item, :object =&gt; ti, :message =&gt; nil, :header_message =&gt; nil, :id =&gt;'small', :class =&gt; 'smallerror')
+</span><span class="uncovered0"><a name="line181"></a>181               end
+</span><span class="uncovered1"><a name="line182"></a>182             end
+</span><span class="uncovered0"><a name="line183"></a>183           end
+</span><span class="uncovered1"><a name="line184"></a>184         end #format.js
+</span><span class="uncovered0"><a name="line185"></a>185 
+</span><span class="uncovered1"><a name="line186"></a>186       end
+</span><span class="uncovered0"><a name="line187"></a>187     end
+</span><span class="uncovered1"><a name="line188"></a>188   end
+</span><span class="inferred0"><a name="line189"></a>189 
 </span><span class="inferred1"><a name="line190"></a>190 
-</span><span class="inferred0"><a name="line191"></a>191 
-</span><span class="marked1"><a name="line192"></a>192   def destroy
-</span><span class="uncovered0"><a name="line193"></a>193     # TODO: if else ??
-</span><span class="uncovered1"><a name="line194"></a>194     @transfer.destroy
-</span><span class="uncovered0"><a name="line195"></a>195     respond_to do |format|
-</span><span class="uncovered1"><a name="line196"></a>196       format.html do
-</span><span class="uncovered0"><a name="line197"></a>197         flash[:notice] = 'Transfer został usunięty'
-</span><span class="uncovered1"><a name="line198"></a>198         redirect_to :action =&gt; 'show', :controller =&gt; 'categories', :id =&gt; session[:category_id]
-</span><span class="uncovered0"><a name="line199"></a>199       end
-</span><span class="uncovered1"><a name="line200"></a>200       format.js { render_transfer_table }
-</span><span class="uncovered0"><a name="line201"></a>201     end
-</span><span class="uncovered1"><a name="line202"></a>202   end
-</span><span class="inferred0"><a name="line203"></a>203 
-</span><span class="inferred1"><a name="line204"></a>204   
-</span><span class="marked0"><a name="line205"></a>205   private
-</span><span class="inferred1"><a name="line206"></a>206   
-</span><span class="marked0"><a name="line207"></a>207   def check_perm_for_transfer
-</span><span class="uncovered1"><a name="line208"></a>208     @transfer = Transfer.find(params[:id])
-</span><span class="uncovered0"><a name="line209"></a>209     if @transfer.user.id != self.current_user.id
-</span><span class="uncovered1"><a name="line210"></a>210       flash[:notice] = 'You do not have permission to view this transfer!'
-</span><span class="uncovered0"><a name="line211"></a>211       @transfer = nil
-</span><span class="uncovered1"><a name="line212"></a>212       redirect_to :action =&gt; :index, :controller =&gt; :categories
-</span><span class="uncovered0"><a name="line213"></a>213       return
-</span><span class="uncovered1"><a name="line214"></a>214       #why doesn't it work ? There is no flash ?
-</span><span class="uncovered0"><a name="line215"></a>215     end
-</span><span class="uncovered1"><a name="line216"></a>216   end
-</span><span class="inferred0"><a name="line217"></a>217 
-</span><span class="inferred1"><a name="line218"></a>218 
-</span><span class="marked0"><a name="line219"></a>219   def conditions
-</span><span class="marked1"><a name="line220"></a>220     set_current_category
-</span><span class="marked0"><a name="line221"></a>221     condition = 'day &gt;= ? AND day &lt;= ?'
-</span><span class="marked1"><a name="line222"></a>222     @range = get_period('transfer_day', true)
-</span><span class="inferred0"><a name="line223"></a>223 
-</span><span class="marked1"><a name="line224"></a>224     parameters = [condition, @range.begin, @range.end]
-</span><span class="inferred0"><a name="line225"></a>225 
-</span><span class="inferred1"><a name="line226"></a>226     #searching for transfers connected via items to one category
-</span><span class="marked0"><a name="line227"></a>227     if @category
-</span><span class="uncovered1"><a name="line228"></a>228       parameters.first += 'AND category_id IN (?)'
-</span><span class="uncovered0"><a name="line229"></a>229       parameters &lt;&lt; if params[:subcategories]
-</span><span class="uncovered1"><a name="line230"></a>230         @category.self_and_descendants().map {|c| c.id} #table of subcategories ids
-</span><span class="uncovered0"><a name="line231"></a>231       else
-</span><span class="uncovered1"><a name="line232"></a>232         [@category.id] #table with category id
-</span><span class="uncovered0"><a name="line233"></a>233       end
-</span><span class="uncovered1"><a name="line234"></a>234     end
-</span><span class="inferred0"><a name="line235"></a>235 
-</span><span class="marked1"><a name="line236"></a>236     return parameters
-</span><span class="inferred0"><a name="line237"></a>237   end #conditions method
-</span><span class="inferred1"><a name="line238"></a>238 
-</span><span class="inferred0"><a name="line239"></a>239 end
+</span><span class="marked0"><a name="line191"></a>191   def destroy
+</span><span class="uncovered1"><a name="line192"></a>192     # TODO: if else ??
+</span><span class="uncovered0"><a name="line193"></a>193     @transfer.destroy
+</span><span class="uncovered1"><a name="line194"></a>194     respond_to do |format|
+</span><span class="uncovered0"><a name="line195"></a>195       format.html do
+</span><span class="uncovered1"><a name="line196"></a>196         flash[:notice] = 'Transfer został usunięty'
+</span><span class="uncovered0"><a name="line197"></a>197         redirect_to :action =&gt; 'show', :controller =&gt; 'categories', :id =&gt; session[:category_id]
+</span><span class="uncovered1"><a name="line198"></a>198       end
+</span><span class="uncovered0"><a name="line199"></a>199       format.js { render_transfer_table }
+</span><span class="uncovered1"><a name="line200"></a>200     end
+</span><span class="uncovered0"><a name="line201"></a>201   end
+</span><span class="inferred1"><a name="line202"></a>202 
+</span><span class="inferred0"><a name="line203"></a>203   
+</span><span class="marked1"><a name="line204"></a>204   private
+</span><span class="inferred0"><a name="line205"></a>205   
+</span><span class="marked1"><a name="line206"></a>206   def check_perm_for_transfer
+</span><span class="uncovered0"><a name="line207"></a>207     @transfer = Transfer.find(params[:id])
+</span><span class="uncovered1"><a name="line208"></a>208     if @transfer.user.id != self.current_user.id
+</span><span class="uncovered0"><a name="line209"></a>209       flash[:notice] = 'You do not have permission to view this transfer!'
+</span><span class="uncovered1"><a name="line210"></a>210       @transfer = nil
+</span><span class="uncovered0"><a name="line211"></a>211       redirect_to :action =&gt; :index, :controller =&gt; :categories
+</span><span class="uncovered1"><a name="line212"></a>212       return
+</span><span class="uncovered0"><a name="line213"></a>213       #why doesn't it work ? There is no flash ?
+</span><span class="uncovered1"><a name="line214"></a>214     end
+</span><span class="uncovered0"><a name="line215"></a>215   end
+</span><span class="uncovered1"><a name="line216"></a>216 
+</span><span class="uncovered0"><a name="line217"></a>217 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

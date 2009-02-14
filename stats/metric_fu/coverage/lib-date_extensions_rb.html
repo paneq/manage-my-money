@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,21 +571,11 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='lib-date_extensions_rb.html'>lib/date_extensions.rb</a>
         </td>
-      <td class='lines_total'><tt>175</tt>
+      <td class='lines_total'><tt>235</tt>
         </td>
-      <td class='lines_code'><tt>145</tt>
+      <td class='lines_code'><tt>184</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>94.9%</tt>
-              &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='95'/>
-                  <td class='uncovered' width='5'/>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>93.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>94.5%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='94'/>
                   <td class='uncovered' width='6'/>
@@ -595,184 +585,254 @@ span.run100 {
             </tr>
           </table>
         </td>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>92.9%</tt>
+              &nbsp;</td>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='93'/>
+                  <td class='uncovered' width='7'/>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a>  1 class Date
-</span><span class="inferred0"><a name="line2"></a>  2 
-</span><span class="marked1"><a name="line3"></a>  3   alias old_advance advance
-</span><span class="inferred0"><a name="line4"></a>  4   #Dodaje do metody advance opcje :weeks i :quarters (dodają odpowiednio po 7 dni i 3 miesiące)
-</span><span class="marked1"><a name="line5"></a>  5   def advance(options)
-</span><span class="marked0"><a name="line6"></a>  6     if options[:weeks]
-</span><span class="marked1"><a name="line7"></a>  7       options[:days] ||= 0
-</span><span class="marked0"><a name="line8"></a>  8       options[:days] += options[:weeks]*7
-</span><span class="marked1"><a name="line9"></a>  9       options[:weeks] = nil
-</span><span class="inferred0"><a name="line10"></a> 10     end
-</span><span class="inferred1"><a name="line11"></a> 11 
-</span><span class="marked0"><a name="line12"></a> 12     if options[:quarters]
-</span><span class="marked1"><a name="line13"></a> 13       options[:months] ||= 0
-</span><span class="marked0"><a name="line14"></a> 14       options[:months] += options[:quarters]*3
-</span><span class="marked1"><a name="line15"></a> 15       options[:quarters] = nil
-</span><span class="inferred0"><a name="line16"></a> 16     end
-</span><span class="marked1"><a name="line17"></a> 17     old_advance(options)
-</span><span class="inferred0"><a name="line18"></a> 18   end
-</span><span class="inferred1"><a name="line19"></a> 19 
-</span><span class="marked0"><a name="line20"></a> 20   def next_quarter
-</span><span class="marked1"><a name="line21"></a> 21     self.at_end_of_quarter.next
-</span><span class="inferred0"><a name="line22"></a> 22   end
-</span><span class="inferred1"><a name="line23"></a> 23 
-</span><span class="marked0"><a name="line24"></a> 24   def last_quarter
-</span><span class="marked1"><a name="line25"></a> 25     self.at_beginning_of_quarter.advance(:days =&gt; -1).at_beginning_of_quarter
-</span><span class="inferred0"><a name="line26"></a> 26   end
-</span><span class="inferred1"><a name="line27"></a> 27 
-</span><span class="marked0"><a name="line28"></a> 28   def next_week
-</span><span class="marked1"><a name="line29"></a> 29     self.at_end_of_week.next
-</span><span class="inferred0"><a name="line30"></a> 30   end
-</span><span class="inferred1"><a name="line31"></a> 31 
-</span><span class="marked0"><a name="line32"></a> 32   def last_week
-</span><span class="marked1"><a name="line33"></a> 33     self.at_beginning_of_week.advance(:days =&gt; -1).at_beginning_of_week
-</span><span class="inferred0"><a name="line34"></a> 34   end
-</span><span class="inferred1"><a name="line35"></a> 35 
-</span><span class="inferred0"><a name="line36"></a> 36 
-</span><span class="inferred1"><a name="line37"></a> 37 
-</span><span class="inferred0"><a name="line38"></a> 38   #Periods recognized by calculate
-</span><span class="marked1"><a name="line39"></a> 39   PERIODS = [
-</span><span class="inferred0"><a name="line40"></a> 40     [:THIS_DAY, 'Dzisiaj'],
-</span><span class="inferred1"><a name="line41"></a> 41     [:LAST_DAY, 'Wczoraj'],
-</span><span class="inferred0"><a name="line42"></a> 42     [:THIS_WEEK, 'Aktualny tydzień'],
-</span><span class="inferred1"><a name="line43"></a> 43     [:LAST_WEEK, 'Poprzedni tydzień'],
-</span><span class="inferred0"><a name="line44"></a> 44     [:LAST_7_DAYS, 'Ostatnie 7 dni'],
-</span><span class="inferred1"><a name="line45"></a> 45     [:THIS_MONTH, 'Aktualny miesiąc'],
-</span><span class="inferred0"><a name="line46"></a> 46     [:LAST_MONTH, 'Poprzedni miesiąc'],
-</span><span class="inferred1"><a name="line47"></a> 47     [:LAST_4_WEEKS, 'Ostatnie 4 tygodnie'],
-</span><span class="inferred0"><a name="line48"></a> 48     [:THIS_QUARTER, 'Aktualny kwartał'],
-</span><span class="inferred1"><a name="line49"></a> 49     [:LAST_QUARTER, 'Poprzedni kwartał'],
-</span><span class="inferred0"><a name="line50"></a> 50     [:LAST_3_MONTHS, 'Ostatnie 3 miesiące'],
-</span><span class="inferred1"><a name="line51"></a> 51     [:LAST_90_DAYS, 'Ostatnie 90 dni'],
-</span><span class="inferred0"><a name="line52"></a> 52     [:THIS_YEAR, 'Aktualny rok'],
-</span><span class="inferred1"><a name="line53"></a> 53     [:LAST_YEAR, 'Poprzedni rok'],
-</span><span class="inferred0"><a name="line54"></a> 54     [:LAST_12_MONTHS, 'Ostatnie 12 miesięcy'],
-</span><span class="inferred1"><a name="line55"></a> 55   ]
-</span><span class="inferred0"><a name="line56"></a> 56 
-</span><span class="marked1"><a name="line57"></a> 57   RECOGNIZED_PERIODS = PERIODS.map {|symbol, name| symbol}
-</span><span class="inferred0"><a name="line58"></a> 58 
-</span><span class="marked1"><a name="line59"></a> 59   @@cache = {}
-</span><span class="marked0"><a name="line60"></a> 60   @@today = Date.today
-</span><span class="inferred1"><a name="line61"></a> 61   
-</span><span class="inferred0"><a name="line62"></a> 62   # Returns range based on given symbol
-</span><span class="marked1"><a name="line63"></a> 63   def self.calculate(symbol)
-</span><span class="marked0"><a name="line64"></a> 64     raise &quot;Unrecognized period symbol: #{symbol}&quot; unless RECOGNIZED_PERIODS.include?(symbol)
-</span><span class="marked1"><a name="line65"></a> 65     unless @@today == Date.today
-</span><span class="uncovered0"><a name="line66"></a> 66       @@cache = {}
-</span><span class="uncovered1"><a name="line67"></a> 67       @@today = Date.today
-</span><span class="uncovered0"><a name="line68"></a> 68     end
-</span><span class="marked1"><a name="line69"></a> 69     return @@cache[symbol] ||= Range.new(Date.calculate_start(symbol), Date.calculate_end(symbol))
-</span><span class="inferred0"><a name="line70"></a> 70   end
-</span><span class="inferred1"><a name="line71"></a> 71 
-</span><span class="inferred0"><a name="line72"></a> 72 
-</span><span class="marked1"><a name="line73"></a> 73   def self.calculate_start(symbol)
-</span><span class="uncovered0"><a name="line74"></a> 74     return case symbol
-</span><span class="marked1"><a name="line75"></a> 75     when :THIS_DAY        then Date.today
-</span><span class="marked0"><a name="line76"></a> 76     when :LAST_DAY        then Date.yesterday
-</span><span class="marked1"><a name="line77"></a> 77     when :THIS_WEEK       then Date.today.beginning_of_week
-</span><span class="marked0"><a name="line78"></a> 78     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.beginning_of_week
-</span><span class="marked1"><a name="line79"></a> 79     when :LAST_7_DAYS     then 6.days.ago.to_date
-</span><span class="marked0"><a name="line80"></a> 80     when :THIS_MONTH      then Date.today.beginning_of_month
-</span><span class="marked1"><a name="line81"></a> 81     when :LAST_MONTH      then Date.today.months_ago(1).beginning_of_month
-</span><span class="marked0"><a name="line82"></a> 82     when :LAST_4_WEEKS    then 3.weeks.ago.to_date.beginning_of_week
-</span><span class="marked1"><a name="line83"></a> 83     when :THIS_QUARTER    then Date.today.beginning_of_quarter
-</span><span class="marked0"><a name="line84"></a> 84     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday.beginning_of_quarter
-</span><span class="marked1"><a name="line85"></a> 85     when :LAST_3_MONTHS   then Date.today.months_ago(2).beginning_of_month
-</span><span class="marked0"><a name="line86"></a> 86     when :LAST_90_DAYS    then 89.days.ago.to_date
-</span><span class="marked1"><a name="line87"></a> 87     when :THIS_YEAR       then Date.today.beginning_of_year
-</span><span class="marked0"><a name="line88"></a> 88     when :LAST_YEAR       then Date.today.years_ago(1).beginning_of_year
-</span><span class="marked1"><a name="line89"></a> 89     when :LAST_12_MONTHS  then Date.today.months_ago(11).beginning_of_month
-</span><span class="uncovered0"><a name="line90"></a> 90     else
-</span><span class="uncovered1"><a name="line91"></a> 91       raise &quot;Unrecognized period symbol: #{symbol}&quot;
-</span><span class="marked0"><a name="line92"></a> 92     end
-</span><span class="inferred1"><a name="line93"></a> 93   end
-</span><span class="inferred0"><a name="line94"></a> 94 
-</span><span class="marked1"><a name="line95"></a> 95   def self.calculate_end(symbol)
-</span><span class="uncovered0"><a name="line96"></a> 96     return case symbol
-</span><span class="marked1"><a name="line97"></a> 97     when :THIS_DAY        then Date.today
-</span><span class="marked0"><a name="line98"></a> 98     when :LAST_DAY        then Date.yesterday
-</span><span class="marked1"><a name="line99"></a> 99     when :THIS_WEEK       then Date.today.end_of_week
-</span><span class="marked0"><a name="line100"></a>100     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.end_of_week
-</span><span class="marked1"><a name="line101"></a>101     when :LAST_7_DAYS     then Date.today
-</span><span class="marked0"><a name="line102"></a>102     when :THIS_MONTH      then Date.today.end_of_month
-</span><span class="marked1"><a name="line103"></a>103     when :LAST_MONTH      then Date.today.months_ago(1).end_of_month
-</span><span class="marked0"><a name="line104"></a>104     when :THIS_QUARTER    then Date.today.end_of_quarter
-</span><span class="marked1"><a name="line105"></a>105     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday
-</span><span class="marked0"><a name="line106"></a>106     when :LAST_4_WEEKS    then Date.today
-</span><span class="marked1"><a name="line107"></a>107     when :LAST_3_MONTHS   then Date.today.end_of_month
-</span><span class="marked0"><a name="line108"></a>108     when :LAST_90_DAYS    then Date.today
-</span><span class="marked1"><a name="line109"></a>109     when :THIS_YEAR       then Date.today.end_of_year
-</span><span class="marked0"><a name="line110"></a>110     when :LAST_YEAR       then Date.today.years_ago(1).end_of_year
-</span><span class="marked1"><a name="line111"></a>111     when :LAST_12_MONTHS  then Date.today.end_of_month
-</span><span class="uncovered0"><a name="line112"></a>112     else
-</span><span class="uncovered1"><a name="line113"></a>113       raise &quot;Unrecognized period symbol: #{symbol}&quot;
-</span><span class="marked0"><a name="line114"></a>114     end
-</span><span class="inferred1"><a name="line115"></a>115   end
-</span><span class="inferred0"><a name="line116"></a>116 
-</span><span class="inferred1"><a name="line117"></a>117 
-</span><span class="marked0"><a name="line118"></a>118   def self.split_period(period_division, period_start, period_end)
-</span><span class="marked1"><a name="line119"></a>119     case period_division
-</span><span class="marked0"><a name="line120"></a>120     when :day then
-</span><span class="marked1"><a name="line121"></a>121       split_into_days(period_start, period_end)
-</span><span class="marked0"><a name="line122"></a>122     when :week, :month, :quarter, :year then
-</span><span class="marked1"><a name="line123"></a>123       meta_split_period(period_division, period_start, period_end)
-</span><span class="marked0"><a name="line124"></a>124     when :none then
-</span><span class="marked1"><a name="line125"></a>125       [[period_start, period_end]]
-</span><span class="inferred0"><a name="line126"></a>126     end
-</span><span class="inferred1"><a name="line127"></a>127   end
-</span><span class="inferred0"><a name="line128"></a>128 
-</span><span class="inferred1"><a name="line129"></a>129 
-</span><span class="marked0"><a name="line130"></a>130   def self.split_into_days(period_start, period_end)
-</span><span class="marked1"><a name="line131"></a>131     result = []
-</span><span class="marked0"><a name="line132"></a>132     act_date = period_start
-</span><span class="marked1"><a name="line133"></a>133     next_date = nil
-</span><span class="marked0"><a name="line134"></a>134     while act_date &lt;= period_end do
-</span><span class="marked1"><a name="line135"></a>135       next_date = act_date.advance :days =&gt; 1
-</span><span class="marked0"><a name="line136"></a>136       result &lt;&lt; [act_date, next_date - 1.day]
-</span><span class="marked1"><a name="line137"></a>137       act_date = next_date
-</span><span class="inferred0"><a name="line138"></a>138     end
-</span><span class="marked1"><a name="line139"></a>139     result
-</span><span class="inferred0"><a name="line140"></a>140   end
-</span><span class="inferred1"><a name="line141"></a>141 
-</span><span class="marked0"><a name="line142"></a>142   private
-</span><span class="marked1"><a name="line143"></a>143   def self.meta_split_period(split_unit, period_start, period_end)
-</span><span class="inferred0"><a name="line144"></a>144 
-</span><span class="marked1"><a name="line145"></a>145     beginning_method = &quot;at_beginning_of_#{split_unit}&quot;
-</span><span class="marked0"><a name="line146"></a>146     end_method = &quot;at_end_of_#{split_unit}&quot;
-</span><span class="marked1"><a name="line147"></a>147     next_method = &quot;next_#{split_unit}&quot;
-</span><span class="marked0"><a name="line148"></a>148     last_method = &quot;last_#{split_unit}&quot;
-</span><span class="marked1"><a name="line149"></a>149     adv_symbol = split_unit.to_s.pluralize.intern
-</span><span class="inferred0"><a name="line150"></a>150 
-</span><span class="marked1"><a name="line151"></a>151     result = []
-</span><span class="marked0"><a name="line152"></a>152     act_date = period_start
-</span><span class="marked1"><a name="line153"></a>153     next_date = nil
-</span><span class="marked0"><a name="line154"></a>154     if period_start.send(end_method) == period_end.send(end_method)
-</span><span class="marked1"><a name="line155"></a>155       result &lt;&lt; [period_start, period_end]
-</span><span class="inferred0"><a name="line156"></a>156     else
-</span><span class="inferred1"><a name="line157"></a>157       #1. od daty poczatkowej do konca okresu
-</span><span class="marked0"><a name="line158"></a>158       result &lt;&lt; [period_start, period_start.send(end_method)]
-</span><span class="inferred1"><a name="line159"></a>159       #2.srodek
-</span><span class="marked0"><a name="line160"></a>160       if period_start.send(next_method).send(end_method) != period_end.send(end_method)
-</span><span class="marked1"><a name="line161"></a>161         act_date = period_start.send(next_method).send(beginning_method)
-</span><span class="marked0"><a name="line162"></a>162         while act_date &lt;= period_end.send(last_method).send(end_method) do
-</span><span class="marked1"><a name="line163"></a>163           next_date = act_date.advance adv_symbol =&gt; 1
-</span><span class="marked0"><a name="line164"></a>164           result &lt;&lt; [act_date, act_date.send(end_method)]
-</span><span class="marked1"><a name="line165"></a>165           act_date = next_date
-</span><span class="inferred0"><a name="line166"></a>166         end
-</span><span class="inferred1"><a name="line167"></a>167       end
-</span><span class="inferred0"><a name="line168"></a>168       #3.od poczatku okresu do daty koncowej
-</span><span class="marked1"><a name="line169"></a>169       result &lt;&lt; [period_end.send(beginning_method), period_end]
-</span><span class="inferred0"><a name="line170"></a>170     end
-</span><span class="marked1"><a name="line171"></a>171     result
-</span><span class="inferred0"><a name="line172"></a>172   end
-</span><span class="inferred1"><a name="line173"></a>173 
-</span><span class="inferred0"><a name="line174"></a>174 
-</span><span class="inferred1"><a name="line175"></a>175 end
+<pre><span class="marked0"><a name="line1"></a>  1 class Date
+</span><span class="inferred1"><a name="line2"></a>  2 
+</span><span class="marked0"><a name="line3"></a>  3   alias old_advance advance
+</span><span class="inferred1"><a name="line4"></a>  4   #Dodaje do metody advance opcje :weeks i :quarters (dodają odpowiednio po 7 dni i 3 miesiące)
+</span><span class="marked0"><a name="line5"></a>  5   def advance(options)
+</span><span class="marked1"><a name="line6"></a>  6     if options[:weeks]
+</span><span class="marked0"><a name="line7"></a>  7       options[:days] ||= 0
+</span><span class="marked1"><a name="line8"></a>  8       options[:days] += options[:weeks]*7
+</span><span class="marked0"><a name="line9"></a>  9       options[:weeks] = nil
+</span><span class="inferred1"><a name="line10"></a> 10     end
+</span><span class="inferred0"><a name="line11"></a> 11 
+</span><span class="marked1"><a name="line12"></a> 12     if options[:quarters]
+</span><span class="marked0"><a name="line13"></a> 13       options[:months] ||= 0
+</span><span class="marked1"><a name="line14"></a> 14       options[:months] += options[:quarters]*3
+</span><span class="marked0"><a name="line15"></a> 15       options[:quarters] = nil
+</span><span class="inferred1"><a name="line16"></a> 16     end
+</span><span class="marked0"><a name="line17"></a> 17     old_advance(options)
+</span><span class="inferred1"><a name="line18"></a> 18   end
+</span><span class="inferred0"><a name="line19"></a> 19 
+</span><span class="marked1"><a name="line20"></a> 20   def next_quarter
+</span><span class="marked0"><a name="line21"></a> 21     self.at_end_of_quarter.next
+</span><span class="inferred1"><a name="line22"></a> 22   end
+</span><span class="inferred0"><a name="line23"></a> 23 
+</span><span class="marked1"><a name="line24"></a> 24   def last_quarter
+</span><span class="marked0"><a name="line25"></a> 25     self.at_beginning_of_quarter.advance(:days =&gt; -1).at_beginning_of_quarter
+</span><span class="inferred1"><a name="line26"></a> 26   end
+</span><span class="inferred0"><a name="line27"></a> 27 
+</span><span class="marked1"><a name="line28"></a> 28   def next_week
+</span><span class="marked0"><a name="line29"></a> 29     self.at_end_of_week.next
+</span><span class="inferred1"><a name="line30"></a> 30   end
+</span><span class="inferred0"><a name="line31"></a> 31 
+</span><span class="marked1"><a name="line32"></a> 32   def last_week
+</span><span class="marked0"><a name="line33"></a> 33     self.at_beginning_of_week.advance(:days =&gt; -1).at_beginning_of_week
+</span><span class="inferred1"><a name="line34"></a> 34   end
+</span><span class="inferred0"><a name="line35"></a> 35 
+</span><span class="inferred1"><a name="line36"></a> 36 
+</span><span class="inferred0"><a name="line37"></a> 37 
+</span><span class="inferred1"><a name="line38"></a> 38   #Periods recognized by calculate
+</span><span class="marked0"><a name="line39"></a> 39   PERIODS = [
+</span><span class="inferred1"><a name="line40"></a> 40     [:THIS_DAY, 'Dzisiaj'],
+</span><span class="inferred0"><a name="line41"></a> 41     [:LAST_DAY, 'Wczoraj'],
+</span><span class="inferred1"><a name="line42"></a> 42     [:THIS_WEEK, 'Aktualny tydzień'],
+</span><span class="inferred0"><a name="line43"></a> 43     [:LAST_WEEK, 'Poprzedni tydzień'],
+</span><span class="inferred1"><a name="line44"></a> 44     [:LAST_7_DAYS, 'Ostatnie 7 dni'],
+</span><span class="inferred0"><a name="line45"></a> 45     [:THIS_MONTH, 'Aktualny miesiąc'],
+</span><span class="inferred1"><a name="line46"></a> 46     [:LAST_MONTH, 'Poprzedni miesiąc'],
+</span><span class="inferred0"><a name="line47"></a> 47     [:LAST_4_WEEKS, 'Ostatnie 4 tygodnie'],
+</span><span class="inferred1"><a name="line48"></a> 48     [:THIS_QUARTER, 'Aktualny kwartał'],
+</span><span class="inferred0"><a name="line49"></a> 49     [:LAST_QUARTER, 'Poprzedni kwartał'],
+</span><span class="inferred1"><a name="line50"></a> 50     [:LAST_3_MONTHS, 'Ostatnie 3 miesiące'],
+</span><span class="inferred0"><a name="line51"></a> 51     [:LAST_90_DAYS, 'Ostatnie 90 dni'],
+</span><span class="inferred1"><a name="line52"></a> 52     [:THIS_YEAR, 'Aktualny rok'],
+</span><span class="inferred0"><a name="line53"></a> 53     [:LAST_YEAR, 'Poprzedni rok'],
+</span><span class="inferred1"><a name="line54"></a> 54     [:LAST_12_MONTHS, 'Ostatnie 12 miesięcy'],
+</span><span class="inferred0"><a name="line55"></a> 55   ]
+</span><span class="inferred1"><a name="line56"></a> 56 
+</span><span class="marked0"><a name="line57"></a> 57   RECOGNIZED_PERIODS = PERIODS.map {|symbol, name| symbol}
+</span><span class="inferred1"><a name="line58"></a> 58 
+</span><span class="marked0"><a name="line59"></a> 59   @@cache = {}
+</span><span class="marked1"><a name="line60"></a> 60   @@today = Date.today
+</span><span class="inferred0"><a name="line61"></a> 61   
+</span><span class="inferred1"><a name="line62"></a> 62   # Returns range based on given symbol
+</span><span class="marked0"><a name="line63"></a> 63   def self.calculate(symbol)
+</span><span class="marked1"><a name="line64"></a> 64     raise &quot;Unrecognized period symbol: #{symbol}&quot; unless RECOGNIZED_PERIODS.include?(symbol)
+</span><span class="marked0"><a name="line65"></a> 65     unless @@today == Date.today
+</span><span class="uncovered1"><a name="line66"></a> 66       @@cache = {}
+</span><span class="uncovered0"><a name="line67"></a> 67       @@today = Date.today
+</span><span class="uncovered1"><a name="line68"></a> 68     end
+</span><span class="marked0"><a name="line69"></a> 69     return @@cache[symbol] ||= Range.new(Date.calculate_start(symbol), Date.calculate_end(symbol))
+</span><span class="inferred1"><a name="line70"></a> 70   end
+</span><span class="inferred0"><a name="line71"></a> 71 
+</span><span class="inferred1"><a name="line72"></a> 72 
+</span><span class="marked0"><a name="line73"></a> 73   def self.calculate_start(symbol)
+</span><span class="uncovered1"><a name="line74"></a> 74     return case symbol
+</span><span class="marked0"><a name="line75"></a> 75     when :THIS_DAY        then Date.today
+</span><span class="marked1"><a name="line76"></a> 76     when :LAST_DAY        then Date.yesterday
+</span><span class="marked0"><a name="line77"></a> 77     when :THIS_WEEK       then Date.today.beginning_of_week
+</span><span class="marked1"><a name="line78"></a> 78     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.beginning_of_week
+</span><span class="marked0"><a name="line79"></a> 79     when :LAST_7_DAYS     then 6.days.ago.to_date
+</span><span class="marked1"><a name="line80"></a> 80     when :THIS_MONTH      then Date.today.beginning_of_month
+</span><span class="marked0"><a name="line81"></a> 81     when :LAST_MONTH      then Date.today.months_ago(1).beginning_of_month
+</span><span class="marked1"><a name="line82"></a> 82     when :LAST_4_WEEKS    then 3.weeks.ago.to_date.beginning_of_week
+</span><span class="marked0"><a name="line83"></a> 83     when :THIS_QUARTER    then Date.today.beginning_of_quarter
+</span><span class="marked1"><a name="line84"></a> 84     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday.beginning_of_quarter
+</span><span class="marked0"><a name="line85"></a> 85     when :LAST_3_MONTHS   then Date.today.months_ago(2).beginning_of_month
+</span><span class="marked1"><a name="line86"></a> 86     when :LAST_90_DAYS    then 89.days.ago.to_date
+</span><span class="marked0"><a name="line87"></a> 87     when :THIS_YEAR       then Date.today.beginning_of_year
+</span><span class="marked1"><a name="line88"></a> 88     when :LAST_YEAR       then Date.today.years_ago(1).beginning_of_year
+</span><span class="marked0"><a name="line89"></a> 89     when :LAST_12_MONTHS  then Date.today.months_ago(11).beginning_of_month
+</span><span class="uncovered1"><a name="line90"></a> 90     else
+</span><span class="uncovered0"><a name="line91"></a> 91       raise &quot;Unrecognized period symbol: #{symbol}&quot;
+</span><span class="marked1"><a name="line92"></a> 92     end
+</span><span class="inferred0"><a name="line93"></a> 93   end
+</span><span class="inferred1"><a name="line94"></a> 94 
+</span><span class="marked0"><a name="line95"></a> 95   def self.calculate_end(symbol)
+</span><span class="uncovered1"><a name="line96"></a> 96     return case symbol
+</span><span class="marked0"><a name="line97"></a> 97     when :THIS_DAY        then Date.today
+</span><span class="marked1"><a name="line98"></a> 98     when :LAST_DAY        then Date.yesterday
+</span><span class="marked0"><a name="line99"></a> 99     when :THIS_WEEK       then Date.today.end_of_week
+</span><span class="marked1"><a name="line100"></a>100     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.end_of_week
+</span><span class="marked0"><a name="line101"></a>101     when :LAST_7_DAYS     then Date.today
+</span><span class="marked1"><a name="line102"></a>102     when :THIS_MONTH      then Date.today.end_of_month
+</span><span class="marked0"><a name="line103"></a>103     when :LAST_MONTH      then Date.today.months_ago(1).end_of_month
+</span><span class="marked1"><a name="line104"></a>104     when :THIS_QUARTER    then Date.today.end_of_quarter
+</span><span class="marked0"><a name="line105"></a>105     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday
+</span><span class="marked1"><a name="line106"></a>106     when :LAST_4_WEEKS    then Date.today
+</span><span class="marked0"><a name="line107"></a>107     when :LAST_3_MONTHS   then Date.today.end_of_month
+</span><span class="marked1"><a name="line108"></a>108     when :LAST_90_DAYS    then Date.today
+</span><span class="marked0"><a name="line109"></a>109     when :THIS_YEAR       then Date.today.end_of_year
+</span><span class="marked1"><a name="line110"></a>110     when :LAST_YEAR       then Date.today.years_ago(1).end_of_year
+</span><span class="marked0"><a name="line111"></a>111     when :LAST_12_MONTHS  then Date.today.end_of_month
+</span><span class="uncovered1"><a name="line112"></a>112     else
+</span><span class="uncovered0"><a name="line113"></a>113       raise &quot;Unrecognized period symbol: #{symbol}&quot;
+</span><span class="marked1"><a name="line114"></a>114     end
+</span><span class="inferred0"><a name="line115"></a>115   end
+</span><span class="inferred1"><a name="line116"></a>116 
+</span><span class="inferred0"><a name="line117"></a>117 
+</span><span class="marked1"><a name="line118"></a>118   def self.split_period(period_division, period_start, period_end)
+</span><span class="marked0"><a name="line119"></a>119     case period_division
+</span><span class="marked1"><a name="line120"></a>120     when :day then
+</span><span class="marked0"><a name="line121"></a>121       split_into_days(period_start, period_end)
+</span><span class="marked1"><a name="line122"></a>122     when :week, :month, :quarter, :year then
+</span><span class="marked0"><a name="line123"></a>123       meta_split_period(period_division, period_start, period_end)
+</span><span class="marked1"><a name="line124"></a>124     when :none then
+</span><span class="marked0"><a name="line125"></a>125       [[period_start, period_end]]
+</span><span class="inferred1"><a name="line126"></a>126     end
+</span><span class="inferred0"><a name="line127"></a>127   end
+</span><span class="inferred1"><a name="line128"></a>128 
+</span><span class="inferred0"><a name="line129"></a>129 
+</span><span class="marked1"><a name="line130"></a>130   def self.split_into_days(period_start, period_end)
+</span><span class="marked0"><a name="line131"></a>131     result = []
+</span><span class="marked1"><a name="line132"></a>132     act_date = period_start
+</span><span class="marked0"><a name="line133"></a>133     next_date = nil
+</span><span class="marked1"><a name="line134"></a>134     while act_date &lt;= period_end do
+</span><span class="marked0"><a name="line135"></a>135       next_date = act_date.advance :days =&gt; 1
+</span><span class="marked1"><a name="line136"></a>136       result &lt;&lt; [act_date, next_date - 1.day]
+</span><span class="marked0"><a name="line137"></a>137       act_date = next_date
+</span><span class="inferred1"><a name="line138"></a>138     end
+</span><span class="marked0"><a name="line139"></a>139     result
+</span><span class="inferred1"><a name="line140"></a>140   end
+</span><span class="inferred0"><a name="line141"></a>141 
+</span><span class="inferred1"><a name="line142"></a>142 
+</span><span class="inferred0"><a name="line143"></a>143   #
+</span><span class="inferred1"><a name="line144"></a>144   # Podaje tablice etykiet dla zakresu daty z podziałem
+</span><span class="inferred0"><a name="line145"></a>145   #
+</span><span class="inferred1"><a name="line146"></a>146   # Parametry:
+</span><span class="inferred0"><a name="line147"></a>147   #  period_division podział, moze być :day, :week, :month :quarter :year :none, domyślnie :none
+</span><span class="inferred1"><a name="line148"></a>148   #  period_start, period_end zakres
+</span><span class="inferred0"><a name="line149"></a>149   #
+</span><span class="inferred1"><a name="line150"></a>150   # Wyjście:
+</span><span class="inferred0"><a name="line151"></a>151   #  tablica stringów
+</span><span class="inferred1"><a name="line152"></a>152   #  sortowanie od etykiety opisujacej najstarsza wartosc
+</span><span class="marked0"><a name="line153"></a>153   def self.get_date_range_labels(period_start, period_end, period_division = :none)
+</span><span class="marked1"><a name="line154"></a>154     dates = Date.split_period(period_division, period_start, period_end)
+</span><span class="marked0"><a name="line155"></a>155     result = []
+</span><span class="marked1"><a name="line156"></a>156     case period_division
+</span><span class="marked0"><a name="line157"></a>157     when :day then
+</span><span class="uncovered1"><a name="line158"></a>158       dates.each do |range|
+</span><span class="uncovered0"><a name="line159"></a>159         result &lt;&lt; &quot;#{range[0].to_s}&quot;
+</span><span class="uncovered1"><a name="line160"></a>160       end
+</span><span class="marked0"><a name="line161"></a>161     when :week then
+</span><span class="marked1"><a name="line162"></a>162       dates.each do |range|
+</span><span class="marked0"><a name="line163"></a>163         result &lt;&lt; &quot;#{range[0].to_s} do #{range[1].to_s}&quot;
+</span><span class="inferred1"><a name="line164"></a>164       end
+</span><span class="marked0"><a name="line165"></a>165     when :month then
+</span><span class="marked1"><a name="line166"></a>166       dates.each do |range|
+</span><span class="marked0"><a name="line167"></a>167         result &lt;&lt; I18n.l(range[0], :format =&gt; '%Y %b ')
+</span><span class="inferred1"><a name="line168"></a>168       end
+</span><span class="inferred0"><a name="line169"></a>169     when :quarter then
+</span><span class="inferred1"><a name="line170"></a>170       dates.each do |range|
+</span><span class="inferred0"><a name="line171"></a>171         result &lt;&lt; &quot;#{quarter_number(range[0])} kwartał #{range[0].strftime('%Y')}&quot;
+</span><span class="inferred1"><a name="line172"></a>172       end
+</span><span class="uncovered0"><a name="line173"></a>173     when :year then
+</span><span class="inferred1"><a name="line174"></a>174       dates.each do |range|
+</span><span class="inferred0"><a name="line175"></a>175         result &lt;&lt; range[0].strftime('%Y')
+</span><span class="inferred1"><a name="line176"></a>176       end
+</span><span class="inferred0"><a name="line177"></a>177     when :none then
+</span><span class="inferred1"><a name="line178"></a>178       dates.each do |range|
+</span><span class="inferred0"><a name="line179"></a>179         result &lt;&lt; &quot;#{range[0].to_s} do #{range[1].to_s}&quot;
+</span><span class="inferred1"><a name="line180"></a>180       end
+</span><span class="inferred0"><a name="line181"></a>181     end
+</span><span class="marked1"><a name="line182"></a>182     result
+</span><span class="inferred0"><a name="line183"></a>183   end
+</span><span class="inferred1"><a name="line184"></a>184 
+</span><span class="inferred0"><a name="line185"></a>185 
+</span><span class="inferred1"><a name="line186"></a>186 
+</span><span class="inferred0"><a name="line187"></a>187 
+</span><span class="inferred1"><a name="line188"></a>188 
+</span><span class="inferred0"><a name="line189"></a>189 
+</span><span class="marked1"><a name="line190"></a>190   private
+</span><span class="inferred0"><a name="line191"></a>191 
+</span><span class="inferred1"><a name="line192"></a>192   #numer kwartału po rzymsku
+</span><span class="marked0"><a name="line193"></a>193   def self.quarter_number(date)
+</span><span class="inferred1"><a name="line194"></a>194     case (date.at_beginning_of_quarter.month)
+</span><span class="inferred0"><a name="line195"></a>195     when 1 then &quot;I&quot;
+</span><span class="inferred1"><a name="line196"></a>196     when 4 then &quot;II&quot;
+</span><span class="inferred0"><a name="line197"></a>197     when 7 then &quot;III&quot;
+</span><span class="inferred1"><a name="line198"></a>198     when 10 then &quot;IV&quot;
+</span><span class="inferred0"><a name="line199"></a>199     end
+</span><span class="inferred1"><a name="line200"></a>200   end
+</span><span class="inferred0"><a name="line201"></a>201 
+</span><span class="inferred1"><a name="line202"></a>202 
+</span><span class="marked0"><a name="line203"></a>203   def self.meta_split_period(split_unit, period_start, period_end)
+</span><span class="inferred1"><a name="line204"></a>204 
+</span><span class="marked0"><a name="line205"></a>205     beginning_method = &quot;at_beginning_of_#{split_unit}&quot;
+</span><span class="marked1"><a name="line206"></a>206     end_method = &quot;at_end_of_#{split_unit}&quot;
+</span><span class="marked0"><a name="line207"></a>207     next_method = &quot;next_#{split_unit}&quot;
+</span><span class="marked1"><a name="line208"></a>208     last_method = &quot;last_#{split_unit}&quot;
+</span><span class="marked0"><a name="line209"></a>209     adv_symbol = split_unit.to_s.pluralize.intern
+</span><span class="inferred1"><a name="line210"></a>210 
+</span><span class="marked0"><a name="line211"></a>211     result = []
+</span><span class="marked1"><a name="line212"></a>212     act_date = period_start
+</span><span class="marked0"><a name="line213"></a>213     next_date = nil
+</span><span class="marked1"><a name="line214"></a>214     if period_start.send(end_method) == period_end.send(end_method)
+</span><span class="marked0"><a name="line215"></a>215       result &lt;&lt; [period_start, period_end]
+</span><span class="inferred1"><a name="line216"></a>216     else
+</span><span class="inferred0"><a name="line217"></a>217       #1. od daty poczatkowej do konca okresu
+</span><span class="marked1"><a name="line218"></a>218       result &lt;&lt; [period_start, period_start.send(end_method)]
+</span><span class="inferred0"><a name="line219"></a>219       #2.srodek
+</span><span class="marked1"><a name="line220"></a>220       if period_start.send(next_method).send(end_method) != period_end.send(end_method)
+</span><span class="marked0"><a name="line221"></a>221         act_date = period_start.send(next_method).send(beginning_method)
+</span><span class="marked1"><a name="line222"></a>222         while act_date &lt;= period_end.send(last_method).send(end_method) do
+</span><span class="marked0"><a name="line223"></a>223           next_date = act_date.advance adv_symbol =&gt; 1
+</span><span class="marked1"><a name="line224"></a>224           result &lt;&lt; [act_date, act_date.send(end_method)]
+</span><span class="marked0"><a name="line225"></a>225           act_date = next_date
+</span><span class="inferred1"><a name="line226"></a>226         end
+</span><span class="inferred0"><a name="line227"></a>227       end
+</span><span class="inferred1"><a name="line228"></a>228       #3.od poczatku okresu do daty koncowej
+</span><span class="marked0"><a name="line229"></a>229       result &lt;&lt; [period_end.send(beginning_method), period_end]
+</span><span class="inferred1"><a name="line230"></a>230     end
+</span><span class="marked0"><a name="line231"></a>231     result
+</span><span class="inferred1"><a name="line232"></a>232   end
+</span><span class="inferred0"><a name="line233"></a>233 
+</span><span class="inferred1"><a name="line234"></a>234 
+</span><span class="inferred0"><a name="line235"></a>235 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

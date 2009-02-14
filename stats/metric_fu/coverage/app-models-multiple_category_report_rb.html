@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:45 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:07 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-multiple_category_report_rb.html'>app/models/multiple_category_report.rb</a>
         </td>
-      <td class='lines_total'><tt>84</tt>
+      <td class='lines_total'><tt>83</tt>
         </td>
       <td class='lines_code'><tt>44</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>73.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>89.2%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='74'/>
-                  <td class='uncovered' width='26'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='89'/>
+                  <td class='uncovered' width='11'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>50.0%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>79.5%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='50'/>
-                  <td class='uncovered' width='50'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='80'/>
+                  <td class='uncovered' width='20'/>
                   </tr>
                 </table>
               </td>
@@ -598,90 +598,89 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred1"><a name="line1"></a> 1 # == Schema Information
-</span><span class="inferred0"><a name="line2"></a> 2 # Schema version: 20090201170116
-</span><span class="inferred1"><a name="line3"></a> 3 #
-</span><span class="inferred0"><a name="line4"></a> 4 # Table name: reports
-</span><span class="inferred1"><a name="line5"></a> 5 #
-</span><span class="inferred0"><a name="line6"></a> 6 #  id                   :integer       not null, primary key
-</span><span class="inferred1"><a name="line7"></a> 7 #  type                 :string(255)   
-</span><span class="inferred0"><a name="line8"></a> 8 #  name                 :string(255)   not null
-</span><span class="inferred1"><a name="line9"></a> 9 #  period_type_int      :integer       not null
-</span><span class="inferred0"><a name="line10"></a>10 #  period_start         :date          
-</span><span class="inferred1"><a name="line11"></a>11 #  period_end           :date          
-</span><span class="inferred0"><a name="line12"></a>12 #  report_view_type_int :integer       not null
-</span><span class="inferred1"><a name="line13"></a>13 #  is_predefined        :boolean       not null
-</span><span class="inferred0"><a name="line14"></a>14 #  user_id              :integer       
-</span><span class="inferred1"><a name="line15"></a>15 #  created_at           :datetime      
-</span><span class="inferred0"><a name="line16"></a>16 #  updated_at           :datetime      
-</span><span class="inferred1"><a name="line17"></a>17 #  share_type_int       :integer       default(0)
-</span><span class="inferred0"><a name="line18"></a>18 #  depth                :integer       default(0)
-</span><span class="inferred1"><a name="line19"></a>19 #  max_categories_count :integer       default(0)
-</span><span class="inferred0"><a name="line20"></a>20 #  category_id          :integer       
-</span><span class="inferred1"><a name="line21"></a>21 #  period_division_int  :integer       default(5)
-</span><span class="inferred0"><a name="line22"></a>22 #  temporary            :boolean       not null
-</span><span class="inferred1"><a name="line23"></a>23 #
-</span><span class="inferred0"><a name="line24"></a>24 
-</span><span class="marked1"><a name="line25"></a>25 class MultipleCategoryReport &lt; Report
-</span><span class="marked0"><a name="line26"></a>26   has_many :category_report_options, :foreign_key =&gt; :report_id, :dependent =&gt; :destroy
-</span><span class="marked1"><a name="line27"></a>27   has_many :categories, :through =&gt; :category_report_options
-</span><span class="inferred0"><a name="line28"></a>28 
-</span><span class="marked1"><a name="line29"></a>29   validate :has_at_least_one_category?
-</span><span class="inferred0"><a name="line30"></a>30 
-</span><span class="marked1"><a name="line31"></a>31   validates_associated :category_report_options
-</span><span class="inferred0"><a name="line32"></a>32 
-</span><span class="marked1"><a name="line33"></a>33   def has_at_least_one_category?
-</span><span class="marked0"><a name="line34"></a>34      unless category_report_options != nil &amp;&amp; category_report_options.size &gt; 0
-</span><span class="marked1"><a name="line35"></a>35        errors.add(:category_report_options, &quot;Powinna być wybrana conajmiej jedna kategoria&quot;)
-</span><span class="inferred0"><a name="line36"></a>36      end
-</span><span class="inferred1"><a name="line37"></a>37   end
-</span><span class="inferred0"><a name="line38"></a>38 
-</span><span class="marked1"><a name="line39"></a>39   def new_category_report_options=(category_report_options_attr)
-</span><span class="uncovered0"><a name="line40"></a>40     category_report_options_attr.each do |attributes|
-</span><span class="uncovered1"><a name="line41"></a>41       if attributes[:inclusion_type] != 'none'
-</span><span class="uncovered0"><a name="line42"></a>42         category = Category.find(attributes[:category_id])
-</span><span class="uncovered1"><a name="line43"></a>43         category_report_options.build({:inclusion_type =&gt; attributes[:inclusion_type], :category =&gt; category})
-</span><span class="uncovered0"><a name="line44"></a>44       else 
-</span><span class="uncovered1"><a name="line45"></a>45         category_report_options.delete_if {|item| item.category_id == attributes[:category_id]}
-</span><span class="uncovered0"><a name="line46"></a>46       end
-</span><span class="uncovered1"><a name="line47"></a>47     end
-</span><span class="uncovered0"><a name="line48"></a>48   end
-</span><span class="inferred1"><a name="line49"></a>49 
-</span><span class="marked0"><a name="line50"></a>50   after_update :save_options
-</span><span class="inferred1"><a name="line51"></a>51 
-</span><span class="marked0"><a name="line52"></a>52   def existing_category_report_options=(category_report_options_attr)
-</span><span class="uncovered1"><a name="line53"></a>53     category_report_options.reject(&amp;:new_record?).each do |option|
-</span><span class="uncovered0"><a name="line54"></a>54       attributes = category_report_options_attr[option.id.to_s]
-</span><span class="uncovered1"><a name="line55"></a>55       if attributes &amp;&amp; attributes[:inclusion_type] != 'none'
-</span><span class="uncovered0"><a name="line56"></a>56         option.attributes = attributes
-</span><span class="uncovered1"><a name="line57"></a>57       else
-</span><span class="uncovered0"><a name="line58"></a>58         category_report_options.delete(option)
-</span><span class="uncovered1"><a name="line59"></a>59       end
-</span><span class="uncovered0"><a name="line60"></a>60     end
-</span><span class="uncovered1"><a name="line61"></a>61   end
-</span><span class="inferred0"><a name="line62"></a>62 
-</span><span class="marked1"><a name="line63"></a>63   def save_options
-</span><span class="uncovered0"><a name="line64"></a>64     category_report_options.each do |option|
-</span><span class="uncovered1"><a name="line65"></a>65       option.save(false)
-</span><span class="uncovered0"><a name="line66"></a>66     end
-</span><span class="uncovered1"><a name="line67"></a>67   end
-</span><span class="inferred0"><a name="line68"></a>68 
-</span><span class="inferred1"><a name="line69"></a>69 
-</span><span class="inferred0"><a name="line70"></a>70 
-</span><span class="inferred1"><a name="line71"></a>71 
-</span><span class="inferred0"><a name="line72"></a>72   #dla kazdej category na liscie categories i dla ktorej nie ma category_report_option
-</span><span class="inferred1"><a name="line73"></a>73   #tworzy category_report_option i ustawia mu inclusion_type na :none
-</span><span class="inferred0"><a name="line74"></a>74   #
-</span><span class="marked1"><a name="line75"></a>75   def prepare_category_report_options(given_categories)
-</span><span class="marked0"><a name="line76"></a>76     given_categories.each do |cat|
-</span><span class="marked1"><a name="line77"></a>77       unless categories.include? cat
-</span><span class="marked0"><a name="line78"></a>78         category_report_options &lt;&lt; CategoryReportOption.new({:category =&gt; cat, :inclusion_type =&gt; :none})
-</span><span class="inferred1"><a name="line79"></a>79       end
-</span><span class="inferred0"><a name="line80"></a>80    end
-</span><span class="inferred1"><a name="line81"></a>81   end
-</span><span class="inferred0"><a name="line82"></a>82 
-</span><span class="inferred1"><a name="line83"></a>83 
-</span><span class="inferred0"><a name="line84"></a>84 end
+<pre><span class="inferred0"><a name="line1"></a> 1 # == Schema Information
+</span><span class="inferred1"><a name="line2"></a> 2 # Schema version: 20090201170116
+</span><span class="inferred0"><a name="line3"></a> 3 #
+</span><span class="inferred1"><a name="line4"></a> 4 # Table name: reports
+</span><span class="inferred0"><a name="line5"></a> 5 #
+</span><span class="inferred1"><a name="line6"></a> 6 #  id                   :integer       not null, primary key
+</span><span class="inferred0"><a name="line7"></a> 7 #  type                 :string(255)   
+</span><span class="inferred1"><a name="line8"></a> 8 #  name                 :string(255)   not null
+</span><span class="inferred0"><a name="line9"></a> 9 #  period_type_int      :integer       not null
+</span><span class="inferred1"><a name="line10"></a>10 #  period_start         :date          
+</span><span class="inferred0"><a name="line11"></a>11 #  period_end           :date          
+</span><span class="inferred1"><a name="line12"></a>12 #  report_view_type_int :integer       not null
+</span><span class="inferred0"><a name="line13"></a>13 #  is_predefined        :boolean       not null
+</span><span class="inferred1"><a name="line14"></a>14 #  user_id              :integer       
+</span><span class="inferred0"><a name="line15"></a>15 #  created_at           :datetime      
+</span><span class="inferred1"><a name="line16"></a>16 #  updated_at           :datetime      
+</span><span class="inferred0"><a name="line17"></a>17 #  share_type_int       :integer       default(0)
+</span><span class="inferred1"><a name="line18"></a>18 #  depth                :integer       default(0)
+</span><span class="inferred0"><a name="line19"></a>19 #  max_categories_count :integer       default(0)
+</span><span class="inferred1"><a name="line20"></a>20 #  category_id          :integer       
+</span><span class="inferred0"><a name="line21"></a>21 #  period_division_int  :integer       default(5)
+</span><span class="inferred1"><a name="line22"></a>22 #  temporary            :boolean       not null
+</span><span class="inferred0"><a name="line23"></a>23 #
+</span><span class="inferred1"><a name="line24"></a>24 
+</span><span class="marked0"><a name="line25"></a>25 class MultipleCategoryReport &lt; Report
+</span><span class="marked1"><a name="line26"></a>26   has_many :category_report_options, :foreign_key =&gt; :report_id, :dependent =&gt; :destroy, :include =&gt; :category, :order =&gt; 'categories.category_type_int, categories.lft'
+</span><span class="marked0"><a name="line27"></a>27   has_many :categories, :through =&gt; :category_report_options# 
+</span><span class="inferred1"><a name="line28"></a>28 
+</span><span class="marked0"><a name="line29"></a>29   validate :has_at_least_one_category?
+</span><span class="inferred1"><a name="line30"></a>30 
+</span><span class="marked0"><a name="line31"></a>31   validates_associated :category_report_options
+</span><span class="inferred1"><a name="line32"></a>32 
+</span><span class="marked0"><a name="line33"></a>33   def has_at_least_one_category?
+</span><span class="marked1"><a name="line34"></a>34      unless category_report_options != nil &amp;&amp; category_report_options.size &gt; 0
+</span><span class="marked0"><a name="line35"></a>35        errors.add(:category_report_options, &quot;Powinna być wybrana conajmiej jedna kategoria&quot;)
+</span><span class="inferred1"><a name="line36"></a>36      end
+</span><span class="inferred0"><a name="line37"></a>37   end
+</span><span class="inferred1"><a name="line38"></a>38 
+</span><span class="marked0"><a name="line39"></a>39   def new_category_report_options=(category_report_options_attr)
+</span><span class="uncovered1"><a name="line40"></a>40     category_report_options_attr.each do |attributes|
+</span><span class="uncovered0"><a name="line41"></a>41       if attributes[:inclusion_type] != 'none'
+</span><span class="uncovered1"><a name="line42"></a>42         category = Category.find(attributes[:category_id])
+</span><span class="uncovered0"><a name="line43"></a>43         category_report_options.build({:inclusion_type =&gt; attributes[:inclusion_type], :category =&gt; category})
+</span><span class="uncovered1"><a name="line44"></a>44       else 
+</span><span class="uncovered0"><a name="line45"></a>45         category_report_options.delete_if {|item| item.category_id == attributes[:category_id]}
+</span><span class="uncovered1"><a name="line46"></a>46       end
+</span><span class="uncovered0"><a name="line47"></a>47     end
+</span><span class="uncovered1"><a name="line48"></a>48   end
+</span><span class="inferred0"><a name="line49"></a>49 
+</span><span class="marked1"><a name="line50"></a>50   after_update :save_options
+</span><span class="inferred0"><a name="line51"></a>51 
+</span><span class="marked1"><a name="line52"></a>52   def existing_category_report_options=(category_report_options_attr)
+</span><span class="marked0"><a name="line53"></a>53     category_report_options.reject(&amp;:new_record?).each do |option|
+</span><span class="marked1"><a name="line54"></a>54       attributes = category_report_options_attr[option.id.to_s]
+</span><span class="marked0"><a name="line55"></a>55       if attributes &amp;&amp; attributes[:inclusion_type] != 'none'
+</span><span class="marked1"><a name="line56"></a>56         option.attributes = attributes
+</span><span class="inferred0"><a name="line57"></a>57       else
+</span><span class="marked1"><a name="line58"></a>58         category_report_options.delete(option)
+</span><span class="inferred0"><a name="line59"></a>59       end
+</span><span class="inferred1"><a name="line60"></a>60     end
+</span><span class="inferred0"><a name="line61"></a>61   end
+</span><span class="inferred1"><a name="line62"></a>62 
+</span><span class="marked0"><a name="line63"></a>63   def save_options
+</span><span class="marked1"><a name="line64"></a>64     category_report_options.each do |option|
+</span><span class="marked0"><a name="line65"></a>65       option.save(false)
+</span><span class="inferred1"><a name="line66"></a>66     end
+</span><span class="inferred0"><a name="line67"></a>67   end
+</span><span class="inferred1"><a name="line68"></a>68 
+</span><span class="inferred0"><a name="line69"></a>69 
+</span><span class="inferred1"><a name="line70"></a>70 
+</span><span class="inferred0"><a name="line71"></a>71   #dla kazdej category na liscie categories i dla ktorej nie ma category_report_option
+</span><span class="inferred1"><a name="line72"></a>72   #tworzy category_report_option i ustawia mu inclusion_type na :none
+</span><span class="inferred0"><a name="line73"></a>73   #
+</span><span class="marked1"><a name="line74"></a>74   def prepare_category_report_options(given_categories)
+</span><span class="marked0"><a name="line75"></a>75     given_categories.each do |cat|
+</span><span class="marked1"><a name="line76"></a>76       unless categories.include? cat
+</span><span class="marked0"><a name="line77"></a>77         category_report_options &lt;&lt; CategoryReportOption.new({:category =&gt; cat, :inclusion_type =&gt; :none})
+</span><span class="inferred1"><a name="line78"></a>78       end
+</span><span class="inferred0"><a name="line79"></a>79    end
+</span><span class="inferred1"><a name="line80"></a>80   end
+</span><span class="inferred0"><a name="line81"></a>81 
+</span><span class="inferred1"><a name="line82"></a>82 
+</span><span class="inferred0"><a name="line83"></a>83 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:46 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:06 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -575,20 +575,20 @@ span.run100 {
         </td>
       <td class='lines_code'><tt>57</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>83.3%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>76.4%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='83'/>
-                  <td class='uncovered' width='17'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='76'/>
+                  <td class='uncovered' width='24'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>78.9%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>70.2%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='79'/>
-                  <td class='uncovered' width='21'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='70'/>
+                  <td class='uncovered' width='30'/>
                   </tr>
                 </table>
               </td>
@@ -598,78 +598,78 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a> 1 module ReportsHelper
-</span><span class="inferred0"><a name="line2"></a> 2 
-</span><span class="marked1"><a name="line3"></a> 3   def get_report_partial_name(report)
-</span><span class="marked0"><a name="line4"></a> 4      report.type_str.underscore + '_fields'
-</span><span class="inferred1"><a name="line5"></a> 5   end
-</span><span class="inferred0"><a name="line6"></a> 6 
-</span><span class="inferred1"><a name="line7"></a> 7 
-</span><span class="marked0"><a name="line8"></a> 8   def get_report_partial_div_name(report)
-</span><span class="marked1"><a name="line9"></a> 9      report.to_s.underscore + '_options'
-</span><span class="inferred0"><a name="line10"></a>10   end
-</span><span class="inferred1"><a name="line11"></a>11 
-</span><span class="inferred0"><a name="line12"></a>12 
-</span><span class="inferred1"><a name="line13"></a>13   #generuje kod javascript ukrywajacy i pokazujacy divy
-</span><span class="inferred0"><a name="line14"></a>14   # zawierajace formularze dla poszczegolnych typow raportow
-</span><span class="inferred1"><a name="line15"></a>15   #@author Jarek
-</span><span class="marked0"><a name="line16"></a>16   def control_visibility_of_report_forms(report)
-</span><span class="marked1"><a name="line17"></a>17     [FlowReport, ValueReport, ShareReport].inject '' do |mem, item|
-</span><span class="marked0"><a name="line18"></a>18       div = get_report_partial_div_name(item)
-</span><span class="marked1"><a name="line19"></a>19       command = report.is_a?(item)? &quot;show&quot; : &quot;hide&quot;
-</span><span class="marked0"><a name="line20"></a>20       mem += &quot;Element.#{command}('#{div}');&quot;
-</span><span class="inferred1"><a name="line21"></a>21     end
-</span><span class="inferred0"><a name="line22"></a>22   end
-</span><span class="inferred1"><a name="line23"></a>23 
-</span><span class="marked0"><a name="line24"></a>24   def get_desc_for_report_view_type(code)
-</span><span class="marked1"><a name="line25"></a>25     case code
-</span><span class="marked0"><a name="line26"></a>26     when :bar then 'Wykres słupkowy'
-</span><span class="marked1"><a name="line27"></a>27     when :pie then 'Wykres kołowy'
-</span><span class="marked0"><a name="line28"></a>28     when :linear then 'Wykres liniowy'
-</span><span class="uncovered1"><a name="line29"></a>29     when :text then 'Raport tekstowy'
-</span><span class="uncovered0"><a name="line30"></a>30     end
-</span><span class="uncovered1"><a name="line31"></a>31   end
-</span><span class="inferred0"><a name="line32"></a>32 
-</span><span class="marked1"><a name="line33"></a>33   def get_desc_for_share_type(code)
-</span><span class="marked0"><a name="line34"></a>34     case code
-</span><span class="marked1"><a name="line35"></a>35     when :percentage then 'Procentowy'
-</span><span class="marked0"><a name="line36"></a>36     when :value then '&quot;Wartościowy&quot;'
-</span><span class="inferred1"><a name="line37"></a>37     end
-</span><span class="inferred0"><a name="line38"></a>38   end
-</span><span class="inferred1"><a name="line39"></a>39 
-</span><span class="marked0"><a name="line40"></a>40   def get_desc_for_inclusion_type(code)
-</span><span class="marked1"><a name="line41"></a>41     case code
-</span><span class="marked0"><a name="line42"></a>42     when :none then 'Nie wybrana'
-</span><span class="marked1"><a name="line43"></a>43     when :both then 'Kategoria i podkategorie osobno'
-</span><span class="marked0"><a name="line44"></a>44     when :category_only then 'Kategoria'
-</span><span class="marked1"><a name="line45"></a>45     when :category_and_subcategories then 'Kategoria (+podkategorie)'
-</span><span class="inferred0"><a name="line46"></a>46     end
-</span><span class="inferred1"><a name="line47"></a>47   end
-</span><span class="inferred0"><a name="line48"></a>48 
-</span><span class="marked1"><a name="line49"></a>49   def get_desc_for_period_type(code)
-</span><span class="uncovered0"><a name="line50"></a>50     case code
-</span><span class="uncovered1"><a name="line51"></a>51     when :day then 'Dzień'
-</span><span class="uncovered0"><a name="line52"></a>52     when :week then 'Tydzień'
-</span><span class="uncovered1"><a name="line53"></a>53     when :month then 'Miesiąc'
-</span><span class="uncovered0"><a name="line54"></a>54     when :quarter then 'Kwartał&quot;'
-</span><span class="uncovered1"><a name="line55"></a>55     when :year then 'Rok'
-</span><span class="uncovered0"><a name="line56"></a>56     when :custom then 'Dowolny'
-</span><span class="uncovered1"><a name="line57"></a>57     end
-</span><span class="uncovered0"><a name="line58"></a>58   end
-</span><span class="inferred1"><a name="line59"></a>59 
-</span><span class="marked0"><a name="line60"></a>60   def get_desc_for_period_division(code)
-</span><span class="marked1"><a name="line61"></a>61     case code
-</span><span class="marked0"><a name="line62"></a>62     when :day then 'Dzień'
-</span><span class="marked1"><a name="line63"></a>63     when :week then 'Tydzień'
-</span><span class="marked0"><a name="line64"></a>64     when :month then 'Miesiąc'
-</span><span class="marked1"><a name="line65"></a>65     when :quarter then 'Kwartał&quot;'
-</span><span class="marked0"><a name="line66"></a>66     when :year then 'Rok'
-</span><span class="marked1"><a name="line67"></a>67     when :none then 'Bez podziału'
-</span><span class="inferred0"><a name="line68"></a>68     end
-</span><span class="inferred1"><a name="line69"></a>69   end
-</span><span class="inferred0"><a name="line70"></a>70 
-</span><span class="inferred1"><a name="line71"></a>71 
-</span><span class="inferred0"><a name="line72"></a>72 end
+<pre><span class="marked0"><a name="line1"></a> 1 module ReportsHelper
+</span><span class="inferred1"><a name="line2"></a> 2 
+</span><span class="marked0"><a name="line3"></a> 3   def get_report_partial_name(report)
+</span><span class="marked1"><a name="line4"></a> 4      report.type_str.underscore + '_fields'
+</span><span class="inferred0"><a name="line5"></a> 5   end
+</span><span class="inferred1"><a name="line6"></a> 6 
+</span><span class="inferred0"><a name="line7"></a> 7 
+</span><span class="marked1"><a name="line8"></a> 8   def get_report_partial_div_name(report)
+</span><span class="marked0"><a name="line9"></a> 9      report.to_s.underscore + '_options'
+</span><span class="inferred1"><a name="line10"></a>10   end
+</span><span class="inferred0"><a name="line11"></a>11 
+</span><span class="inferred1"><a name="line12"></a>12 
+</span><span class="inferred0"><a name="line13"></a>13   #generuje kod javascript ukrywajacy i pokazujacy divy
+</span><span class="inferred1"><a name="line14"></a>14   # zawierajace formularze dla poszczegolnych typow raportow
+</span><span class="inferred0"><a name="line15"></a>15   #@author Jarek
+</span><span class="marked1"><a name="line16"></a>16   def control_visibility_of_report_forms(report)
+</span><span class="marked0"><a name="line17"></a>17     [FlowReport, ValueReport, ShareReport].inject '' do |mem, item|
+</span><span class="marked1"><a name="line18"></a>18       div = get_report_partial_div_name(item)
+</span><span class="marked0"><a name="line19"></a>19       command = report.is_a?(item)? &quot;show&quot; : &quot;hide&quot;
+</span><span class="marked1"><a name="line20"></a>20       mem += &quot;Element.#{command}('#{div}');&quot;
+</span><span class="inferred0"><a name="line21"></a>21     end
+</span><span class="inferred1"><a name="line22"></a>22   end
+</span><span class="inferred0"><a name="line23"></a>23 
+</span><span class="marked1"><a name="line24"></a>24   def get_desc_for_report_view_type(code)
+</span><span class="marked0"><a name="line25"></a>25     case code
+</span><span class="marked1"><a name="line26"></a>26     when :bar then 'Wykres słupkowy'
+</span><span class="marked0"><a name="line27"></a>27     when :pie then 'Wykres kołowy'
+</span><span class="marked1"><a name="line28"></a>28     when :linear then 'Wykres liniowy'
+</span><span class="uncovered0"><a name="line29"></a>29     when :text then 'Raport tekstowy'
+</span><span class="uncovered1"><a name="line30"></a>30     end
+</span><span class="uncovered0"><a name="line31"></a>31   end
+</span><span class="inferred1"><a name="line32"></a>32 
+</span><span class="marked0"><a name="line33"></a>33   def get_desc_for_share_type(code)
+</span><span class="uncovered1"><a name="line34"></a>34     case code
+</span><span class="uncovered0"><a name="line35"></a>35     when :percentage then 'Procentowy'
+</span><span class="uncovered1"><a name="line36"></a>36     when :value then '&quot;Wartościowy&quot;'
+</span><span class="uncovered0"><a name="line37"></a>37     end
+</span><span class="uncovered1"><a name="line38"></a>38   end
+</span><span class="inferred0"><a name="line39"></a>39 
+</span><span class="marked1"><a name="line40"></a>40   def get_desc_for_inclusion_type(code)
+</span><span class="marked0"><a name="line41"></a>41     case code
+</span><span class="marked1"><a name="line42"></a>42     when :none then 'Nie wybrana'
+</span><span class="marked0"><a name="line43"></a>43     when :both then 'Kategoria i podkategorie osobno'
+</span><span class="marked1"><a name="line44"></a>44     when :category_only then 'Kategoria'
+</span><span class="marked0"><a name="line45"></a>45     when :category_and_subcategories then 'Kategoria (+podkategorie)'
+</span><span class="inferred1"><a name="line46"></a>46     end
+</span><span class="inferred0"><a name="line47"></a>47   end
+</span><span class="inferred1"><a name="line48"></a>48 
+</span><span class="marked0"><a name="line49"></a>49   def get_desc_for_period_type(code)
+</span><span class="uncovered1"><a name="line50"></a>50     case code
+</span><span class="uncovered0"><a name="line51"></a>51     when :day then 'Dzień'
+</span><span class="uncovered1"><a name="line52"></a>52     when :week then 'Tydzień'
+</span><span class="uncovered0"><a name="line53"></a>53     when :month then 'Miesiąc'
+</span><span class="uncovered1"><a name="line54"></a>54     when :quarter then 'Kwartał'
+</span><span class="uncovered0"><a name="line55"></a>55     when :year then 'Rok'
+</span><span class="uncovered1"><a name="line56"></a>56     when :custom then 'Dowolny'
+</span><span class="uncovered0"><a name="line57"></a>57     end
+</span><span class="uncovered1"><a name="line58"></a>58   end
+</span><span class="inferred0"><a name="line59"></a>59 
+</span><span class="marked1"><a name="line60"></a>60   def get_desc_for_period_division(code)
+</span><span class="marked0"><a name="line61"></a>61     case code
+</span><span class="marked1"><a name="line62"></a>62     when :day then 'Dzień'
+</span><span class="marked0"><a name="line63"></a>63     when :week then 'Tydzień'
+</span><span class="marked1"><a name="line64"></a>64     when :month then 'Miesiąc'
+</span><span class="marked0"><a name="line65"></a>65     when :quarter then 'Kwartał'
+</span><span class="marked1"><a name="line66"></a>66     when :year then 'Rok'
+</span><span class="marked0"><a name="line67"></a>67     when :none then 'Bez podziału'
+</span><span class="inferred1"><a name="line68"></a>68     end
+</span><span class="inferred0"><a name="line69"></a>69   end
+</span><span class="inferred1"><a name="line70"></a>70 
+</span><span class="inferred0"><a name="line71"></a>71 
+</span><span class="inferred1"><a name="line72"></a>72 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

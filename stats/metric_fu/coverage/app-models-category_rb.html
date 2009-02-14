@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:07 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-category_rb.html'>app/models/category.rb</a>
         </td>
-      <td class='lines_total'><tt>529</tt>
+      <td class='lines_total'><tt>571</tt>
         </td>
-      <td class='lines_code'><tt>338</tt>
+      <td class='lines_code'><tt>375</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>88.3%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>82.8%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='88'/>
-                  <td class='uncovered' width='12'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='83'/>
+                  <td class='uncovered' width='17'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>82.2%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>75.2%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='82'/>
-                  <td class='uncovered' width='18'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='75'/>
+                  <td class='uncovered' width='25'/>
                   </tr>
                 </table>
               </td>
@@ -629,7 +629,7 @@ span.run100 {
 </span><span class="inferred1"><a name="line29"></a> 29 
 </span><span class="marked0"><a name="line30"></a> 30   attr_accessor :opening_balance, :opening_balance_currency
 </span><span class="inferred1"><a name="line31"></a> 31 
-</span><span class="marked0"><a name="line32"></a> 32   attr_accessor :parent_guid #for importing
+</span><span class="marked0"><a name="line32"></a> 32   attr_accessor :parent_guid #for importing, not saved in db
 </span><span class="inferred1"><a name="line33"></a> 33 
 </span><span class="marked0"><a name="line34"></a> 34   belongs_to :user
 </span><span class="inferred1"><a name="line35"></a> 35 
@@ -683,450 +683,492 @@ span.run100 {
 </span><span class="inferred1"><a name="line83"></a> 83 
 </span><span class="marked0"><a name="line84"></a> 84   has_many :goals
 </span><span class="inferred1"><a name="line85"></a> 85 
-</span><span class="marked0"><a name="line86"></a> 86   has_many :category_report_options, :foreign_key =&gt; :category_id
+</span><span class="marked0"><a name="line86"></a> 86   has_many :category_report_options, :foreign_key =&gt; :category_id, :dependent =&gt; :destroy
 </span><span class="marked1"><a name="line87"></a> 87   has_many :multiple_category_reports, :through =&gt; :category_report_options
 </span><span class="inferred0"><a name="line88"></a> 88 
-</span><span class="marked1"><a name="line89"></a> 89   validates_presence_of :name
+</span><span class="marked1"><a name="line89"></a> 89   attr_reader :opening_balance, :opening_balance_currency
 </span><span class="inferred0"><a name="line90"></a> 90 
-</span><span class="inferred1"><a name="line91"></a> 91 
-</span><span class="marked0"><a name="line92"></a> 92   def &lt;=&gt;(category)
-</span><span class="marked1"><a name="line93"></a> 93     name &lt;=&gt; category.name
-</span><span class="inferred0"><a name="line94"></a> 94   end
-</span><span class="inferred1"><a name="line95"></a> 95 
-</span><span class="inferred0"><a name="line96"></a> 96 
-</span><span class="inferred1"><a name="line97"></a> 97   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
-</span><span class="inferred0"><a name="line98"></a> 98   #np dla kategorii Owoce -&gt; Wydatki:Jedzenie:Owoce
-</span><span class="marked1"><a name="line99"></a> 99   def name_with_path
-</span><span class="marked0"><a name="line100"></a>100     path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
-</span><span class="marked1"><a name="line101"></a>101     path[0,path.size-1]
-</span><span class="inferred0"><a name="line102"></a>102   end
-</span><span class="inferred1"><a name="line103"></a>103 
-</span><span class="marked0"><a name="line104"></a>104   def short_name
-</span><span class="marked1"><a name="line105"></a>105     name[0,15]
-</span><span class="inferred0"><a name="line106"></a>106   end
-</span><span class="inferred1"><a name="line107"></a>107 
-</span><span class="inferred0"><a name="line108"></a>108 
-</span><span class="marked1"><a name="line109"></a>109   def parent=(element)
-</span><span class="marked0"><a name="line110"></a>110     @parent_to_save = element
-</span><span class="marked1"><a name="line111"></a>111     self.category_type_int = element.category_type_int
-</span><span class="inferred0"><a name="line112"></a>112   end
-</span><span class="inferred1"><a name="line113"></a>113 
+</span><span class="marked1"><a name="line91"></a> 91   validates_presence_of :name
+</span><span class="marked0"><a name="line92"></a> 92   validates_numericality_of :opening_balance, :allow_nil =&gt; true
+</span><span class="marked1"><a name="line93"></a> 93   validates_presence_of :opening_balance_currency , :unless =&gt; proc { |category| category.opening_balance.nil? }
+</span><span class="inferred0"><a name="line94"></a> 94 
+</span><span class="marked1"><a name="line95"></a> 95   def &lt;=&gt;(category)
+</span><span class="marked0"><a name="line96"></a> 96     name &lt;=&gt; category.name
+</span><span class="inferred1"><a name="line97"></a> 97   end
+</span><span class="inferred0"><a name="line98"></a> 98 
+</span><span class="inferred1"><a name="line99"></a> 99 
+</span><span class="inferred0"><a name="line100"></a>100   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
+</span><span class="inferred1"><a name="line101"></a>101   #np dla kategorii Owoce -&gt; Wydatki:Jedzenie:Owoce
+</span><span class="marked0"><a name="line102"></a>102   def name_with_path
+</span><span class="marked1"><a name="line103"></a>103     path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
+</span><span class="marked0"><a name="line104"></a>104     path[0,path.size-1]
+</span><span class="inferred1"><a name="line105"></a>105   end
+</span><span class="inferred0"><a name="line106"></a>106 
+</span><span class="marked1"><a name="line107"></a>107   def name_with_indentation
+</span><span class="marked0"><a name="line108"></a>108     '.'*level + name
+</span><span class="inferred1"><a name="line109"></a>109   end
+</span><span class="inferred0"><a name="line110"></a>110 
+</span><span class="marked1"><a name="line111"></a>111   def short_name_with_indentation
+</span><span class="marked0"><a name="line112"></a>112     '&amp;nbsp;'*level*2 + short_name
+</span><span class="inferred1"><a name="line113"></a>113   end
 </span><span class="inferred0"><a name="line114"></a>114 
-</span><span class="marked1"><a name="line115"></a>115   def after_save
-</span><span class="marked0"><a name="line116"></a>116     if @parent_to_save
-</span><span class="marked1"><a name="line117"></a>117       self.move_to_child_of(@parent_to_save)
-</span><span class="marked0"><a name="line118"></a>118       @parent_to_save = :default
-</span><span class="inferred1"><a name="line119"></a>119     end
-</span><span class="inferred0"><a name="line120"></a>120   end
-</span><span class="inferred1"><a name="line121"></a>121 
-</span><span class="marked0"><a name="line122"></a>122   alias_method :original_destroy, :destroy
-</span><span class="inferred1"><a name="line123"></a>123 
-</span><span class="marked0"><a name="line124"></a>124   def destroy
-</span><span class="inferred1"><a name="line125"></a>125     #this could not be done with before_destroy because all children are destroyed first and then before_destroy is exectued
-</span><span class="inferred0"><a name="line126"></a>126     # in other words before_destroy is exectued before destroying object but after destroying child objects...
-</span><span class="inferred1"><a name="line127"></a>127     # Look: :dependent =&gt; :destroy
-</span><span class="inferred0"><a name="line128"></a>128 
-</span><span class="marked1"><a name="line129"></a>129     throw :indestructible if is_top? #cannot be destroyed but can be deleted
-</span><span class="inferred0"><a name="line130"></a>130 
-</span><span class="marked1"><a name="line131"></a>131     children.to_a.each do |c|
-</span><span class="marked0"><a name="line132"></a>132       c.parent = self.parent
-</span><span class="marked1"><a name="line133"></a>133       c.save!
-</span><span class="inferred0"><a name="line134"></a>134     end 
-</span><span class="inferred1"><a name="line135"></a>135 
-</span><span class="marked0"><a name="line136"></a>136     TransferItem.update_all(&quot;category_id = #{self.parent.id}&quot;, &quot;category_id = #{self.id}&quot;)
-</span><span class="inferred1"><a name="line137"></a>137 
-</span><span class="inferred0"><a name="line138"></a>138     # Moving children makes SQL queries that updates current object lft and rgt fields.
-</span><span class="inferred1"><a name="line139"></a>139     # Becuase of that we need to update it calling reload_nested_set so valid fields are stored
-</span><span class="inferred0"><a name="line140"></a>140     # and another sql queries are exectued with valid values -&gt; queries that destroy children
-</span><span class="marked1"><a name="line141"></a>141     reload_nested_set
-</span><span class="marked0"><a name="line142"></a>142     original_destroy
-</span><span class="inferred1"><a name="line143"></a>143 
-</span><span class="inferred0"><a name="line144"></a>144   end
-</span><span class="inferred1"><a name="line145"></a>145   
-</span><span class="marked0"><a name="line146"></a>146   def before_validation
-</span><span class="marked1"><a name="line147"></a>147     if self.description.nil? or self.description.empty?
-</span><span class="marked0"><a name="line148"></a>148       self.description = &quot; &quot; #self.type.to_s + &quot; &quot; + self.name  
-</span><span class="inferred1"><a name="line149"></a>149     end  
-</span><span class="inferred0"><a name="line150"></a>150   end
-</span><span class="inferred1"><a name="line151"></a>151   
-</span><span class="inferred0"><a name="line152"></a>152 
-</span><span class="marked1"><a name="line153"></a>153   def is_top?
-</span><span class="marked0"><a name="line154"></a>154     root?
-</span><span class="inferred1"><a name="line155"></a>155   end
-</span><span class="inferred0"><a name="line156"></a>156     
-</span><span class="inferred1"><a name="line157"></a>157   #======================
-</span><span class="inferred0"><a name="line158"></a>158   #nowy kod do liczenia
-</span><span class="inferred1"><a name="line159"></a>159   #
-</span><span class="inferred0"><a name="line160"></a>160   
-</span><span class="inferred1"><a name="line161"></a>161  
-</span><span class="marked0"><a name="line162"></a>162   def saldo_new(algorithm=:default, with_subcategories = false)
-</span><span class="marked1"><a name="line163"></a>163     universal_saldo(algorithm, with_subcategories)
-</span><span class="inferred0"><a name="line164"></a>164   end
-</span><span class="inferred1"><a name="line165"></a>165 
-</span><span class="inferred0"><a name="line166"></a>166   
-</span><span class="marked1"><a name="line167"></a>167   def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
-</span><span class="marked0"><a name="line168"></a>168     universal_saldo(algorithm, with_subcategories, 't.day &lt;= ?', day)
-</span><span class="inferred1"><a name="line169"></a>169   end
-</span><span class="inferred0"><a name="line170"></a>170 
-</span><span class="inferred1"><a name="line171"></a>171 
-</span><span class="marked0"><a name="line172"></a>172   def saldo_for_period_new(start_day, end_day, algorithm=:default, with_subcategories = false)
-</span><span class="marked1"><a name="line173"></a>173     universal_saldo(algorithm, with_subcategories, 't.day &gt;= ? AND t.day &lt;= ?', start_day, end_day)
-</span><span class="inferred0"><a name="line174"></a>174   end
+</span><span class="inferred1"><a name="line115"></a>115 
+</span><span class="marked0"><a name="line116"></a>116   def short_name
+</span><span class="marked1"><a name="line117"></a>117     name[0,15]
+</span><span class="inferred0"><a name="line118"></a>118   end
+</span><span class="inferred1"><a name="line119"></a>119 
+</span><span class="inferred0"><a name="line120"></a>120 
+</span><span class="marked1"><a name="line121"></a>121   def parent=(element)
+</span><span class="marked0"><a name="line122"></a>122     @parent_to_save = element
+</span><span class="marked1"><a name="line123"></a>123     self.category_type_int = element.category_type_int
+</span><span class="inferred0"><a name="line124"></a>124   end
+</span><span class="inferred1"><a name="line125"></a>125 
+</span><span class="inferred0"><a name="line126"></a>126 
+</span><span class="marked1"><a name="line127"></a>127   def after_save
+</span><span class="marked0"><a name="line128"></a>128     if @parent_to_save &amp;&amp; @parent_to_save != self.parent
+</span><span class="marked1"><a name="line129"></a>129       self.move_to_child_of(@parent_to_save)
+</span><span class="marked0"><a name="line130"></a>130       @parent_to_save = :default
+</span><span class="inferred1"><a name="line131"></a>131     end
+</span><span class="inferred0"><a name="line132"></a>132   end
+</span><span class="inferred1"><a name="line133"></a>133 
+</span><span class="inferred0"><a name="line134"></a>134 
+</span><span class="inferred1"><a name="line135"></a>135   #Required for rails validation of fields that are not in database
+</span><span class="marked0"><a name="line136"></a>136   def opening_balance_before_type_cast
+</span><span class="marked1"><a name="line137"></a>137     @opening_balance
+</span><span class="inferred0"><a name="line138"></a>138   end
+</span><span class="inferred1"><a name="line139"></a>139   #Required for rails validation of fields that are not in database
+</span><span class="marked0"><a name="line140"></a>140   def opening_balance_currency_before_type_cast
+</span><span class="uncovered1"><a name="line141"></a>141     @opening_balance_currency
+</span><span class="uncovered0"><a name="line142"></a>142   end
+</span><span class="marked1"><a name="line143"></a>143   def opening_balance=(ob)
+</span><span class="marked0"><a name="line144"></a>144     @opening_balance = ob unless ob.blank? #so =&gt; allow_nil works properly
+</span><span class="inferred1"><a name="line145"></a>145   end
+</span><span class="marked0"><a name="line146"></a>146   def opening_balance_currency=(obc)
+</span><span class="marked1"><a name="line147"></a>147     @opening_balance_currency = obc unless obc.blank?
+</span><span class="inferred0"><a name="line148"></a>148   end
+</span><span class="marked1"><a name="line149"></a>149   def opening_balance_currency_id
+</span><span class="marked0"><a name="line150"></a>150     return @opening_balance_currency.id if @opening_balance_currency.is_a? Currency
+</span><span class="inferred1"><a name="line151"></a>151   end
+</span><span class="marked0"><a name="line152"></a>152   def opening_balance_currency_id=(currency_id)
+</span><span class="marked1"><a name="line153"></a>153     self.opening_balance_currency= Currency.find_by_id(currency_id)
+</span><span class="inferred0"><a name="line154"></a>154   end
+</span><span class="inferred1"><a name="line155"></a>155 
+</span><span class="inferred0"><a name="line156"></a>156 
+</span><span class="inferred1"><a name="line157"></a>157 
+</span><span class="marked0"><a name="line158"></a>158   def after_create
+</span><span class="marked1"><a name="line159"></a>159     if @opening_balance &amp;&amp; @opening_balance_currency
+</span><span class="marked0"><a name="line160"></a>160       currency = @opening_balance_currency
+</span><span class="marked1"><a name="line161"></a>161       value = @opening_balance
+</span><span class="marked0"><a name="line162"></a>162       transfer = Transfer.new(:day =&gt;Date.today, :user =&gt; self.user, :description =&gt; &quot;Bilans otwarcia&quot;)
+</span><span class="inferred1"><a name="line163"></a>163 
+</span><span class="marked0"><a name="line164"></a>164       transfer.transfer_items.build(:description =&gt; transfer.description, :value =&gt; value, :category =&gt; self, :currency =&gt; currency)
+</span><span class="marked1"><a name="line165"></a>165       ti = transfer.transfer_items[0]
+</span><span class="marked0"><a name="line166"></a>166       transfer.transfer_items.build(:description =&gt; transfer.description, :value =&gt; (-1 * ti.value), :category =&gt; self.user.balance, :currency =&gt; currency)
+</span><span class="marked1"><a name="line167"></a>167       transfer.save!
+</span><span class="inferred0"><a name="line168"></a>168       
+</span><span class="marked1"><a name="line169"></a>169       @opening_balance = nil
+</span><span class="marked0"><a name="line170"></a>170       @opening_balance_currency = nil
+</span><span class="inferred1"><a name="line171"></a>171     end
+</span><span class="inferred0"><a name="line172"></a>172   end
+</span><span class="inferred1"><a name="line173"></a>173 
+</span><span class="marked0"><a name="line174"></a>174   alias_method :original_destroy, :destroy
 </span><span class="inferred1"><a name="line175"></a>175 
-</span><span class="marked0"><a name="line176"></a>176   def saldo_for_period_with_subcategories(start_day, end_day, algorithm=:default)
-</span><span class="marked1"><a name="line177"></a>177     saldo_for_period_new(start_day, end_day, algorithm, true)
-</span><span class="inferred0"><a name="line178"></a>178   end
-</span><span class="inferred1"><a name="line179"></a>179 
+</span><span class="marked0"><a name="line176"></a>176   def destroy
+</span><span class="inferred1"><a name="line177"></a>177     #this could not be done with before_destroy because all children are destroyed first and then before_destroy is exectued
+</span><span class="inferred0"><a name="line178"></a>178     # in other words before_destroy is exectued before destroying object but after destroying child objects...
+</span><span class="inferred1"><a name="line179"></a>179     # Look: :dependent =&gt; :destroy
 </span><span class="inferred0"><a name="line180"></a>180 
-</span><span class="inferred1"><a name="line181"></a>181 
-</span><span class="marked0"><a name="line182"></a>182   def saldo_after_day_new(day, algorithm=:default, with_subcategories = false)
-</span><span class="marked1"><a name="line183"></a>183     universal_saldo(algorithm, with_subcategories, 't.day &gt; ?', day)
-</span><span class="inferred0"><a name="line184"></a>184   end
-</span><span class="inferred1"><a name="line185"></a>185 
-</span><span class="inferred0"><a name="line186"></a>186 
-</span><span class="marked1"><a name="line187"></a>187   def current_saldo(algorithm=:default)
-</span><span class="marked0"><a name="line188"></a>188     saldo_at_end_of_day(Date.today, algorithm)
-</span><span class="inferred1"><a name="line189"></a>189   end
-</span><span class="inferred0"><a name="line190"></a>190 
-</span><span class="inferred1"><a name="line191"></a>191 
-</span><span class="inferred0"><a name="line192"></a>192   # Returns array of hashes{:transfer =&gt; tr, :money =&gt; Money object, :saldo =&gt; Money object}
-</span><span class="marked1"><a name="line193"></a>193   def transfers_with_saldo_for_period_new(start_day, end_day, with_subcategories = false)
-</span><span class="marked0"><a name="line194"></a>194     categories = get_categories_id(with_subcategories)
-</span><span class="marked1"><a name="line195"></a>195     transfers = Transfer.find(
-</span><span class="inferred0"><a name="line196"></a>196       :all,
-</span><span class="inferred1"><a name="line197"></a>197       :select =&gt;      'transfers.*, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
-</span><span class="inferred0"><a name="line198"></a>198       :joins =&gt;       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
-</span><span class="inferred1"><a name="line199"></a>199       :group =&gt;       'transfers.id, transfer_items.currency_id',
-</span><span class="inferred0"><a name="line200"></a>200       :conditions =&gt;  ['transfer_items.category_id IN (?) AND transfers.day &gt;= ? AND transfers.day &lt;= ?', categories, start_day, end_day],
-</span><span class="inferred1"><a name="line201"></a>201       :order =&gt;       'transfers.day, transfers.id, transfer_items.currency_id')
-</span><span class="inferred0"><a name="line202"></a>202     
-</span><span class="marked1"><a name="line203"></a>203     list = []
-</span><span class="marked0"><a name="line204"></a>204     last_transfer = :default
-</span><span class="marked1"><a name="line205"></a>205     for t in transfers do
-</span><span class="marked0"><a name="line206"></a>206       if last_transfer == t
-</span><span class="marked1"><a name="line207"></a>207         list.last[:money].add(t.read_attribute('value_for_currency').to_i , Currency.find(t.read_attribute('currency_id')))
-</span><span class="inferred0"><a name="line208"></a>208       else
-</span><span class="marked1"><a name="line209"></a>209         list &lt;&lt; {:transfer =&gt; t, :money =&gt; Money.new(Currency.find(t.read_attribute('currency_id')) =&gt; t.read_attribute('value_for_currency').to_i )}
-</span><span class="inferred0"><a name="line210"></a>210       end
-</span><span class="marked1"><a name="line211"></a>211       last_transfer = t
-</span><span class="inferred0"><a name="line212"></a>212     end
-</span><span class="inferred1"><a name="line213"></a>213     
-</span><span class="marked0"><a name="line214"></a>214     saldo = saldo_at_end_of_day(start_day - 1.day, :show_all_currencies, with_subcategories)
-</span><span class="marked1"><a name="line215"></a>215     for t in list do
-</span><span class="marked0"><a name="line216"></a>216       saldo.add(t[:money])
-</span><span class="marked1"><a name="line217"></a>217       t[:saldo] = saldo.clone
-</span><span class="inferred0"><a name="line218"></a>218     end
-</span><span class="inferred1"><a name="line219"></a>219 
-</span><span class="marked0"><a name="line220"></a>220     return list;
-</span><span class="inferred1"><a name="line221"></a>221   end
+</span><span class="marked1"><a name="line181"></a>181     throw :indestructible if is_top? #cannot be destroyed but can be deleted
+</span><span class="inferred0"><a name="line182"></a>182 
+</span><span class="marked1"><a name="line183"></a>183     children.to_a.each do |c|
+</span><span class="marked0"><a name="line184"></a>184       c.parent = self.parent
+</span><span class="marked1"><a name="line185"></a>185       c.save!
+</span><span class="inferred0"><a name="line186"></a>186     end 
+</span><span class="inferred1"><a name="line187"></a>187 
+</span><span class="marked0"><a name="line188"></a>188     TransferItem.update_all(&quot;category_id = #{self.parent.id}&quot;, &quot;category_id = #{self.id}&quot;)
+</span><span class="inferred1"><a name="line189"></a>189 
+</span><span class="inferred0"><a name="line190"></a>190     # Moving children makes SQL queries that updates current object lft and rgt fields.
+</span><span class="inferred1"><a name="line191"></a>191     # Becuase of that we need to update it calling reload_nested_set so valid fields are stored
+</span><span class="inferred0"><a name="line192"></a>192     # and another sql queries are exectued with valid values -&gt; queries that destroy children
+</span><span class="marked1"><a name="line193"></a>193     reload_nested_set
+</span><span class="marked0"><a name="line194"></a>194     original_destroy
+</span><span class="inferred1"><a name="line195"></a>195 
+</span><span class="inferred0"><a name="line196"></a>196   end
+</span><span class="inferred1"><a name="line197"></a>197   
+</span><span class="marked0"><a name="line198"></a>198   def before_validation
+</span><span class="marked1"><a name="line199"></a>199     if self.description.nil? or self.description.empty?
+</span><span class="marked0"><a name="line200"></a>200       self.description = &quot; &quot; #self.type.to_s + &quot; &quot; + self.name  
+</span><span class="inferred1"><a name="line201"></a>201     end  
+</span><span class="inferred0"><a name="line202"></a>202   end
+</span><span class="inferred1"><a name="line203"></a>203 
+</span><span class="marked0"><a name="line204"></a>204   def is_top?
+</span><span class="marked1"><a name="line205"></a>205     root?
+</span><span class="inferred0"><a name="line206"></a>206   end
+</span><span class="inferred1"><a name="line207"></a>207     
+</span><span class="inferred0"><a name="line208"></a>208   #======================
+</span><span class="inferred1"><a name="line209"></a>209   #nowy kod do liczenia
+</span><span class="inferred0"><a name="line210"></a>210   #
+</span><span class="inferred1"><a name="line211"></a>211   
+</span><span class="inferred0"><a name="line212"></a>212  
+</span><span class="marked1"><a name="line213"></a>213   def saldo_new(algorithm=:default, with_subcategories = false)
+</span><span class="marked0"><a name="line214"></a>214     universal_saldo(algorithm, with_subcategories)
+</span><span class="inferred1"><a name="line215"></a>215   end
+</span><span class="inferred0"><a name="line216"></a>216 
+</span><span class="inferred1"><a name="line217"></a>217   
+</span><span class="marked0"><a name="line218"></a>218   def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
+</span><span class="marked1"><a name="line219"></a>219     universal_saldo(algorithm, with_subcategories, 't.day &lt;= ?', day)
+</span><span class="inferred0"><a name="line220"></a>220   end
+</span><span class="inferred1"><a name="line221"></a>221 
 </span><span class="inferred0"><a name="line222"></a>222 
-</span><span class="inferred1"><a name="line223"></a>223 
-</span><span class="inferred0"><a name="line224"></a>224   #TODO
-</span><span class="inferred1"><a name="line225"></a>225   # Oblicza udzial wartosci podkategorii w kategorii
-</span><span class="inferred0"><a name="line226"></a>226   # 
-</span><span class="inferred1"><a name="line227"></a>227   # Parametry:
-</span><span class="inferred0"><a name="line228"></a>228   #  share_type to jedno z [:percentage, :value]
-</span><span class="inferred1"><a name="line229"></a>229   #  max_categories_count liczba podkategorii do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'
-</span><span class="inferred0"><a name="line230"></a>230   #  depth stopien zaglebienia w podkategorie w obliczeniach
-</span><span class="inferred1"><a name="line231"></a>231   #  period_start, period_end zakres czasowy
-</span><span class="inferred0"><a name="line232"></a>232   #
-</span><span class="inferred1"><a name="line233"></a>233   # Wyjscie:
-</span><span class="inferred0"><a name="line234"></a>234   #  tablica tablic postaci:
-</span><span class="inferred1"><a name="line235"></a>235   #  [[wartosc1,nazwa1],[wartosc2,nazwa2]]
-</span><span class="inferred0"><a name="line236"></a>236   #  sortowanie od najwiekszej wartosci
-</span><span class="marked1"><a name="line237"></a>237   def calculate_share_values(max_categories_count, depth, period_start, period_end, share_type)
-</span><span class="uncovered0"><a name="line238"></a>238     [[9,'Nazwa1'],[7,'Nazwa2'],[2,'Nazwa3'],[1,'Nazwa4'],[5,'Pozostale']]
-</span><span class="uncovered1"><a name="line239"></a>239   end
-</span><span class="inferred0"><a name="line240"></a>240   
+</span><span class="marked1"><a name="line223"></a>223   def saldo_for_period_new(start_day, end_day, algorithm=:default, with_subcategories = false)
+</span><span class="marked0"><a name="line224"></a>224     universal_saldo(algorithm, with_subcategories, 't.day &gt;= ? AND t.day &lt;= ?', start_day, end_day)
+</span><span class="inferred1"><a name="line225"></a>225   end
+</span><span class="inferred0"><a name="line226"></a>226 
+</span><span class="marked1"><a name="line227"></a>227   def saldo_for_period_with_subcategories(start_day, end_day, algorithm=:default)
+</span><span class="marked0"><a name="line228"></a>228     saldo_for_period_new(start_day, end_day, algorithm, true)
+</span><span class="inferred1"><a name="line229"></a>229   end
+</span><span class="inferred0"><a name="line230"></a>230 
+</span><span class="inferred1"><a name="line231"></a>231 
+</span><span class="inferred0"><a name="line232"></a>232 
+</span><span class="marked1"><a name="line233"></a>233   def saldo_after_day_new(day, algorithm=:default, with_subcategories = false)
+</span><span class="marked0"><a name="line234"></a>234     universal_saldo(algorithm, with_subcategories, 't.day &gt; ?', day)
+</span><span class="inferred1"><a name="line235"></a>235   end
+</span><span class="inferred0"><a name="line236"></a>236 
+</span><span class="inferred1"><a name="line237"></a>237 
+</span><span class="marked0"><a name="line238"></a>238   def current_saldo(algorithm=:default)
+</span><span class="marked1"><a name="line239"></a>239     saldo_at_end_of_day(Date.today, algorithm)
+</span><span class="inferred0"><a name="line240"></a>240   end
 </span><span class="inferred1"><a name="line241"></a>241 
-</span><span class="inferred0"><a name="line242"></a>242   #TODO
-</span><span class="inferred1"><a name="line243"></a>243   #TODO co z walutami?
-</span><span class="inferred0"><a name="line244"></a>244   # Podaje saldo/salda kategorii w podanym czasie
-</span><span class="inferred1"><a name="line245"></a>245   #
-</span><span class="inferred0"><a name="line246"></a>246   # Parametry:
-</span><span class="inferred1"><a name="line247"></a>247   #  inclusion_type to jedno z [:category_only, :category_and_subcategories, :both]
-</span><span class="inferred0"><a name="line248"></a>248   #  period_division to jedno z [:day, :week, :none...] podzial podanego zakresu czasu na podokresy
-</span><span class="inferred1"><a name="line249"></a>249   #  period_start, period_end zakres czasowy
-</span><span class="inferred0"><a name="line250"></a>250   #
-</span><span class="inferred1"><a name="line251"></a>251   # Wyjscie:
-</span><span class="inferred0"><a name="line252"></a>252   #  hash z maksymalnie dwoma tablicami wartosci postaci:
-</span><span class="inferred1"><a name="line253"></a>253   #  {:category_only =&gt; [money,money,money],
-</span><span class="inferred0"><a name="line254"></a>254   #  :category_and_subcategories =&gt; [money,money,money]}
-</span><span class="inferred1"><a name="line255"></a>255   #  w szczegolnym przypadku tablica moze byc jednoelementowa, np gdy period_division == :none
-</span><span class="inferred0"><a name="line256"></a>256   #  sortowanie od najstarszej wartosci
-</span><span class="inferred1"><a name="line257"></a>257   #
-</span><span class="marked0"><a name="line258"></a>258   def calculate_values(inclusion_type, period_division, period_start, period_end)
-</span><span class="marked1"><a name="line259"></a>259     result = []
-</span><span class="marked0"><a name="line260"></a>260     dates = Date.split_period(period_division, period_start, period_end)
-</span><span class="inferred1"><a name="line261"></a>261     
-</span><span class="inferred0"><a name="line262"></a>262 #    result[:category_only] = []
-</span><span class="marked1"><a name="line263"></a>263     dates.each do |date_range|
-</span><span class="marked0"><a name="line264"></a>264       result &lt;&lt; [:category_only, saldo_for_period_new(date_range[0], date_range[1])] if inclusion_type == :category_only || inclusion_type == :both
-</span><span class="marked1"><a name="line265"></a>265       result &lt;&lt; [:category_and_subcategories, saldo_for_period_with_subcategories(date_range[0], date_range[1])] if inclusion_type == :category_and_subcategories || inclusion_type == :both
-</span><span class="inferred0"><a name="line266"></a>266     end
-</span><span class="inferred1"><a name="line267"></a>267 
-</span><span class="marked0"><a name="line268"></a>268     result
-</span><span class="inferred1"><a name="line269"></a>269   end
-</span><span class="inferred0"><a name="line270"></a>270 
-</span><span class="inferred1"><a name="line271"></a>271 
-</span><span class="inferred0"><a name="line272"></a>272   #TODO
-</span><span class="inferred1"><a name="line273"></a>273   # Uwaga: powinno sie znalezc w jakims bardziej uniwersalnym miejscu (module/klasie)
-</span><span class="inferred0"><a name="line274"></a>274   # Podaje etykiety dla wartosci generowanych przez metode calculate_values
-</span><span class="inferred1"><a name="line275"></a>275   #
-</span><span class="inferred0"><a name="line276"></a>276   # Parametry:
-</span><span class="inferred1"><a name="line277"></a>277   #  takie jak w calculate_values
-</span><span class="inferred0"><a name="line278"></a>278   #
-</span><span class="inferred1"><a name="line279"></a>279   # Wyjście:
-</span><span class="inferred0"><a name="line280"></a>280   #  tablica wartosci postaci:
-</span><span class="inferred1"><a name="line281"></a>281   #  ['tydzien1','tydzien2','tydzien3']
-</span><span class="inferred0"><a name="line282"></a>282   #  ['Styczen','Luty','Marzec']
-</span><span class="inferred1"><a name="line283"></a>283   #  ['Poniedzialek', 'Wtorek']
-</span><span class="inferred0"><a name="line284"></a>284   #  ['2007','2008']
-</span><span class="inferred1"><a name="line285"></a>285   #  [''] dla period_division == :none
-</span><span class="inferred0"><a name="line286"></a>286   #  sortowanie od etykiety opisujacej najstarsza wartosc
-</span><span class="marked1"><a name="line287"></a>287   def self.get_values_labels(period_division, period_start, period_end)
-</span><span class="marked0"><a name="line288"></a>288     dates = Date.split_period(period_division, period_start, period_end)
-</span><span class="marked1"><a name="line289"></a>289     result = []
-</span><span class="marked0"><a name="line290"></a>290     case period_division
-</span><span class="marked1"><a name="line291"></a>291     when :day then
-</span><span class="uncovered0"><a name="line292"></a>292       dates.each do |range|
-</span><span class="uncovered1"><a name="line293"></a>293         result &lt;&lt; &quot;#{range[0].to_s}&quot;
-</span><span class="uncovered0"><a name="line294"></a>294       end
-</span><span class="marked1"><a name="line295"></a>295     when :week then
-</span><span class="marked0"><a name="line296"></a>296       dates.each do |range|
-</span><span class="marked1"><a name="line297"></a>297         result &lt;&lt; &quot;#{range[0].to_s} do #{range[1].to_s}&quot;
-</span><span class="inferred0"><a name="line298"></a>298       end
-</span><span class="uncovered1"><a name="line299"></a>299     when :month then
-</span><span class="uncovered0"><a name="line300"></a>300       dates.each do |range|
-</span><span class="uncovered1"><a name="line301"></a>301         result &lt;&lt; I18n.l(range[0], :format =&gt; '%Y %b ')
-</span><span class="uncovered0"><a name="line302"></a>302       end
-</span><span class="uncovered1"><a name="line303"></a>303     when :quarter then
-</span><span class="uncovered0"><a name="line304"></a>304       dates.each do |range|
-</span><span class="uncovered1"><a name="line305"></a>305         result &lt;&lt; &quot;#{quarter_number(range[0])} kwartał #{range[0].strftime('%Y')}&quot;
-</span><span class="uncovered0"><a name="line306"></a>306       end
-</span><span class="uncovered1"><a name="line307"></a>307     when :year then
-</span><span class="inferred0"><a name="line308"></a>308       dates.each do |range|
-</span><span class="inferred1"><a name="line309"></a>309         result &lt;&lt; range[0].strftime('%Y')
-</span><span class="inferred0"><a name="line310"></a>310       end
-</span><span class="inferred1"><a name="line311"></a>311     when :none then
-</span><span class="inferred0"><a name="line312"></a>312       dates.each do |range|
-</span><span class="inferred1"><a name="line313"></a>313         result &lt;&lt; &quot;#{range[0].to_s} do #{range[1].to_s}&quot;
-</span><span class="inferred0"><a name="line314"></a>314       end
-</span><span class="inferred1"><a name="line315"></a>315     end
-</span><span class="marked0"><a name="line316"></a>316     result
-</span><span class="inferred1"><a name="line317"></a>317   end
-</span><span class="inferred0"><a name="line318"></a>318 
-</span><span class="marked1"><a name="line319"></a>319   def self.quarter_number(date)
-</span><span class="inferred0"><a name="line320"></a>320     case (date.at_beginning_of_quarter.month)
-</span><span class="inferred1"><a name="line321"></a>321     when 1 then &quot;I&quot;
-</span><span class="inferred0"><a name="line322"></a>322     when 4 then &quot;II&quot;
-</span><span class="inferred1"><a name="line323"></a>323     when 7 then &quot;III&quot;
-</span><span class="inferred0"><a name="line324"></a>324     when 10 then &quot;IV&quot;
-</span><span class="inferred1"><a name="line325"></a>325     end
-</span><span class="inferred0"><a name="line326"></a>326   end
-</span><span class="inferred1"><a name="line327"></a>327 
-</span><span class="inferred0"><a name="line328"></a>328 
-</span><span class="inferred1"><a name="line329"></a>329   #
-</span><span class="inferred0"><a name="line330"></a>330   #
-</span><span class="inferred1"><a name="line331"></a>331   # Wyjście:
-</span><span class="inferred0"><a name="line332"></a>332   # hash z dwoma kluczami :in oraz :out
-</span><span class="inferred1"><a name="line333"></a>333   # z których każdy zawiera tabele...
-</span><span class="inferred0"><a name="line334"></a>334   # przykład
-</span><span class="inferred1"><a name="line335"></a>335   # {
-</span><span class="inferred0"><a name="line336"></a>336   # :in =&gt; [
-</span><span class="inferred1"><a name="line337"></a>337   #         {
-</span><span class="inferred0"><a name="line338"></a>338   #          :category =&gt; Category,
-</span><span class="inferred1"><a name="line339"></a>339   #          :values =&gt; Money
-</span><span class="inferred0"><a name="line340"></a>340   #         },
-</span><span class="inferred1"><a name="line341"></a>341   #         {
-</span><span class="inferred0"><a name="line342"></a>342   #          :category =&gt; category,
-</span><span class="inferred1"><a name="line343"></a>343   #          :values =&gt; Money
-</span><span class="inferred0"><a name="line344"></a>344   #         }
-</span><span class="inferred1"><a name="line345"></a>345   # ],
-</span><span class="inferred0"><a name="line346"></a>346   # :out =&gt; [] }
-</span><span class="inferred1"><a name="line347"></a>347 
-</span><span class="marked0"><a name="line348"></a>348   def self.calculate_flow_values(categories, period_start, period_end)
-</span><span class="marked1"><a name="line349"></a>349     categories.collect! { |cat| cat.id }
-</span><span class="marked0"><a name="line350"></a>350     flow_categories = Category.find(
-</span><span class="inferred1"><a name="line351"></a>351       :all,
-</span><span class="inferred0"><a name="line352"></a>352       :select =&gt;      'categories.*,
-</span><span class="inferred1"><a name="line353"></a>353                        ti2.value &gt;=0 as income,
-</span><span class="inferred0"><a name="line354"></a>354                        ti2.currency_id,
-</span><span class="inferred1"><a name="line355"></a>355                        sum(abs(ti2.value)) as sum_value',
-</span><span class="inferred0"><a name="line356"></a>356       :joins =&gt;       'INNER JOIN transfers t on categories.id = ti2.category_id
-</span><span class="inferred1"><a name="line357"></a>357                        INNER JOIN transfer_items ti on ti.transfer_id = t.id
-</span><span class="inferred0"><a name="line358"></a>358                        INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id',
-</span><span class="inferred1"><a name="line359"></a>359       :group =&gt;       'ti2.category_id,
-</span><span class="inferred0"><a name="line360"></a>360                        ti2.currency_id,
-</span><span class="inferred1"><a name="line361"></a>361                        ti2.value &gt;= 0',
-</span><span class="inferred0"><a name="line362"></a>362       :conditions =&gt;  ['ti.category_id in (?)
-</span><span class="inferred1"><a name="line363"></a>363                         and ti2.category_id not in (?)
-</span><span class="inferred0"><a name="line364"></a>364                         AND t.day &gt;= ?
-</span><span class="inferred1"><a name="line365"></a>365                         AND t.day &lt;= ?',
-</span><span class="inferred0"><a name="line366"></a>366                         categories, categories, period_start, period_end],
-</span><span class="inferred1"><a name="line367"></a>367       :order =&gt;       'categories.category_type_int, categories.lft')
-</span><span class="inferred0"><a name="line368"></a>368 
-</span><span class="inferred1"><a name="line369"></a>369     #TODO: cumulate Money walues for one category
-</span><span class="inferred0"><a name="line370"></a>370 
-</span><span class="marked1"><a name="line371"></a>371     flow_categories.collect! do |cat|
-</span><span class="inferred0"><a name="line372"></a>372       {
-</span><span class="inferred1"><a name="line373"></a>373         :category =&gt; cat,
-</span><span class="marked0"><a name="line374"></a>374         :values =&gt; Money.new( Currency.find(cat.read_attribute('currency_id') ), cat.read_attribute('sum_value').to_f )
-</span><span class="marked1"><a name="line375"></a>375       }
-</span><span class="inferred0"><a name="line376"></a>376     end
-</span><span class="inferred1"><a name="line377"></a>377 
-</span><span class="marked0"><a name="line378"></a>378     cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == '0'}
-</span><span class="inferred1"><a name="line379"></a>379 
-</span><span class="marked0"><a name="line380"></a>380     {:out =&gt; cash_out, :in =&gt; cash_in}
-</span><span class="inferred1"><a name="line381"></a>381   end
-</span><span class="inferred0"><a name="line382"></a>382 
-</span><span class="inferred1"><a name="line383"></a>383   #======================
-</span><span class="marked0"><a name="line384"></a>384   private
-</span><span class="inferred1"><a name="line385"></a>385 
-</span><span class="inferred0"><a name="line386"></a>386 
-</span><span class="inferred1"><a name="line387"></a>387 
-</span><span class="marked0"><a name="line388"></a>388   def universal_saldo(algorithm = :default, with_subcategories = false, additional_condition=&quot;&quot;, *params)
-</span><span class="marked1"><a name="line389"></a>389     algorithm = algorithm(algorithm, with_subcategories)
-</span><span class="marked0"><a name="line390"></a>390     unless additional_condition.blank?
-</span><span class="marked1"><a name="line391"></a>391       algorithm[:conditions].first &lt;&lt; &quot; AND #{additional_condition}&quot;
-</span><span class="marked0"><a name="line392"></a>392       algorithm[:conditions] += params
-</span><span class="inferred1"><a name="line393"></a>393     end
-</span><span class="inferred0"><a name="line394"></a>394 
-</span><span class="marked1"><a name="line395"></a>395     money = Money.new()
-</span><span class="inferred0"><a name="line396"></a>396 
-</span><span class="marked1"><a name="line397"></a>397     TransferItem.sum(:value, algorithm).each do |set|
-</span><span class="marked0"><a name="line398"></a>398       if set.class == Array
-</span><span class="inferred1"><a name="line399"></a>399         # group by currency
-</span><span class="marked0"><a name="line400"></a>400         currency, value = set
-</span><span class="marked1"><a name="line401"></a>401         currency = Currency.find_by_id(currency)
-</span><span class="marked0"><a name="line402"></a>402         money.add(value, currency)
-</span><span class="inferred1"><a name="line403"></a>403       else
-</span><span class="inferred0"><a name="line404"></a>404         # calculated to one value in default currency
-</span><span class="marked1"><a name="line405"></a>405         money.add(set.to_f, Currency.find_by_id(self.user.default_currency))
-</span><span class="inferred0"><a name="line406"></a>406       end
-</span><span class="inferred1"><a name="line407"></a>407     end
-</span><span class="marked0"><a name="line408"></a>408     return money
-</span><span class="inferred1"><a name="line409"></a>409 
-</span><span class="inferred0"><a name="line410"></a>410   end
-</span><span class="inferred1"><a name="line411"></a>411 
-</span><span class="inferred0"><a name="line412"></a>412 
-</span><span class="marked1"><a name="line413"></a>413   def algorithm(algorithm, with_subcategories = false)
-</span><span class="marked0"><a name="line414"></a>414     return algorithm(self.user.multi_currency_balance_calculating_algorithm, with_subcategories) if algorithm == :default
-</span><span class="inferred1"><a name="line415"></a>415 
+</span><span class="inferred0"><a name="line242"></a>242 
+</span><span class="inferred1"><a name="line243"></a>243   # Returns array of hashes{:transfer =&gt; tr, :money =&gt; Money object, :saldo =&gt; Money object}
+</span><span class="marked0"><a name="line244"></a>244   def transfers_with_saldo_for_period_new(start_day, end_day, with_subcategories = false)
+</span><span class="marked1"><a name="line245"></a>245     categories = get_categories_id(with_subcategories)
+</span><span class="marked0"><a name="line246"></a>246     transfers = Transfer.find(
+</span><span class="inferred1"><a name="line247"></a>247       :all,
+</span><span class="inferred0"><a name="line248"></a>248       :select =&gt;      'transfers.*, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
+</span><span class="inferred1"><a name="line249"></a>249       :joins =&gt;       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
+</span><span class="inferred0"><a name="line250"></a>250       :group =&gt;       'transfers.id, transfer_items.currency_id',
+</span><span class="inferred1"><a name="line251"></a>251       :conditions =&gt;  ['transfer_items.category_id IN (?) AND transfers.day &gt;= ? AND transfers.day &lt;= ?', categories, start_day, end_day],
+</span><span class="inferred0"><a name="line252"></a>252       :order =&gt;       'transfers.day, transfers.id, transfer_items.currency_id')
+</span><span class="inferred1"><a name="line253"></a>253     
+</span><span class="marked0"><a name="line254"></a>254     list = []
+</span><span class="marked1"><a name="line255"></a>255     last_transfer = :default
+</span><span class="marked0"><a name="line256"></a>256     for t in transfers do
+</span><span class="inferred1"><a name="line257"></a>257 
+</span><span class="marked0"><a name="line258"></a>258       value = t.read_attribute('value_for_currency').to_f.round(2)
+</span><span class="inferred1"><a name="line259"></a>259 
+</span><span class="marked0"><a name="line260"></a>260       if self.user.invert_saldo_for_income &amp;&amp; self.category_type == :INCOME
+</span><span class="uncovered1"><a name="line261"></a>261         value = -value
+</span><span class="uncovered0"><a name="line262"></a>262       end
+</span><span class="inferred1"><a name="line263"></a>263 
+</span><span class="inferred0"><a name="line264"></a>264 
+</span><span class="marked1"><a name="line265"></a>265       currency = Currency.find(t.read_attribute('currency_id'))
+</span><span class="inferred0"><a name="line266"></a>266 
+</span><span class="marked1"><a name="line267"></a>267       if last_transfer != t
+</span><span class="marked0"><a name="line268"></a>268         list &lt;&lt; {:transfer =&gt; t, :money =&gt; Money.new()}
+</span><span class="inferred1"><a name="line269"></a>269       end
+</span><span class="marked0"><a name="line270"></a>270       list.last[:money].add!(value, currency)
+</span><span class="marked1"><a name="line271"></a>271       last_transfer = t
+</span><span class="inferred0"><a name="line272"></a>272     end
+</span><span class="inferred1"><a name="line273"></a>273     
+</span><span class="marked0"><a name="line274"></a>274     saldo = saldo_at_end_of_day(start_day - 1.day, :show_all_currencies, with_subcategories)
+</span><span class="marked1"><a name="line275"></a>275     for t in list do
+</span><span class="marked0"><a name="line276"></a>276       saldo.add!(t[:money])
+</span><span class="marked1"><a name="line277"></a>277       t[:saldo] = saldo.clone
+</span><span class="inferred0"><a name="line278"></a>278     end
+</span><span class="inferred1"><a name="line279"></a>279 
+</span><span class="marked0"><a name="line280"></a>280     return list;
+</span><span class="inferred1"><a name="line281"></a>281   end
+</span><span class="inferred0"><a name="line282"></a>282 
+</span><span class="inferred1"><a name="line283"></a>283 
+</span><span class="inferred0"><a name="line284"></a>284   #TODO
+</span><span class="inferred1"><a name="line285"></a>285   # Oblicza udzial wartosci podkategorii w kategorii
+</span><span class="inferred0"><a name="line286"></a>286   # 
+</span><span class="inferred1"><a name="line287"></a>287   # Parametry:
+</span><span class="inferred0"><a name="line288"></a>288   #  share_type to jedno z [:percentage, :value] do usuniecia - nie obliczaj procentow, zawsze podawaj wartosci
+</span><span class="inferred1"><a name="line289"></a>289   #  max_values_count liczba największych wartości do uwzględnienia do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'
+</span><span class="inferred0"><a name="line290"></a>290   #  depth stopien zaglebienia w podkategorie w obliczeniach
+</span><span class="inferred1"><a name="line291"></a>291   #    mozliwe wartosci: 0,1,2,3,4,5,6, :all
+</span><span class="inferred0"><a name="line292"></a>292   #    0 oznacza zerowe zaglebienie, tzn pokaz oblicz tylko te kategorie z podkategoriami
+</span><span class="inferred1"><a name="line293"></a>293   #    :all oznacza
+</span><span class="inferred0"><a name="line294"></a>294   #  period_start, period_end zakres czasowy
+</span><span class="inferred1"><a name="line295"></a>295   #
+</span><span class="inferred0"><a name="line296"></a>296   # Wyjscie:
+</span><span class="inferred1"><a name="line297"></a>297   #  hash tablicy hashy postaci
+</span><span class="inferred0"><a name="line298"></a>298   #  {currency =&gt; [{category=&gt;a_category,with_subcategories =&gt; true/false, value =&gt; 123.21}, (...) ]}
+</span><span class="inferred1"><a name="line299"></a>299   #  sortowanie od najwiekszej wartosci waramch waluty
+</span><span class="marked0"><a name="line300"></a>300   def calculate_max_share_values(max_values_count, depth, period_start, period_end)
+</span><span class="marked1"><a name="line301"></a>301     values = calculate_share_values(depth, period_start, period_end)
+</span><span class="inferred0"><a name="line302"></a>302 
+</span><span class="marked1"><a name="line303"></a>303     values_in_currencies = {}
+</span><span class="inferred0"><a name="line304"></a>304 
+</span><span class="marked1"><a name="line305"></a>305     values.map{|v| v[:value].currencies}.flatten.uniq.each do |cur|
+</span><span class="marked0"><a name="line306"></a>306       values.sort! {|one,two| two[:value].value(cur)&lt;=&gt;one[:value].value(cur)} #sort from biggest to lowest
+</span><span class="marked1"><a name="line307"></a>307       min_value = values.map{|a| a[:value].value(cur)}.uniq[0..(max_values_count-1)].last
+</span><span class="inferred0"><a name="line308"></a>308 
+</span><span class="marked1"><a name="line309"></a>309       values_to_show, other_values = values.partition {|v| v[:value].value(cur) &gt;= min_value}
+</span><span class="marked0"><a name="line310"></a>310       values_to_show &lt;&lt; {:category =&gt; nil, :value =&gt; other_values.sum(Money.new){|v| v[:value]}, :without_subcategories =&gt; false}
+</span><span class="marked1"><a name="line311"></a>311       values_to_show.delete_if {|el| el[:value].value(cur) == 0}
+</span><span class="marked0"><a name="line312"></a>312       values_in_currencies[cur] = values_to_show
+</span><span class="inferred1"><a name="line313"></a>313     end
+</span><span class="marked0"><a name="line314"></a>314     values_in_currencies
+</span><span class="inferred1"><a name="line315"></a>315   end
+</span><span class="inferred0"><a name="line316"></a>316 
+</span><span class="inferred1"><a name="line317"></a>317   #
+</span><span class="marked0"><a name="line318"></a>318   def calculate_share_values(depth, period_start, period_end)
+</span><span class="marked1"><a name="line319"></a>319     result = []
+</span><span class="marked0"><a name="line320"></a>320     if self.leaf? || depth == 0
+</span><span class="marked1"><a name="line321"></a>321       result &lt;&lt; {:category =&gt; self, :without_subcategories =&gt; false, :value =&gt; self.saldo_for_period_with_subcategories(period_start, period_end)}
+</span><span class="uncovered0"><a name="line322"></a>322     elsif depth == :all
+</span><span class="uncovered1"><a name="line323"></a>323       result &lt;&lt; {:category =&gt; self, :without_subcategories =&gt; true, :value =&gt; self.saldo_for_period_new(period_start, period_end)}
+</span><span class="uncovered0"><a name="line324"></a>324       self.children.each do |sub_category|
+</span><span class="uncovered1"><a name="line325"></a>325         result += sub_category.calculate_share_values(depth, period_start, period_end)
+</span><span class="uncovered0"><a name="line326"></a>326       end
+</span><span class="uncovered1"><a name="line327"></a>327     elsif depth &gt; 0
+</span><span class="uncovered0"><a name="line328"></a>328       result &lt;&lt; {:category =&gt; self, :without_subcategories =&gt; true, :value =&gt; self.saldo_for_period_new(period_start, period_end)}
+</span><span class="uncovered1"><a name="line329"></a>329       self.children.each do |sub_category|
+</span><span class="uncovered0"><a name="line330"></a>330         result += sub_category.calculate_share_values(depth-1, period_start, period_end)
+</span><span class="uncovered1"><a name="line331"></a>331       end
+</span><span class="uncovered0"><a name="line332"></a>332     end
+</span><span class="marked1"><a name="line333"></a>333     result
+</span><span class="inferred0"><a name="line334"></a>334   end
+</span><span class="inferred1"><a name="line335"></a>335 
+</span><span class="inferred0"><a name="line336"></a>336 
+</span><span class="inferred1"><a name="line337"></a>337 
+</span><span class="inferred0"><a name="line338"></a>338   # Podaje saldo/salda kategorii w podanym czasie
+</span><span class="inferred1"><a name="line339"></a>339   #
+</span><span class="inferred0"><a name="line340"></a>340   # Parametry:
+</span><span class="inferred1"><a name="line341"></a>341   #  inclusion_type to jedno z [:category_only, :category_and_subcategories, :both]
+</span><span class="inferred0"><a name="line342"></a>342   #  period_division to jedno z [:day, :week, :none...] podzial podanego zakresu czasu na podokresy
+</span><span class="inferred1"><a name="line343"></a>343   #  period_start, period_end zakres czasowy
+</span><span class="inferred0"><a name="line344"></a>344   #
+</span><span class="inferred1"><a name="line345"></a>345   # Wyjscie:
+</span><span class="inferred0"><a name="line346"></a>346   #  hash z maksymalnie dwoma tablicami wartosci postaci:
+</span><span class="inferred1"><a name="line347"></a>347   #  {:category_only =&gt; [money,money,money],
+</span><span class="inferred0"><a name="line348"></a>348   #  :category_and_subcategories =&gt; [money,money,money]}
+</span><span class="inferred1"><a name="line349"></a>349   #  w szczegolnym przypadku tablica moze byc jednoelementowa, np gdy period_division == :none
+</span><span class="inferred0"><a name="line350"></a>350   #  sortowanie od najstarszej wartosci
+</span><span class="inferred1"><a name="line351"></a>351   #
+</span><span class="marked0"><a name="line352"></a>352   def calculate_values(inclusion_type, period_division, period_start, period_end)
+</span><span class="marked1"><a name="line353"></a>353     result = []
+</span><span class="marked0"><a name="line354"></a>354     dates = Date.split_period(period_division, period_start, period_end)
+</span><span class="inferred1"><a name="line355"></a>355     
+</span><span class="inferred0"><a name="line356"></a>356     #    result[:category_only] = []
+</span><span class="marked1"><a name="line357"></a>357     dates.each do |date_range|
+</span><span class="marked0"><a name="line358"></a>358       result &lt;&lt; [:category_only, saldo_for_period_new(date_range[0], date_range[1])] if inclusion_type == :category_only || inclusion_type == :both
+</span><span class="marked1"><a name="line359"></a>359       result &lt;&lt; [:category_and_subcategories, saldo_for_period_with_subcategories(date_range[0], date_range[1])] if inclusion_type == :category_and_subcategories || inclusion_type == :both
+</span><span class="inferred0"><a name="line360"></a>360     end
+</span><span class="inferred1"><a name="line361"></a>361 
+</span><span class="marked0"><a name="line362"></a>362     result
+</span><span class="inferred1"><a name="line363"></a>363   end
+</span><span class="inferred0"><a name="line364"></a>364 
+</span><span class="inferred1"><a name="line365"></a>365 
+</span><span class="inferred0"><a name="line366"></a>366   #
+</span><span class="inferred1"><a name="line367"></a>367   #
+</span><span class="inferred0"><a name="line368"></a>368   # Wyjście:
+</span><span class="inferred1"><a name="line369"></a>369   # hash z dwoma kluczami :in oraz :out
+</span><span class="inferred0"><a name="line370"></a>370   # z których każdy zawiera tabele...
+</span><span class="inferred1"><a name="line371"></a>371   # przykład
+</span><span class="inferred0"><a name="line372"></a>372   # {
+</span><span class="inferred1"><a name="line373"></a>373   # :in =&gt; [
+</span><span class="inferred0"><a name="line374"></a>374   #         {
+</span><span class="inferred1"><a name="line375"></a>375   #          :category =&gt; Category,
+</span><span class="inferred0"><a name="line376"></a>376   #          :values =&gt; Money
+</span><span class="inferred1"><a name="line377"></a>377   #         },
+</span><span class="inferred0"><a name="line378"></a>378   #         {
+</span><span class="inferred1"><a name="line379"></a>379   #          :category =&gt; category,
+</span><span class="inferred0"><a name="line380"></a>380   #          :values =&gt; Money
+</span><span class="inferred1"><a name="line381"></a>381   #         }
+</span><span class="inferred0"><a name="line382"></a>382   # ],
+</span><span class="inferred1"><a name="line383"></a>383   # :out =&gt; [] }
+</span><span class="inferred0"><a name="line384"></a>384 
+</span><span class="marked1"><a name="line385"></a>385   def self.calculate_flow_values(categories, period_start, period_end)
+</span><span class="marked0"><a name="line386"></a>386     categories.collect! { |cat| cat.id }
+</span><span class="marked1"><a name="line387"></a>387     flow_categories = Category.find(
+</span><span class="inferred0"><a name="line388"></a>388       :all,
+</span><span class="inferred1"><a name="line389"></a>389       :select =&gt;      'categories.*,
+</span><span class="inferred0"><a name="line390"></a>390                        ti2.value &gt;=0 as income,
+</span><span class="inferred1"><a name="line391"></a>391                        ti2.currency_id,
+</span><span class="inferred0"><a name="line392"></a>392                        sum(abs(ti2.value)) as sum_value',
+</span><span class="inferred1"><a name="line393"></a>393       :joins =&gt;       'INNER JOIN transfers t on categories.id = ti2.category_id
+</span><span class="uncovered0"><a name="line394"></a>394                        INNER JOIN transfer_items ti on ti.transfer_id = t.id
+</span><span class="uncovered1"><a name="line395"></a>395                        INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id',
+</span><span class="uncovered0"><a name="line396"></a>396       :group =&gt;       'ti2.category_id,
+</span><span class="uncovered1"><a name="line397"></a>397                        ti2.currency_id,
+</span><span class="uncovered0"><a name="line398"></a>398                        ti2.value &gt;= 0',
+</span><span class="uncovered1"><a name="line399"></a>399       :conditions =&gt;  ['ti.category_id in (?)
+</span><span class="uncovered0"><a name="line400"></a>400                         and ti2.category_id not in (?)
+</span><span class="uncovered1"><a name="line401"></a>401                         AND t.day &gt;= ?
+</span><span class="uncovered0"><a name="line402"></a>402                         AND t.day &lt;= ?',
+</span><span class="uncovered1"><a name="line403"></a>403         categories, categories, period_start, period_end],
+</span><span class="uncovered0"><a name="line404"></a>404       :order =&gt;       'categories.category_type_int, categories.lft')
+</span><span class="inferred1"><a name="line405"></a>405 
+</span><span class="marked0"><a name="line406"></a>406     flow_categories.map! do |cat|
+</span><span class="marked1"><a name="line407"></a>407       cur = Currency.find(cat.read_attribute('currency_id'))
+</span><span class="inferred0"><a name="line408"></a>408       {
+</span><span class="inferred1"><a name="line409"></a>409         :category =&gt; cat,
+</span><span class="inferred0"><a name="line410"></a>410         :currency =&gt; cur,
+</span><span class="marked1"><a name="line411"></a>411         :value =&gt; Money.new(cur, cat.read_attribute('sum_value').to_f.round(2))
+</span><span class="marked0"><a name="line412"></a>412       }
+</span><span class="inferred1"><a name="line413"></a>413     end
+</span><span class="inferred0"><a name="line414"></a>414 
+</span><span class="marked1"><a name="line415"></a>415     cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == '0'}
 </span><span class="inferred0"><a name="line416"></a>416 
-</span><span class="marked1"><a name="line417"></a>417     categories_to_sum = get_categories_id(with_subcategories)
-</span><span class="inferred0"><a name="line418"></a>418 
-</span><span class="inferred1"><a name="line419"></a>419     return case algorithm
-</span><span class="marked0"><a name="line420"></a>420     when :calculate_with_exchanges_closest_to_transaction
-</span><span class="marked1"><a name="line421"></a>421       currency = self.user.default_currency
-</span><span class="inferred0"><a name="line422"></a>422       {
-</span><span class="inferred1"><a name="line423"></a>423         :select =&gt; &quot;
-</span><span class="inferred0"><a name="line424"></a>424         CASE
-</span><span class="marked1"><a name="line425"></a>425         WHEN ti.currency_id = #{currency.id} THEN ti.value
-</span><span class="marked0"><a name="line426"></a>426         WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
-</span><span class="marked1"><a name="line427"></a>427         WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
-</span><span class="inferred0"><a name="line428"></a>428         END
-</span><span class="inferred1"><a name="line429"></a>429         &quot;,
-</span><span class="inferred0"><a name="line430"></a>430 
-</span><span class="inferred1"><a name="line431"></a>431         :from =&gt; 'transfer_items as ti',
-</span><span class="inferred0"><a name="line432"></a>432 
-</span><span class="inferred1"><a name="line433"></a>433         :joins =&gt;&quot;
-</span><span class="inferred0"><a name="line434"></a>434         JOIN transfers AS t ON (ti.transfer_id = t.id)
-</span><span class="inferred1"><a name="line435"></a>435         LEFT JOIN exchanges as ex ON
-</span><span class="inferred0"><a name="line436"></a>436           (
-</span><span class="marked1"><a name="line437"></a>437           ti.currency_id != #{currency.id} AND ex.Id IN
-</span><span class="inferred0"><a name="line438"></a>438             (
-</span><span class="inferred1"><a name="line439"></a>439               SELECT Id FROM exchanges as e WHERE
-</span><span class="inferred0"><a name="line440"></a>440                 (
-</span><span class="inferred1"><a name="line441"></a>441                 abs( julianday(t.day) - julianday(e.day) ) =
-</span><span class="inferred0"><a name="line442"></a>442                   (
-</span><span class="inferred1"><a name="line443"></a>443                   SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM exchanges as e2 WHERE
-</span><span class="inferred0"><a name="line444"></a>444                     (
-</span><span class="marked1"><a name="line445"></a>445                     (e2.user_id = #{self.user.id} ) AND
-</span><span class="marked0"><a name="line446"></a>446                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
-</span><span class="inferred1"><a name="line447"></a>447                     )
-</span><span class="inferred0"><a name="line448"></a>448                   )
-</span><span class="inferred1"><a name="line449"></a>449                 AND
-</span><span class="inferred0"><a name="line450"></a>450                   (
-</span><span class="marked1"><a name="line451"></a>451                   (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
-</span><span class="inferred0"><a name="line452"></a>452                   )
-</span><span class="inferred1"><a name="line453"></a>453                 AND
-</span><span class="inferred0"><a name="line454"></a>454                   (
-</span><span class="marked1"><a name="line455"></a>455                   e.user_id = #{self.user.id}
-</span><span class="inferred0"><a name="line456"></a>456                   )
-</span><span class="inferred1"><a name="line457"></a>457                 )
-</span><span class="inferred0"><a name="line458"></a>458               ORDER BY e.day ASC LIMIT 1
-</span><span class="inferred1"><a name="line459"></a>459             )
-</span><span class="inferred0"><a name="line460"></a>460           )
-</span><span class="inferred1"><a name="line461"></a>461         &quot;,
-</span><span class="marked0"><a name="line462"></a>462         :conditions =&gt; ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-</span><span class="marked1"><a name="line463"></a>463       }
-</span><span class="marked0"><a name="line464"></a>464     when :calculate_with_newest_exchanges
-</span><span class="marked1"><a name="line465"></a>465       currency = self.user.default_currency
-</span><span class="uncovered0"><a name="line466"></a>466       {
-</span><span class="uncovered1"><a name="line467"></a>467         :select =&gt; &quot;
-</span><span class="uncovered0"><a name="line468"></a>468         CASE
-</span><span class="marked1"><a name="line469"></a>469         WHEN ti.currency_id = #{currency.id} THEN ti.value
-</span><span class="marked0"><a name="line470"></a>470         WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
-</span><span class="marked1"><a name="line471"></a>471         WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
-</span><span class="uncovered0"><a name="line472"></a>472         END
-</span><span class="uncovered1"><a name="line473"></a>473         &quot;,
+</span><span class="marked1"><a name="line417"></a>417     {:out =&gt; cash_out, :in =&gt; cash_in}
+</span><span class="inferred0"><a name="line418"></a>418   end
+</span><span class="inferred1"><a name="line419"></a>419 
+</span><span class="inferred0"><a name="line420"></a>420   #======================
+</span><span class="marked1"><a name="line421"></a>421   private
+</span><span class="inferred0"><a name="line422"></a>422 
+</span><span class="inferred1"><a name="line423"></a>423 
+</span><span class="inferred0"><a name="line424"></a>424 
+</span><span class="marked1"><a name="line425"></a>425   def universal_saldo(algorithm = :default, with_subcategories = false, additional_condition=&quot;&quot;, *params)
+</span><span class="marked0"><a name="line426"></a>426     algorithm = algorithm(algorithm, with_subcategories)
+</span><span class="marked1"><a name="line427"></a>427     unless additional_condition.blank?
+</span><span class="marked0"><a name="line428"></a>428       algorithm[:conditions].first &lt;&lt; &quot; AND #{additional_condition}&quot;
+</span><span class="marked1"><a name="line429"></a>429       algorithm[:conditions] += params
+</span><span class="inferred0"><a name="line430"></a>430     end
+</span><span class="inferred1"><a name="line431"></a>431 
+</span><span class="marked0"><a name="line432"></a>432     money = Money.new()
+</span><span class="inferred1"><a name="line433"></a>433 
+</span><span class="marked0"><a name="line434"></a>434     TransferItem.sum(:value, algorithm).each do |set|
+</span><span class="marked1"><a name="line435"></a>435       if set.class == Array
+</span><span class="inferred0"><a name="line436"></a>436         # group by currency
+</span><span class="marked1"><a name="line437"></a>437         currency, value = set
+</span><span class="marked0"><a name="line438"></a>438         currency = Currency.find_by_id(currency)
+</span><span class="marked1"><a name="line439"></a>439         money.add!(value.round(2), currency)
+</span><span class="inferred0"><a name="line440"></a>440       else
+</span><span class="inferred1"><a name="line441"></a>441         # calculated to one value in default currency
+</span><span class="marked0"><a name="line442"></a>442         money.add!(set.to_f.round(2), Currency.find_by_id(self.user.default_currency))
+</span><span class="inferred1"><a name="line443"></a>443       end
+</span><span class="inferred0"><a name="line444"></a>444     end
+</span><span class="inferred1"><a name="line445"></a>445 
+</span><span class="marked0"><a name="line446"></a>446     if self.user.invert_saldo_for_income &amp;&amp; self.category_type == :INCOME
+</span><span class="marked1"><a name="line447"></a>447       money = Money.new - money
+</span><span class="inferred0"><a name="line448"></a>448     end
+</span><span class="inferred1"><a name="line449"></a>449 
+</span><span class="marked0"><a name="line450"></a>450     return money
+</span><span class="inferred1"><a name="line451"></a>451 
+</span><span class="inferred0"><a name="line452"></a>452   end
+</span><span class="inferred1"><a name="line453"></a>453 
+</span><span class="inferred0"><a name="line454"></a>454 
+</span><span class="marked1"><a name="line455"></a>455   def algorithm(algorithm, with_subcategories = false)
+</span><span class="marked0"><a name="line456"></a>456     return algorithm(self.user.multi_currency_balance_calculating_algorithm, with_subcategories) if algorithm == :default
+</span><span class="inferred1"><a name="line457"></a>457 
+</span><span class="inferred0"><a name="line458"></a>458 
+</span><span class="marked1"><a name="line459"></a>459     categories_to_sum = get_categories_id(with_subcategories)
+</span><span class="uncovered0"><a name="line460"></a>460 
+</span><span class="uncovered1"><a name="line461"></a>461     return case algorithm
+</span><span class="marked0"><a name="line462"></a>462     when :calculate_with_exchanges_closest_to_transaction
+</span><span class="marked1"><a name="line463"></a>463       currency = self.user.default_currency
+</span><span class="uncovered0"><a name="line464"></a>464       {
+</span><span class="uncovered1"><a name="line465"></a>465         :select =&gt; &quot;
+</span><span class="uncovered0"><a name="line466"></a>466         CASE
+</span><span class="marked1"><a name="line467"></a>467         WHEN ti.currency_id = #{currency.id} THEN ti.value
+</span><span class="marked0"><a name="line468"></a>468         WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
+</span><span class="marked1"><a name="line469"></a>469         WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+</span><span class="uncovered0"><a name="line470"></a>470         END
+</span><span class="uncovered1"><a name="line471"></a>471         &quot;,
+</span><span class="uncovered0"><a name="line472"></a>472 
+</span><span class="uncovered1"><a name="line473"></a>473         :from =&gt; 'transfer_items as ti',
 </span><span class="uncovered0"><a name="line474"></a>474 
-</span><span class="uncovered1"><a name="line475"></a>475         :from =&gt; 'transfer_items as ti',
-</span><span class="uncovered0"><a name="line476"></a>476 
-</span><span class="uncovered1"><a name="line477"></a>477         :joins =&gt;&quot;
-</span><span class="uncovered0"><a name="line478"></a>478         JOIN transfers AS t ON (ti.transfer_id = t.id)
-</span><span class="uncovered1"><a name="line479"></a>479         LEFT JOIN exchanges as ex ON
-</span><span class="inferred0"><a name="line480"></a>480           (
-</span><span class="marked1"><a name="line481"></a>481           ti.currency_id != #{currency.id} AND ex.Id IN
-</span><span class="uncovered0"><a name="line482"></a>482             (
-</span><span class="uncovered1"><a name="line483"></a>483               SELECT Id FROM Exchanges as e WHERE
-</span><span class="uncovered0"><a name="line484"></a>484                 (
-</span><span class="uncovered1"><a name="line485"></a>485                 abs( julianday('now', 'start of day') - julianday(e.day) ) =
-</span><span class="uncovered0"><a name="line486"></a>486                   (
-</span><span class="uncovered1"><a name="line487"></a>487                   SELECT min( abs( julianday('now', 'start of day') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
-</span><span class="inferred0"><a name="line488"></a>488                     (
-</span><span class="marked1"><a name="line489"></a>489                     (e2.user_id = #{self.user.id} ) AND
-</span><span class="marked0"><a name="line490"></a>490                     ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
-</span><span class="inferred1"><a name="line491"></a>491                     )
-</span><span class="inferred0"><a name="line492"></a>492                   )
-</span><span class="uncovered1"><a name="line493"></a>493                 AND
-</span><span class="inferred0"><a name="line494"></a>494                   (
-</span><span class="marked1"><a name="line495"></a>495                   (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
-</span><span class="inferred0"><a name="line496"></a>496                   )
-</span><span class="uncovered1"><a name="line497"></a>497                 AND
-</span><span class="inferred0"><a name="line498"></a>498                   (
-</span><span class="marked1"><a name="line499"></a>499                   e.user_id = #{self.user.id}
-</span><span class="inferred0"><a name="line500"></a>500                   )
-</span><span class="inferred1"><a name="line501"></a>501                 )
-</span><span class="uncovered0"><a name="line502"></a>502               ORDER BY e.day ASC LIMIT 1
-</span><span class="uncovered1"><a name="line503"></a>503             )
-</span><span class="uncovered0"><a name="line504"></a>504           )
-</span><span class="inferred1"><a name="line505"></a>505         &quot;,
-</span><span class="inferred0"><a name="line506"></a>506 
-</span><span class="marked1"><a name="line507"></a>507         :conditions =&gt; ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-</span><span class="marked0"><a name="line508"></a>508       }
-</span><span class="inferred1"><a name="line509"></a>509     else
-</span><span class="inferred0"><a name="line510"></a>510       {
-</span><span class="inferred1"><a name="line511"></a>511         :select =&gt; 'ti.value',
-</span><span class="inferred0"><a name="line512"></a>512         :from =&gt; 'transfer_items as ti',
-</span><span class="inferred1"><a name="line513"></a>513         :joins =&gt; 'INNER JOIN transfers AS t ON ti.transfer_id = t.id',
-</span><span class="inferred0"><a name="line514"></a>514         :group =&gt; 'ti.currency_id',
-</span><span class="marked1"><a name="line515"></a>515         :conditions =&gt;['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-</span><span class="marked0"><a name="line516"></a>516       }
-</span><span class="marked1"><a name="line517"></a>517     end
-</span><span class="inferred0"><a name="line518"></a>518   end
-</span><span class="inferred1"><a name="line519"></a>519 
-</span><span class="marked0"><a name="line520"></a>520   def get_categories_id(with_subcategories)
-</span><span class="marked1"><a name="line521"></a>521     categories_to_sum = [self]
-</span><span class="marked0"><a name="line522"></a>522     if with_subcategories
-</span><span class="marked1"><a name="line523"></a>523       categories_to_sum += descendants
-</span><span class="inferred0"><a name="line524"></a>524     end
-</span><span class="marked1"><a name="line525"></a>525     categories_to_sum.map! {|cat| cat.id}
-</span><span class="inferred0"><a name="line526"></a>526   end
-</span><span class="inferred1"><a name="line527"></a>527 
-</span><span class="inferred0"><a name="line528"></a>528 
-</span><span class="inferred1"><a name="line529"></a>529 end
+</span><span class="uncovered1"><a name="line475"></a>475         :joins =&gt;&quot;
+</span><span class="uncovered0"><a name="line476"></a>476         JOIN transfers AS t ON (ti.transfer_id = t.id)
+</span><span class="uncovered1"><a name="line477"></a>477         LEFT JOIN exchanges as ex ON
+</span><span class="inferred0"><a name="line478"></a>478           (
+</span><span class="marked1"><a name="line479"></a>479           ti.currency_id != #{currency.id} AND ex.Id IN
+</span><span class="uncovered0"><a name="line480"></a>480             (
+</span><span class="uncovered1"><a name="line481"></a>481               SELECT Id FROM exchanges as e WHERE
+</span><span class="uncovered0"><a name="line482"></a>482                 (
+</span><span class="uncovered1"><a name="line483"></a>483                 abs( julianday(t.day) - julianday(e.day) ) =
+</span><span class="uncovered0"><a name="line484"></a>484                   (
+</span><span class="uncovered1"><a name="line485"></a>485                   SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM exchanges as e2 WHERE
+</span><span class="inferred0"><a name="line486"></a>486                     (
+</span><span class="marked1"><a name="line487"></a>487                     (e2.user_id = #{self.user.id} ) AND
+</span><span class="marked0"><a name="line488"></a>488                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
+</span><span class="inferred1"><a name="line489"></a>489                     )
+</span><span class="inferred0"><a name="line490"></a>490                   )
+</span><span class="uncovered1"><a name="line491"></a>491                 AND
+</span><span class="inferred0"><a name="line492"></a>492                   (
+</span><span class="marked1"><a name="line493"></a>493                   (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+</span><span class="inferred0"><a name="line494"></a>494                   )
+</span><span class="uncovered1"><a name="line495"></a>495                 AND
+</span><span class="inferred0"><a name="line496"></a>496                   (
+</span><span class="marked1"><a name="line497"></a>497                   e.user_id = #{self.user.id}
+</span><span class="inferred0"><a name="line498"></a>498                   )
+</span><span class="inferred1"><a name="line499"></a>499                 )
+</span><span class="uncovered0"><a name="line500"></a>500               ORDER BY e.day ASC LIMIT 1
+</span><span class="uncovered1"><a name="line501"></a>501             )
+</span><span class="uncovered0"><a name="line502"></a>502           )
+</span><span class="inferred1"><a name="line503"></a>503         &quot;,
+</span><span class="marked0"><a name="line504"></a>504         :conditions =&gt; ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
+</span><span class="marked1"><a name="line505"></a>505       }
+</span><span class="marked0"><a name="line506"></a>506     when :calculate_with_newest_exchanges
+</span><span class="marked1"><a name="line507"></a>507       currency = self.user.default_currency
+</span><span class="uncovered0"><a name="line508"></a>508       {
+</span><span class="uncovered1"><a name="line509"></a>509         :select =&gt; &quot;
+</span><span class="uncovered0"><a name="line510"></a>510         CASE
+</span><span class="marked1"><a name="line511"></a>511         WHEN ti.currency_id = #{currency.id} THEN ti.value
+</span><span class="marked0"><a name="line512"></a>512         WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
+</span><span class="marked1"><a name="line513"></a>513         WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+</span><span class="uncovered0"><a name="line514"></a>514         END
+</span><span class="uncovered1"><a name="line515"></a>515         &quot;,
+</span><span class="uncovered0"><a name="line516"></a>516 
+</span><span class="uncovered1"><a name="line517"></a>517         :from =&gt; 'transfer_items as ti',
+</span><span class="uncovered0"><a name="line518"></a>518 
+</span><span class="uncovered1"><a name="line519"></a>519         :joins =&gt;&quot;
+</span><span class="uncovered0"><a name="line520"></a>520         JOIN transfers AS t ON (ti.transfer_id = t.id)
+</span><span class="uncovered1"><a name="line521"></a>521         LEFT JOIN exchanges as ex ON
+</span><span class="inferred0"><a name="line522"></a>522           (
+</span><span class="marked1"><a name="line523"></a>523           ti.currency_id != #{currency.id} AND ex.Id IN
+</span><span class="uncovered0"><a name="line524"></a>524             (
+</span><span class="uncovered1"><a name="line525"></a>525               SELECT Id FROM Exchanges as e WHERE
+</span><span class="uncovered0"><a name="line526"></a>526                 (
+</span><span class="uncovered1"><a name="line527"></a>527                 abs( julianday('now', 'start of day') - julianday(e.day) ) =
+</span><span class="uncovered0"><a name="line528"></a>528                   (
+</span><span class="uncovered1"><a name="line529"></a>529                   SELECT min( abs( julianday('now', 'start of day') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+</span><span class="inferred0"><a name="line530"></a>530                     (
+</span><span class="marked1"><a name="line531"></a>531                     (e2.user_id = #{self.user.id} ) AND
+</span><span class="marked0"><a name="line532"></a>532                     ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
+</span><span class="inferred1"><a name="line533"></a>533                     )
+</span><span class="inferred0"><a name="line534"></a>534                   )
+</span><span class="uncovered1"><a name="line535"></a>535                 AND
+</span><span class="inferred0"><a name="line536"></a>536                   (
+</span><span class="marked1"><a name="line537"></a>537                   (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+</span><span class="inferred0"><a name="line538"></a>538                   )
+</span><span class="uncovered1"><a name="line539"></a>539                 AND
+</span><span class="inferred0"><a name="line540"></a>540                   (
+</span><span class="marked1"><a name="line541"></a>541                   e.user_id = #{self.user.id}
+</span><span class="inferred0"><a name="line542"></a>542                   )
+</span><span class="inferred1"><a name="line543"></a>543                 )
+</span><span class="uncovered0"><a name="line544"></a>544               ORDER BY e.day ASC LIMIT 1
+</span><span class="uncovered1"><a name="line545"></a>545             )
+</span><span class="uncovered0"><a name="line546"></a>546           )
+</span><span class="inferred1"><a name="line547"></a>547         &quot;,
+</span><span class="inferred0"><a name="line548"></a>548 
+</span><span class="marked1"><a name="line549"></a>549         :conditions =&gt; ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
+</span><span class="marked0"><a name="line550"></a>550       }
+</span><span class="inferred1"><a name="line551"></a>551     else
+</span><span class="inferred0"><a name="line552"></a>552       {
+</span><span class="inferred1"><a name="line553"></a>553         :select =&gt; 'ti.value',
+</span><span class="inferred0"><a name="line554"></a>554         :from =&gt; 'transfer_items as ti',
+</span><span class="inferred1"><a name="line555"></a>555         :joins =&gt; 'INNER JOIN transfers AS t ON ti.transfer_id = t.id',
+</span><span class="inferred0"><a name="line556"></a>556         :group =&gt; 'ti.currency_id',
+</span><span class="marked1"><a name="line557"></a>557         :conditions =&gt;['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
+</span><span class="marked0"><a name="line558"></a>558       }
+</span><span class="marked1"><a name="line559"></a>559     end
+</span><span class="inferred0"><a name="line560"></a>560   end
+</span><span class="inferred1"><a name="line561"></a>561 
+</span><span class="marked0"><a name="line562"></a>562   def get_categories_id(with_subcategories)
+</span><span class="marked1"><a name="line563"></a>563     categories_to_sum = [self]
+</span><span class="marked0"><a name="line564"></a>564     if with_subcategories
+</span><span class="marked1"><a name="line565"></a>565       categories_to_sum += descendants
+</span><span class="inferred0"><a name="line566"></a>566     end
+</span><span class="marked1"><a name="line567"></a>567     categories_to_sum.map! {|cat| cat.id}
+</span><span class="inferred0"><a name="line568"></a>568   end
+</span><span class="inferred1"><a name="line569"></a>569 
+</span><span class="inferred0"><a name="line570"></a>570 
+</span><span class="inferred1"><a name="line571"></a>571 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

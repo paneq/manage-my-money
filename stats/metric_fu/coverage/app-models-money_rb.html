@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,11 +571,11 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-money_rb.html'>app/models/money.rb</a>
         </td>
-      <td class='lines_total'><tt>124</tt>
+      <td class='lines_total'><tt>131</tt>
         </td>
-      <td class='lines_code'><tt>89</tt>
+      <td class='lines_code'><tt>95</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>91.9%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>92.4%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='92'/>
                   <td class='uncovered' width='8'/>
@@ -585,7 +585,7 @@ span.run100 {
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>88.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>89.5%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='89'/>
                   <td class='uncovered' width='11'/>
@@ -598,130 +598,137 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked0"><a name="line1"></a>  1 require 'hash'
-</span><span class="inferred1"><a name="line2"></a>  2 
-</span><span class="marked0"><a name="line3"></a>  3 class Money
-</span><span class="inferred1"><a name="line4"></a>  4   # initialize() &lt;br /&gt;
-</span><span class="inferred0"><a name="line5"></a>  5   # initialize(currency, value) &lt;br /&gt;
-</span><span class="inferred1"><a name="line6"></a>  6   # initialize({currency1 =&gt; value1, currency2 =&gt; value2}) &lt;br /&gt;
-</span><span class="marked0"><a name="line7"></a>  7   def initialize(*args)
-</span><span class="marked1"><a name="line8"></a>  8     case args.size
-</span><span class="marked0"><a name="line9"></a>  9     when 0
-</span><span class="marked1"><a name="line10"></a> 10       @hash = {}
-</span><span class="marked0"><a name="line11"></a> 11     when 1
-</span><span class="marked1"><a name="line12"></a> 12       if args[0].class == Hash
-</span><span class="marked0"><a name="line13"></a> 13         @hash = args[0]
-</span><span class="inferred1"><a name="line14"></a> 14       else
-</span><span class="marked0"><a name="line15"></a> 15         raise ArgumentError.new('Invalid paramter type')
-</span><span class="inferred1"><a name="line16"></a> 16       end
-</span><span class="marked0"><a name="line17"></a> 17     when 2
-</span><span class="marked1"><a name="line18"></a> 18       @hash = {args[0] =&gt; args[1]}
-</span><span class="inferred0"><a name="line19"></a> 19     else
-</span><span class="marked1"><a name="line20"></a> 20       raise ArgumentError.new('Invalid number of arguments')
-</span><span class="inferred0"><a name="line21"></a> 21     end
-</span><span class="marked1"><a name="line22"></a> 22     remove_zero_currencies
-</span><span class="marked0"><a name="line23"></a> 23     @hash.default = 0;
-</span><span class="inferred1"><a name="line24"></a> 24   end
-</span><span class="inferred0"><a name="line25"></a> 25 
-</span><span class="inferred1"><a name="line26"></a> 26 
-</span><span class="marked0"><a name="line27"></a> 27   def currencies
-</span><span class="marked1"><a name="line28"></a> 28     return @hash.keys
-</span><span class="inferred0"><a name="line29"></a> 29   end
-</span><span class="inferred1"><a name="line30"></a> 30 
-</span><span class="inferred0"><a name="line31"></a> 31   
-</span><span class="marked1"><a name="line32"></a> 32   def value(currency=nil)
-</span><span class="marked0"><a name="line33"></a> 33     currency = @hash.keys.first if currency.nil? &amp;&amp; @hash.size == 1
-</span><span class="marked1"><a name="line34"></a> 34     return @hash[currency]
-</span><span class="inferred0"><a name="line35"></a> 35   end
-</span><span class="inferred1"><a name="line36"></a> 36 
-</span><span class="inferred0"><a name="line37"></a> 37   
-</span><span class="marked1"><a name="line38"></a> 38   def currency
-</span><span class="marked0"><a name="line39"></a> 39     if @hash.size == 1
-</span><span class="marked1"><a name="line40"></a> 40       return @hash.first[0]
-</span><span class="inferred0"><a name="line41"></a> 41     end
-</span><span class="uncovered1"><a name="line42"></a> 42     nil
-</span><span class="uncovered0"><a name="line43"></a> 43   end
-</span><span class="inferred1"><a name="line44"></a> 44 
-</span><span class="marked0"><a name="line45"></a> 45   def values_in_currencies
-</span><span class="marked1"><a name="line46"></a> 46     return @hash.clone
-</span><span class="inferred0"><a name="line47"></a> 47   end
-</span><span class="inferred1"><a name="line48"></a> 48 
-</span><span class="inferred0"><a name="line49"></a> 49 
-</span><span class="inferred1"><a name="line50"></a> 50   # add(money)
-</span><span class="inferred0"><a name="line51"></a> 51   # add(value, currency)
-</span><span class="marked1"><a name="line52"></a> 52   def add(*args)
-</span><span class="marked0"><a name="line53"></a> 53     case args.size
-</span><span class="marked1"><a name="line54"></a> 54     when 1
-</span><span class="marked0"><a name="line55"></a> 55       @hash + args[0].values_in_currencies
-</span><span class="marked1"><a name="line56"></a> 56     when 2
-</span><span class="marked0"><a name="line57"></a> 57       @hash[args[1]] ||= 0
-</span><span class="marked1"><a name="line58"></a> 58       @hash[args[1]] += args[0]
-</span><span class="uncovered0"><a name="line59"></a> 59     else
-</span><span class="uncovered1"><a name="line60"></a> 60       raise ArgumentError, &quot;Invalid number of arguments&quot;
-</span><span class="uncovered0"><a name="line61"></a> 61     end
-</span><span class="marked1"><a name="line62"></a> 62     remove_zero_currencies
-</span><span class="marked0"><a name="line63"></a> 63     self
-</span><span class="inferred1"><a name="line64"></a> 64   end
-</span><span class="inferred0"><a name="line65"></a> 65 
-</span><span class="inferred1"><a name="line66"></a> 66   # add(money)
-</span><span class="inferred0"><a name="line67"></a> 67   # add(value, currency)
-</span><span class="marked1"><a name="line68"></a> 68   def sub(*args)
-</span><span class="marked0"><a name="line69"></a> 69     case args.size
-</span><span class="marked1"><a name="line70"></a> 70     when 1
-</span><span class="marked0"><a name="line71"></a> 71       @hash - args[0].values_in_currencies
-</span><span class="marked1"><a name="line72"></a> 72     when 2
-</span><span class="marked0"><a name="line73"></a> 73       @hash[args[1]] ||= 0
-</span><span class="marked1"><a name="line74"></a> 74       @hash[args[1]] -= args[0]
-</span><span class="uncovered0"><a name="line75"></a> 75     else
-</span><span class="uncovered1"><a name="line76"></a> 76       raise ArgumentError, &quot;Invalid number of arguments&quot;
-</span><span class="uncovered0"><a name="line77"></a> 77     end
-</span><span class="marked1"><a name="line78"></a> 78     remove_zero_currencies
-</span><span class="marked0"><a name="line79"></a> 79     self
-</span><span class="inferred1"><a name="line80"></a> 80   end
-</span><span class="inferred0"><a name="line81"></a> 81 
-</span><span class="inferred1"><a name="line82"></a> 82 
-</span><span class="inferred0"><a name="line83"></a> 83 
-</span><span class="inferred1"><a name="line84"></a> 84 
-</span><span class="marked0"><a name="line85"></a> 85   def is_empty?
-</span><span class="marked1"><a name="line86"></a> 86     return @hash.keys.size == 0
-</span><span class="inferred0"><a name="line87"></a> 87   end
-</span><span class="inferred1"><a name="line88"></a> 88 
-</span><span class="marked0"><a name="line89"></a> 89   def empty?
-</span><span class="marked1"><a name="line90"></a> 90     return is_empty?
-</span><span class="inferred0"><a name="line91"></a> 91   end
-</span><span class="inferred1"><a name="line92"></a> 92 
-</span><span class="inferred0"><a name="line93"></a> 93 
-</span><span class="marked1"><a name="line94"></a> 94   def to_s
-</span><span class="uncovered0"><a name="line95"></a> 95     return @hash.to_s
-</span><span class="uncovered1"><a name="line96"></a> 96   end
-</span><span class="inferred0"><a name="line97"></a> 97 
-</span><span class="inferred1"><a name="line98"></a> 98 
-</span><span class="marked0"><a name="line99"></a> 99   def ==(obj)
-</span><span class="marked1"><a name="line100"></a>100     return false unless obj.currencies.size == self.currencies.size
-</span><span class="marked0"><a name="line101"></a>101     for currency in self.currencies
-</span><span class="marked1"><a name="line102"></a>102       return false unless obj.value(currency) == self.value(currency)
-</span><span class="inferred0"><a name="line103"></a>103     end
-</span><span class="marked1"><a name="line104"></a>104     return true
-</span><span class="inferred0"><a name="line105"></a>105   end
-</span><span class="inferred1"><a name="line106"></a>106 
-</span><span class="inferred0"><a name="line107"></a>107 
-</span><span class="marked1"><a name="line108"></a>108   def clone
-</span><span class="marked0"><a name="line109"></a>109     return Money.new(@hash.clone)
-</span><span class="inferred1"><a name="line110"></a>110   end
-</span><span class="inferred0"><a name="line111"></a>111 
-</span><span class="inferred1"><a name="line112"></a>112 
-</span><span class="marked0"><a name="line113"></a>113   def each
-</span><span class="marked1"><a name="line114"></a>114     @hash.each_pair { |key, val|  yield key, val}
-</span><span class="inferred0"><a name="line115"></a>115   end
-</span><span class="inferred1"><a name="line116"></a>116 
-</span><span class="inferred0"><a name="line117"></a>117 
-</span><span class="marked1"><a name="line118"></a>118   private
-</span><span class="inferred0"><a name="line119"></a>119   
-</span><span class="marked1"><a name="line120"></a>120   def remove_zero_currencies
-</span><span class="marked0"><a name="line121"></a>121     @hash.delete_if { |currency, value|  value == 0.00}
-</span><span class="inferred1"><a name="line122"></a>122   end
-</span><span class="inferred0"><a name="line123"></a>123 
-</span><span class="inferred1"><a name="line124"></a>124 end
+<pre><span class="marked1"><a name="line1"></a>  1 require 'hash'
+</span><span class="inferred0"><a name="line2"></a>  2 
+</span><span class="marked1"><a name="line3"></a>  3 class Money
+</span><span class="inferred0"><a name="line4"></a>  4   # initialize() &lt;br /&gt;
+</span><span class="inferred1"><a name="line5"></a>  5   # initialize(currency, value) &lt;br /&gt;
+</span><span class="inferred0"><a name="line6"></a>  6   # initialize({currency1 =&gt; value1, currency2 =&gt; value2}) &lt;br /&gt;
+</span><span class="marked1"><a name="line7"></a>  7   def initialize(*args)
+</span><span class="marked0"><a name="line8"></a>  8     case args.size
+</span><span class="marked1"><a name="line9"></a>  9     when 0
+</span><span class="marked0"><a name="line10"></a> 10       @hash = {}
+</span><span class="marked1"><a name="line11"></a> 11     when 1
+</span><span class="marked0"><a name="line12"></a> 12       if args[0].class == Hash
+</span><span class="marked1"><a name="line13"></a> 13         @hash = args[0]
+</span><span class="inferred0"><a name="line14"></a> 14       else
+</span><span class="marked1"><a name="line15"></a> 15         raise ArgumentError.new('Invalid paramter type')
+</span><span class="inferred0"><a name="line16"></a> 16       end
+</span><span class="marked1"><a name="line17"></a> 17     when 2
+</span><span class="marked0"><a name="line18"></a> 18       @hash = {args[0] =&gt; args[1]}
+</span><span class="inferred1"><a name="line19"></a> 19     else
+</span><span class="marked0"><a name="line20"></a> 20       raise ArgumentError.new('Invalid number of arguments')
+</span><span class="inferred1"><a name="line21"></a> 21     end
+</span><span class="marked0"><a name="line22"></a> 22     remove_zero_currencies
+</span><span class="marked1"><a name="line23"></a> 23     @hash.default = 0;
+</span><span class="inferred0"><a name="line24"></a> 24   end
+</span><span class="inferred1"><a name="line25"></a> 25 
+</span><span class="inferred0"><a name="line26"></a> 26 
+</span><span class="marked1"><a name="line27"></a> 27   def currencies
+</span><span class="marked0"><a name="line28"></a> 28     return @hash.keys
+</span><span class="inferred1"><a name="line29"></a> 29   end
+</span><span class="inferred0"><a name="line30"></a> 30 
+</span><span class="inferred1"><a name="line31"></a> 31   
+</span><span class="marked0"><a name="line32"></a> 32   def value(currency=nil)
+</span><span class="marked1"><a name="line33"></a> 33     currency = @hash.keys.first if currency.nil? &amp;&amp; @hash.size == 1
+</span><span class="marked0"><a name="line34"></a> 34     return @hash[currency].to_f.round(2)
+</span><span class="inferred1"><a name="line35"></a> 35   end
+</span><span class="inferred0"><a name="line36"></a> 36 
+</span><span class="inferred1"><a name="line37"></a> 37   
+</span><span class="marked0"><a name="line38"></a> 38   def currency
+</span><span class="marked1"><a name="line39"></a> 39     if @hash.size == 1
+</span><span class="marked0"><a name="line40"></a> 40       return @hash.first[0]
+</span><span class="inferred1"><a name="line41"></a> 41     end
+</span><span class="uncovered0"><a name="line42"></a> 42     nil
+</span><span class="uncovered1"><a name="line43"></a> 43   end
+</span><span class="inferred0"><a name="line44"></a> 44 
+</span><span class="inferred1"><a name="line45"></a> 45   #TODO should be private, IMHO jp
+</span><span class="marked0"><a name="line46"></a> 46   def values_in_currencies
+</span><span class="marked1"><a name="line47"></a> 47     return @hash.clone
+</span><span class="inferred0"><a name="line48"></a> 48   end
+</span><span class="inferred1"><a name="line49"></a> 49 
+</span><span class="marked0"><a name="line50"></a> 50   def +(money)
+</span><span class="marked1"><a name="line51"></a> 51     self.clone.add!(money)
+</span><span class="inferred0"><a name="line52"></a> 52   end
+</span><span class="inferred1"><a name="line53"></a> 53 
+</span><span class="inferred0"><a name="line54"></a> 54 
+</span><span class="inferred1"><a name="line55"></a> 55   # add(money)
+</span><span class="inferred0"><a name="line56"></a> 56   # add(value, currency)
+</span><span class="marked1"><a name="line57"></a> 57   def add!(*args)
+</span><span class="marked0"><a name="line58"></a> 58     case args.size
+</span><span class="marked1"><a name="line59"></a> 59     when 1
+</span><span class="marked0"><a name="line60"></a> 60       @hash + args[0].values_in_currencies
+</span><span class="marked1"><a name="line61"></a> 61     when 2
+</span><span class="marked0"><a name="line62"></a> 62       @hash[args[1]] ||= 0
+</span><span class="marked1"><a name="line63"></a> 63       @hash[args[1]] += args[0]
+</span><span class="uncovered0"><a name="line64"></a> 64     else
+</span><span class="uncovered1"><a name="line65"></a> 65       raise ArgumentError, &quot;Invalid number of arguments&quot;
+</span><span class="uncovered0"><a name="line66"></a> 66     end
+</span><span class="marked1"><a name="line67"></a> 67     remove_zero_currencies
+</span><span class="marked0"><a name="line68"></a> 68     self
+</span><span class="inferred1"><a name="line69"></a> 69   end
+</span><span class="inferred0"><a name="line70"></a> 70 
+</span><span class="inferred1"><a name="line71"></a> 71   # sub(money)
+</span><span class="inferred0"><a name="line72"></a> 72   # sub(value, currency)
+</span><span class="marked1"><a name="line73"></a> 73   def -(money)
+</span><span class="marked0"><a name="line74"></a> 74     self.clone.sub!(money)
+</span><span class="inferred1"><a name="line75"></a> 75   end
+</span><span class="inferred0"><a name="line76"></a> 76 
+</span><span class="marked1"><a name="line77"></a> 77   def sub!(*args)
+</span><span class="marked0"><a name="line78"></a> 78     case args.size
+</span><span class="marked1"><a name="line79"></a> 79     when 1
+</span><span class="marked0"><a name="line80"></a> 80       @hash - args[0].values_in_currencies
+</span><span class="marked1"><a name="line81"></a> 81     when 2
+</span><span class="marked0"><a name="line82"></a> 82       @hash[args[1]] ||= 0
+</span><span class="marked1"><a name="line83"></a> 83       @hash[args[1]] -= args[0]
+</span><span class="uncovered0"><a name="line84"></a> 84     else
+</span><span class="uncovered1"><a name="line85"></a> 85       raise ArgumentError, &quot;Invalid number of arguments&quot;
+</span><span class="uncovered0"><a name="line86"></a> 86     end
+</span><span class="marked1"><a name="line87"></a> 87     remove_zero_currencies
+</span><span class="marked0"><a name="line88"></a> 88     self
+</span><span class="inferred1"><a name="line89"></a> 89   end
+</span><span class="inferred0"><a name="line90"></a> 90 
+</span><span class="inferred1"><a name="line91"></a> 91 
+</span><span class="marked0"><a name="line92"></a> 92   def is_empty?
+</span><span class="marked1"><a name="line93"></a> 93     return @hash.keys.size == 0
+</span><span class="inferred0"><a name="line94"></a> 94   end
+</span><span class="inferred1"><a name="line95"></a> 95 
+</span><span class="marked0"><a name="line96"></a> 96   def empty?
+</span><span class="marked1"><a name="line97"></a> 97     return is_empty?
+</span><span class="inferred0"><a name="line98"></a> 98   end
+</span><span class="inferred1"><a name="line99"></a> 99 
+</span><span class="inferred0"><a name="line100"></a>100 
+</span><span class="marked1"><a name="line101"></a>101   def to_s
+</span><span class="uncovered0"><a name="line102"></a>102     return @hash.to_s
+</span><span class="uncovered1"><a name="line103"></a>103   end
+</span><span class="inferred0"><a name="line104"></a>104 
+</span><span class="inferred1"><a name="line105"></a>105 
+</span><span class="marked0"><a name="line106"></a>106   def ==(obj)
+</span><span class="marked1"><a name="line107"></a>107     return false unless obj.currencies.size == self.currencies.size
+</span><span class="marked0"><a name="line108"></a>108     for currency in self.currencies
+</span><span class="marked1"><a name="line109"></a>109       return false unless obj.value(currency) == self.value(currency)
+</span><span class="inferred0"><a name="line110"></a>110     end
+</span><span class="marked1"><a name="line111"></a>111     return true
+</span><span class="inferred0"><a name="line112"></a>112   end
+</span><span class="inferred1"><a name="line113"></a>113 
+</span><span class="inferred0"><a name="line114"></a>114 
+</span><span class="marked1"><a name="line115"></a>115   def clone
+</span><span class="marked0"><a name="line116"></a>116     return Money.new(@hash.clone)
+</span><span class="inferred1"><a name="line117"></a>117   end
+</span><span class="inferred0"><a name="line118"></a>118 
+</span><span class="inferred1"><a name="line119"></a>119 
+</span><span class="marked0"><a name="line120"></a>120   def each
+</span><span class="marked1"><a name="line121"></a>121     @hash.each_pair { |key, val|  yield key, val.to_f.round(2)}
+</span><span class="inferred0"><a name="line122"></a>122   end
+</span><span class="inferred1"><a name="line123"></a>123 
+</span><span class="inferred0"><a name="line124"></a>124 
+</span><span class="marked1"><a name="line125"></a>125   private
+</span><span class="inferred0"><a name="line126"></a>126   
+</span><span class="marked1"><a name="line127"></a>127   def remove_zero_currencies
+</span><span class="marked0"><a name="line128"></a>128     @hash.delete_if { |currency, value|  value == 0.00}
+</span><span class="inferred1"><a name="line129"></a>129   end
+</span><span class="inferred0"><a name="line130"></a>130 
+</span><span class="inferred1"><a name="line131"></a>131 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

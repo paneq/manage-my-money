@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:46 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:07 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,11 +571,11 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='lib-forms-application_helper_rb.html'>lib/forms/application_helper.rb</a>
         </td>
-      <td class='lines_total'><tt>48</tt>
+      <td class='lines_total'><tt>52</tt>
         </td>
-      <td class='lines_code'><tt>19</tt>
+      <td class='lines_code'><tt>21</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>89.6%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>90.4%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='90'/>
                   <td class='uncovered' width='10'/>
@@ -585,10 +585,10 @@ span.run100 {
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>73.7%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>76.2%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='74'/>
-                  <td class='uncovered' width='26'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='76'/>
+                  <td class='uncovered' width='24'/>
                   </tr>
                 </table>
               </td>
@@ -598,54 +598,58 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a> 1   module Forms::ApplicationHelper
-</span><span class="inferred0"><a name="line2"></a> 2 
-</span><span class="inferred1"><a name="line3"></a> 3   ##
-</span><span class="inferred0"><a name="line4"></a> 4   # Helper generujacy pole typu select dla podanego atrybutu typu 'enum' utworzonego przy pomocy metody define_enum w module HashEnums
-</span><span class="inferred1"><a name="line5"></a> 5   #
-</span><span class="inferred0"><a name="line6"></a> 6   # Parametry:
-</span><span class="inferred1"><a name="line7"></a> 7   # method - nazwa pola w klasie
-</span><span class="inferred0"><a name="line8"></a> 8   # options - standardowe hash z opcjami, Uwaga: opcje html nalezy przekazac w hashu options pod kluczem :html_options, a nie jako dodatkowy parametr helpera
-</span><span class="inferred1"><a name="line9"></a> 9   #
-</span><span class="inferred0"><a name="line10"></a>10   # Założenia
-</span><span class="inferred1"><a name="line11"></a>11   #  - dla widoku dostepna jest zmienna instancji zawierajaca kody dostepnych opcji, o nazwie wskazanej w parametrze 'method' ale w liczbie mnogiej
-</span><span class="inferred0"><a name="line12"></a>12   #    Jeśli zmienna nie jest dostępna używane są wszystkie wartoścu enum zdefiniowane w danej klasie modelu (zdognie z dokumentacja HashEnums)
-</span><span class="inferred1"><a name="line13"></a>13   #  - dla widoku dostepna jest metoda zwracajaca opis dla kazdej opcji, postaci
-</span><span class="inferred0"><a name="line14"></a>14   #       def get_desc_for_#{method}(option_name)
-</span><span class="inferred1"><a name="line15"></a>15   #       end
-</span><span class="inferred0"><a name="line16"></a>16   #    Jesli metoda nie jest dostepna, wartosc danej opcji staje sie jednoczesnie jej opisem.
-</span><span class="inferred1"><a name="line17"></a>17   #
-</span><span class="inferred0"><a name="line18"></a>18   # Przyklad:
-</span><span class="inferred1"><a name="line19"></a>19   # f.enum_select :transaction_amount_limit_type
-</span><span class="inferred0"><a name="line20"></a>20   # wygeneruje nam to samo co użycie:
-</span><span class="inferred1"><a name="line21"></a>21   # f.select :transaction_amount_limit_type, User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys.map { |type| [get_desc_for_transaction_amount_limit_type(type), type] }
-</span><span class="inferred0"><a name="line22"></a>22   #
-</span><span class="inferred1"><a name="line23"></a>23   # @author jPlebanski
-</span><span class="marked0"><a name="line24"></a>24   def enum_select(object, method, options = {})
-</span><span class="inferred1"><a name="line25"></a>25 
-</span><span class="marked0"><a name="line26"></a>26     object_name = (options[:class] || object).to_s
-</span><span class="marked1"><a name="line27"></a>27     object_class = object_name.camelcase.constantize
-</span><span class="marked0"><a name="line28"></a>28     enum_values = options[:values] || instance_variable_get(&quot;@#{method.to_s.pluralize}&quot;) || object_class.const_get(method.to_s.pluralize.upcase.intern).keys
-</span><span class="inferred1"><a name="line29"></a>29 
-</span><span class="marked0"><a name="line30"></a>30     description_method = &quot;get_desc_for_#{method.to_s}&quot;.intern
-</span><span class="marked1"><a name="line31"></a>31     should_get_description = respond_to? description_method
-</span><span class="inferred0"><a name="line32"></a>32 
-</span><span class="marked1"><a name="line33"></a>33     choices = if should_get_description
-</span><span class="marked0"><a name="line34"></a>34         enum_values.map do |type|
-</span><span class="marked1"><a name="line35"></a>35           [send(description_method, type), type]
-</span><span class="inferred0"><a name="line36"></a>36         end
-</span><span class="uncovered1"><a name="line37"></a>37       else
-</span><span class="uncovered0"><a name="line38"></a>38         enum_values.map do |type|
-</span><span class="uncovered1"><a name="line39"></a>39           [type, type]
-</span><span class="uncovered0"><a name="line40"></a>40         end
-</span><span class="uncovered1"><a name="line41"></a>41     end
-</span><span class="marked0"><a name="line42"></a>42     select object, method, choices, options, options[:html_options] || {}
-</span><span class="inferred1"><a name="line43"></a>43   end
-</span><span class="inferred0"><a name="line44"></a>44 
-</span><span class="inferred1"><a name="line45"></a>45   #TODO: enum_radio
-</span><span class="inferred0"><a name="line46"></a>46 
-</span><span class="inferred1"><a name="line47"></a>47 
-</span><span class="inferred0"><a name="line48"></a>48   end
+<pre><span class="marked0"><a name="line1"></a> 1   module Forms::ApplicationHelper
+</span><span class="inferred1"><a name="line2"></a> 2 
+</span><span class="inferred0"><a name="line3"></a> 3   ##
+</span><span class="inferred1"><a name="line4"></a> 4   # Helper generujacy pole typu select dla podanego atrybutu typu 'enum' utworzonego przy pomocy metody define_enum w module HashEnums
+</span><span class="inferred0"><a name="line5"></a> 5   #
+</span><span class="inferred1"><a name="line6"></a> 6   # Parametry:
+</span><span class="inferred0"><a name="line7"></a> 7   # method - nazwa pola w klasie
+</span><span class="inferred1"><a name="line8"></a> 8   # options - standardowe hash z opcjami, Uwaga: opcje html nalezy przekazac w hashu options pod kluczem :html_options, a nie jako dodatkowy parametr helpera
+</span><span class="inferred0"><a name="line9"></a> 9   # options[:values] - tablica symboli dostępnych wyborów, mozna tez podac hash postaci {:symbol =&gt; 'opis'}
+</span><span class="inferred1"><a name="line10"></a>10   #
+</span><span class="inferred0"><a name="line11"></a>11   # Założenia
+</span><span class="inferred1"><a name="line12"></a>12   #  - jesli options[:values] nie jest podane metoda próbuje znaleźć listę wyboru ze zmiennej instancji kontrolera, o nazwie wskazanej w parametrze 'method' ale w liczbie mnogiej
+</span><span class="inferred0"><a name="line13"></a>13   #    Jeśli zmienna nie jest dostępna używane są wszystkie wartoścu enum zdefiniowane w danej klasie modelu (zdognie z dokumentacja HashEnums)
+</span><span class="inferred1"><a name="line14"></a>14   #  - dla widoku dostepna jest metoda zwracajaca opis dla kazdej opcji, postaci
+</span><span class="inferred0"><a name="line15"></a>15   #       def get_desc_for_#{method}(option_name)
+</span><span class="inferred1"><a name="line16"></a>16   #       end
+</span><span class="inferred0"><a name="line17"></a>17   #    (taka metoda moze znalezc sie w helperze danego kontrolera, lub ApplicationHelperze)
+</span><span class="inferred1"><a name="line18"></a>18   #    Jesli metoda nie jest dostepna, wartosc danej opcji staje sie jednoczesnie jej opisem.
+</span><span class="inferred0"><a name="line19"></a>19   #
+</span><span class="inferred1"><a name="line20"></a>20   # Przyklad:
+</span><span class="inferred0"><a name="line21"></a>21   # f.enum_select :transaction_amount_limit_type
+</span><span class="inferred1"><a name="line22"></a>22   # wygeneruje nam to samo co użycie:
+</span><span class="inferred0"><a name="line23"></a>23   # f.select :transaction_amount_limit_type, User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys.map { |type| [get_desc_for_transaction_amount_limit_type(type), type] }
+</span><span class="inferred1"><a name="line24"></a>24   #
+</span><span class="inferred0"><a name="line25"></a>25   # @author jPlebanski
+</span><span class="marked1"><a name="line26"></a>26   def enum_select(object, method, options = {})
+</span><span class="inferred0"><a name="line27"></a>27 
+</span><span class="marked1"><a name="line28"></a>28     object_name = (options[:class] || object).to_s
+</span><span class="marked0"><a name="line29"></a>29     object_class = object_name.camelcase.constantize
+</span><span class="marked1"><a name="line30"></a>30     enum_values = options[:values] || instance_variable_get(&quot;@#{method.to_s.pluralize}&quot;) || object_class.const_get(method.to_s.pluralize.upcase.intern).keys
+</span><span class="inferred0"><a name="line31"></a>31 
+</span><span class="marked1"><a name="line32"></a>32     description_method = &quot;get_desc_for_#{method.to_s}&quot;.intern
+</span><span class="marked0"><a name="line33"></a>33     should_get_description = respond_to? description_method
+</span><span class="inferred1"><a name="line34"></a>34 
+</span><span class="marked0"><a name="line35"></a>35     choices = if enum_values.is_a? Hash
+</span><span class="marked1"><a name="line36"></a>36         enum_values.collect { |key, desc|  [desc, key] }
+</span><span class="marked0"><a name="line37"></a>37       elsif should_get_description
+</span><span class="marked1"><a name="line38"></a>38         enum_values.map do |type|
+</span><span class="marked0"><a name="line39"></a>39           [send(description_method, type), type]
+</span><span class="inferred1"><a name="line40"></a>40         end
+</span><span class="uncovered0"><a name="line41"></a>41       else
+</span><span class="uncovered1"><a name="line42"></a>42         enum_values.map do |type|
+</span><span class="uncovered0"><a name="line43"></a>43           [type, type]
+</span><span class="uncovered1"><a name="line44"></a>44         end
+</span><span class="uncovered0"><a name="line45"></a>45     end
+</span><span class="marked1"><a name="line46"></a>46     select object, method, choices, options, options[:html_options] || {}
+</span><span class="inferred0"><a name="line47"></a>47   end
+</span><span class="inferred1"><a name="line48"></a>48 
+</span><span class="inferred0"><a name="line49"></a>49   #TODO: enum_radio
+</span><span class="inferred1"><a name="line50"></a>50 
+</span><span class="inferred0"><a name="line51"></a>51 
+</span><span class="inferred1"><a name="line52"></a>52   end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:09 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,9 +571,9 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-share_report_rb.html'>app/models/share_report.rb</a>
         </td>
-      <td class='lines_total'><tt>39</tt>
+      <td class='lines_total'><tt>38</tt>
         </td>
-      <td class='lines_code'><tt>11</tt>
+      <td class='lines_code'><tt>10</tt>
         </td>
       <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>100.0%</tt>
               &nbsp;</td>
@@ -624,19 +624,18 @@ span.run100 {
 </span><span class="inferred0"><a name="line24"></a>24 
 </span><span class="marked1"><a name="line25"></a>25 class ShareReport &lt; Report
 </span><span class="marked0"><a name="line26"></a>26   belongs_to :category
-</span><span class="marked1"><a name="line27"></a>27   define_enum :share_type, [:percentage, :value]
-</span><span class="inferred0"><a name="line28"></a>28 
-</span><span class="marked1"><a name="line29"></a>29   validates_presence_of :report_view_type, :share_type, :category
-</span><span class="marked0"><a name="line30"></a>30   validates_inclusion_of :report_view_type, :in =&gt; [:pie, :bar]
-</span><span class="inferred1"><a name="line31"></a>31 
-</span><span class="marked0"><a name="line32"></a>32   validates_numericality_of  :max_categories_count, :only_integer =&gt; true, :greater_than_or_equal_to =&gt; 0
-</span><span class="marked1"><a name="line33"></a>33   validates_numericality_of  :depth, :only_integer =&gt; true, :greater_than_or_equal_to =&gt; 0
-</span><span class="inferred0"><a name="line34"></a>34 
-</span><span class="marked1"><a name="line35"></a>35   def share_report?
-</span><span class="marked0"><a name="line36"></a>36     true
-</span><span class="inferred1"><a name="line37"></a>37   end
-</span><span class="inferred0"><a name="line38"></a>38 
-</span><span class="inferred1"><a name="line39"></a>39 end
+</span><span class="inferred1"><a name="line27"></a>27 
+</span><span class="marked0"><a name="line28"></a>28   validates_presence_of :report_view_type, :category
+</span><span class="marked1"><a name="line29"></a>29   validates_inclusion_of :report_view_type, :in =&gt; [:pie, :bar]
+</span><span class="inferred0"><a name="line30"></a>30 
+</span><span class="marked1"><a name="line31"></a>31   validates_numericality_of  :max_categories_values_count, :only_integer =&gt; true, :greater_than_or_equal_to =&gt; 1
+</span><span class="marked0"><a name="line32"></a>32   validates_numericality_of  :depth, :only_integer =&gt; true, :greater_than_or_equal_to =&gt; -1, :less_than_or_equal_to =&gt; 6
+</span><span class="inferred1"><a name="line33"></a>33 
+</span><span class="marked0"><a name="line34"></a>34   def share_report?
+</span><span class="marked1"><a name="line35"></a>35     true
+</span><span class="inferred0"><a name="line36"></a>36   end
+</span><span class="inferred1"><a name="line37"></a>37 
+</span><span class="inferred0"><a name="line38"></a>38 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

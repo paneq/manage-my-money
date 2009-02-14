@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'><head><title>app/controllers/transfer_items_controller.rb - C0 code coverage information</title>
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'><head><title>script/server - C0 code coverage information</title>
     <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
     <style type='text/css'>span.cross-ref-title {
  font-size: 140%;
@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:45 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:10 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -569,26 +569,26 @@ span.run100 {
       <td class='heading'>Code coverage</td>
       </tr>
     </thead>
-  <tbody><tr class='light'><td><a href='app-controllers-transfer_items_controller_rb.html'>app/controllers/transfer_items_controller.rb</a>
+  <tbody><tr class='light'><td><a href='script-server.html'>script/server</a>
         </td>
-      <td class='lines_total'><tt>123</tt>
+      <td class='lines_total'><tt>3</tt>
         </td>
-      <td class='lines_code'><tt>61</tt>
+      <td class='lines_code'><tt>2</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>61.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>100.0%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='62'/>
-                  <td class='uncovered' width='38'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='100'/>
+                  <td class='uncovered' width='0'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>24.6%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>100.0%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='25'/>
-                  <td class='uncovered' width='75'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='100'/>
+                  <td class='uncovered' width='0'/>
                   </tr>
                 </table>
               </td>
@@ -598,129 +598,9 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a>  1 class TransferItemsController &lt; ApplicationController
-</span><span class="inferred0"><a name="line2"></a>  2 
-</span><span class="marked1"><a name="line3"></a>  3   before_filter :login_required
-</span><span class="marked0"><a name="line4"></a>  4   before_filter :check_perm, :only =&gt; [:edit]
-</span><span class="inferred1"><a name="line5"></a>  5 
-</span><span class="marked0"><a name="line6"></a>  6   layout 'main'
-</span><span class="inferred1"><a name="line7"></a>  7   
-</span><span class="marked0"><a name="line8"></a>  8   def index
-</span><span class="uncovered1"><a name="line9"></a>  9     list
-</span><span class="uncovered0"><a name="line10"></a> 10     render :action =&gt; 'list'
-</span><span class="uncovered1"><a name="line11"></a> 11   end
-</span><span class="inferred0"><a name="line12"></a> 12 
-</span><span class="inferred1"><a name="line13"></a> 13   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-</span><span class="inferred0"><a name="line14"></a> 14   verify :method =&gt; :post, :only =&gt; [ :destroy, :create, :update ],
-</span><span class="marked1"><a name="line15"></a> 15          :redirect_to =&gt; { :action =&gt; :list }
-</span><span class="inferred0"><a name="line16"></a> 16 
-</span><span class="inferred1"><a name="line17"></a> 17 #   def list
-</span><span class="inferred0"><a name="line18"></a> 18 #     @transfer = Transfer.find(session[:transfer_id])
-</span><span class="inferred1"><a name="line19"></a> 19 #     @transfer_item_pages, @transfer_items = paginate :transfer_items, :per_page =&gt; 10
-</span><span class="inferred0"><a name="line20"></a> 20 #   end
-</span><span class="inferred1"><a name="line21"></a> 21 # 
-</span><span class="inferred0"><a name="line22"></a> 22 #   def show
-</span><span class="inferred1"><a name="line23"></a> 23 #     @transfer = Transfer.find(session[:transfer_id])
-</span><span class="inferred0"><a name="line24"></a> 24 #     @transfer_item = TransferItem.find(params[:id])
-</span><span class="inferred1"><a name="line25"></a> 25 #   end
-</span><span class="inferred0"><a name="line26"></a> 26 # 
-</span><span class="inferred1"><a name="line27"></a> 27 #   def new
-</span><span class="inferred0"><a name="line28"></a> 28 #     @user = User.find( session[ :user_id ] )
-</span><span class="inferred1"><a name="line29"></a> 29 #     @transfer = Transfer.find(session[:transfer_id])
-</span><span class="inferred0"><a name="line30"></a> 30 #     @transfer_item = TransferItem.new
-</span><span class="inferred1"><a name="line31"></a> 31 #   end
-</span><span class="inferred0"><a name="line32"></a> 32 # 
-</span><span class="inferred1"><a name="line33"></a> 33 #   def create
-</span><span class="inferred0"><a name="line34"></a> 34 #     if params[:transfer_item][:category].is_a? String
-</span><span class="inferred1"><a name="line35"></a> 35 #       nr = params[:transfer_item][:category].to_i
-</span><span class="inferred0"><a name="line36"></a> 36 #       params[:transfer_item][:category] = Category.find( nr )
-</span><span class="inferred1"><a name="line37"></a> 37 #     end
-</span><span class="inferred0"><a name="line38"></a> 38 # 
-</span><span class="inferred1"><a name="line39"></a> 39 #     @transfer_item = TransferItem.new(params[:transfer_item])
-</span><span class="inferred0"><a name="line40"></a> 40 #     @transfer_item.transfer = Transfer.find( session[:transfer_id] )
-</span><span class="inferred1"><a name="line41"></a> 41 #     
-</span><span class="inferred0"><a name="line42"></a> 42 #     if @transfer_item.save
-</span><span class="inferred1"><a name="line43"></a> 43 #       flash[:notice] = 'TransferItem was successfully created.'
-</span><span class="inferred0"><a name="line44"></a> 44 #       redirect_to :action =&gt; 'list'
-</span><span class="inferred1"><a name="line45"></a> 45 #     else
-</span><span class="inferred0"><a name="line46"></a> 46 #       render :action =&gt; 'new'
-</span><span class="inferred1"><a name="line47"></a> 47 #     end
-</span><span class="inferred0"><a name="line48"></a> 48 #   end
-</span><span class="inferred1"><a name="line49"></a> 49 
-</span><span class="marked0"><a name="line50"></a> 50   def edit
-</span><span class="inferred1"><a name="line51"></a> 51   end
-</span><span class="inferred0"><a name="line52"></a> 52 
-</span><span class="marked1"><a name="line53"></a> 53   def update
-</span><span class="uncovered0"><a name="line54"></a> 54     if @transfer_item.update_attributes(params[:transfer_item])
-</span><span class="uncovered1"><a name="line55"></a> 55       flash[:notice] = 'This item was successfully updated.'
-</span><span class="uncovered0"><a name="line56"></a> 56       redirect_to :action =&gt; 'show', :id =&gt; @transfer_item
-</span><span class="uncovered1"><a name="line57"></a> 57     else
-</span><span class="uncovered0"><a name="line58"></a> 58       render :action =&gt; 'edit'
-</span><span class="uncovered1"><a name="line59"></a> 59     end
-</span><span class="uncovered0"><a name="line60"></a> 60   end
-</span><span class="inferred1"><a name="line61"></a> 61   
-</span><span class="inferred0"><a name="line62"></a> 62   
-</span><span class="inferred1"><a name="line63"></a> 63   ###########################
-</span><span class="inferred0"><a name="line64"></a> 64   # @author Robert Pankowecki
-</span><span class="inferred1"><a name="line65"></a> 65   # remote
-</span><span class="marked0"><a name="line66"></a> 66   def edit_remote
-</span><span class="uncovered1"><a name="line67"></a> 67     check_perm #why remote calls do not check perm automagicaly?
-</span><span class="uncovered0"><a name="line68"></a> 68     where=&quot;transfer-item-#{@transfer_item.id}&quot;
-</span><span class="uncovered1"><a name="line69"></a> 69     render :update do |page|
-</span><span class="uncovered0"><a name="line70"></a> 70       page.replace_html where , :partial =&gt; 'transfer_items/form_remote' , :locals =&gt; { :transfer_item =&gt; @transfer_item }
-</span><span class="uncovered1"><a name="line71"></a> 71     end
-</span><span class="uncovered0"><a name="line72"></a> 72   end
-</span><span class="inferred1"><a name="line73"></a> 73   
-</span><span class="inferred0"><a name="line74"></a> 74   
-</span><span class="inferred1"><a name="line75"></a> 75   ###########################
-</span><span class="inferred0"><a name="line76"></a> 76   # @author Robert Pankowecki
-</span><span class="inferred1"><a name="line77"></a> 77   # remote
-</span><span class="marked0"><a name="line78"></a> 78   def discard
-</span><span class="uncovered1"><a name="line79"></a> 79     check_perm
-</span><span class="uncovered0"><a name="line80"></a> 80     where=&quot;transfer-item-#{@transfer_item.id}&quot;
-</span><span class="uncovered1"><a name="line81"></a> 81     render :update do |page|
-</span><span class="uncovered0"><a name="line82"></a> 82       page.replace_html where , :partial =&gt; 'transfers/transfer_item_details_body' , :object =&gt; @transfer_item
-</span><span class="uncovered1"><a name="line83"></a> 83     end
-</span><span class="uncovered0"><a name="line84"></a> 84   end
-</span><span class="inferred1"><a name="line85"></a> 85   
-</span><span class="inferred0"><a name="line86"></a> 86   ###########################
-</span><span class="inferred1"><a name="line87"></a> 87   # @author Robert Pankowecki
-</span><span class="inferred0"><a name="line88"></a> 88   # remote
-</span><span class="marked1"><a name="line89"></a> 89   def update_remote
-</span><span class="uncovered0"><a name="line90"></a> 90     check_perm
-</span><span class="uncovered1"><a name="line91"></a> 91     params[:transfer_item][:category] = Category.find(params[:transfer_item][:category].to_i) if params[:transfer_item][:category]
-</span><span class="uncovered0"><a name="line92"></a> 92     params[:transfer_item][:currency] = Currency.find(params[:transfer_item][:currency].to_i) if params[:transfer_item][:currency]
-</span><span class="uncovered1"><a name="line93"></a> 93     if @transfer_item.update_attributes(params[:transfer_item])
-</span><span class="uncovered0"><a name="line94"></a> 94       flash[:notice] = 'This item was successfully updated.'
-</span><span class="uncovered1"><a name="line95"></a> 95       where=&quot;transfer-item-#{@transfer_item.id}&quot;
-</span><span class="uncovered0"><a name="line96"></a> 96       where_flash = &quot;flash-notice-#{@transfer_item.transfer.id}&quot;
-</span><span class="uncovered1"><a name="line97"></a> 97       render :update do |page|
-</span><span class="uncovered0"><a name="line98"></a> 98         page.replace_html where_flash, 'This item was successfully updated.' 
-</span><span class="uncovered1"><a name="line99"></a> 99         page.visual_effect :highlight, where_flash
-</span><span class="uncovered0"><a name="line100"></a>100         page.replace_html where , :partial =&gt; 'transfers/transfer_item_details_body' , :object =&gt; @transfer_item
-</span><span class="uncovered1"><a name="line101"></a>101       end
-</span><span class="uncovered0"><a name="line102"></a>102     else
-</span><span class="uncovered1"><a name="line103"></a>103       #TODO: Write an error managemnt
-</span><span class="uncovered0"><a name="line104"></a>104     end
-</span><span class="uncovered1"><a name="line105"></a>105   end
-</span><span class="inferred0"><a name="line106"></a>106 # 
-</span><span class="inferred1"><a name="line107"></a>107 #   def destroy
-</span><span class="inferred0"><a name="line108"></a>108 #     TransferItem.find(params[:id]).destroy
-</span><span class="inferred1"><a name="line109"></a>109 #     redirect_to :action =&gt; 'list'
-</span><span class="inferred0"><a name="line110"></a>110 #   end
-</span><span class="inferred1"><a name="line111"></a>111   
-</span><span class="marked0"><a name="line112"></a>112   private
-</span><span class="inferred1"><a name="line113"></a>113   
-</span><span class="marked0"><a name="line114"></a>114   def check_perm
-</span><span class="uncovered1"><a name="line115"></a>115     @transfer_item = TransferItem.find(params[:id])
-</span><span class="uncovered0"><a name="line116"></a>116     if @transfer_item.category.user.id != self.current_user.id
-</span><span class="uncovered1"><a name="line117"></a>117       @transfer_item = nil
-</span><span class="uncovered0"><a name="line118"></a>118       flash[:notice] = 'You do not have permission to view this transfer item'
-</span><span class="uncovered1"><a name="line119"></a>119       redirect_to :action =&gt; :index, :controller =&gt; :categories
-</span><span class="uncovered0"><a name="line120"></a>120       return
-</span><span class="uncovered1"><a name="line121"></a>121     end
-</span><span class="uncovered0"><a name="line122"></a>122   end
-</span><span class="uncovered1"><a name="line123"></a>123 end
+<pre><span class="inferred0"><a name="line1"></a>1 #!/usr/bin/env ruby
+</span><span class="marked1"><a name="line2"></a>2 require File.dirname(__FILE__) + '/../config/boot'
+</span><span class="marked0"><a name="line3"></a>3 require 'commands/server'
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

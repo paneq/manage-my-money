@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:10 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,9 +571,9 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-helpers-application_helper_rb.html'>app/helpers/application_helper.rb</a>
         </td>
-      <td class='lines_total'><tt>162</tt>
+      <td class='lines_total'><tt>238</tt>
         </td>
-      <td class='lines_code'><tt>115</tt>
+      <td class='lines_code'><tt>163</tt>
         </td>
       <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>100.0%</tt>
               &nbsp;</td>
@@ -598,168 +598,244 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred1"><a name="line1"></a>  1 # Methods added to this helper will be available to all templates in the application.
-</span><span class="inferred0"><a name="line2"></a>  2 
-</span><span class="marked1"><a name="line3"></a>  3 require File.expand_path(File.dirname(__FILE__) + '../../../lib/date_extensions')
-</span><span class="inferred0"><a name="line4"></a>  4 
-</span><span class="marked1"><a name="line5"></a>  5 module ApplicationHelper
-</span><span class="marked0"><a name="line6"></a>  6   include Forms::ApplicationHelper
-</span><span class="inferred1"><a name="line7"></a>  7 
-</span><span class="marked0"><a name="line8"></a>  8   PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date::PERIODS
-</span><span class="inferred1"><a name="line9"></a>  9 
-</span><span class="inferred0"><a name="line10"></a> 10   #Returns all periods including :Selected which cannote be computed by Date.compute
-</span><span class="marked1"><a name="line11"></a> 11   def get_periods
-</span><span class="marked0"><a name="line12"></a> 12     return PERIODS
-</span><span class="inferred1"><a name="line13"></a> 13   end
-</span><span class="inferred0"><a name="line14"></a> 14 
-</span><span class="inferred1"><a name="line15"></a> 15   # display_if(proc_object)
-</span><span class="inferred0"><a name="line16"></a> 16   # display_if { 1 == 2 }
-</span><span class="inferred1"><a name="line17"></a> 17   #
-</span><span class="inferred0"><a name="line18"></a> 18   # Returns &quot;display:none&quot; if condition is evaluated as false
-</span><span class="inferred1"><a name="line19"></a> 19   # otherwise returns empty string.
-</span><span class="marked0"><a name="line20"></a> 20   def display_if(condition = nil, &amp;block)
-</span><span class="marked1"><a name="line21"></a> 21     raise 'Condition as Proc or code block required' if condition.nil? &amp;&amp; !Kernel.block_given?
-</span><span class="marked0"><a name="line22"></a> 22     condition = block if condition.nil?
-</span><span class="marked1"><a name="line23"></a> 23     return '' if condition.call == true
-</span><span class="marked0"><a name="line24"></a> 24     return 'display:none'
-</span><span class="inferred1"><a name="line25"></a> 25   end
-</span><span class="inferred0"><a name="line26"></a> 26 
-</span><span class="inferred1"><a name="line27"></a> 27 
-</span><span class="inferred0"><a name="line28"></a> 28   # display_if(proc_object)
-</span><span class="inferred1"><a name="line29"></a> 29   # display_if { 1 == 2 }
-</span><span class="inferred0"><a name="line30"></a> 30   #
-</span><span class="inferred1"><a name="line31"></a> 31   # Returns style=&quot;display:none&quot; if condition is evaluated as false
-</span><span class="inferred0"><a name="line32"></a> 32   # otherwise returns style=&quot;&quot; string.
-</span><span class="marked1"><a name="line33"></a> 33   def style_display_if(condition = nil, &amp;block)
-</span><span class="marked0"><a name="line34"></a> 34     raise 'Condition as Proc or code block required' if condition.nil? &amp;&amp; !Kernel.block_given?
-</span><span class="marked1"><a name="line35"></a> 35     condition = block if condition.nil?
-</span><span class="marked0"><a name="line36"></a> 36     return &quot;style=\&quot;#{display_if(condition)}\&quot;&quot;
-</span><span class="inferred1"><a name="line37"></a> 37   end
-</span><span class="inferred0"><a name="line38"></a> 38 
-</span><span class="inferred1"><a name="line39"></a> 39 
-</span><span class="marked0"><a name="line40"></a> 40   def add_transfer_item(transfer_item_type)
-</span><span class="marked1"><a name="line41"></a> 41     jsfunction_code = link_to_function 'Nowy element' do |page|
-</span><span class="marked0"><a name="line42"></a> 42       page.insert_html :bottom, &quot;full-#{transfer_item_type.to_s.downcase}-items&quot;, :partial =&gt; '/transfers/transfer_item', :locals =&gt; {:hack =&gt; true}, :object =&gt; TransferItem.new(:transfer_item_type =&gt; transfer_item_type, :currency_id =&gt; @current_user.default_currency.id)
-</span><span class="inferred1"><a name="line43"></a> 43     end
-</span><span class="marked0"><a name="line44"></a> 44     jsfunction_code.gsub! &quot;onclick=\&quot;try&quot;, &quot;onclick=\&quot;var my_uid = uid();\n try &quot;; #TODO: wyjąc metodę UID  z head'a layoutu
-</span><span class="marked1"><a name="line45"></a> 45     jsfunction_code.gsub! &quot;PUT_ID_HERE&quot;, &quot;&amp;quot; + my_uid +&amp;quot;&quot;
-</span><span class="marked0"><a name="line46"></a> 46     return jsfunction_code
-</span><span class="inferred1"><a name="line47"></a> 47   end
-</span><span class="inferred0"><a name="line48"></a> 48 
-</span><span class="inferred1"><a name="line49"></a> 49 
-</span><span class="inferred0"><a name="line50"></a> 50 
-</span><span class="inferred1"><a name="line51"></a> 51   # TODO: Using  result += may be a bed solution. At least it is not ellegant
-</span><span class="inferred0"><a name="line52"></a> 52   # Is there another, better way to do it? Like using erb Templates ?
-</span><span class="marked1"><a name="line53"></a> 53   def date_period_fields(name, start_day = Date.today, end_day = Date.today)
-</span><span class="inferred0"><a name="line54"></a> 54 
-</span><span class="marked1"><a name="line55"></a> 55     name_id = name.gsub(/_/, '-')
-</span><span class="marked0"><a name="line56"></a> 56     select_name = name+'_period'
-</span><span class="marked1"><a name="line57"></a> 57     start_field_name = get_date_start_field_name(name)
-</span><span class="marked0"><a name="line58"></a> 58     end_field_name = get_date_end_field_name(name)
-</span><span class="marked1"><a name="line59"></a> 59     computed_name = &quot;#{name_id}-computed&quot;
-</span><span class="inferred0"><a name="line60"></a> 60 
-</span><span class="marked1"><a name="line61"></a> 61     result = ''
-</span><span class="marked0"><a name="line62"></a> 62     result += &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line63"></a> 63       &lt;p id=&quot;#{name_id}-period&quot;&gt;&lt;label for=&quot;#{name_id}&quot;&gt;Wybierz okres:&lt;/label&gt;
-</span><span class="inferred0"><a name="line64"></a> 64     HTML
-</span><span class="inferred1"><a name="line65"></a> 65 
-</span><span class="marked0"><a name="line66"></a> 66     result += select_tag select_name, options_from_collection_for_select(get_periods, :first, :second)
-</span><span class="inferred1"><a name="line67"></a> 67 
-</span><span class="marked0"><a name="line68"></a> 68     result += get_date_field_start(name, start_day)
-</span><span class="marked1"><a name="line69"></a> 69     result += get_date_field_end(name, end_day)
-</span><span class="marked0"><a name="line70"></a> 70     result += &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line71"></a> 71       &lt;/p&gt;
-</span><span class="inferred0"><a name="line72"></a> 72     HTML
-</span><span class="inferred1"><a name="line73"></a> 73 
-</span><span class="marked0"><a name="line74"></a> 74     result += &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line75"></a> 75       &lt;p id=&quot;#{computed_name}&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
-</span><span class="inferred0"><a name="line76"></a> 76     HTML
-</span><span class="inferred1"><a name="line77"></a> 77 
-</span><span class="marked0"><a name="line78"></a> 78     function = &lt;&lt;-JS
-</span><span class="inferred1"><a name="line79"></a> 79       if (value == 'SELECTED') {
-</span><span class="inferred0"><a name="line80"></a> 80         Element.hide('#{computed_name}');
-</span><span class="inferred1"><a name="line81"></a> 81         Element.update('#{computed_name}','');
-</span><span class="inferred0"><a name="line82"></a> 82         Element.show('#{start_field_name}');
-</span><span class="inferred1"><a name="line83"></a> 83         Element.show('#{end_field_name}');
-</span><span class="inferred0"><a name="line84"></a> 84         return;
-</span><span class="inferred1"><a name="line85"></a> 85       }
-</span><span class="inferred0"><a name="line86"></a> 86       var text1 = '&lt;p&gt;&lt;label&gt;Data początkowa: &lt;/label&gt; '
-</span><span class="inferred1"><a name="line87"></a> 87       var text2 = '&lt;/p&gt; &lt;p&gt;&lt;label&gt;Data końcowa: &lt;/label&gt; '
-</span><span class="inferred0"><a name="line88"></a> 88       var text3 = '&lt;/p&gt;'
-</span><span class="inferred1"><a name="line89"></a> 89       switch (value) {
-</span><span class="inferred0"><a name="line90"></a> 90     JS
-</span><span class="inferred1"><a name="line91"></a> 91 
-</span><span class="inferred0"><a name="line92"></a> 92 
-</span><span class="marked1"><a name="line93"></a> 93     Date::PERIODS.each do |period_type, period_name|
-</span><span class="marked0"><a name="line94"></a> 94       range = Date.calculate(period_type)
-</span><span class="marked1"><a name="line95"></a> 95       function &lt;&lt; &quot;case '#{period_type.to_s}': \n&quot;
-</span><span class="marked0"><a name="line96"></a> 96       function &lt;&lt; &quot;  text1 = text1 + '#{range.begin}' ;\n&quot;
-</span><span class="marked1"><a name="line97"></a> 97       function &lt;&lt; &quot;  text2 = text2 + '#{range.end}' ;\n&quot;
-</span><span class="marked0"><a name="line98"></a> 98       function &lt;&lt; &quot;break;\n&quot;
-</span><span class="inferred1"><a name="line99"></a> 99     end
-</span><span class="marked0"><a name="line100"></a>100     function += &lt;&lt;-JS
-</span><span class="inferred1"><a name="line101"></a>101     }
-</span><span class="inferred0"><a name="line102"></a>102     text1 = text1 + text2 + text3
-</span><span class="inferred1"><a name="line103"></a>103     Element.update('#{computed_name}', text1);
-</span><span class="inferred0"><a name="line104"></a>104     Element.hide('#{start_field_name}');
-</span><span class="inferred1"><a name="line105"></a>105     Element.hide('#{end_field_name}');
-</span><span class="inferred0"><a name="line106"></a>106     Element.show('#{computed_name}');
-</span><span class="inferred1"><a name="line107"></a>107     JS
-</span><span class="inferred0"><a name="line108"></a>108 
-</span><span class="marked1"><a name="line109"></a>109     result += observe_field select_name,
-</span><span class="inferred0"><a name="line110"></a>110       :on =&gt; 'click' ,
-</span><span class="marked1"><a name="line111"></a>111       :function =&gt; function
-</span><span class="inferred0"><a name="line112"></a>112   end
-</span><span class="inferred1"><a name="line113"></a>113 
-</span><span class="marked0"><a name="line114"></a>114   def get_date_field_start(name, start_day = Date.today)
-</span><span class="marked1"><a name="line115"></a>115     begin_field_name = get_date_start_field_name(name)
-</span><span class="marked0"><a name="line116"></a>116     result = &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line117"></a>117       &lt;p id=&quot;#{begin_field_name}&quot;&gt;&lt;label for=&quot;#{begin_field_name}&quot;&gt;Data początkowa: &lt;/label&gt;
-</span><span class="inferred0"><a name="line118"></a>118     HTML
-</span><span class="inferred1"><a name="line119"></a>119 
-</span><span class="marked0"><a name="line120"></a>120     result += select_date start_day, :prefix =&gt; &quot;#{name}_start&quot;
-</span><span class="inferred1"><a name="line121"></a>121 
-</span><span class="marked0"><a name="line122"></a>122     result += &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line123"></a>123       &lt;/p&gt;
-</span><span class="inferred0"><a name="line124"></a>124     HTML
-</span><span class="inferred1"><a name="line125"></a>125   end
-</span><span class="inferred0"><a name="line126"></a>126 
-</span><span class="inferred1"><a name="line127"></a>127 
-</span><span class="marked0"><a name="line128"></a>128   def get_date_field_end(name, end_day = Date.today)
-</span><span class="marked1"><a name="line129"></a>129     end_field_name = get_date_end_field_name(name)
-</span><span class="marked0"><a name="line130"></a>130     result = &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line131"></a>131       &lt;p id=&quot;#{end_field_name}&quot;&gt;&lt;label for=&quot;#{end_field_name}&quot;&gt;Data końcowa: &lt;/label&gt;
-</span><span class="inferred0"><a name="line132"></a>132     HTML
-</span><span class="inferred1"><a name="line133"></a>133 
-</span><span class="marked0"><a name="line134"></a>134     result += select_date end_day, :prefix =&gt; &quot;#{name}_end&quot;
-</span><span class="inferred1"><a name="line135"></a>135 
-</span><span class="marked0"><a name="line136"></a>136     result += &lt;&lt;-HTML
-</span><span class="inferred1"><a name="line137"></a>137       &lt;/p&gt;
-</span><span class="inferred0"><a name="line138"></a>138     HTML
-</span><span class="inferred1"><a name="line139"></a>139   end
-</span><span class="inferred0"><a name="line140"></a>140 
-</span><span class="marked1"><a name="line141"></a>141   def switch(div_id, name)
-</span><span class="marked0"><a name="line142"></a>142     result = ''
-</span><span class="marked1"><a name="line143"></a>143     result += link_to_function name, :id =&gt; &quot;switch_for_#{div_id}&quot;, :onclick =&gt;  &lt;&lt;-JS
-</span><span class="inferred0"><a name="line144"></a>144       if(Element.visible('#{div_id}')) {
-</span><span class="inferred1"><a name="line145"></a>145             Element.hide('#{div_id}')
-</span><span class="inferred0"><a name="line146"></a>146         } else {
-</span><span class="inferred1"><a name="line147"></a>147             Element.show('#{div_id}')
-</span><span class="inferred0"><a name="line148"></a>148         }
-</span><span class="inferred1"><a name="line149"></a>149     JS
-</span><span class="inferred0"><a name="line150"></a>150   end
-</span><span class="inferred1"><a name="line151"></a>151 
-</span><span class="inferred0"><a name="line152"></a>152 
-</span><span class="marked1"><a name="line153"></a>153   private
-</span><span class="marked0"><a name="line154"></a>154   def get_date_start_field_name(name)
-</span><span class="marked1"><a name="line155"></a>155     &quot;#{name.gsub(/_/, '-')}-start&quot;
-</span><span class="inferred0"><a name="line156"></a>156   end
-</span><span class="inferred1"><a name="line157"></a>157 
-</span><span class="marked0"><a name="line158"></a>158   def get_date_end_field_name(name)
-</span><span class="marked1"><a name="line159"></a>159     &quot;#{name.gsub(/_/, '-')}-end&quot;
-</span><span class="inferred0"><a name="line160"></a>160   end
-</span><span class="inferred1"><a name="line161"></a>161 
-</span><span class="inferred0"><a name="line162"></a>162 end
+<pre><span class="inferred0"><a name="line1"></a>  1 # Methods added to this helper will be available to all templates in the application.
+</span><span class="inferred1"><a name="line2"></a>  2 
+</span><span class="marked0"><a name="line3"></a>  3 require File.expand_path(File.dirname(__FILE__) + '../../../lib/date_extensions')
+</span><span class="marked1"><a name="line4"></a>  4 require 'erb'
+</span><span class="inferred0"><a name="line5"></a>  5 
+</span><span class="marked1"><a name="line6"></a>  6 module ApplicationHelper
+</span><span class="marked0"><a name="line7"></a>  7   include Forms::ApplicationHelper
+</span><span class="inferred1"><a name="line8"></a>  8 
+</span><span class="marked0"><a name="line9"></a>  9   PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date::PERIODS
+</span><span class="inferred1"><a name="line10"></a> 10 
+</span><span class="inferred0"><a name="line11"></a> 11   #Returns all periods including :Selected which cannote be computed by Date.compute
+</span><span class="marked1"><a name="line12"></a> 12   def get_periods
+</span><span class="marked0"><a name="line13"></a> 13     return PERIODS
+</span><span class="inferred1"><a name="line14"></a> 14   end
+</span><span class="inferred0"><a name="line15"></a> 15 
+</span><span class="inferred1"><a name="line16"></a> 16   # Returns id='name-#{obj.id}'
+</span><span class="marked0"><a name="line17"></a> 17   def obj_id(name, obj)
+</span><span class="marked1"><a name="line18"></a> 18     &quot;id='#{name}-#{obj.id}'&quot;
+</span><span class="inferred0"><a name="line19"></a> 19   end
+</span><span class="inferred1"><a name="line20"></a> 20 
+</span><span class="inferred0"><a name="line21"></a> 21   # Returns hash { :id =&gt; 'name-#{obj.id}' }
+</span><span class="marked1"><a name="line22"></a> 22   def obj_hash_id(name, obj)
+</span><span class="marked0"><a name="line23"></a> 23     {:id =&gt; &quot;#{name}-#{obj.id}&quot;}
+</span><span class="inferred1"><a name="line24"></a> 24   end
+</span><span class="inferred0"><a name="line25"></a> 25 
+</span><span class="inferred1"><a name="line26"></a> 26   # display_if(proc_object)
+</span><span class="inferred0"><a name="line27"></a> 27   # display_if { 1 == 2 }
+</span><span class="inferred1"><a name="line28"></a> 28   #
+</span><span class="inferred0"><a name="line29"></a> 29   # Returns &quot;display:none&quot; if condition is evaluated as false
+</span><span class="inferred1"><a name="line30"></a> 30   # otherwise returns empty string.
+</span><span class="marked0"><a name="line31"></a> 31   def display_if(condition = nil, &amp;block)
+</span><span class="marked1"><a name="line32"></a> 32     raise 'Condition as Proc or code block required' if condition.nil? &amp;&amp; !Kernel.block_given?
+</span><span class="marked0"><a name="line33"></a> 33     condition = block if condition.nil?
+</span><span class="marked1"><a name="line34"></a> 34     return '' if condition.call == true
+</span><span class="marked0"><a name="line35"></a> 35     return 'display:none'
+</span><span class="inferred1"><a name="line36"></a> 36   end
+</span><span class="inferred0"><a name="line37"></a> 37 
+</span><span class="inferred1"><a name="line38"></a> 38 
+</span><span class="inferred0"><a name="line39"></a> 39   # display_if(proc_object)
+</span><span class="inferred1"><a name="line40"></a> 40   # display_if { 1 == 2 }
+</span><span class="inferred0"><a name="line41"></a> 41   #
+</span><span class="inferred1"><a name="line42"></a> 42   # Returns style=&quot;display:none&quot; if condition is evaluated as false
+</span><span class="inferred0"><a name="line43"></a> 43   # otherwise returns style=&quot;&quot; string.
+</span><span class="marked1"><a name="line44"></a> 44   def style_display_if(condition = nil, &amp;block)
+</span><span class="marked0"><a name="line45"></a> 45     raise 'Condition as Proc or code block required' if condition.nil? &amp;&amp; !Kernel.block_given?
+</span><span class="marked1"><a name="line46"></a> 46     condition = block if condition.nil?
+</span><span class="marked0"><a name="line47"></a> 47     return &quot;style=\&quot;#{display_if(condition)}\&quot;&quot;
+</span><span class="inferred1"><a name="line48"></a> 48   end
+</span><span class="inferred0"><a name="line49"></a> 49 
+</span><span class="inferred1"><a name="line50"></a> 50 
+</span><span class="marked0"><a name="line51"></a> 51   def add_transfer_item(transfer_item_type)
+</span><span class="marked1"><a name="line52"></a> 52     jsfunction_code = link_to_function 'Nowy element' do |page|
+</span><span class="marked0"><a name="line53"></a> 53       page.insert_html :bottom, &quot;full-#{transfer_item_type.to_s.downcase}-items&quot;, :partial =&gt; '/transfers/transfer_item', :locals =&gt; {:hack =&gt; true}, :object =&gt; TransferItem.new(:transfer_item_type =&gt; transfer_item_type, :currency_id =&gt; @current_user.default_currency.id)
+</span><span class="inferred1"><a name="line54"></a> 54     end
+</span><span class="marked0"><a name="line55"></a> 55     jsfunction_code.gsub! &quot;onclick=\&quot;try&quot;, &quot;onclick=\&quot;var my_uid = uid();\n try &quot;; #TODO: wyjąc metodę UID  z head'a layoutu
+</span><span class="marked1"><a name="line56"></a> 56     jsfunction_code.gsub! &quot;PUT_ID_HERE&quot;, &quot;&amp;quot; + my_uid +&amp;quot;&quot;
+</span><span class="marked0"><a name="line57"></a> 57     return jsfunction_code
+</span><span class="inferred1"><a name="line58"></a> 58   end
+</span><span class="inferred0"><a name="line59"></a> 59 
+</span><span class="inferred1"><a name="line60"></a> 60 
+</span><span class="inferred0"><a name="line61"></a> 61 
+</span><span class="inferred1"><a name="line62"></a> 62   # TODO: Using  result += may be a bed solution. At least it is not ellegant
+</span><span class="inferred0"><a name="line63"></a> 63   # Is there another, better way to do it? Like using erb Templates ?
+</span><span class="marked1"><a name="line64"></a> 64   def date_period_fields(name, start_day = Date.today, end_day = Date.today)
+</span><span class="inferred0"><a name="line65"></a> 65 
+</span><span class="marked1"><a name="line66"></a> 66     name_id = name.gsub(/_/, '-')
+</span><span class="marked0"><a name="line67"></a> 67     select_name = name+'_period'
+</span><span class="marked1"><a name="line68"></a> 68     start_field_name = get_date_start_field_name(name)
+</span><span class="marked0"><a name="line69"></a> 69     end_field_name = get_date_end_field_name(name)
+</span><span class="marked1"><a name="line70"></a> 70     computed_name = &quot;#{name_id}-computed&quot;
+</span><span class="inferred0"><a name="line71"></a> 71 
+</span><span class="marked1"><a name="line72"></a> 72     result = ''
+</span><span class="marked0"><a name="line73"></a> 73     result += &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line74"></a> 74       &lt;p id=&quot;#{name_id}-period&quot;&gt;&lt;label for=&quot;#{name_id}&quot;&gt;Wybierz okres:&lt;/label&gt;
+</span><span class="inferred0"><a name="line75"></a> 75     HTML
+</span><span class="inferred1"><a name="line76"></a> 76 
+</span><span class="marked0"><a name="line77"></a> 77     result += select_tag select_name, options_from_collection_for_select(get_periods, :first, :second)
+</span><span class="inferred1"><a name="line78"></a> 78 
+</span><span class="marked0"><a name="line79"></a> 79     result += get_date_field_start(name, start_day)
+</span><span class="marked1"><a name="line80"></a> 80     result += get_date_field_end(name, end_day)
+</span><span class="marked0"><a name="line81"></a> 81     result += &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line82"></a> 82       &lt;/p&gt;
+</span><span class="inferred0"><a name="line83"></a> 83     HTML
+</span><span class="inferred1"><a name="line84"></a> 84 
+</span><span class="marked0"><a name="line85"></a> 85     result += &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line86"></a> 86       &lt;p id=&quot;#{computed_name}&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
+</span><span class="inferred0"><a name="line87"></a> 87     HTML
+</span><span class="inferred1"><a name="line88"></a> 88 
+</span><span class="marked0"><a name="line89"></a> 89     function = &lt;&lt;-JS
+</span><span class="inferred1"><a name="line90"></a> 90       if (value == 'SELECTED') {
+</span><span class="inferred0"><a name="line91"></a> 91         Element.hide('#{computed_name}');
+</span><span class="inferred1"><a name="line92"></a> 92         Element.update('#{computed_name}','');
+</span><span class="inferred0"><a name="line93"></a> 93         Element.show('#{start_field_name}');
+</span><span class="inferred1"><a name="line94"></a> 94         Element.show('#{end_field_name}');
+</span><span class="inferred0"><a name="line95"></a> 95         return;
+</span><span class="inferred1"><a name="line96"></a> 96       }
+</span><span class="inferred0"><a name="line97"></a> 97       var text1 = '&lt;p&gt;&lt;label&gt;Data początkowa: &lt;/label&gt; '
+</span><span class="inferred1"><a name="line98"></a> 98       var text2 = '&lt;/p&gt; &lt;p&gt;&lt;label&gt;Data końcowa: &lt;/label&gt; '
+</span><span class="inferred0"><a name="line99"></a> 99       var text3 = '&lt;/p&gt;'
+</span><span class="inferred1"><a name="line100"></a>100       switch (value) {
+</span><span class="inferred0"><a name="line101"></a>101     JS
+</span><span class="inferred1"><a name="line102"></a>102 
+</span><span class="inferred0"><a name="line103"></a>103 
+</span><span class="marked1"><a name="line104"></a>104     Date::PERIODS.each do |period_type, period_name|
+</span><span class="marked0"><a name="line105"></a>105       range = Date.calculate(period_type)
+</span><span class="marked1"><a name="line106"></a>106       function &lt;&lt; &quot;case '#{period_type.to_s}': \n&quot;
+</span><span class="marked0"><a name="line107"></a>107       function &lt;&lt; &quot;  text1 = text1 + '#{range.begin}' ;\n&quot;
+</span><span class="marked1"><a name="line108"></a>108       function &lt;&lt; &quot;  text2 = text2 + '#{range.end}' ;\n&quot;
+</span><span class="marked0"><a name="line109"></a>109       function &lt;&lt; &quot;break;\n&quot;
+</span><span class="inferred1"><a name="line110"></a>110     end
+</span><span class="marked0"><a name="line111"></a>111     function += &lt;&lt;-JS
+</span><span class="inferred1"><a name="line112"></a>112     }
+</span><span class="inferred0"><a name="line113"></a>113     text1 = text1 + text2 + text3
+</span><span class="inferred1"><a name="line114"></a>114     Element.update('#{computed_name}', text1);
+</span><span class="inferred0"><a name="line115"></a>115     Element.hide('#{start_field_name}');
+</span><span class="inferred1"><a name="line116"></a>116     Element.hide('#{end_field_name}');
+</span><span class="inferred0"><a name="line117"></a>117     Element.show('#{computed_name}');
+</span><span class="inferred1"><a name="line118"></a>118     JS
+</span><span class="inferred0"><a name="line119"></a>119 
+</span><span class="marked1"><a name="line120"></a>120     result += observe_field select_name,
+</span><span class="inferred0"><a name="line121"></a>121       :on =&gt; 'click' ,
+</span><span class="marked1"><a name="line122"></a>122       :function =&gt; function
+</span><span class="inferred0"><a name="line123"></a>123   end
+</span><span class="inferred1"><a name="line124"></a>124 
+</span><span class="marked0"><a name="line125"></a>125   def get_date_field_start(name, start_day = Date.today)
+</span><span class="marked1"><a name="line126"></a>126     begin_field_name = get_date_start_field_name(name)
+</span><span class="marked0"><a name="line127"></a>127     result = &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line128"></a>128       &lt;p id=&quot;#{begin_field_name}&quot;&gt;&lt;label for=&quot;#{begin_field_name}&quot;&gt;Data początkowa: &lt;/label&gt;
+</span><span class="inferred0"><a name="line129"></a>129     HTML
+</span><span class="inferred1"><a name="line130"></a>130 
+</span><span class="marked0"><a name="line131"></a>131     result += select_date start_day, :prefix =&gt; &quot;#{name}_start&quot;
+</span><span class="inferred1"><a name="line132"></a>132 
+</span><span class="marked0"><a name="line133"></a>133     result += &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line134"></a>134       &lt;/p&gt;
+</span><span class="inferred0"><a name="line135"></a>135     HTML
+</span><span class="inferred1"><a name="line136"></a>136   end
+</span><span class="inferred0"><a name="line137"></a>137 
+</span><span class="inferred1"><a name="line138"></a>138 
+</span><span class="marked0"><a name="line139"></a>139   def get_date_field_end(name, end_day = Date.today)
+</span><span class="marked1"><a name="line140"></a>140     end_field_name = get_date_end_field_name(name)
+</span><span class="marked0"><a name="line141"></a>141     result = &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line142"></a>142       &lt;p id=&quot;#{end_field_name}&quot;&gt;&lt;label for=&quot;#{end_field_name}&quot;&gt;Data końcowa: &lt;/label&gt;
+</span><span class="inferred0"><a name="line143"></a>143     HTML
+</span><span class="inferred1"><a name="line144"></a>144 
+</span><span class="marked0"><a name="line145"></a>145     result += select_date end_day, :prefix =&gt; &quot;#{name}_end&quot;
+</span><span class="inferred1"><a name="line146"></a>146 
+</span><span class="marked0"><a name="line147"></a>147     result += &lt;&lt;-HTML
+</span><span class="inferred1"><a name="line148"></a>148       &lt;/p&gt;
+</span><span class="inferred0"><a name="line149"></a>149     HTML
+</span><span class="inferred1"><a name="line150"></a>150   end
+</span><span class="inferred0"><a name="line151"></a>151 
+</span><span class="inferred1"><a name="line152"></a>152 
+</span><span class="marked0"><a name="line153"></a>153   def switch(div_id, name)
+</span><span class="marked1"><a name="line154"></a>154     result = ''
+</span><span class="marked0"><a name="line155"></a>155     result += link_to_function name, :id =&gt; &quot;switch_for_#{div_id}&quot;, :onclick =&gt;  &lt;&lt;-JS
+</span><span class="inferred1"><a name="line156"></a>156       if(Element.visible('#{div_id}')) {
+</span><span class="inferred0"><a name="line157"></a>157             Element.hide('#{div_id}')
+</span><span class="inferred1"><a name="line158"></a>158         } else {
+</span><span class="inferred0"><a name="line159"></a>159             Element.show('#{div_id}')
+</span><span class="inferred1"><a name="line160"></a>160         }
+</span><span class="inferred0"><a name="line161"></a>161     JS
+</span><span class="inferred1"><a name="line162"></a>162   end
+</span><span class="inferred0"><a name="line163"></a>163 
+</span><span class="inferred1"><a name="line164"></a>164 
+</span><span class="inferred0"><a name="line165"></a>165   # Makes tab to show and hide elements &lt;br /&gt;
+</span><span class="inferred1"><a name="line166"></a>166   #
+</span><span class="inferred0"><a name="line167"></a>167   # def tab([[:quick, 'Szybki'],[:full, 'Pelny'],[:search,'Wyszukaj']], :name =&gt; :transfer &lt;br /&gt;
+</span><span class="inferred1"><a name="line168"></a>168   # Options : &lt;br /&gt;
+</span><span class="inferred0"><a name="line169"></a>169   # * name - Required option
+</span><span class="inferred1"><a name="line170"></a>170   # * menu_prefix
+</span><span class="inferred0"><a name="line171"></a>171   # * menu_sufix
+</span><span class="inferred1"><a name="line172"></a>172   # * show_prefix
+</span><span class="inferred0"><a name="line173"></a>173   # * active ex. =&gt; :quick
+</span><span class="inferred1"><a name="line174"></a>174   # &lt;br /&gt;
+</span><span class="inferred0"><a name="line175"></a>175   # Refactor, make it faster... ?
+</span><span class="marked1"><a name="line176"></a>176   def tab(table, options = {})
+</span><span class="marked0"><a name="line177"></a>177     defaults = {:name =&gt; :nil, :menu_prefix =&gt; 'kind-of', :menu_sufix =&gt; 'tab', :show_prefix =&gt; 'form-for', :active =&gt; :nil}
+</span><span class="marked1"><a name="line178"></a>178     defaults.merge!(options)
+</span><span class="marked0"><a name="line179"></a>179     throw &quot;:menu_prefix and :show_prefix cannot be the same&quot; if defaults[:menu_prefix].to_s == defaults[:show_prefix].to_s
+</span><span class="marked1"><a name="line180"></a>180     throw &quot;:name cannot be blank&quot; if defaults[:name].blank?
+</span><span class="marked0"><a name="line181"></a>181     all = table
+</span><span class="marked1"><a name="line182"></a>182     show = nil
+</span><span class="marked0"><a name="line183"></a>183     show = defaults[:active] if !defaults[:active].nil? &amp;&amp; table.map{|element, name| element}.include?(defaults[:active])
+</span><span class="marked1"><a name="line184"></a>184     show = table.first.first if show.nil?
+</span><span class="inferred0"><a name="line185"></a>185 
+</span><span class="marked1"><a name="line186"></a>186     menu_name = defaults[:menu_prefix].nil? ? defaults[:name].to_s : (defaults[:menu_prefix].to_s + &quot;-&quot; + defaults[:name].to_s)
+</span><span class="inferred0"><a name="line187"></a>187 
+</span><span class="marked1"><a name="line188"></a>188     active_class = menu_name + '-active'
+</span><span class="marked0"><a name="line189"></a>189     active_class += ('-' + defaults[:menu_sufix].to_s) unless defaults[:menu_sufix].nil?
+</span><span class="inferred1"><a name="line190"></a>190 
+</span><span class="marked0"><a name="line191"></a>191     inactive_class = menu_name + '-inactive'
+</span><span class="marked1"><a name="line192"></a>192     inactive_class += ('-' + defaults[:menu_sufix].to_s) unless defaults[:menu_sufix].nil?
+</span><span class="inferred0"><a name="line193"></a>193 
+</span><span class="marked1"><a name="line194"></a>194     show_name = defaults[:show_prefix].nil? ? defaults[:name].to_s : (defaults[:show_prefix].to_s + &quot;-&quot; + defaults[:name].to_s)
+</span><span class="inferred0"><a name="line195"></a>195 
+</span><span class="marked1"><a name="line196"></a>196     template =  %q{
+</span><span class="inferred0"><a name="line197"></a>197 &lt;b&gt;
+</span><span class="inferred1"><a name="line198"></a>198   &lt;span id=&quot;&lt;%= menu_name %&gt;&quot;&gt;
+</span><span class="inferred0"><a name="line199"></a>199     &lt;% all.each do |active, name| %&gt;
+</span><span class="inferred1"><a name="line200"></a>200       &lt;span id=&quot;&lt;%= menu_name %&gt;-&lt;%= active %&gt;&quot; &lt;%= &quot; style='display:none'&quot; unless active == show %&gt; &gt;
+</span><span class="inferred0"><a name="line201"></a>201 
+</span><span class="inferred1"><a name="line202"></a>202         &lt;% all.each do |element, text| %&gt;
+</span><span class="inferred0"><a name="line203"></a>203 
+</span><span class="inferred1"><a name="line204"></a>204           &lt;% if active == element %&gt;
+</span><span class="inferred0"><a name="line205"></a>205             &lt;span class=&quot;&lt;%= active_class %&gt;&quot;&gt;
+</span><span class="inferred1"><a name="line206"></a>206               &lt;%= text.to_s %&gt;
+</span><span class="inferred0"><a name="line207"></a>207             &lt;/span&gt;
+</span><span class="inferred1"><a name="line208"></a>208           &lt;% else %&gt;
+</span><span class="inferred0"><a name="line209"></a>209             &lt;span class=&quot;&lt;%= inactive_class %&gt;&quot;&gt;
+</span><span class="inferred1"><a name="line210"></a>210               &lt;a href=&quot;#&quot; onclick=&quot;Element.show('&lt;%= show_name + '-' + element.to_s %&gt;'); Element.hide('&lt;%= show_name + '-' + active.to_s %&gt;'); Element.show('&lt;%= menu_name + '-' + element.to_s %&gt;'); Element.hide('&lt;%= menu_name + '-' + active.to_s %&gt;');&quot;&gt;
+</span><span class="inferred0"><a name="line211"></a>211                 &lt;%= text.to_s %&gt;
+</span><span class="inferred1"><a name="line212"></a>212               &lt;/a&gt;
+</span><span class="inferred0"><a name="line213"></a>213             &lt;/span&gt;
+</span><span class="inferred1"><a name="line214"></a>214           &lt;% end %&gt;
+</span><span class="inferred0"><a name="line215"></a>215 
+</span><span class="inferred1"><a name="line216"></a>216         &lt;% end %&gt;
+</span><span class="inferred0"><a name="line217"></a>217       &lt;/span&gt;
+</span><span class="inferred1"><a name="line218"></a>218     &lt;% end %&gt;
+</span><span class="inferred0"><a name="line219"></a>219   &lt;/span&gt;
+</span><span class="inferred1"><a name="line220"></a>220 &lt;/b&gt;
+</span><span class="inferred0"><a name="line221"></a>221     }
+</span><span class="marked1"><a name="line222"></a>222     erb = ERB.new(template)
+</span><span class="marked0"><a name="line223"></a>223     return erb.result(binding)
+</span><span class="inferred1"><a name="line224"></a>224   end
+</span><span class="inferred0"><a name="line225"></a>225 
+</span><span class="inferred1"><a name="line226"></a>226 
+</span><span class="marked0"><a name="line227"></a>227   private
+</span><span class="inferred1"><a name="line228"></a>228 
+</span><span class="inferred0"><a name="line229"></a>229 
+</span><span class="marked1"><a name="line230"></a>230   def get_date_start_field_name(name)
+</span><span class="marked0"><a name="line231"></a>231     &quot;#{name.gsub(/_/, '-')}-start&quot;
+</span><span class="inferred1"><a name="line232"></a>232   end
+</span><span class="inferred0"><a name="line233"></a>233 
+</span><span class="marked1"><a name="line234"></a>234   def get_date_end_field_name(name)
+</span><span class="marked0"><a name="line235"></a>235     &quot;#{name.gsub(/_/, '-')}-end&quot;
+</span><span class="inferred1"><a name="line236"></a>236   end
+</span><span class="inferred0"><a name="line237"></a>237 
+</span><span class="inferred1"><a name="line238"></a>238 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

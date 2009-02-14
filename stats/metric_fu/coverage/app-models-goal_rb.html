@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:47 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -598,74 +598,74 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred1"><a name="line1"></a> 1 # == Schema Information
-</span><span class="inferred0"><a name="line2"></a> 2 # Schema version: 20090201170116
-</span><span class="inferred1"><a name="line3"></a> 3 #
-</span><span class="inferred0"><a name="line4"></a> 4 # Table name: goals
-</span><span class="inferred1"><a name="line5"></a> 5 #
-</span><span class="inferred0"><a name="line6"></a> 6 #  id                            :integer       not null, primary key
-</span><span class="inferred1"><a name="line7"></a> 7 #  description                   :string(255)   
-</span><span class="inferred0"><a name="line8"></a> 8 #  include_subcategories         :boolean       
-</span><span class="inferred1"><a name="line9"></a> 9 #  period_type_int               :integer       
-</span><span class="inferred0"><a name="line10"></a>10 #  goal_type_int                 :integer       
-</span><span class="inferred1"><a name="line11"></a>11 #  goal_completion_condition_int :integer       
-</span><span class="inferred0"><a name="line12"></a>12 #  value                         :float         
-</span><span class="inferred1"><a name="line13"></a>13 #  category_id                   :integer       not null
-</span><span class="inferred0"><a name="line14"></a>14 #  created_at                    :datetime      
-</span><span class="inferred1"><a name="line15"></a>15 #  updated_at                    :datetime      
-</span><span class="inferred0"><a name="line16"></a>16 #
-</span><span class="inferred1"><a name="line17"></a>17 
-</span><span class="inferred0"><a name="line18"></a>18 #require 'hash_enums'
-</span><span class="marked1"><a name="line19"></a>19 class Goal &lt; ActiveRecord::Base
-</span><span class="marked0"><a name="line20"></a>20   extend HashEnums
-</span><span class="marked1"><a name="line21"></a>21   belongs_to :category
-</span><span class="inferred0"><a name="line22"></a>22 
-</span><span class="inferred1"><a name="line23"></a>23   #has_many :historical_goals
-</span><span class="inferred0"><a name="line24"></a>24 
-</span><span class="inferred1"><a name="line25"></a>25 
-</span><span class="marked0"><a name="line26"></a>26   define_enum :period_type, {:infinite =&gt; 0,:monthly =&gt; 1}
-</span><span class="marked1"><a name="line27"></a>27   define_enum :goal_type, {:percent=&gt;0, :value=&gt;1}
-</span><span class="marked0"><a name="line28"></a>28   define_enum :goal_completion_condition,{:at_least=&gt;0, :at_most=&gt;1}
-</span><span class="inferred1"><a name="line29"></a>29 
-</span><span class="inferred0"><a name="line30"></a>30   
-</span><span class="inferred1"><a name="line31"></a>31   #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
-</span><span class="marked0"><a name="line32"></a>32   def percent_of_parent_category
-</span><span class="uncovered1"><a name="line33"></a>33     category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
-</span><span class="uncovered0"><a name="line34"></a>34   end
-</span><span class="inferred1"><a name="line35"></a>35 
-</span><span class="inferred0"><a name="line36"></a>36   #mówi czy osiągnieto cel, czy to dobrze czy źle zależy od wartości :goal_completion_condition
-</span><span class="marked1"><a name="line37"></a>37   def is_goal_reached
-</span><span class="inferred0"><a name="line38"></a>38 
-</span><span class="inferred1"><a name="line39"></a>39   end
-</span><span class="inferred0"><a name="line40"></a>40 
-</span><span class="inferred1"><a name="line41"></a>41   #ile punktów procentowych zostało do osiągnięcia celu
-</span><span class="marked0"><a name="line42"></a>42   def percents_to_reach_goal
-</span><span class="inferred1"><a name="line43"></a>43 
-</span><span class="inferred0"><a name="line44"></a>44   end
-</span><span class="inferred1"><a name="line45"></a>45 
-</span><span class="inferred0"><a name="line46"></a>46   #ile pięniędzy zostało do osiągnięcia celu
-</span><span class="marked1"><a name="line47"></a>47   def money_to_reach_goal
-</span><span class="inferred0"><a name="line48"></a>48 
-</span><span class="inferred1"><a name="line49"></a>49   end
-</span><span class="inferred0"><a name="line50"></a>50 
-</span><span class="inferred1"><a name="line51"></a>51   #o ile punktów procentowych przekroczono cel
-</span><span class="marked0"><a name="line52"></a>52   def percents_of_goal_exceed
-</span><span class="inferred1"><a name="line53"></a>53 
-</span><span class="inferred0"><a name="line54"></a>54   end
-</span><span class="inferred1"><a name="line55"></a>55 
-</span><span class="inferred0"><a name="line56"></a>56   #o ile pieniędzy przekroczono cel
-</span><span class="marked1"><a name="line57"></a>57   def money_of_goal_exceed
-</span><span class="inferred0"><a name="line58"></a>58 
-</span><span class="inferred1"><a name="line59"></a>59   end
-</span><span class="inferred0"><a name="line60"></a>60 
-</span><span class="inferred1"><a name="line61"></a>61   #zwraca różnicę w wykonaniu planu w tym i poprzednim okresie (procentowo lub w wartości)
-</span><span class="marked0"><a name="line62"></a>62   def goal_realization_compared_to_last_period
-</span><span class="inferred1"><a name="line63"></a>63 
-</span><span class="inferred0"><a name="line64"></a>64   end
-</span><span class="inferred1"><a name="line65"></a>65 
-</span><span class="inferred0"><a name="line66"></a>66 
-</span><span class="inferred1"><a name="line67"></a>67 end
-</span><span class="inferred0"><a name="line68"></a>68 
+<pre><span class="inferred0"><a name="line1"></a> 1 # == Schema Information
+</span><span class="inferred1"><a name="line2"></a> 2 # Schema version: 20090201170116
+</span><span class="inferred0"><a name="line3"></a> 3 #
+</span><span class="inferred1"><a name="line4"></a> 4 # Table name: goals
+</span><span class="inferred0"><a name="line5"></a> 5 #
+</span><span class="inferred1"><a name="line6"></a> 6 #  id                            :integer       not null, primary key
+</span><span class="inferred0"><a name="line7"></a> 7 #  description                   :string(255)   
+</span><span class="inferred1"><a name="line8"></a> 8 #  include_subcategories         :boolean       
+</span><span class="inferred0"><a name="line9"></a> 9 #  period_type_int               :integer       
+</span><span class="inferred1"><a name="line10"></a>10 #  goal_type_int                 :integer       
+</span><span class="inferred0"><a name="line11"></a>11 #  goal_completion_condition_int :integer       
+</span><span class="inferred1"><a name="line12"></a>12 #  value                         :float         
+</span><span class="inferred0"><a name="line13"></a>13 #  category_id                   :integer       not null
+</span><span class="inferred1"><a name="line14"></a>14 #  created_at                    :datetime      
+</span><span class="inferred0"><a name="line15"></a>15 #  updated_at                    :datetime      
+</span><span class="inferred1"><a name="line16"></a>16 #
+</span><span class="inferred0"><a name="line17"></a>17 
+</span><span class="inferred1"><a name="line18"></a>18 #require 'hash_enums'
+</span><span class="marked0"><a name="line19"></a>19 class Goal &lt; ActiveRecord::Base
+</span><span class="marked1"><a name="line20"></a>20   extend HashEnums
+</span><span class="marked0"><a name="line21"></a>21   belongs_to :category
+</span><span class="inferred1"><a name="line22"></a>22 
+</span><span class="inferred0"><a name="line23"></a>23   #has_many :historical_goals
+</span><span class="inferred1"><a name="line24"></a>24 
+</span><span class="inferred0"><a name="line25"></a>25 
+</span><span class="marked1"><a name="line26"></a>26   define_enum :period_type, {:infinite =&gt; 0,:monthly =&gt; 1}
+</span><span class="marked0"><a name="line27"></a>27   define_enum :goal_type, {:percent=&gt;0, :value=&gt;1}
+</span><span class="marked1"><a name="line28"></a>28   define_enum :goal_completion_condition,{:at_least=&gt;0, :at_most=&gt;1}
+</span><span class="inferred0"><a name="line29"></a>29 
+</span><span class="inferred1"><a name="line30"></a>30   
+</span><span class="inferred0"><a name="line31"></a>31   #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
+</span><span class="marked1"><a name="line32"></a>32   def percent_of_parent_category
+</span><span class="uncovered0"><a name="line33"></a>33     category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
+</span><span class="uncovered1"><a name="line34"></a>34   end
+</span><span class="inferred0"><a name="line35"></a>35 
+</span><span class="inferred1"><a name="line36"></a>36   #mówi czy osiągnieto cel, czy to dobrze czy źle zależy od wartości :goal_completion_condition
+</span><span class="marked0"><a name="line37"></a>37   def is_goal_reached
+</span><span class="inferred1"><a name="line38"></a>38 
+</span><span class="inferred0"><a name="line39"></a>39   end
+</span><span class="inferred1"><a name="line40"></a>40 
+</span><span class="inferred0"><a name="line41"></a>41   #ile punktów procentowych zostało do osiągnięcia celu
+</span><span class="marked1"><a name="line42"></a>42   def percents_to_reach_goal
+</span><span class="inferred0"><a name="line43"></a>43 
+</span><span class="inferred1"><a name="line44"></a>44   end
+</span><span class="inferred0"><a name="line45"></a>45 
+</span><span class="inferred1"><a name="line46"></a>46   #ile pięniędzy zostało do osiągnięcia celu
+</span><span class="marked0"><a name="line47"></a>47   def money_to_reach_goal
+</span><span class="inferred1"><a name="line48"></a>48 
+</span><span class="inferred0"><a name="line49"></a>49   end
+</span><span class="inferred1"><a name="line50"></a>50 
+</span><span class="inferred0"><a name="line51"></a>51   #o ile punktów procentowych przekroczono cel
+</span><span class="marked1"><a name="line52"></a>52   def percents_of_goal_exceed
+</span><span class="inferred0"><a name="line53"></a>53 
+</span><span class="inferred1"><a name="line54"></a>54   end
+</span><span class="inferred0"><a name="line55"></a>55 
+</span><span class="inferred1"><a name="line56"></a>56   #o ile pieniędzy przekroczono cel
+</span><span class="marked0"><a name="line57"></a>57   def money_of_goal_exceed
+</span><span class="inferred1"><a name="line58"></a>58 
+</span><span class="inferred0"><a name="line59"></a>59   end
+</span><span class="inferred1"><a name="line60"></a>60 
+</span><span class="inferred0"><a name="line61"></a>61   #zwraca różnicę w wykonaniu planu w tym i poprzednim okresie (procentowo lub w wartości)
+</span><span class="marked1"><a name="line62"></a>62   def goal_realization_compared_to_last_period
+</span><span class="inferred0"><a name="line63"></a>63 
+</span><span class="inferred1"><a name="line64"></a>64   end
+</span><span class="inferred0"><a name="line65"></a>65 
+</span><span class="inferred1"><a name="line66"></a>66 
+</span><span class="inferred0"><a name="line67"></a>67 end
+</span><span class="inferred1"><a name="line68"></a>68 
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

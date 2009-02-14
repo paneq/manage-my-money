@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:46 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-controllers-categories_controller_rb.html'>app/controllers/categories_controller.rb</a>
         </td>
-      <td class='lines_total'><tt>180</tt>
+      <td class='lines_total'><tt>116</tt>
         </td>
-      <td class='lines_code'><tt>123</tt>
+      <td class='lines_code'><tt>91</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>77.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>87.9%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='78'/>
-                  <td class='uncovered' width='22'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='88'/>
+                  <td class='uncovered' width='12'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>71.5%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>85.7%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='72'/>
-                  <td class='uncovered' width='28'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='86'/>
+                  <td class='uncovered' width='14'/>
                   </tr>
                 </table>
               </td>
@@ -598,186 +598,122 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a>  1 class CategoriesController &lt; ApplicationController
-</span><span class="inferred0"><a name="line2"></a>  2  
-</span><span class="marked1"><a name="line3"></a>  3   layout 'main'
-</span><span class="marked0"><a name="line4"></a>  4   before_filter :login_required
-</span><span class="marked1"><a name="line5"></a>  5   before_filter :check_perm, :only =&gt; [:show , :remove, :search]
-</span><span class="inferred0"><a name="line6"></a>  6 
-</span><span class="inferred1"><a name="line7"></a>  7   # @NOTE: this line should be somewhere else
-</span><span class="marked0"><a name="line8"></a>  8   LENGTH = (1..31).to_a
-</span><span class="inferred1"><a name="line9"></a>  9 
-</span><span class="inferred0"><a name="line10"></a> 10 
-</span><span class="inferred1"><a name="line11"></a> 11   # remote
-</span><span class="inferred0"><a name="line12"></a> 12   #should not be here!
-</span><span class="inferred1"><a name="line13"></a> 13   #should be by js hidden and showed
-</span><span class="marked0"><a name="line14"></a> 14   def quick
-</span><span class="uncovered1"><a name="line15"></a> 15     where = &quot;form-for-quick-transfer&quot;
-</span><span class="uncovered0"><a name="line16"></a> 16     render :update do |page|
-</span><span class="uncovered1"><a name="line17"></a> 17       page.insert_html :bottom , where , :partial =&gt; 'quick_transfer' , :object =&gt; { :category_id =&gt; params[:category_id] }
-</span><span class="uncovered0"><a name="line18"></a> 18     end
-</span><span class="uncovered1"><a name="line19"></a> 19   end
-</span><span class="inferred0"><a name="line20"></a> 20 
-</span><span class="inferred1"><a name="line21"></a> 21 
-</span><span class="marked0"><a name="line22"></a> 22   def show
-</span><span class="marked1"><a name="line23"></a> 23     create_empty_transfer
-</span><span class="marked0"><a name="line24"></a> 24     set_variables_for_rendering_transfer_table
-</span><span class="inferred1"><a name="line25"></a> 25   end
-</span><span class="inferred0"><a name="line26"></a> 26 
-</span><span class="inferred1"><a name="line27"></a> 27 
-</span><span class="marked0"><a name="line28"></a> 28   def search
-</span><span class="uncovered1"><a name="line29"></a> 29     @category = self.current_user.categories.find(params[:id])
-</span><span class="uncovered0"><a name="line30"></a> 30     
-</span><span class="uncovered1"><a name="line31"></a> 31   end
-</span><span class="inferred0"><a name="line32"></a> 32 
-</span><span class="inferred1"><a name="line33"></a> 33   
-</span><span class="marked0"><a name="line34"></a> 34   def index
-</span><span class="inferred1"><a name="line35"></a> 35   
-</span><span class="marked0"><a name="line36"></a> 36   end
-</span><span class="inferred1"><a name="line37"></a> 37 
-</span><span class="inferred0"><a name="line38"></a> 38 
-</span><span class="marked1"><a name="line39"></a> 39   def destroy
-</span><span class="marked0"><a name="line40"></a> 40     @category = self.current_user.categories.find(params[:id])
-</span><span class="marked1"><a name="line41"></a> 41     @destroyed = false
-</span><span class="marked0"><a name="line42"></a> 42     catch(:indestructible) do
-</span><span class="marked1"><a name="line43"></a> 43       @category.destroy
-</span><span class="marked0"><a name="line44"></a> 44       @destroyed = true
-</span><span class="inferred1"><a name="line45"></a> 45     end
-</span><span class="marked0"><a name="line46"></a> 46     respond_to do |format|
-</span><span class="marked1"><a name="line47"></a> 47       format.html do
-</span><span class="marked0"><a name="line48"></a> 48         flash[:notice] = @destroyed ? &quot;Usunięto kategorię&quot; : &quot;Nie można usunąć kategorii&quot;
-</span><span class="marked1"><a name="line49"></a> 49         redirect_to categories_path
-</span><span class="inferred0"><a name="line50"></a> 50       end
-</span><span class="marked1"><a name="line51"></a> 51       format.js # destroy.js.rjs
-</span><span class="inferred0"><a name="line52"></a> 52     end
-</span><span class="inferred1"><a name="line53"></a> 53 
-</span><span class="inferred0"><a name="line54"></a> 54   end
-</span><span class="inferred1"><a name="line55"></a> 55 
-</span><span class="inferred0"><a name="line56"></a> 56 
-</span><span class="marked1"><a name="line57"></a> 57   def new
-</span><span class="marked0"><a name="line58"></a> 58     @parent = params[:parent_category_id].to_i
-</span><span class="marked1"><a name="line59"></a> 59     @category = Category.new()
-</span><span class="marked0"><a name="line60"></a> 60     @categories = self.current_user.categories
-</span><span class="marked1"><a name="line61"></a> 61     @currencies = self.current_user.visible_currencies
-</span><span class="inferred0"><a name="line62"></a> 62   end
-</span><span class="inferred1"><a name="line63"></a> 63 
-</span><span class="inferred0"><a name="line64"></a> 64 
-</span><span class="marked1"><a name="line65"></a> 65   def create
-</span><span class="marked0"><a name="line66"></a> 66     params[:category][:parent] = self.current_user.categories.find( params[:category][:parent].to_i )
-</span><span class="marked1"><a name="line67"></a> 67     @category = Category.new(params[:category])
-</span><span class="marked0"><a name="line68"></a> 68     @category.user = self.current_user
-</span><span class="marked1"><a name="line69"></a> 69     if @category.save
-</span><span class="marked0"><a name="line70"></a> 70       if params[:category][:opening_balance].to_f != 0
-</span><span class="marked1"><a name="line71"></a> 71         make_opening_transfer
-</span><span class="inferred0"><a name="line72"></a> 72       end
-</span><span class="marked1"><a name="line73"></a> 73       flash[:notice] ||= 'Utworzono nową kategorię'
-</span><span class="marked0"><a name="line74"></a> 74       redirect_to categories_url
-</span><span class="uncovered1"><a name="line75"></a> 75     else
-</span><span class="uncovered0"><a name="line76"></a> 76       flash[:notice] = 'Category was NOT successfully created.'
-</span><span class="uncovered1"><a name="line77"></a> 77       render :action =&gt; 'new'
-</span><span class="uncovered0"><a name="line78"></a> 78     end
-</span><span class="uncovered1"><a name="line79"></a> 79   end
-</span><span class="inferred0"><a name="line80"></a> 80 
-</span><span class="inferred1"><a name="line81"></a> 81 
-</span><span class="marked0"><a name="line82"></a> 82   def edit
-</span><span class="marked1"><a name="line83"></a> 83     @category = self.current_user.categories.find(params[:id])
-</span><span class="marked0"><a name="line84"></a> 84     @parent = @category.parent
-</span><span class="marked1"><a name="line85"></a> 85     @top = self.current_user.categories.top_of_type(@category.category_type)
-</span><span class="inferred0"><a name="line86"></a> 86   end
-</span><span class="inferred1"><a name="line87"></a> 87 
-</span><span class="inferred0"><a name="line88"></a> 88   
-</span><span class="marked1"><a name="line89"></a> 89   def update
-</span><span class="inferred0"><a name="line90"></a> 90     #begin
-</span><span class="marked1"><a name="line91"></a> 91     @category = self.current_user.categories.find(params[:id])
-</span><span class="marked0"><a name="line92"></a> 92     @category.name = params[:category][:name]
-</span><span class="marked1"><a name="line93"></a> 93     @category.description = params[:category][:description]
-</span><span class="marked0"><a name="line94"></a> 94     @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
-</span><span class="marked1"><a name="line95"></a> 95     @category.save!
-</span><span class="marked0"><a name="line96"></a> 96     flash[:notice] = 'Category was successfully updated.'
-</span><span class="marked1"><a name="line97"></a> 97     redirect_to categories_url
-</span><span class="inferred0"><a name="line98"></a> 98     #rescue Exception
-</span><span class="inferred1"><a name="line99"></a> 99     # thr
-</span><span class="inferred0"><a name="line100"></a>100     #render :action =&gt; 'edit'
-</span><span class="inferred1"><a name="line101"></a>101     #end
-</span><span class="inferred0"><a name="line102"></a>102   end
-</span><span class="inferred1"><a name="line103"></a>103 
-</span><span class="inferred0"><a name="line104"></a>104 
-</span><span class="inferred1"><a name="line105"></a>105 
-</span><span class="inferred0"><a name="line106"></a>106 
-</span><span class="inferred1"><a name="line107"></a>107  
-</span><span class="marked0"><a name="line108"></a>108   private
-</span><span class="inferred1"><a name="line109"></a>109    
-</span><span class="inferred0"><a name="line110"></a>110    
-</span><span class="inferred1"><a name="line111"></a>111    
-</span><span class="marked0"><a name="line112"></a>112   def make_opening_transfer
-</span><span class="inferred1"><a name="line113"></a>113     #new opening_balance transfer here
-</span><span class="inferred0"><a name="line114"></a>114     #category = Category.find(params['data']['category'])
-</span><span class="marked1"><a name="line115"></a>115     currency = self.current_user.visible_currencies.find(params[:category][:opening_balance_currency].to_i)
-</span><span class="marked0"><a name="line116"></a>116     value = params[:category][:opening_balance]
-</span><span class="marked1"><a name="line117"></a>117     value.slice!(&quot; &quot;) #removes all spaces from input data so string like &quot;10 000&quot; will be converted to &quot;10000&quot; and treted well by &quot;to_f&quot; method in next line
-</span><span class="marked0"><a name="line118"></a>118     value = value.to_f
-</span><span class="marked1"><a name="line119"></a>119     transfer = Transfer.new
-</span><span class="marked0"><a name="line120"></a>120     transfer.day = Date.today
-</span><span class="marked1"><a name="line121"></a>121     transfer.user = self.current_user
-</span><span class="marked0"><a name="line122"></a>122     transfer.description = &quot;Bilans otwarcia&quot;
-</span><span class="inferred1"><a name="line123"></a>123     
-</span><span class="marked0"><a name="line124"></a>124     t1 = TransferItem.new
-</span><span class="marked1"><a name="line125"></a>125     t1.description = &quot;Bilans otwarcia&quot;
-</span><span class="marked0"><a name="line126"></a>126     t1.value = value
-</span><span class="marked1"><a name="line127"></a>127     t1.category = @category
-</span><span class="marked0"><a name="line128"></a>128     t1.currency = currency
-</span><span class="inferred1"><a name="line129"></a>129 
-</span><span class="marked0"><a name="line130"></a>130     t2 = TransferItem.new
-</span><span class="marked1"><a name="line131"></a>131     t2.description = t1.description
-</span><span class="marked0"><a name="line132"></a>132     t2.value = -1 * t1.value
-</span><span class="marked1"><a name="line133"></a>133     t2.currency = t1.currency
-</span><span class="marked0"><a name="line134"></a>134     opening_category = self.current_user.categories.top_of_type(:BALANCE)
-</span><span class="inferred1"><a name="line135"></a>135       
-</span><span class="marked0"><a name="line136"></a>136     t2.category = opening_category
-</span><span class="inferred1"><a name="line137"></a>137     
-</span><span class="marked0"><a name="line138"></a>138     transfer.transfer_items &lt;&lt; t2 &lt;&lt; t1
-</span><span class="marked1"><a name="line139"></a>139     if transfer.save
-</span><span class="marked0"><a name="line140"></a>140       flash[:notice] = 'Utworzono kategorię wraz z bilansem otwarcia'
-</span><span class="inferred1"><a name="line141"></a>141     end
-</span><span class="inferred0"><a name="line142"></a>142   end
-</span><span class="inferred1"><a name="line143"></a>143 
-</span><span class="inferred0"><a name="line144"></a>144 
-</span><span class="marked1"><a name="line145"></a>145   def check_perm
-</span><span class="marked0"><a name="line146"></a>146     @category = self.current_user.categories.find(params[:id])
-</span><span class="marked1"><a name="line147"></a>147     unless @category
-</span><span class="uncovered0"><a name="line148"></a>148       flash[:notice] = 'You do not have permission to view this category'
-</span><span class="uncovered1"><a name="line149"></a>149       @category = nil
-</span><span class="uncovered0"><a name="line150"></a>150       redirect_to :action =&gt; :show_categories , :controller =&gt; :category
-</span><span class="uncovered1"><a name="line151"></a>151       #why doesn't it work ? There is no flash ?
-</span><span class="uncovered0"><a name="line152"></a>152     end
-</span><span class="uncovered1"><a name="line153"></a>153   end
-</span><span class="inferred0"><a name="line154"></a>154   
-</span><span class="inferred1"><a name="line155"></a>155   
-</span><span class="inferred0"><a name="line156"></a>156   
-</span><span class="inferred1"><a name="line157"></a>157   ########################
-</span><span class="inferred0"><a name="line158"></a>158   # @author: Robert Pankowecki
-</span><span class="marked1"><a name="line159"></a>159   def get_date_from_params
-</span><span class="uncovered0"><a name="line160"></a>160   
-</span><span class="uncovered1"><a name="line161"></a>161     if params[:transfer].nil? or params[:transfer]['start(1i)'].nil?
-</span><span class="uncovered0"><a name="line162"></a>162       @start_time = Time.now.years_ago(2).to_date
-</span><span class="uncovered1"><a name="line163"></a>163     else
-</span><span class="uncovered0"><a name="line164"></a>164       #       @start_time = params[:start].to_time
-</span><span class="uncovered1"><a name="line165"></a>165       d = params[:transfer]['start(3i)'].to_i
-</span><span class="uncovered0"><a name="line166"></a>166       m = params[:transfer]['start(2i)'].to_i
-</span><span class="uncovered1"><a name="line167"></a>167       y = params[:transfer]['start(1i)'].to_i
-</span><span class="uncovered0"><a name="line168"></a>168       @start_time = Date.new(y , m , d)
-</span><span class="uncovered1"><a name="line169"></a>169     end
-</span><span class="uncovered0"><a name="line170"></a>170     if params[:transfer].nil? or params[:transfer]['end(1i)'].nil?
-</span><span class="uncovered1"><a name="line171"></a>171       @end_time = Time.now.years_since(2).to_date
-</span><span class="uncovered0"><a name="line172"></a>172     else
-</span><span class="uncovered1"><a name="line173"></a>173       d = params[:transfer]['end(3i)'].to_i
-</span><span class="uncovered0"><a name="line174"></a>174       m = params[:transfer]['end(2i)'].to_i
-</span><span class="uncovered1"><a name="line175"></a>175       y = params[:transfer]['end(1i)'].to_i
-</span><span class="uncovered0"><a name="line176"></a>176       @end_time = Date.new(y , m , d)
-</span><span class="uncovered1"><a name="line177"></a>177     end
-</span><span class="uncovered0"><a name="line178"></a>178   end
-</span><span class="uncovered1"><a name="line179"></a>179     
-</span><span class="uncovered0"><a name="line180"></a>180 end
+<pre><span class="marked0"><a name="line1"></a>  1 class CategoriesController &lt; ApplicationController
+</span><span class="inferred1"><a name="line2"></a>  2  
+</span><span class="marked0"><a name="line3"></a>  3   layout 'main'
+</span><span class="marked1"><a name="line4"></a>  4   before_filter :login_required
+</span><span class="marked0"><a name="line5"></a>  5   before_filter :check_perm, :only =&gt; [:show , :remove, :search]
+</span><span class="inferred1"><a name="line6"></a>  6 
+</span><span class="inferred0"><a name="line7"></a>  7   # @NOTE: this line should be somewhere else
+</span><span class="marked1"><a name="line8"></a>  8   LENGTH = (1..31).to_a
+</span><span class="inferred0"><a name="line9"></a>  9 
+</span><span class="marked1"><a name="line10"></a> 10   def show
+</span><span class="marked0"><a name="line11"></a> 11     create_empty_transfer
+</span><span class="marked1"><a name="line12"></a> 12     set_variables_for_rendering_transfer_table
+</span><span class="inferred0"><a name="line13"></a> 13   end
+</span><span class="inferred1"><a name="line14"></a> 14 
+</span><span class="inferred0"><a name="line15"></a> 15 
+</span><span class="marked1"><a name="line16"></a> 16   def search
+</span><span class="uncovered0"><a name="line17"></a> 17     @category = self.current_user.categories.find(params[:id])
+</span><span class="uncovered1"><a name="line18"></a> 18     @range = get_period('transfer_day', true)
+</span><span class="uncovered0"><a name="line19"></a> 19     @include_subcategories = !!params[:include_subcategories]
+</span><span class="uncovered1"><a name="line20"></a> 20     respond_to do |format|
+</span><span class="uncovered0"><a name="line21"></a> 21       format.html {}
+</span><span class="uncovered1"><a name="line22"></a> 22       format.js {render_transfer_table}
+</span><span class="uncovered0"><a name="line23"></a> 23     end
+</span><span class="uncovered1"><a name="line24"></a> 24   end
+</span><span class="inferred0"><a name="line25"></a> 25 
+</span><span class="inferred1"><a name="line26"></a> 26   
+</span><span class="marked0"><a name="line27"></a> 27   def index
+</span><span class="inferred1"><a name="line28"></a> 28   
+</span><span class="marked0"><a name="line29"></a> 29   end
+</span><span class="inferred1"><a name="line30"></a> 30 
+</span><span class="inferred0"><a name="line31"></a> 31 
+</span><span class="marked1"><a name="line32"></a> 32   def destroy
+</span><span class="marked0"><a name="line33"></a> 33     @category = self.current_user.categories.find(params[:id])
+</span><span class="marked1"><a name="line34"></a> 34     @destroyed = false
+</span><span class="marked0"><a name="line35"></a> 35     catch(:indestructible) do
+</span><span class="marked1"><a name="line36"></a> 36       @category.destroy
+</span><span class="marked0"><a name="line37"></a> 37       @destroyed = true
+</span><span class="inferred1"><a name="line38"></a> 38     end
+</span><span class="marked0"><a name="line39"></a> 39     respond_to do |format|
+</span><span class="marked1"><a name="line40"></a> 40       format.html do
+</span><span class="marked0"><a name="line41"></a> 41         flash[:notice] = @destroyed ? &quot;Usunięto kategorię&quot; : &quot;Nie można usunąć kategorii&quot;
+</span><span class="marked1"><a name="line42"></a> 42         redirect_to categories_path
+</span><span class="inferred0"><a name="line43"></a> 43       end
+</span><span class="marked1"><a name="line44"></a> 44       format.js # destroy.js.rjs
+</span><span class="inferred0"><a name="line45"></a> 45     end
+</span><span class="inferred1"><a name="line46"></a> 46 
+</span><span class="inferred0"><a name="line47"></a> 47   end
+</span><span class="inferred1"><a name="line48"></a> 48 
+</span><span class="inferred0"><a name="line49"></a> 49 
+</span><span class="marked1"><a name="line50"></a> 50   def new
+</span><span class="marked0"><a name="line51"></a> 51     @parent = @current_user.categories.find(params[:parent_category_id].to_i) if params[:parent_category_id]
+</span><span class="marked1"><a name="line52"></a> 52     @category = Category.new()
+</span><span class="marked0"><a name="line53"></a> 53     @categories = @current_user.categories
+</span><span class="marked1"><a name="line54"></a> 54     @currencies = @current_user.visible_currencies
+</span><span class="inferred0"><a name="line55"></a> 55   end
+</span><span class="inferred1"><a name="line56"></a> 56 
+</span><span class="inferred0"><a name="line57"></a> 57 
+</span><span class="marked1"><a name="line58"></a> 58   def create
+</span><span class="marked0"><a name="line59"></a> 59     @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent].to_i )
+</span><span class="marked1"><a name="line60"></a> 60     format_openinig_balance
+</span><span class="marked0"><a name="line61"></a> 61     @category = Category.new(params[:category].merge(:user =&gt; @current_user))
+</span><span class="marked1"><a name="line62"></a> 62     if @category.save
+</span><span class="marked0"><a name="line63"></a> 63       flash[:notice] ||= 'Utworzono nową kategorię'
+</span><span class="marked1"><a name="line64"></a> 64       redirect_to categories_url
+</span><span class="inferred0"><a name="line65"></a> 65     else
+</span><span class="marked1"><a name="line66"></a> 66       @categories = @current_user.categories
+</span><span class="marked0"><a name="line67"></a> 67       @currencies = @current_user.visible_currencies
+</span><span class="marked1"><a name="line68"></a> 68       flash[:notice] = 'Nie udało się utworzyć kategorii.'
+</span><span class="marked0"><a name="line69"></a> 69       render :action =&gt; 'new'
+</span><span class="inferred1"><a name="line70"></a> 70     end
+</span><span class="inferred0"><a name="line71"></a> 71   end
+</span><span class="inferred1"><a name="line72"></a> 72 
+</span><span class="inferred0"><a name="line73"></a> 73 
+</span><span class="marked1"><a name="line74"></a> 74   def edit
+</span><span class="marked0"><a name="line75"></a> 75     @category = self.current_user.categories.find(params[:id])
+</span><span class="marked1"><a name="line76"></a> 76     @parent = @category.parent
+</span><span class="marked0"><a name="line77"></a> 77     @top = self.current_user.categories.top_of_type(@category.category_type)
+</span><span class="inferred1"><a name="line78"></a> 78   end
+</span><span class="inferred0"><a name="line79"></a> 79 
+</span><span class="inferred1"><a name="line80"></a> 80   
+</span><span class="marked0"><a name="line81"></a> 81   def update
+</span><span class="marked1"><a name="line82"></a> 82     @category = self.current_user.categories.find(params[:id])
+</span><span class="marked0"><a name="line83"></a> 83     @category.name = params[:category][:name]
+</span><span class="marked1"><a name="line84"></a> 84     @category.description = params[:category][:description]
+</span><span class="marked0"><a name="line85"></a> 85     @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
+</span><span class="marked1"><a name="line86"></a> 86     if @category.save
+</span><span class="marked0"><a name="line87"></a> 87       flash[:notice] = 'Zapisano zmiany.'
+</span><span class="marked1"><a name="line88"></a> 88       redirect_to categories_url
+</span><span class="inferred0"><a name="line89"></a> 89     else
+</span><span class="marked1"><a name="line90"></a> 90       @parent = @category.parent
+</span><span class="marked0"><a name="line91"></a> 91       @top = self.current_user.categories.top_of_type(@category.category_type)
+</span><span class="marked1"><a name="line92"></a> 92       flash[:notice] = 'Nie udało się utworzyć kategorii.'
+</span><span class="marked0"><a name="line93"></a> 93       render :action =&gt; 'edit'
+</span><span class="inferred1"><a name="line94"></a> 94     end
+</span><span class="inferred0"><a name="line95"></a> 95   end
+</span><span class="inferred1"><a name="line96"></a> 96 
+</span><span class="inferred0"><a name="line97"></a> 97  
+</span><span class="marked1"><a name="line98"></a> 98   private
+</span><span class="inferred0"><a name="line99"></a> 99 
+</span><span class="marked1"><a name="line100"></a>100   def check_perm
+</span><span class="marked0"><a name="line101"></a>101     @category = self.current_user.categories.find(params[:id])
+</span><span class="marked1"><a name="line102"></a>102     unless @category
+</span><span class="uncovered0"><a name="line103"></a>103       flash[:notice] = 'You do not have permission to view this category'
+</span><span class="uncovered1"><a name="line104"></a>104       @category = nil
+</span><span class="uncovered0"><a name="line105"></a>105       redirect_to :action =&gt; :show_categories , :controller =&gt; :category
+</span><span class="uncovered1"><a name="line106"></a>106       #why doesn't it work ? There is no flash ?
+</span><span class="uncovered0"><a name="line107"></a>107     end
+</span><span class="uncovered1"><a name="line108"></a>108   end
+</span><span class="inferred0"><a name="line109"></a>109 
+</span><span class="marked1"><a name="line110"></a>110   def format_openinig_balance
+</span><span class="marked0"><a name="line111"></a>111     if params[:category][:opening_balance]
+</span><span class="marked1"><a name="line112"></a>112       params[:category][:opening_balance].strip!
+</span><span class="marked0"><a name="line113"></a>113       params[:category][:opening_balance].slice!(&quot; &quot;)
+</span><span class="inferred1"><a name="line114"></a>114     end
+</span><span class="inferred0"><a name="line115"></a>115   end
+</span><span class="inferred1"><a name="line116"></a>116 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

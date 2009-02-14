@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:45 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:08 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,24 +571,24 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-controllers-currencies_controller_rb.html'>app/controllers/currencies_controller.rb</a>
         </td>
-      <td class='lines_total'><tt>106</tt>
+      <td class='lines_total'><tt>93</tt>
         </td>
-      <td class='lines_code'><tt>80</tt>
+      <td class='lines_code'><tt>73</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>42.5%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>90.3%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='42'/>
-                  <td class='uncovered' width='58'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='90'/>
+                  <td class='uncovered' width='10'/>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>23.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>87.7%</tt>
               &nbsp;</td>
-            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='24'/>
-                  <td class='uncovered' width='76'/>
+            <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='88'/>
+                  <td class='uncovered' width='12'/>
                   </tr>
                 </table>
               </td>
@@ -598,112 +598,99 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="marked1"><a name="line1"></a>  1 class CurrenciesController &lt; ApplicationController
-</span><span class="inferred0"><a name="line2"></a>  2   
-</span><span class="marked1"><a name="line3"></a>  3   layout 'main'
-</span><span class="marked0"><a name="line4"></a>  4   before_filter :login_required
-</span><span class="marked1"><a name="line5"></a>  5   before_filter :find_and_set_currency, :except =&gt;[:index, :new, :create, :create_remote]
-</span><span class="marked0"><a name="line6"></a>  6   before_filter :check_perm_read, :only =&gt; [:show]
-</span><span class="marked1"><a name="line7"></a>  7   before_filter :check_perm_write, :only =&gt; [:edit, :update, :destroy]
-</span><span class="inferred0"><a name="line8"></a>  8 
-</span><span class="inferred1"><a name="line9"></a>  9   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-</span><span class="inferred0"><a name="line10"></a> 10   #   verify :method =&gt; :post, :only =&gt; [ :destroy, :create, :update ],
-</span><span class="inferred1"><a name="line11"></a> 11   #          :redirect_to =&gt; { :action =&gt; :list }
-</span><span class="inferred0"><a name="line12"></a> 12 
-</span><span class="marked1"><a name="line13"></a> 13   def index
-</span><span class="uncovered0"><a name="line14"></a> 14     @currencies = self.current_user.visible_currencies
-</span><span class="uncovered1"><a name="line15"></a> 15   end
-</span><span class="inferred0"><a name="line16"></a> 16 
-</span><span class="marked1"><a name="line17"></a> 17   def show
-</span><span class="uncovered0"><a name="line18"></a> 18     @currency = Currency.find(params[:id])
-</span><span class="uncovered1"><a name="line19"></a> 19   end
-</span><span class="inferred0"><a name="line20"></a> 20 
-</span><span class="inferred1"><a name="line21"></a> 21 
-</span><span class="marked0"><a name="line22"></a> 22   def new
-</span><span class="uncovered1"><a name="line23"></a> 23     @currency = Currency.new
-</span><span class="uncovered0"><a name="line24"></a> 24   end
-</span><span class="inferred1"><a name="line25"></a> 25 
-</span><span class="inferred0"><a name="line26"></a> 26 
-</span><span class="inferred1"><a name="line27"></a> 27   # remote
-</span><span class="marked0"><a name="line28"></a> 28   def create_remote
-</span><span class="uncovered1"><a name="line29"></a> 29     @currency = Currency.new(params[:currency])
-</span><span class="uncovered0"><a name="line30"></a> 30     @currency.user = self.current_user
-</span><span class="uncovered1"><a name="line31"></a> 31     where_insert = 'currencies-list'
-</span><span class="uncovered0"><a name="line32"></a> 32     where_replace = 'new-currency'
-</span><span class="uncovered1"><a name="line33"></a> 33     where_error = 'flash_notice'
-</span><span class="uncovered0"><a name="line34"></a> 34     if @currency.save
-</span><span class="uncovered1"><a name="line35"></a> 35       render :update do |page|
-</span><span class="uncovered0"><a name="line36"></a> 36       page.remove where_replace
-</span><span class="uncovered1"><a name="line37"></a> 37       page.insert_html :bottom, where_insert, :partial =&gt; 'currencies/currency', :object =&gt; @currency
-</span><span class="uncovered0"><a name="line38"></a> 38       page.visual_effect :highlight, &quot;currency-#{@currency.id}&quot;
-</span><span class="uncovered1"><a name="line39"></a> 39       @currency = nil
-</span><span class="uncovered0"><a name="line40"></a> 40       page.insert_html :bottom, where_insert, :partial =&gt; 'currencies/new_currency'
-</span><span class="uncovered1"><a name="line41"></a> 41       page.replace_html where_error, :partial =&gt; 'currencies/empty'
-</span><span class="uncovered0"><a name="line42"></a> 42       end
-</span><span class="uncovered1"><a name="line43"></a> 43     else
-</span><span class="uncovered0"><a name="line44"></a> 44       render :update do |page|
-</span><span class="uncovered1"><a name="line45"></a> 45         page.visual_effect :highlight, where_error
-</span><span class="uncovered0"><a name="line46"></a> 46         page.replace_html where_error, :partial =&gt; 'currencies/error', :object =&gt; &quot;Adding currency failed: #{ @currency.errors.full_messages.join(', ') } &quot;
-</span><span class="uncovered1"><a name="line47"></a> 47       end
-</span><span class="uncovered0"><a name="line48"></a> 48     end
-</span><span class="uncovered1"><a name="line49"></a> 49   end
-</span><span class="inferred0"><a name="line50"></a> 50 
-</span><span class="inferred1"><a name="line51"></a> 51 
-</span><span class="marked0"><a name="line52"></a> 52   def create
-</span><span class="uncovered1"><a name="line53"></a> 53     @currency = Currency.new(params[:currency])
-</span><span class="uncovered0"><a name="line54"></a> 54     @currency.user = self.current_user
-</span><span class="uncovered1"><a name="line55"></a> 55     if @currency.save
-</span><span class="uncovered0"><a name="line56"></a> 56       flash[:notice] = 'Currency was successfully created.'
-</span><span class="uncovered1"><a name="line57"></a> 57       redirect_to :action =&gt; :index
-</span><span class="uncovered0"><a name="line58"></a> 58     else
-</span><span class="uncovered1"><a name="line59"></a> 59       render :action =&gt; 'new'
-</span><span class="uncovered0"><a name="line60"></a> 60     end
-</span><span class="uncovered1"><a name="line61"></a> 61   end
-</span><span class="inferred0"><a name="line62"></a> 62 
-</span><span class="inferred1"><a name="line63"></a> 63 
-</span><span class="marked0"><a name="line64"></a> 64   def edit
-</span><span class="inferred1"><a name="line65"></a> 65   end
-</span><span class="inferred0"><a name="line66"></a> 66 
-</span><span class="inferred1"><a name="line67"></a> 67 
-</span><span class="marked0"><a name="line68"></a> 68   def update
-</span><span class="uncovered1"><a name="line69"></a> 69     if @currency.update_attributes(params[:currency])
-</span><span class="uncovered0"><a name="line70"></a> 70       flash[:notice] = 'Currency was successfully updated.'
-</span><span class="uncovered1"><a name="line71"></a> 71       redirect_to :action =&gt; 'show', :id =&gt; @currency
-</span><span class="uncovered0"><a name="line72"></a> 72     else
-</span><span class="uncovered1"><a name="line73"></a> 73       render :action =&gt; 'edit'
-</span><span class="uncovered0"><a name="line74"></a> 74     end
-</span><span class="uncovered1"><a name="line75"></a> 75   end
-</span><span class="inferred0"><a name="line76"></a> 76 
-</span><span class="inferred1"><a name="line77"></a> 77 
-</span><span class="marked0"><a name="line78"></a> 78   def destroy
-</span><span class="uncovered1"><a name="line79"></a> 79     @currency.destroy
-</span><span class="uncovered0"><a name="line80"></a> 80     redirect_to currencies_url
-</span><span class="uncovered1"><a name="line81"></a> 81   end
-</span><span class="inferred0"><a name="line82"></a> 82   
-</span><span class="marked1"><a name="line83"></a> 83   private
-</span><span class="inferred0"><a name="line84"></a> 84   
-</span><span class="marked1"><a name="line85"></a> 85     def find_and_set_currency
-</span><span class="uncovered0"><a name="line86"></a> 86       @currency = Currency.find(params[:id])
-</span><span class="uncovered1"><a name="line87"></a> 87     end
-</span><span class="inferred0"><a name="line88"></a> 88   
-</span><span class="inferred1"><a name="line89"></a> 89 
-</span><span class="marked0"><a name="line90"></a> 90     def check_perm_read
-</span><span class="uncovered1"><a name="line91"></a> 91       if @currency.user != nil and @currency.user.id != self.current_user.id
-</span><span class="uncovered0"><a name="line92"></a> 92         flash[:notice] = 'You do not have permission to view this currency'
-</span><span class="uncovered1"><a name="line93"></a> 93         @currency = nil
-</span><span class="uncovered0"><a name="line94"></a> 94         redirect_to :action =&gt; :index , :controller =&gt; :currencies
-</span><span class="uncovered1"><a name="line95"></a> 95       end
-</span><span class="uncovered0"><a name="line96"></a> 96     end
-</span><span class="inferred1"><a name="line97"></a> 97     
-</span><span class="inferred0"><a name="line98"></a> 98 
-</span><span class="marked1"><a name="line99"></a> 99     def check_perm_write
-</span><span class="uncovered0"><a name="line100"></a>100       if @currency.user == nil or @currency.user.id != self.current_user.id
-</span><span class="uncovered1"><a name="line101"></a>101         flash[:notice] = 'You do not have permission to modify this currency'
-</span><span class="uncovered0"><a name="line102"></a>102         @currency = nil
-</span><span class="uncovered1"><a name="line103"></a>103         redirect_to :action =&gt; :index , :controller =&gt; :currencies
-</span><span class="uncovered0"><a name="line104"></a>104       end
-</span><span class="uncovered1"><a name="line105"></a>105     end
-</span><span class="uncovered0"><a name="line106"></a>106 end
+<pre><span class="marked0"><a name="line1"></a> 1 class CurrenciesController &lt; ApplicationController
+</span><span class="inferred1"><a name="line2"></a> 2   
+</span><span class="marked0"><a name="line3"></a> 3   layout 'main'
+</span><span class="marked1"><a name="line4"></a> 4   before_filter :login_required
+</span><span class="marked0"><a name="line5"></a> 5   before_filter :find_and_set_currency, :except =&gt;[:index, :new, :create]
+</span><span class="marked1"><a name="line6"></a> 6   before_filter :check_perm_read, :only =&gt; [:show]
+</span><span class="marked0"><a name="line7"></a> 7   before_filter :check_perm_write, :only =&gt; [:edit, :update, :destroy]
+</span><span class="inferred1"><a name="line8"></a> 8 
+</span><span class="marked0"><a name="line9"></a> 9   def index
+</span><span class="marked1"><a name="line10"></a>10     @currencies = Currency.for_user(self.current_user).find(:all, :order =&gt; 'name')
+</span><span class="marked0"><a name="line11"></a>11     @currency = Currency.new
+</span><span class="inferred1"><a name="line12"></a>12   end
+</span><span class="inferred0"><a name="line13"></a>13 
+</span><span class="inferred1"><a name="line14"></a>14   
+</span><span class="marked0"><a name="line15"></a>15   def show
+</span><span class="marked1"><a name="line16"></a>16     @currency = Currency.for_user(self.current_user).find(params[:id])
+</span><span class="inferred0"><a name="line17"></a>17   end
+</span><span class="inferred1"><a name="line18"></a>18 
+</span><span class="inferred0"><a name="line19"></a>19 
+</span><span class="marked1"><a name="line20"></a>20   def new
+</span><span class="marked0"><a name="line21"></a>21     @currency = Currency.new
+</span><span class="inferred1"><a name="line22"></a>22   end
+</span><span class="inferred0"><a name="line23"></a>23 
+</span><span class="inferred1"><a name="line24"></a>24 
+</span><span class="marked0"><a name="line25"></a>25   def create
+</span><span class="marked1"><a name="line26"></a>26     @currency = Currency.new(params[:currency].block(:user, :user_id).merge(:user =&gt; self.current_user))
+</span><span class="marked0"><a name="line27"></a>27     if @currency.save
+</span><span class="marked1"><a name="line28"></a>28       respond_to do |format|
+</span><span class="marked0"><a name="line29"></a>29         format.html do
+</span><span class="marked1"><a name="line30"></a>30           flash[:notice] = 'Utworzono nową walutę.'
+</span><span class="marked0"><a name="line31"></a>31           redirect_to :action =&gt; :index
+</span><span class="inferred1"><a name="line32"></a>32         end
+</span><span class="inferred0"><a name="line33"></a>33       end
+</span><span class="inferred1"><a name="line34"></a>34     else
+</span><span class="marked0"><a name="line35"></a>35       respond_to do |format|
+</span><span class="marked1"><a name="line36"></a>36         format.html do
+</span><span class="marked0"><a name="line37"></a>37           render :action =&gt; 'new'
+</span><span class="inferred1"><a name="line38"></a>38         end
+</span><span class="inferred0"><a name="line39"></a>39       end
+</span><span class="inferred1"><a name="line40"></a>40     end
+</span><span class="inferred0"><a name="line41"></a>41   end
+</span><span class="inferred1"><a name="line42"></a>42 
+</span><span class="inferred0"><a name="line43"></a>43 
+</span><span class="marked1"><a name="line44"></a>44   def edit
+</span><span class="marked0"><a name="line45"></a>45   end
+</span><span class="inferred1"><a name="line46"></a>46 
+</span><span class="inferred0"><a name="line47"></a>47 
+</span><span class="marked1"><a name="line48"></a>48   def update
+</span><span class="marked0"><a name="line49"></a>49     if @currency.update_attributes(params[:currency])
+</span><span class="marked1"><a name="line50"></a>50       flash[:notice] = 'Zmiany zostały zapisane.'
+</span><span class="marked0"><a name="line51"></a>51       redirect_to :action =&gt; 'show', :id =&gt; @currency
+</span><span class="inferred1"><a name="line52"></a>52     else
+</span><span class="marked0"><a name="line53"></a>53       render :action =&gt; 'edit'
+</span><span class="marked1"><a name="line54"></a>54       flash[:notice] = 'Zmiany nie zostały zapisane.'
+</span><span class="inferred0"><a name="line55"></a>55     end
+</span><span class="inferred1"><a name="line56"></a>56   end
+</span><span class="inferred0"><a name="line57"></a>57 
+</span><span class="inferred1"><a name="line58"></a>58 
+</span><span class="marked0"><a name="line59"></a>59   def destroy
+</span><span class="marked1"><a name="line60"></a>60     unless @currency.destroy
+</span><span class="marked0"><a name="line61"></a>61       flash[:notice] = if @currency.why_not_destroyed == :has_transfer_items
+</span><span class="marked1"><a name="line62"></a>62         'Nie można usunąć waluty, gdyż istnieją w systemie transakcje korzystające z niej'
+</span><span class="uncovered0"><a name="line63"></a>63       else
+</span><span class="uncovered1"><a name="line64"></a>64         'Nie udało się usunąć waluty'
+</span><span class="uncovered0"><a name="line65"></a>65       end
+</span><span class="uncovered1"><a name="line66"></a>66     end
+</span><span class="marked0"><a name="line67"></a>67     redirect_to currencies_url
+</span><span class="inferred1"><a name="line68"></a>68   end
+</span><span class="inferred0"><a name="line69"></a>69   
+</span><span class="marked1"><a name="line70"></a>70   private
+</span><span class="inferred0"><a name="line71"></a>71   
+</span><span class="marked1"><a name="line72"></a>72   def find_and_set_currency
+</span><span class="marked0"><a name="line73"></a>73     @currency = Currency.find(params[:id])
+</span><span class="inferred1"><a name="line74"></a>74   end
+</span><span class="inferred0"><a name="line75"></a>75   
+</span><span class="inferred1"><a name="line76"></a>76 
+</span><span class="marked0"><a name="line77"></a>77   def check_perm_read
+</span><span class="marked1"><a name="line78"></a>78     if @currency.user != nil and @currency.user.id != self.current_user.id
+</span><span class="uncovered0"><a name="line79"></a>79       flash[:notice] = 'Brak uprawnień do oglądania tej waluty.'
+</span><span class="uncovered1"><a name="line80"></a>80       @currency = nil
+</span><span class="uncovered0"><a name="line81"></a>81       redirect_to currencies_path
+</span><span class="uncovered1"><a name="line82"></a>82     end
+</span><span class="uncovered0"><a name="line83"></a>83   end
+</span><span class="inferred1"><a name="line84"></a>84     
+</span><span class="inferred0"><a name="line85"></a>85 
+</span><span class="marked1"><a name="line86"></a>86   def check_perm_write
+</span><span class="marked0"><a name="line87"></a>87     if @currency.user == nil or @currency.user.id != self.current_user.id
+</span><span class="marked1"><a name="line88"></a>88       flash[:notice] = 'Brak uprawnień do modyfikacji tej waluty.'
+</span><span class="marked0"><a name="line89"></a>89       @currency = nil
+</span><span class="marked1"><a name="line90"></a>90       redirect_to currencies_path
+</span><span class="inferred0"><a name="line91"></a>91     end
+</span><span class="inferred1"><a name="line92"></a>92   end
+</span><span class="inferred0"><a name="line93"></a>93 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

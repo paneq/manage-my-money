@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'><head><title>app/models/hash.rb - C0 code coverage information</title>
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'><head><title>lib/hash.rb - C0 code coverage information</title>
     <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
     <style type='text/css'>span.cross-ref-title {
  font-size: 140%;
@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:46 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:06 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -569,7 +569,7 @@ span.run100 {
       <td class='heading'>Code coverage</td>
       </tr>
     </thead>
-  <tbody><tr class='light'><td><a href='app-models-hash_rb.html'>app/models/hash.rb</a>
+  <tbody><tr class='light'><td><a href='lib-hash_rb.html'>lib/hash.rb</a>
         </td>
       <td class='lines_total'><tt>63</tt>
         </td>
@@ -598,69 +598,69 @@ span.run100 {
       </tr>
     </tbody>
   </table>
-<pre><span class="inferred0"><a name="line1"></a> 1 # 
-</span><span class="inferred1"><a name="line2"></a> 2 # hash.rb
-</span><span class="inferred0"><a name="line3"></a> 3 # 
-</span><span class="inferred1"><a name="line4"></a> 4 # Created on Nov 12, 2008, 11:06:31 AM
-</span><span class="inferred0"><a name="line5"></a> 5 # 
-</span><span class="inferred1"><a name="line6"></a> 6 # To change this template, choose Tools | Templates
-</span><span class="inferred0"><a name="line7"></a> 7 # and open the template in the editor.
-</span><span class="inferred1"><a name="line8"></a> 8  
-</span><span class="inferred0"><a name="line9"></a> 9 
-</span><span class="marked1"><a name="line10"></a>10 class Hash
-</span><span class="marked0"><a name="line11"></a>11   def +(item)
-</span><span class="marked1"><a name="line12"></a>12     if item.class == Hash
-</span><span class="marked0"><a name="line13"></a>13       item.each_pair do |key, value|
-</span><span class="marked1"><a name="line14"></a>14         if self[key] == nil
-</span><span class="uncovered0"><a name="line15"></a>15           self[key] = value 
-</span><span class="inferred1"><a name="line16"></a>16         else
-</span><span class="marked0"><a name="line17"></a>17           self[key] += value 
-</span><span class="inferred1"><a name="line18"></a>18         end
-</span><span class="inferred0"><a name="line19"></a>19       end
-</span><span class="uncovered1"><a name="line20"></a>20     else
-</span><span class="uncovered0"><a name="line21"></a>21       raise &quot;Add only possible for two hashes&quot;
-</span><span class="uncovered1"><a name="line22"></a>22     end
-</span><span class="uncovered0"><a name="line23"></a>23   end
-</span><span class="inferred1"><a name="line24"></a>24 
-</span><span class="marked0"><a name="line25"></a>25   def -(item)
-</span><span class="marked1"><a name="line26"></a>26     if item.class == Hash
-</span><span class="marked0"><a name="line27"></a>27       item.each_pair do |key, value|
-</span><span class="marked1"><a name="line28"></a>28         if self[key] == nil
-</span><span class="uncovered0"><a name="line29"></a>29           self[key] = -value
-</span><span class="inferred1"><a name="line30"></a>30         else
-</span><span class="marked0"><a name="line31"></a>31           self[key] -= value
-</span><span class="inferred1"><a name="line32"></a>32         end
-</span><span class="inferred0"><a name="line33"></a>33       end
-</span><span class="uncovered1"><a name="line34"></a>34     else
-</span><span class="uncovered0"><a name="line35"></a>35       raise &quot;subtraction only possible for two hashes&quot;
-</span><span class="uncovered1"><a name="line36"></a>36     end
-</span><span class="uncovered0"><a name="line37"></a>37   end
-</span><span class="inferred1"><a name="line38"></a>38   
-</span><span class="inferred0"><a name="line39"></a>39 
-</span><span class="inferred1"><a name="line40"></a>40   # lets through the keys in the argument
-</span><span class="inferred0"><a name="line41"></a>41   # &gt;&gt; {:one =&gt; 1, :two =&gt; 2, :three =&gt; 3}.pass(:one)
-</span><span class="inferred1"><a name="line42"></a>42   # =&gt; {:one=&gt;1}
-</span><span class="marked0"><a name="line43"></a>43   def pass(*keys)
-</span><span class="marked1"><a name="line44"></a>44     tmp = self.clone
-</span><span class="marked0"><a name="line45"></a>45     tmp.delete_if {|k,v| ! keys.include?(k) }
-</span><span class="marked1"><a name="line46"></a>46     tmp
-</span><span class="inferred0"><a name="line47"></a>47   end
-</span><span class="inferred1"><a name="line48"></a>48 
-</span><span class="inferred0"><a name="line49"></a>49   # blocks the keys in the arguments
-</span><span class="inferred1"><a name="line50"></a>50   # &gt;&gt; {:one =&gt; 1, :two =&gt; 2, :three =&gt; 3}.block(:one)
-</span><span class="inferred0"><a name="line51"></a>51   # =&gt; {:two=&gt;2, :three=&gt;3}
-</span><span class="marked1"><a name="line52"></a>52   def block(*keys)
-</span><span class="marked0"><a name="line53"></a>53     tmp = self.clone
-</span><span class="marked1"><a name="line54"></a>54     tmp.delete_if {|k,v| keys.include?(k) }
-</span><span class="marked0"><a name="line55"></a>55     tmp
-</span><span class="inferred1"><a name="line56"></a>56   end
-</span><span class="uncovered0"><a name="line57"></a>57 
-</span><span class="uncovered1"><a name="line58"></a>58   def first
-</span><span class="uncovered0"><a name="line59"></a>59     return [ self.keys[0], self[self.keys[0]] ] if self.size &gt; 0
-</span><span class="uncovered1"><a name="line60"></a>60     return nil
-</span><span class="marked0"><a name="line61"></a>61   end unless method_defined?(:first) #compatibility mode for ruby 1.8.7
-</span><span class="inferred1"><a name="line62"></a>62 
-</span><span class="inferred0"><a name="line63"></a>63 end
+<pre><span class="inferred1"><a name="line1"></a> 1 # 
+</span><span class="inferred0"><a name="line2"></a> 2 # hash.rb
+</span><span class="inferred1"><a name="line3"></a> 3 # 
+</span><span class="inferred0"><a name="line4"></a> 4 # Created on Nov 12, 2008, 11:06:31 AM
+</span><span class="inferred1"><a name="line5"></a> 5 # 
+</span><span class="inferred0"><a name="line6"></a> 6 # To change this template, choose Tools | Templates
+</span><span class="inferred1"><a name="line7"></a> 7 # and open the template in the editor.
+</span><span class="inferred0"><a name="line8"></a> 8  
+</span><span class="inferred1"><a name="line9"></a> 9 
+</span><span class="marked0"><a name="line10"></a>10 class Hash
+</span><span class="marked1"><a name="line11"></a>11   def +(item)
+</span><span class="marked0"><a name="line12"></a>12     if item.class == Hash
+</span><span class="marked1"><a name="line13"></a>13       item.each_pair do |key, value|
+</span><span class="marked0"><a name="line14"></a>14         if self[key] == nil
+</span><span class="uncovered1"><a name="line15"></a>15           self[key] = value 
+</span><span class="inferred0"><a name="line16"></a>16         else
+</span><span class="marked1"><a name="line17"></a>17           self[key] += value 
+</span><span class="inferred0"><a name="line18"></a>18         end
+</span><span class="inferred1"><a name="line19"></a>19       end
+</span><span class="uncovered0"><a name="line20"></a>20     else
+</span><span class="uncovered1"><a name="line21"></a>21       raise &quot;Add only possible for two hashes&quot;
+</span><span class="uncovered0"><a name="line22"></a>22     end
+</span><span class="uncovered1"><a name="line23"></a>23   end
+</span><span class="inferred0"><a name="line24"></a>24 
+</span><span class="marked1"><a name="line25"></a>25   def -(item)
+</span><span class="marked0"><a name="line26"></a>26     if item.class == Hash
+</span><span class="marked1"><a name="line27"></a>27       item.each_pair do |key, value|
+</span><span class="marked0"><a name="line28"></a>28         if self[key] == nil
+</span><span class="uncovered1"><a name="line29"></a>29           self[key] = -value
+</span><span class="inferred0"><a name="line30"></a>30         else
+</span><span class="marked1"><a name="line31"></a>31           self[key] -= value
+</span><span class="inferred0"><a name="line32"></a>32         end
+</span><span class="inferred1"><a name="line33"></a>33       end
+</span><span class="uncovered0"><a name="line34"></a>34     else
+</span><span class="uncovered1"><a name="line35"></a>35       raise &quot;subtraction only possible for two hashes&quot;
+</span><span class="uncovered0"><a name="line36"></a>36     end
+</span><span class="uncovered1"><a name="line37"></a>37   end
+</span><span class="inferred0"><a name="line38"></a>38   
+</span><span class="inferred1"><a name="line39"></a>39 
+</span><span class="inferred0"><a name="line40"></a>40   # lets through the keys in the argument
+</span><span class="inferred1"><a name="line41"></a>41   # &gt;&gt; {:one =&gt; 1, :two =&gt; 2, :three =&gt; 3}.pass(:one)
+</span><span class="inferred0"><a name="line42"></a>42   # =&gt; {:one=&gt;1}
+</span><span class="marked1"><a name="line43"></a>43   def pass(*keys)
+</span><span class="marked0"><a name="line44"></a>44     tmp = self.clone
+</span><span class="marked1"><a name="line45"></a>45     tmp.delete_if {|k,v| ! keys.include?(k) }
+</span><span class="marked0"><a name="line46"></a>46     tmp
+</span><span class="inferred1"><a name="line47"></a>47   end
+</span><span class="inferred0"><a name="line48"></a>48 
+</span><span class="inferred1"><a name="line49"></a>49   # blocks the keys in the arguments
+</span><span class="inferred0"><a name="line50"></a>50   # &gt;&gt; {:one =&gt; 1, :two =&gt; 2, :three =&gt; 3}.block(:one)
+</span><span class="inferred1"><a name="line51"></a>51   # =&gt; {:two=&gt;2, :three=&gt;3}
+</span><span class="marked0"><a name="line52"></a>52   def block(*keys)
+</span><span class="marked1"><a name="line53"></a>53     tmp = self.clone
+</span><span class="marked0"><a name="line54"></a>54     tmp.delete_if {|k,v| keys.include?(k) }
+</span><span class="marked1"><a name="line55"></a>55     tmp
+</span><span class="inferred0"><a name="line56"></a>56   end
+</span><span class="uncovered1"><a name="line57"></a>57 
+</span><span class="uncovered0"><a name="line58"></a>58   def first
+</span><span class="uncovered1"><a name="line59"></a>59     return [ self.keys[0], self[self.keys[0]] ] if self.size &gt; 0
+</span><span class="uncovered0"><a name="line60"></a>60     return nil
+</span><span class="marked1"><a name="line61"></a>61   end unless method_defined?(:first) #compatibility mode for ruby 1.8.7
+</span><span class="inferred0"><a name="line62"></a>62 
+</span><span class="inferred1"><a name="line63"></a>63 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>

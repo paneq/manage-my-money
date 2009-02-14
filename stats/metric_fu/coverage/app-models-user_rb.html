@@ -553,7 +553,7 @@ span.run100 {
 </style>
     </head>
   <body><h3>C0 code coverage information</h3>
-    <p>Generated on Tue Feb 03 01:19:48 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
+    <p>Generated on Sat Feb 14 11:54:09 +0100 2009 with <a href='http://eigenclass.org/hiki/rcov'>rcov 0.8.1.3</a>
       </p>
     <hr/>
     <pre><span class='marked0'>Code reported as executed by Ruby looks like this...
@@ -571,11 +571,11 @@ span.run100 {
     </thead>
   <tbody><tr class='light'><td><a href='app-models-user_rb.html'>app/models/user.rb</a>
         </td>
-      <td class='lines_total'><tt>192</tt>
+      <td class='lines_total'><tt>204</tt>
         </td>
-      <td class='lines_code'><tt>116</tt>
+      <td class='lines_code'><tt>121</tt>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>95.8%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_total'>96.1%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='96'/>
                   <td class='uncovered' width='4'/>
@@ -585,7 +585,7 @@ span.run100 {
             </tr>
           </table>
         </td>
-      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>93.1%</tt>
+      <td><table cellspacing='0' align='right' cellpadding='0'><tr><td><tt class='coverage_code'>93.4%</tt>
               &nbsp;</td>
             <td><table class='percent_graph' cellspacing='0' cellpadding='0' width='100'><tr><td class='covered' width='93'/>
                   <td class='uncovered' width='7'/>
@@ -640,7 +640,7 @@ span.run100 {
 </span><span class="inferred1"><a name="line40"></a> 40                                                               :calculate_with_exchanges_closest_to_transaction_but
 </span><span class="inferred0"><a name="line41"></a> 41                                                               ]
 </span><span class="inferred1"><a name="line42"></a> 42 
-</span><span class="marked0"><a name="line43"></a> 43   has_many :categories, :order =&gt; 'category_type_int, lft' do
+</span><span class="marked0"><a name="line43"></a> 43   has_many :categories, :order =&gt; 'category_type_int, lft', :dependent =&gt; :delete_all do
 </span><span class="marked1"><a name="line44"></a> 44     def top
 </span><span class="uncovered0"><a name="line45"></a> 45       find(:all, :conditions =&gt; ['parent_id IS NULL'])
 </span><span class="uncovered1"><a name="line46"></a> 46     end
@@ -650,146 +650,158 @@ span.run100 {
 </span><span class="marked1"><a name="line50"></a> 50       find(:first, :conditions =&gt; ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
 </span><span class="inferred0"><a name="line51"></a> 51     end
 </span><span class="inferred1"><a name="line52"></a> 52   end
-</span><span class="inferred0"><a name="line53"></a> 53   
-</span><span class="marked1"><a name="line54"></a> 54   has_many :transfers
-</span><span class="marked0"><a name="line55"></a> 55   has_many :transfer_items, :through =&gt; :transfers
-</span><span class="marked1"><a name="line56"></a> 56   has_many :currencies
-</span><span class="inferred0"><a name="line57"></a> 57 
-</span><span class="marked1"><a name="line58"></a> 58   has_many :visible_currencies,
-</span><span class="inferred0"><a name="line59"></a> 59     :class_name =&gt; 'Currency',
-</span><span class="inferred1"><a name="line60"></a> 60     :finder_sql =&gt; 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
+</span><span class="inferred0"><a name="line53"></a> 53 
+</span><span class="inferred1"><a name="line54"></a> 54 
+</span><span class="marked0"><a name="line55"></a> 55   Category.CATEGORY_TYPES.keys.each do |category_type|
+</span><span class="marked1"><a name="line56"></a> 56     define_method(category_type.to_s.downcase.to_sym) do
+</span><span class="marked0"><a name="line57"></a> 57       self.categories.top_of_type(category_type)
+</span><span class="inferred1"><a name="line58"></a> 58     end
+</span><span class="inferred0"><a name="line59"></a> 59   end
+</span><span class="inferred1"><a name="line60"></a> 60 
 </span><span class="inferred0"><a name="line61"></a> 61 
-</span><span class="marked1"><a name="line62"></a> 62   has_many :exchanges
-</span><span class="marked0"><a name="line63"></a> 63   has_many :visible_exchanges,
-</span><span class="inferred1"><a name="line64"></a> 64     :class_name =&gt; 'Exchange',
-</span><span class="inferred0"><a name="line65"></a> 65     :finder_sql =&gt; 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
-</span><span class="inferred1"><a name="line66"></a> 66 
-</span><span class="marked0"><a name="line67"></a> 67   has_many :goals, :through =&gt; :categories
-</span><span class="marked1"><a name="line68"></a> 68   has_many :reports
-</span><span class="inferred0"><a name="line69"></a> 69 
-</span><span class="marked1"><a name="line70"></a> 70   belongs_to :default_currency, :class_name =&gt; &quot;Currency&quot;
-</span><span class="inferred0"><a name="line71"></a> 71 
+</span><span class="marked1"><a name="line62"></a> 62   has_many :transfers, :dependent =&gt; :destroy
+</span><span class="marked0"><a name="line63"></a> 63   has_many :transfer_items, :through =&gt; :transfers
+</span><span class="marked1"><a name="line64"></a> 64   has_many :currencies, :dependent =&gt; :destroy
+</span><span class="inferred0"><a name="line65"></a> 65 
+</span><span class="inferred1"><a name="line66"></a> 66   #TODO: To remove
+</span><span class="marked0"><a name="line67"></a> 67   has_many :visible_currencies,
+</span><span class="inferred1"><a name="line68"></a> 68     :class_name =&gt; 'Currency',
+</span><span class="inferred0"><a name="line69"></a> 69     :finder_sql =&gt; 'SELECT c.* FROM currencies c WHERE (c.user_id = #{id} OR c.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
+</span><span class="inferred1"><a name="line70"></a> 70 
+</span><span class="marked0"><a name="line71"></a> 71   has_many :exchanges, :dependent =&gt; :destroy
 </span><span class="inferred1"><a name="line72"></a> 72 
-</span><span class="marked0"><a name="line73"></a> 73   before_create :create_top_categories
-</span><span class="marked1"><a name="line74"></a> 74   before_destroy :remove_all_data
-</span><span class="inferred0"><a name="line75"></a> 75 
-</span><span class="inferred1"><a name="line76"></a> 76   
-</span><span class="marked0"><a name="line77"></a> 77   def create_top_categories
-</span><span class="marked1"><a name="line78"></a> 78     [ [ &quot;Zasoby&quot; , :ASSET ] ,
-</span><span class="inferred0"><a name="line79"></a> 79       [ &quot;Przychody&quot; , :INCOME ] ,
-</span><span class="inferred1"><a name="line80"></a> 80       [ &quot;Wydatki&quot; , :EXPENSE ],
-</span><span class="inferred0"><a name="line81"></a> 81       [ &quot;Zobowiązania&quot; , :LOAN ] ,
-</span><span class="inferred1"><a name="line82"></a> 82       [ &quot;Bilanse otwarcia&quot;, :BALANCE ] ].each do | name, type |
-</span><span class="marked0"><a name="line83"></a> 83       self.categories &lt;&lt; Category.new do |c|
-</span><span class="marked1"><a name="line84"></a> 84         c.name = name
-</span><span class="marked0"><a name="line85"></a> 85         c.category_type = type
-</span><span class="marked1"><a name="line86"></a> 86       end
-</span><span class="inferred0"><a name="line87"></a> 87     end
-</span><span class="inferred1"><a name="line88"></a> 88   end
-</span><span class="inferred0"><a name="line89"></a> 89 
-</span><span class="inferred1"><a name="line90"></a> 90 
-</span><span class="marked0"><a name="line91"></a> 91   def remove_all_data
-</span><span class="uncovered1"><a name="line92"></a> 92     transfer_items.delete_all
-</span><span class="uncovered0"><a name="line93"></a> 93     transfers.delete_all
-</span><span class="uncovered1"><a name="line94"></a> 94     categories.delete_all
-</span><span class="uncovered0"><a name="line95"></a> 95     exchanges.delete_all
-</span><span class="uncovered1"><a name="line96"></a> 96     currencies.delete_all
-</span><span class="uncovered0"><a name="line97"></a> 97   end
-</span><span class="inferred1"><a name="line98"></a> 98 
-</span><span class="marked0"><a name="line99"></a> 99   validates_inclusion_of    :transaction_amount_limit_type_int, :in =&gt; User.TRANSACTION_AMOUNT_LIMIT_TYPES.values
-</span><span class="marked1"><a name="line100"></a>100   validates_inclusion_of    :multi_currency_balance_calculating_algorithm_int, :in =&gt; User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.values
-</span><span class="marked0"><a name="line101"></a>101   validates_presence_of     :transaction_amount_limit_value, :if =&gt; :transaction_amount_limit_with_value?
-</span><span class="marked1"><a name="line102"></a>102   validates_numericality_of :transaction_amount_limit_value, :greater_than =&gt; 0, :if =&gt; :transaction_amount_limit_with_value? 
-</span><span class="inferred0"><a name="line103"></a>103 
-</span><span class="inferred1"><a name="line104"></a>104   #used for conditional validation of transaction_amount_limit_value
-</span><span class="marked0"><a name="line105"></a>105   def transaction_amount_limit_with_value?
-</span><span class="marked1"><a name="line106"></a>106     [:transaction_count, :week_count].include?(transaction_amount_limit_type)
-</span><span class="inferred0"><a name="line107"></a>107   end
-</span><span class="inferred1"><a name="line108"></a>108   
-</span><span class="inferred0"><a name="line109"></a>109   # Autogenerated ===============================
-</span><span class="inferred1"><a name="line110"></a>110 
-</span><span class="marked0"><a name="line111"></a>111   include Authentication
-</span><span class="marked1"><a name="line112"></a>112   include Authentication::ByPassword
-</span><span class="marked0"><a name="line113"></a>113   include Authentication::ByCookieToken
+</span><span class="inferred0"><a name="line73"></a> 73   #TODO: To remove
+</span><span class="marked1"><a name="line74"></a> 74   has_many :visible_exchanges,
+</span><span class="inferred0"><a name="line75"></a> 75     :class_name =&gt; 'Exchange',
+</span><span class="inferred1"><a name="line76"></a> 76     :finder_sql =&gt; 'SELECT e.* FROM exchanges e WHERE (e.user_id = #{id} OR e.user_id IS NULL)' #THIS IS REALLY IMPORTANT TO BE SINGLE QUOTED !!
+</span><span class="inferred0"><a name="line77"></a> 77 
+</span><span class="marked1"><a name="line78"></a> 78   has_many :goals, :through =&gt; :categories, :dependent =&gt; :destroy
+</span><span class="marked0"><a name="line79"></a> 79   has_many :reports, :dependent =&gt; :destroy
+</span><span class="inferred1"><a name="line80"></a> 80 
+</span><span class="marked0"><a name="line81"></a> 81   belongs_to :default_currency, :class_name =&gt; &quot;Currency&quot;
+</span><span class="inferred1"><a name="line82"></a> 82 
+</span><span class="inferred0"><a name="line83"></a> 83 
+</span><span class="marked1"><a name="line84"></a> 84   before_create :create_top_categories
+</span><span class="inferred0"><a name="line85"></a> 85 #  before_destroy :remove_all_data
+</span><span class="inferred1"><a name="line86"></a> 86 
+</span><span class="inferred0"><a name="line87"></a> 87   
+</span><span class="marked1"><a name="line88"></a> 88   def create_top_categories
+</span><span class="marked0"><a name="line89"></a> 89     [ [ &quot;Zasoby&quot; , :ASSET ] ,
+</span><span class="inferred1"><a name="line90"></a> 90       [ &quot;Przychody&quot; , :INCOME ] ,
+</span><span class="inferred0"><a name="line91"></a> 91       [ &quot;Wydatki&quot; , :EXPENSE ],
+</span><span class="inferred1"><a name="line92"></a> 92       [ &quot;Zobowiązania&quot; , :LOAN ] ,
+</span><span class="inferred0"><a name="line93"></a> 93       [ &quot;Bilanse otwarcia&quot;, :BALANCE ] ].each do | name, type |
+</span><span class="marked1"><a name="line94"></a> 94       self.categories &lt;&lt; Category.new do |c|
+</span><span class="marked0"><a name="line95"></a> 95         c.name = name
+</span><span class="marked1"><a name="line96"></a> 96         c.category_type = type
+</span><span class="marked0"><a name="line97"></a> 97       end
+</span><span class="inferred1"><a name="line98"></a> 98     end
+</span><span class="inferred0"><a name="line99"></a> 99   end
+</span><span class="inferred1"><a name="line100"></a>100 
+</span><span class="inferred0"><a name="line101"></a>101 
+</span><span class="marked1"><a name="line102"></a>102   def remove_all_data
+</span><span class="uncovered0"><a name="line103"></a>103     transfer_items.delete_all
+</span><span class="uncovered1"><a name="line104"></a>104     transfers.delete_all
+</span><span class="uncovered0"><a name="line105"></a>105     categories.delete_all
+</span><span class="uncovered1"><a name="line106"></a>106     exchanges.delete_all
+</span><span class="uncovered0"><a name="line107"></a>107     currencies.delete_all
+</span><span class="uncovered1"><a name="line108"></a>108   end
+</span><span class="inferred0"><a name="line109"></a>109 
+</span><span class="marked1"><a name="line110"></a>110   validates_inclusion_of    :transaction_amount_limit_type_int, :in =&gt; User.TRANSACTION_AMOUNT_LIMIT_TYPES.values
+</span><span class="marked0"><a name="line111"></a>111   validates_inclusion_of    :multi_currency_balance_calculating_algorithm_int, :in =&gt; User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.values
+</span><span class="marked1"><a name="line112"></a>112   validates_presence_of     :transaction_amount_limit_value, :if =&gt; :transaction_amount_limit_with_value?
+</span><span class="marked0"><a name="line113"></a>113   validates_numericality_of :transaction_amount_limit_value, :greater_than =&gt; 0, :if =&gt; :transaction_amount_limit_with_value? 
 </span><span class="inferred1"><a name="line114"></a>114 
-</span><span class="marked0"><a name="line115"></a>115   validates_presence_of     :login
-</span><span class="marked1"><a name="line116"></a>116   validates_length_of       :login,    :within =&gt; 3..40
-</span><span class="marked0"><a name="line117"></a>117   validates_uniqueness_of   :login
-</span><span class="marked1"><a name="line118"></a>118   validates_format_of       :login,    :with =&gt; Authentication.login_regex, :message =&gt; Authentication.bad_login_message
-</span><span class="inferred0"><a name="line119"></a>119 
-</span><span class="marked1"><a name="line120"></a>120   validates_format_of       :name,     :with =&gt; Authentication.name_regex,  :message =&gt; Authentication.bad_name_message, :allow_nil =&gt; true
-</span><span class="marked0"><a name="line121"></a>121   validates_length_of       :name,     :maximum =&gt; 100
-</span><span class="inferred1"><a name="line122"></a>122 
-</span><span class="marked0"><a name="line123"></a>123   validates_presence_of     :email
-</span><span class="marked1"><a name="line124"></a>124   validates_length_of       :email,    :within =&gt; 6..100 #r@a.wk
-</span><span class="marked0"><a name="line125"></a>125   validates_uniqueness_of   :email
-</span><span class="marked1"><a name="line126"></a>126   validates_format_of       :email,    :with =&gt; Authentication.email_regex, :message =&gt; Authentication.bad_email_message
-</span><span class="inferred0"><a name="line127"></a>127 
-</span><span class="marked1"><a name="line128"></a>128   before_create :make_activation_code 
-</span><span class="inferred0"><a name="line129"></a>129 
-</span><span class="inferred1"><a name="line130"></a>130   # HACK HACK HACK -- how to do attr_accessible from here?
-</span><span class="inferred0"><a name="line131"></a>131   # prevents a user from submitting a crafted form that bypasses activation
-</span><span class="inferred1"><a name="line132"></a>132   # anything else you want your user to change should be added here.
-</span><span class="marked0"><a name="line133"></a>133   attr_accessible :login,
-</span><span class="inferred1"><a name="line134"></a>134                   :email,
-</span><span class="inferred0"><a name="line135"></a>135                   :name,
-</span><span class="inferred1"><a name="line136"></a>136                   :password,
-</span><span class="inferred0"><a name="line137"></a>137                   :password_confirmation,
-</span><span class="inferred1"><a name="line138"></a>138                   :multi_currency_balance_calculating_algorithm,
-</span><span class="inferred0"><a name="line139"></a>139                   :include_transactions_from_subcategories,
-</span><span class="inferred1"><a name="line140"></a>140                   :transaction_amount_limit_value,
-</span><span class="inferred0"><a name="line141"></a>141                   :transaction_amount_limit_type,
-</span><span class="inferred1"><a name="line142"></a>142                   :default_currency_id
-</span><span class="inferred0"><a name="line143"></a>143 
-</span><span class="inferred1"><a name="line144"></a>144 
-</span><span class="inferred0"><a name="line145"></a>145   # Activates the user in the database.
-</span><span class="marked1"><a name="line146"></a>146   def activate!
-</span><span class="marked0"><a name="line147"></a>147     @activated = true
-</span><span class="marked1"><a name="line148"></a>148     self.activated_at = Time.now.utc
-</span><span class="marked0"><a name="line149"></a>149     self.activation_code = nil
-</span><span class="marked1"><a name="line150"></a>150     save(false)
-</span><span class="inferred0"><a name="line151"></a>151   end
-</span><span class="inferred1"><a name="line152"></a>152 
-</span><span class="inferred0"><a name="line153"></a>153   # Returns true if the user has just been activated.
-</span><span class="marked1"><a name="line154"></a>154   def recently_activated?
-</span><span class="marked0"><a name="line155"></a>155     @activated
-</span><span class="inferred1"><a name="line156"></a>156   end
-</span><span class="inferred0"><a name="line157"></a>157 
-</span><span class="marked1"><a name="line158"></a>158   def active?
-</span><span class="inferred0"><a name="line159"></a>159     # the existence of an activation code means they have not activated yet
-</span><span class="marked1"><a name="line160"></a>160     activation_code.nil?
-</span><span class="inferred0"><a name="line161"></a>161   end
-</span><span class="inferred1"><a name="line162"></a>162 
-</span><span class="inferred0"><a name="line163"></a>163   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-</span><span class="inferred1"><a name="line164"></a>164   #
-</span><span class="inferred0"><a name="line165"></a>165   # uff.  this is really an authorization, not authentication routine.  
-</span><span class="inferred1"><a name="line166"></a>166   # We really need a Dispatch Chain here or something.
-</span><span class="inferred0"><a name="line167"></a>167   # This will also let us return a human error message.
-</span><span class="inferred1"><a name="line168"></a>168   #
-</span><span class="marked0"><a name="line169"></a>169   def self.authenticate(login, password)
-</span><span class="marked1"><a name="line170"></a>170     return nil if login.blank? || password.blank?
-</span><span class="marked0"><a name="line171"></a>171     u = find :first, :conditions =&gt; ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
-</span><span class="marked1"><a name="line172"></a>172     u &amp;&amp; u.authenticated?(password) ? u : nil
+</span><span class="inferred0"><a name="line115"></a>115   #used for conditional validation of transaction_amount_limit_value
+</span><span class="marked1"><a name="line116"></a>116   def transaction_amount_limit_with_value?
+</span><span class="marked0"><a name="line117"></a>117     [:transaction_count, :week_count].include?(transaction_amount_limit_type)
+</span><span class="inferred1"><a name="line118"></a>118   end
+</span><span class="inferred0"><a name="line119"></a>119   
+</span><span class="inferred1"><a name="line120"></a>120   # Autogenerated ===============================
+</span><span class="inferred0"><a name="line121"></a>121 
+</span><span class="marked1"><a name="line122"></a>122   include Authentication
+</span><span class="marked0"><a name="line123"></a>123   include Authentication::ByPassword
+</span><span class="marked1"><a name="line124"></a>124   include Authentication::ByCookieToken
+</span><span class="inferred0"><a name="line125"></a>125 
+</span><span class="marked1"><a name="line126"></a>126   validates_presence_of     :login
+</span><span class="marked0"><a name="line127"></a>127   validates_length_of       :login,    :within =&gt; 3..40
+</span><span class="marked1"><a name="line128"></a>128   validates_uniqueness_of   :login
+</span><span class="marked0"><a name="line129"></a>129   validates_format_of       :login,    :with =&gt; Authentication.login_regex, :message =&gt; Authentication.bad_login_message
+</span><span class="inferred1"><a name="line130"></a>130 
+</span><span class="marked0"><a name="line131"></a>131   validates_format_of       :name,     :with =&gt; Authentication.name_regex,  :message =&gt; Authentication.bad_name_message, :allow_nil =&gt; true
+</span><span class="marked1"><a name="line132"></a>132   validates_length_of       :name,     :maximum =&gt; 100
+</span><span class="inferred0"><a name="line133"></a>133 
+</span><span class="marked1"><a name="line134"></a>134   validates_presence_of     :email
+</span><span class="marked0"><a name="line135"></a>135   validates_length_of       :email,    :within =&gt; 6..100 #r@a.wk
+</span><span class="marked1"><a name="line136"></a>136   validates_uniqueness_of   :email
+</span><span class="marked0"><a name="line137"></a>137   validates_format_of       :email,    :with =&gt; Authentication.email_regex, :message =&gt; Authentication.bad_email_message
+</span><span class="inferred1"><a name="line138"></a>138 
+</span><span class="marked0"><a name="line139"></a>139   before_create :make_activation_code 
+</span><span class="inferred1"><a name="line140"></a>140 
+</span><span class="inferred0"><a name="line141"></a>141   # HACK HACK HACK -- how to do attr_accessible from here?
+</span><span class="inferred1"><a name="line142"></a>142   # prevents a user from submitting a crafted form that bypasses activation
+</span><span class="inferred0"><a name="line143"></a>143   # anything else you want your user to change should be added here.
+</span><span class="marked1"><a name="line144"></a>144   attr_accessible :login,
+</span><span class="inferred0"><a name="line145"></a>145                   :email,
+</span><span class="inferred1"><a name="line146"></a>146                   :name,
+</span><span class="inferred0"><a name="line147"></a>147                   :password,
+</span><span class="inferred1"><a name="line148"></a>148                   :password_confirmation,
+</span><span class="inferred0"><a name="line149"></a>149                   :multi_currency_balance_calculating_algorithm,
+</span><span class="inferred1"><a name="line150"></a>150                   :include_transactions_from_subcategories,
+</span><span class="inferred0"><a name="line151"></a>151                   :transaction_amount_limit_value,
+</span><span class="inferred1"><a name="line152"></a>152                   :transaction_amount_limit_type,
+</span><span class="inferred0"><a name="line153"></a>153                   :default_currency_id,
+</span><span class="inferred1"><a name="line154"></a>154                   :invert_saldo_for_income
+</span><span class="inferred0"><a name="line155"></a>155 
+</span><span class="inferred1"><a name="line156"></a>156 
+</span><span class="inferred0"><a name="line157"></a>157   # Activates the user in the database.
+</span><span class="marked1"><a name="line158"></a>158   def activate!
+</span><span class="marked0"><a name="line159"></a>159     @activated = true
+</span><span class="marked1"><a name="line160"></a>160     self.activated_at = Time.now.utc
+</span><span class="marked0"><a name="line161"></a>161     self.activation_code = nil
+</span><span class="marked1"><a name="line162"></a>162     save(false)
+</span><span class="inferred0"><a name="line163"></a>163   end
+</span><span class="inferred1"><a name="line164"></a>164 
+</span><span class="inferred0"><a name="line165"></a>165   # Returns true if the user has just been activated.
+</span><span class="marked1"><a name="line166"></a>166   def recently_activated?
+</span><span class="marked0"><a name="line167"></a>167     @activated
+</span><span class="inferred1"><a name="line168"></a>168   end
+</span><span class="inferred0"><a name="line169"></a>169 
+</span><span class="marked1"><a name="line170"></a>170   def active?
+</span><span class="inferred0"><a name="line171"></a>171     # the existence of an activation code means they have not activated yet
+</span><span class="marked1"><a name="line172"></a>172     activation_code.nil?
 </span><span class="inferred0"><a name="line173"></a>173   end
 </span><span class="inferred1"><a name="line174"></a>174 
-</span><span class="marked0"><a name="line175"></a>175   def login=(value)
-</span><span class="marked1"><a name="line176"></a>176     write_attribute :login, (value ? value.downcase : nil)
-</span><span class="inferred0"><a name="line177"></a>177   end
-</span><span class="inferred1"><a name="line178"></a>178 
-</span><span class="marked0"><a name="line179"></a>179   def email=(value)
-</span><span class="marked1"><a name="line180"></a>180     write_attribute :email, (value ? value.downcase : nil)
-</span><span class="inferred0"><a name="line181"></a>181   end
-</span><span class="inferred1"><a name="line182"></a>182 
-</span><span class="marked0"><a name="line183"></a>183   protected
-</span><span class="inferred1"><a name="line184"></a>184     
-</span><span class="marked0"><a name="line185"></a>185   def make_activation_code
-</span><span class="marked1"><a name="line186"></a>186     self.activation_code = self.class.make_token
-</span><span class="inferred0"><a name="line187"></a>187   end
-</span><span class="inferred1"><a name="line188"></a>188 
-</span><span class="inferred0"><a name="line189"></a>189 
+</span><span class="inferred0"><a name="line175"></a>175   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+</span><span class="inferred1"><a name="line176"></a>176   #
+</span><span class="inferred0"><a name="line177"></a>177   # uff.  this is really an authorization, not authentication routine.  
+</span><span class="inferred1"><a name="line178"></a>178   # We really need a Dispatch Chain here or something.
+</span><span class="inferred0"><a name="line179"></a>179   # This will also let us return a human error message.
+</span><span class="inferred1"><a name="line180"></a>180   #
+</span><span class="marked0"><a name="line181"></a>181   def self.authenticate(login, password)
+</span><span class="marked1"><a name="line182"></a>182     return nil if login.blank? || password.blank?
+</span><span class="marked0"><a name="line183"></a>183     u = find :first, :conditions =&gt; ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
+</span><span class="marked1"><a name="line184"></a>184     u &amp;&amp; u.authenticated?(password) ? u : nil
+</span><span class="inferred0"><a name="line185"></a>185   end
+</span><span class="inferred1"><a name="line186"></a>186 
+</span><span class="marked0"><a name="line187"></a>187   def login=(value)
+</span><span class="marked1"><a name="line188"></a>188     write_attribute :login, (value ? value.downcase : nil)
+</span><span class="inferred0"><a name="line189"></a>189   end
 </span><span class="inferred1"><a name="line190"></a>190 
-</span><span class="inferred0"><a name="line191"></a>191 
-</span><span class="inferred1"><a name="line192"></a>192 end
+</span><span class="marked0"><a name="line191"></a>191   def email=(value)
+</span><span class="marked1"><a name="line192"></a>192     write_attribute :email, (value ? value.downcase : nil)
+</span><span class="inferred0"><a name="line193"></a>193   end
+</span><span class="inferred1"><a name="line194"></a>194 
+</span><span class="marked0"><a name="line195"></a>195   protected
+</span><span class="inferred1"><a name="line196"></a>196     
+</span><span class="marked0"><a name="line197"></a>197   def make_activation_code
+</span><span class="marked1"><a name="line198"></a>198     self.activation_code = self.class.make_token
+</span><span class="inferred0"><a name="line199"></a>199   end
+</span><span class="inferred1"><a name="line200"></a>200 
+</span><span class="inferred0"><a name="line201"></a>201 
+</span><span class="inferred1"><a name="line202"></a>202 
+</span><span class="inferred0"><a name="line203"></a>203 
+</span><span class="inferred1"><a name="line204"></a>204 end
 </span></pre><hr/>
     <p>Generated using the <a href='http://eigenclass.org/hiki.rb?rcov'>rcov code coverage analysis tool for Ruby</a>
    version 0.8.1.3.</p>
