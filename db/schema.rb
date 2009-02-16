@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090211155039) do
+ActiveRecord::Schema.define(:version => 20090216182617) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -44,6 +44,8 @@ ActiveRecord::Schema.define(:version => 20090211155039) do
   end
 
   add_index "categories", ["id", "user_id", "category_type_int"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
+  add_index "categories", ["lft", "rgt"], :name => "index_categories_on_lft_and_rgt"
+  add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
 
   create_table "category_report_options", :force => true do |t|
     t.integer  "inclusion_type_int", :default => 0, :null => false
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(:version => 20090211155039) do
     t.integer  "category_id"
     t.integer  "period_division_int",         :default => 5
     t.boolean  "temporary",                   :default => false, :null => false
+    t.boolean  "relative_period",             :default => false, :null => false
   end
 
   add_index "reports", ["category_id"], :name => "index_reports_on_category_id"

@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
     if return_range
       return range
     else
-      return range.begin, range.end
+      return range.begin, range.end, symbol
     end
   end
   

@@ -24,7 +24,7 @@
 
 class Report < ActiveRecord::Base
   extend HashEnums
-  define_enum :period_type, [:day, :week, :month, :quarter, :year, :custom]
+  define_enum :period_type, [:SELECTED] + Date::RECOGNIZED_PERIODS
   define_enum :report_view_type, [:pie, :linear, :text, :bar]
 
   belongs_to :user
@@ -35,7 +35,7 @@ class Report < ActiveRecord::Base
 
   #used for conditional validation
   def period_type_custom?
-    period_type == :custom
+    period_type == :SELECTED
   end
 
   def share_report?
@@ -64,6 +64,21 @@ class Report < ActiveRecord::Base
     end
   end
 
+  def period_start
+    if relative_period && period_type != :SELECTED
+      Date.calculate_start(period_type)
+    else
+      self.read_attribute('period_start')
+    end
+  end
+
+  def period_end
+    if relative_period && period_type != :SELECTED
+      Date.calculate_end(period_type)
+    else
+      self.read_attribute('period_end')
+    end
+  end
 
   
 end

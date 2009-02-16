@@ -10,7 +10,7 @@ class ShareReportTest < ActiveSupport::TestCase
     r = ShareReport.new
     r.category = @jarek.categories.first
     r.report_view_type = :pie
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.max_categories_values_count = 1
     r.name = "Testowy raport"
     assert r.save!

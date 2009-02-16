@@ -10,7 +10,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r = ValueReport.new
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     assert r.save!
   end
@@ -19,7 +19,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r = ValueReport.new
     add_category_options @jarek, r
     r.report_view_type = :pie
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     assert !r.save
     assert r.errors.on(:report_view_type)
@@ -30,7 +30,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r = ValueReport.new
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     r.category_report_options.each do |option|
       option.inclusion_type = :both

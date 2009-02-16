@@ -4,7 +4,7 @@ CREATE TABLE "category_report_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT N
 CREATE TABLE "currencies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar(255) NOT NULL, "long_symbol" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "long_name" varchar(255) NOT NULL, "user_id" integer);
 CREATE TABLE "exchanges" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "currency_a" decimal(8,4) NOT NULL, "currency_b" decimal(8,4) NOT NULL, "left_to_right" float NOT NULL, "right_to_left" float NOT NULL, "day" date NOT NULL, "user_id" integer);
 CREATE TABLE "goals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255), "include_subcategories" boolean, "period_type_int" integer, "goal_type_int" integer, "goal_completion_condition_int" integer, "value" float, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
-CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255) NOT NULL, "period_type_int" integer NOT NULL, "period_start" date, "period_end" date, "report_view_type_int" integer NOT NULL, "is_predefined" boolean DEFAULT 'f' NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "depth" integer DEFAULT 0, "max_categories_values_count" integer DEFAULT 0, "category_id" integer, "period_division_int" integer DEFAULT 2, "temporary" boolean DEFAULT 'f' NOT NULL);
+CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255) NOT NULL, "period_type_int" integer NOT NULL, "period_start" date, "period_end" date, "report_view_type_int" integer NOT NULL, "is_predefined" boolean DEFAULT 'f' NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "depth" integer DEFAULT 0, "max_categories_values_count" integer DEFAULT 0, "category_id" integer, "period_division_int" integer DEFAULT 5, "temporary" boolean DEFAULT 'f' NOT NULL, "relative_period" boolean DEFAULT 'f' NOT NULL);
 CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
 CREATE TABLE "sessions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "session_id" varchar(255), "data" text, "updated_at" datetime);
 CREATE TABLE "transfer_items" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" text NOT NULL, "value" decimal(8,2) NOT NULL, "transfer_id" integer NOT NULL, "category_id" integer NOT NULL, "currency_id" integer DEFAULT 3 NOT NULL, "import_guid" varchar(255));
@@ -76,3 +76,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090207162724');
 INSERT INTO schema_migrations (version) VALUES ('20090208112934');
 
 INSERT INTO schema_migrations (version) VALUES ('20090211155039');
+
+INSERT INTO schema_migrations (version) VALUES ('20090216182617');

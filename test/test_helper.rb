@@ -217,7 +217,7 @@ class Test::Unit::TestCase
     r.user = user
     r.category = user.categories.first
     r.report_view_type = :pie
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.depth = 5
     r.max_categories_values_count = 6
     r.name = "Testowy raport"
@@ -231,7 +231,7 @@ class Test::Unit::TestCase
     r.user = user
     add_category_options user, r
     r.report_view_type = :text
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     r.save!
     r
@@ -243,7 +243,7 @@ class Test::Unit::TestCase
     r.user = user
     add_category_options user, r
     r.report_view_type = :bar
-    r.period_type = :custom
+    r.period_type = :SELECTED
     r.period_start = 5.month.ago
     r.period_end = Date.today.to_date
     r.period_division = :week

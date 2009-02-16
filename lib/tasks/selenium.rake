@@ -15,12 +15,22 @@ namespace :selenium do
     `echo 'Starting app server and selenium server' & ./script/server -e selenium -p 3031 & selenium`
   end
 
-  desc 'Runs selenium test'
-  Rake::TestTask.new(:test) do |t|
+  desc 'Runs selenium tests'
+  Rake::TestTask.new(:test => :kill_firefox) do |t|
       t.libs << "test"
       t.pattern = 'test/selenium/**/*_test.rb'
       t.verbose = true
   end
+
+  desc 'Kills firefox before runnig selenium'
+  task :kill_firefox do
+      @killed_firefox = false
+      if find_pid_of_process('firefox') != 0
+        `skill firefox`
+        @killed_firefox = true
+      end
+    end
+
 end
 
 

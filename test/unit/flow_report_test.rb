@@ -10,7 +10,7 @@ class FlowReportTest < ActiveSupport::TestCase
     r = FlowReport.new
     add_category_options @jarek, r
     r.report_view_type = :text
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     assert r.save!
  end
@@ -19,7 +19,7 @@ class FlowReportTest < ActiveSupport::TestCase
     r = FlowReport.new
     add_category_options @jarek, r
     r.report_view_type = :linear
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     assert !r.save
     assert r.errors.on(:report_view_type)

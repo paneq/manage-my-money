@@ -63,6 +63,7 @@ namespace :metrics do
 
     
 
+    desc 'Kills firefox before runnig selenium'
     task :kill_firefox do
       @killed_firefox = false
       if find_pid_of_process('firefox') != 0

@@ -10,7 +10,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     r.name = "Testowy raport"
     assert r.save!
     assert_equal @jarek.categories.size, r.categories.size
@@ -36,7 +36,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
-    r.period_type = :week
+    r.period_type = :LAST_WEEK
     assert !r.save
     assert r.errors.on(:category_report_options)
     r.category_report_options = []

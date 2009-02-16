@@ -75,8 +75,12 @@ class ReportsController < ApplicationController
     end
 
     @report.user = @current_user
-    @report.period_type = :custom #TODO
-    @report.period_start, @report.period_end = get_period("report_day_#{params[:report_type]}")
+    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{params[:report_type]}")
+
+    if @report.relative_period
+      @report.period_start = @report.period_end = nil
+    end
+
     if params[:commit] == 'Pokaż'
       @report.temporary = true
       @report.name = 'Tymczasowy raport' if @report.name.empty?
@@ -120,9 +124,19 @@ class ReportsController < ApplicationController
 
   def update
     @report = self.current_user.reports.find params[:id]
-    @report.period_start, @report.period_end = get_period("report_day_#{@report.type_str}")
+
+    report_param_name = @report.type_str.underscore.intern
+    @report.relative_period = params[report_param_name][:relative_period]
+
+    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{@report.type_str}")
+
+    if @report.relative_period
+      @report.period_start = @report.period_end = nil
+    end
+
+#    @report.period_start, @report.period_end = get_period("report_day_#{@report.type_str}")
     @report.temporary = false if @report.temporary && params[:commit] != 'Pokaż'
-    if @report.update_attributes(params[@report.type_str.underscore.intern])
+    if @report.update_attributes(params[report_param_name])
       if params[:commit] == 'Zapisz'
         flash[:notice] = 'Raport zostal pomyslnie zapisany'
         redirect_to :action => :index
@@ -166,7 +180,7 @@ class ReportsController < ApplicationController
     r.user = self.current_user
     r.category = self.current_user.expense
     r.report_view_type = :pie
-    r.period_type = :custom
+    r.period_type = :SELECTED
     r.period_start = 1.year.ago.to_date
     r.period_end = Date.today
     r.depth = 1
@@ -181,7 +195,7 @@ class ReportsController < ApplicationController
       r.category_report_options << CategoryReportOption.new(:category => cat, :inclusion_type => :category_and_subcategories, :multiple_category_report => r)
     end
     r.user = self.current_user
-    r.period_type = :custom
+    r.period_type = :SELECTED
     r.report_view_type = :linear
     r.period_start = 1.year.ago.to_date
     r.period_end = Date.today
@@ -196,7 +210,7 @@ class ReportsController < ApplicationController
     r.user = self.current_user
     r.category_report_options << CategoryReportOption.new(:category => self.current_user.income, :inclusion_type => :category_only, :multiple_category_report => r)
 #    r.categories << self.current_user.income
-    r.period_type = :custom
+    r.period_type = :SELECTED
     r.report_view_type = :text
     r.period_start = 1.year.ago.to_date
     r.period_end = Date.today
