@@ -406,7 +406,22 @@ class CategoryTest < Test::Unit::TestCase
 
   #TODO
   def test_calculate_share_values
+#    prepare_sample_catagory_tree_for_jarek
+#    category1 = @jarek.income
+#    category2 = @jarek.categories.find_by_name "child1"
+#
+#    save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
+
     
+    #TODO
+    # przetestować czy zwraca dobre wyniki
+    # na 1 poziomie zagłebienia
+    # na różnym od pierwszego poziomie
+    # sprawdzić czy zwraca dobrą liczbę wyników i czy 'pozostałe' są dobrze policzone
+    #sprawdzić czy działa jeśli w podkategoriach saldo jest zerowe lub nie ma transferów
+    # sprawdzić działanie dla wielu walut
+
+
   end
 
   #TODO

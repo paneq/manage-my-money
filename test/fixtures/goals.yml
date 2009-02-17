@@ -20,13 +20,15 @@
 one:
   description: MyString
   include_subcategories: false
-  period_type: 1
-  goal_type: 1
-  goal_completion_condition: 1
+  period_type_int: 1
+  goal_type_int: 1
+  goal_completion_condition_int: 1
+  category_id: 3
 
 two:
   description: MyString
   include_subcategories: false
-  period_type: 1
-  goal_type: 1
-  goal_completion_condition: 1
+  period_type_int: 1
+  goal_type_int: 1
+  goal_completion_condition_int: 1
+  category_id: 1

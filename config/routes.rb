@@ -72,7 +72,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources     :share_reports, :controller => 'reports'
   map.resources     :value_reports, :controller => 'reports'
   map.resources     :flow_reports, :controller => 'reports'
-
+  map.resources     :goals
 
 
   map.home          '/', :controller => 'sessions', :action => 'default'

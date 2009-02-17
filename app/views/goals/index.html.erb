@@ -1,0 +1,21 @@
+<h1>Twoje cele</h1>
+
+<table>
+  <tr><th>Nazwa</th><th>Zakładana wartość</th><th>Aktualna wartość</th><th>Na okres</th><th colspan="2">Akcje</th>
+  </tr>
+
+<% for goal in @goals %>
+  <tr>
+    <td><%=goal.description%></td>
+    <td><%=goal.value%></td>
+    <td>0</td>
+    <td><%=goal.period_type%></td>
+    <td><%= link_to 'Edytuj', edit_goal_path(goal) %></td>
+    <td><%= link_to 'Usuń', goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Nowy cel', new_goal_path %>

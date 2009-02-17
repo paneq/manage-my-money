@@ -27,6 +27,9 @@ class Goal < ActiveRecord::Base
   define_enum :goal_type, {:percent=>0, :value=>1}
   define_enum :goal_completion_condition,{:at_least=>0, :at_most=>1}
 
+  validates_presence_of :description, :value
+  validates_numericality_of :value
+
   
   #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
   def percent_of_parent_category

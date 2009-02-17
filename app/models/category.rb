@@ -281,7 +281,6 @@ class Category < ActiveRecord::Base
   end
 
 
-  #TODO
   # Oblicza udzial wartosci podkategorii w kategorii
   # 
   # Parametry:
