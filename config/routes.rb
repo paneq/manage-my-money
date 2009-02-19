@@ -37,13 +37,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources     :categories
   {
-    :member => {
-      :show => [:post, :get],
-    },
     :collection => {
       :search => :post
       }
   }
+  map.resources     :loan_categories, :controller => 'categories'
     
   map.resources     :currencies
   {

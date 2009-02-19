@@ -195,6 +195,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
       assert_select 'p#name', 1
       assert_select 'p#description', 1
       assert_select 'p#parent', 0
+      assert_select 'p#loan', 0
       assert_select 'p#update', 1
     end
     assert_select "input#category_name[value='#{@rupert.income.name}']"
@@ -210,17 +211,32 @@ class CategoriesControllerTest < Test::Unit::TestCase
     assert_template 'edit'
     assert_select 'div#category-edit' do
       assert_select 'p#parent', 1
+      assert_select 'p#loan', 0
       assert_select 'option[selected=selected]', @expense_category.name
     end
     [@expense_category, @house, @rent, @clothes].each_with_index do |c, nr|
       assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new(c.name)
     end
+
+    @rupert.categories.build(:name => 'test', :parent => rupert.loan)
+    @rupert.save!
+
+    get :edit, :id => @rupert.loan.children.first
+    assert_response :success
+    assert_template 'edit'
+    assert_select 'div#category-edit' do
+      assert_select 'p#loan' do
+        assert_select 'p#is_loan', 1
+        assert_select 'p#email', 1
+        assert_select 'p#bankinfo', 1
+      end
+    end
   end
 
 
   def test_update_top_category
-    income_category = @rupert.categories.top_of_type(:EXPENSE)
-    loan_category = @rupert.categories.top_of_type(:LOAN)
+    income_category = @rupert.expense
+    loan_category = @rupert.loan
 
     put :update, :id => loan_category.id, :category => {
       :name => 'new_loan_name',
@@ -268,6 +284,34 @@ class CategoriesControllerTest < Test::Unit::TestCase
     assert_equal :EXPENSE, @healthy.category_type
 
   end
+
+
+  def test_update_to_loan
+    category = Category.new(:name => 'sejtenik', :parent => rupert.loan, :user => @rupert)
+    category.save!
+
+    put :update, :id => category.id, :category => {
+      :type => 'LoanCategory',
+      :email => 'sejtenik@gmail.com',
+      :bankinfo => 'bank bank bank'
+    }
+
+    assert_redirected_to :action => :index
+    assert_match(/Zapisano/, flash[:notice])
+
+    category = LoanCategory.find_by_id(category.id)
+    assert_not_nil category
+    assert !category.email.blank?
+    assert !category.bankinfo.blank?
+
+    put :update, :id => category.id, :category => {
+      :type => 'Category',
+    }
+    
+    category = LoanCategory.find_by_id(category.id)
+    assert_nil category
+  end
+
 
   #TODO: testy przy podawaniu zlych danych, np kiedy proba przeniesienia kategorii do takiej gdzie przeniesc nie mozna.
 

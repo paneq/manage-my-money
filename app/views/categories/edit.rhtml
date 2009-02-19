@@ -1,6 +1,6 @@
 <h1>Edycja kategorii</h1>
 <div id="category-edit">
-  <% form_for @category do |form| %>
+  <% form_for :category, @category, :url => category_path(@category), :html => {:method => :put} do |form| %>
 
     <%= error_messages_for :category, :message => nil %>
 
@@ -14,6 +14,15 @@
       </p>
 
     <% end %>
+
+    <% if @category.can_become_loan_category? %>
+      <p id="loan">
+        <p id="is_loan">Dłużnik / Wierzyciel: <%= form.check_box :type, {}, 'LoanCategory', 'Category' %> </p>
+        <p id="email"> E-mail: <%= form.text_field :email %> </p>
+        <p id="bankinfo"> Informacje do przelewu: <%= form.text_field :bankinfo %></p>
+      </p>
+    <% end %>
+
     <p id="update">
       <%= form.submit "Zapisz zmiany" %>
     </p>

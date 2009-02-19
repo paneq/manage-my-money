@@ -2,6 +2,7 @@
 # Likewise, all the methods added will be available for all controllers.
 
 require 'date'
+require 'hash'
 
 class ApplicationController < ActionController::Base
   include SslRequirement

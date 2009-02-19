@@ -77,19 +77,20 @@ class CategoriesController < ApplicationController
     @top = self.current_user.categories.top_of_type(@category.category_type)
   end
 
-  
+   
   def update
     @category = self.current_user.categories.find(params[:id])
-    @category.name = params[:category][:name]
-    @category.description = params[:category][:description]
-    @category.parent = self.current_user.categories.find(params[:category][:parent].to_i) if !@category.is_top? and params[:category][:parent]
+    attr = params[:category]
+    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo)
+    @category[:type] = attr[:type] if attr[:type] && [Category, LoanCategory].map{|klass| klass.to_s}.include?(attr[:type])
+    @category.parent = self.current_user.categories.find(attr[:parent].to_i) if !@category.is_top? and attr[:parent]
     if @category.save
       flash[:notice] = 'Zapisano zmiany.'
       redirect_to categories_url
     else
       @parent = @category.parent
       @top = self.current_user.categories.top_of_type(@category.category_type)
-      flash[:notice] = 'Nie udało się utworzyć kategorii.'
+      flash[:notice] = 'Nie udało się zaktualizować kategorii.'
       render :action => 'edit'
     end
   end
