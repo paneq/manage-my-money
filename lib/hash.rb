@@ -1,11 +1,3 @@
-# 
-# hash.rb
-# 
-# Created on Nov 12, 2008, 11:06:31 AM
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
 
 class Hash
   def +(item)
@@ -59,5 +51,42 @@ class Hash
     return [ self.keys[0], self[self.keys[0]] ] if self.size > 0
     return nil
   end unless method_defined?(:first) #compatibility mode for ruby 1.8.7
+
+end
+
+
+class HashWithIndifferentAccess
+
+  # lets through the keys in the argument
+  # >> {:one => 1, :two => 2, :three => 3}.pass(:one)
+  # => {:one=>1}
+  def pass(*keys)
+    keys = keys.map do |k|
+      if k.is_a?(Symbol)
+        k.to_s
+      else
+        k
+      end
+    end
+    tmp = self.clone
+    tmp.delete_if {|k,v| ! keys.include?(k) }
+    tmp
+  end
+
+  # blocks the keys in the arguments
+  # >> {:one => 1, :two => 2, :three => 3}.block(:one)
+  # => {:two=>2, :three=>3}
+  def block(*keys)
+    keys = keys.map do |k|
+      if k.is_a?(Symbol)
+        k.to_s
+      else
+        k
+      end
+    end
+    tmp = self.clone
+    tmp.delete_if {|k,v| keys.include?(k) }
+    tmp
+  end
 
 end
