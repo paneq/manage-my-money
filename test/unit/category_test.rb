@@ -16,7 +16,8 @@ class CategoryTest < Test::Unit::TestCase
       assert_equal 0, category.saldo_new.currencies.size, "At the beggining saldo does not contains any currency"
     end
   end
-  
+
+
   def test_saldo_after_transfers_in_one_currency    
     income_category = @rupert.categories[0]
     outcome_category = @rupert.categories[1]
@@ -43,7 +44,8 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal 1, income_category.saldo_new.currencies.size
     assert_equal 1, outcome_category.saldo_new.currencies.size
   end
-  
+
+
   def test_saldo_after_transfers_in_many_currencies    
     income_category = @rupert.categories[0]
     outcome_income_category = @rupert.categories[1]
@@ -78,8 +80,6 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal(100, income_category.saldo_new.value(@zloty))
 
   end
-
-
   
   
   def test_saldo_at_end_of_days

@@ -1,0 +1,3 @@
+class LoanCategory < Category
+  
+end

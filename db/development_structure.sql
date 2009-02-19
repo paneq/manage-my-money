@@ -1,5 +1,5 @@
 CREATE TABLE "bdrb_job_queues" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "args" blob, "worker_name" varchar(255), "worker_method" varchar(255), "job_key" varchar(255), "taken" int, "finished" int, "timeout" int, "priority" int, "submitted_at" datetime, "started_at" datetime, "finished_at" datetime, "archived_at" datetime, "tag" varchar(255), "submitter_info" varchar(255), "runner_info" varchar(255), "worker_key" varchar(255), "scheduled_at" datetime);
-CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "description" varchar(255), "category_type_int" integer, "user_id" integer, "parent_id" integer, "lft" integer, "rgt" integer, "import_guid" varchar(255), "imported" boolean DEFAULT 'f');
+CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255) NOT NULL, "description" varchar(255), "category_type_int" integer, "user_id" integer, "parent_id" integer, "lft" integer, "rgt" integer, "import_guid" varchar(255), "imported" boolean DEFAULT 'f', "type" varchar(255), "email" varchar(255), "bankinfo" text);
 CREATE TABLE "category_report_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "inclusion_type_int" integer DEFAULT 0 NOT NULL, "report_id" integer NOT NULL, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
 CREATE TABLE "currencies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar(255) NOT NULL, "long_symbol" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "long_name" varchar(255) NOT NULL, "user_id" integer);
 CREATE TABLE "exchanges" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "currency_a" decimal(8,4) NOT NULL, "currency_b" decimal(8,4) NOT NULL, "left_to_right" float NOT NULL, "right_to_left" float NOT NULL, "day" date NOT NULL, "user_id" integer);
@@ -78,3 +78,7 @@ INSERT INTO schema_migrations (version) VALUES ('20090208112934');
 INSERT INTO schema_migrations (version) VALUES ('20090211155039');
 
 INSERT INTO schema_migrations (version) VALUES ('20090216182617');
+
+INSERT INTO schema_migrations (version) VALUES ('20090219102055');
+
+INSERT INTO schema_migrations (version) VALUES ('20090219104138');

@@ -91,6 +91,7 @@ class Category < ActiveRecord::Base
   validates_presence_of :name
   validates_numericality_of :opening_balance, :allow_nil => true
   validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
+  validate :type_validation
 
   def <=>(category)
     name <=> category.name
@@ -127,7 +128,7 @@ class Category < ActiveRecord::Base
   def after_save
     if @parent_to_save && @parent_to_save != self.parent
       self.move_to_child_of(@parent_to_save)
-      @parent_to_save = :default
+      @parent_to_save = nil
     end
   end
 
@@ -194,22 +195,33 @@ class Category < ActiveRecord::Base
     original_destroy
 
   end
-  
+
+
+  def type_validation
+    if self.type == LoanCategory.to_s && !can_become_loan_category?
+      errors.add(:base, "Tylko nienajwyższa kategoria typu 'Zobowiązania' może reprezentować Dłużnika lub Wierzyciela")
+    end
+  end
+
+
   def before_validation
     if self.description.nil? or self.description.empty?
       self.description = " " #self.type.to_s + " " + self.name  
-    end  
+    end
   end
+
 
   def is_top?
     root?
   end
-    
-  #======================
-  #nowy kod do liczenia
-  #
-  
- 
+
+
+  def can_become_loan_category?
+    new_or_old_parent = @parent_to_save || self.parent
+    return !(new_or_old_parent.nil? || self.category_type != :LOAN)
+  end
+
+
   def saldo_new(algorithm=:default, with_subcategories = false)
     universal_saldo(algorithm, with_subcategories)
   end
