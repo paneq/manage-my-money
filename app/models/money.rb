@@ -68,11 +68,13 @@ class Money
     self
   end
 
+
   # sub(money)
   # sub(value, currency)
   def -(money)
     self.clone.sub!(money)
   end
+
 
   def sub!(*args)
     case args.size
@@ -122,10 +124,33 @@ class Money
   end
 
 
+  def positive(&block)
+    positive_or_negative(:positive, block)
+  end
+
+
+  def negative(&block)
+    positive_or_negative(:negative, block)
+  end
+
+
   private
-  
+
+
   def remove_zero_currencies
     @hash.delete_if { |currency, value|  value == 0.00}
+  end
+
+
+  def positive_or_negative(symbol,block = nil)
+    number = (symbol == :positive ? 1 : -1)
+    unless block.nil?
+      @hash.each { |k,v| block.call(k,v) if (v <=> 0) == number}
+    else
+      hash = @hash.clone
+      hash.delete_if {|k,v| (v <=> 0) != number }
+      return Money.new(hash)
+    end
   end
 
 end

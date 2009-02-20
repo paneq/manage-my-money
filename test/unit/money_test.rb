@@ -280,8 +280,8 @@ class MoneyTest < Test::Unit::TestCase
 
 
   def test_value_for_uncontained_currency
-      money = Money.new()
-      assert_equal 0, money.value(@zloty)
+    money = Money.new()
+    assert_equal 0, money.value(@zloty)
   end
 
   def test_value_and_currency_for_one_value
@@ -290,6 +290,35 @@ class MoneyTest < Test::Unit::TestCase
     assert_equal @zloty, money.currency
   end
 
+
+  def test_positive
+    money = Money.new(@zloty => 10, @euro => -10.3, @dolar =>0)
+    positive = Money.new(@zloty => 10)
+
+    assert_equal positive, money.positive
+    
+    new_money = Money.new
+    money.positive do |cur, val|
+      new_money.add!(val, cur)
+    end
+    
+    assert_equal positive, new_money
+  end
+
+
+  def test_negative
+    money = Money.new(@zloty => -10, @euro => 10.3, @dolar =>0)
+    negative = Money.new(@zloty => -10)
+
+    assert_equal negative, money.negative
+
+    new_money = Money.new
+    money.negative do |cur, val|
+      new_money.add!(val, cur)
+    end
+
+    assert_equal negative, new_money
+  end
 
 
   def test_range
