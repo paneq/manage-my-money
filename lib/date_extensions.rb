@@ -34,27 +34,45 @@ class Date
   end
 
 
+  ACTUAL_PERIODS = [
+    [:THIS_DAY, 'Dzisiaj'],
+    [:THIS_WEEK, 'Aktualny tydzień'],
+    [:THIS_MONTH, 'Aktualny miesiąc'],
+    [:THIS_QUARTER, 'Aktualny kwartał'],
+    [:THIS_YEAR, 'Aktualny rok'],
+  ]
+
 
   #Periods recognized by calculate
-  PERIODS = [
-    [:THIS_DAY, 'Dzisiaj'],
+  PAST_PERIODS = [
     [:LAST_DAY, 'Wczoraj'],
-    [:THIS_WEEK, 'Aktualny tydzień'],
     [:LAST_WEEK, 'Poprzedni tydzień'],
     [:LAST_7_DAYS, 'Ostatnie 7 dni'],
-    [:THIS_MONTH, 'Aktualny miesiąc'],
     [:LAST_MONTH, 'Poprzedni miesiąc'],
     [:LAST_4_WEEKS, 'Ostatnie 4 tygodnie'],
-    [:THIS_QUARTER, 'Aktualny kwartał'],
     [:LAST_QUARTER, 'Poprzedni kwartał'],
     [:LAST_3_MONTHS, 'Ostatnie 3 miesiące'],
     [:LAST_90_DAYS, 'Ostatnie 90 dni'],
-    [:THIS_YEAR, 'Aktualny rok'],
     [:LAST_YEAR, 'Poprzedni rok'],
     [:LAST_12_MONTHS, 'Ostatnie 12 miesięcy'],
   ]
 
-  RECOGNIZED_PERIODS = PERIODS.map {|symbol, name| symbol}
+  FUTURE_PERIODS = [
+    [:NEXT_DAY, 'Jutro'],
+    [:NEXT_WEEK, 'Następny tydzień'],
+    [:NEXT_7_DAYS, 'Następne 7 dni'],
+    [:NEXT_MONTH, 'Następny miesiąc'],
+    [:NEXT_4_WEEKS, 'Następne 4 tygodnie'],
+    [:NEXT_QUARTER, 'Następnt kwartał'],
+    [:NEXT_3_MONTHS, 'Następne 3 miesiące'],
+    [:NEXT_90_DAYS, 'Następne 90 dni'],
+    [:NEXT_YEAR, 'Następny rok'],
+    [:NEXT_12_MONTHS, 'Następne 12 miesięcy'],
+  ]
+
+  #  PERIODS = (ACTUAL_PERIODS + PAST_PERIODS + FUTURE_PERIODS)
+  PERIODS = ACTUAL_PERIODS + PAST_PERIODS
+  RECOGNIZED_PERIODS = (ACTUAL_PERIODS + PAST_PERIODS + FUTURE_PERIODS).map {|symbol, name| symbol}
 
   @@cache = {}
   @@today = Date.today
@@ -72,21 +90,35 @@ class Date
 
   def self.calculate_start(symbol)
     return case symbol
+      #actual periods
     when :THIS_DAY        then Date.today
-    when :LAST_DAY        then Date.yesterday
     when :THIS_WEEK       then Date.today.beginning_of_week
+    when :THIS_MONTH      then Date.today.beginning_of_month
+    when :THIS_QUARTER    then Date.today.beginning_of_quarter
+    when :THIS_YEAR       then Date.today.beginning_of_year
+      #past periods
+    when :LAST_DAY        then Date.yesterday
     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.beginning_of_week
     when :LAST_7_DAYS     then 6.days.ago.to_date
-    when :THIS_MONTH      then Date.today.beginning_of_month
     when :LAST_MONTH      then Date.today.months_ago(1).beginning_of_month
     when :LAST_4_WEEKS    then 3.weeks.ago.to_date.beginning_of_week
-    when :THIS_QUARTER    then Date.today.beginning_of_quarter
     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday.beginning_of_quarter
     when :LAST_3_MONTHS   then Date.today.months_ago(2).beginning_of_month
     when :LAST_90_DAYS    then 89.days.ago.to_date
-    when :THIS_YEAR       then Date.today.beginning_of_year
     when :LAST_YEAR       then Date.today.years_ago(1).beginning_of_year
     when :LAST_12_MONTHS  then Date.today.months_ago(11).beginning_of_month
+      #future periods
+    when :NEXT_DAY        then Date.tomorrow
+    when :NEXT_WEEK       then Date.today.end_of_week.tomorrow
+    when :NEXT_7_DAYS     then Date.today
+    when :NEXT_MONTH      then Date.today.end_of_month.tomorrow
+    when :NEXT_4_WEEKS    then Date.today
+    when :NEXT_QUARTER    then Date.today.next_quarter
+    when :NEXT_3_MONTHS   then Date.today
+    when :NEXT_90_DAYS    then Date.today
+    when :NEXT_YEAR       then Date.today.next_year.beginning_of_year
+    when :NEXT_12_MONTHS  then Date.today
+
     else
       raise "Unrecognized period symbol: #{symbol}"
     end
@@ -94,21 +126,37 @@ class Date
 
   def self.calculate_end(symbol)
     return case symbol
+    #actual periods
     when :THIS_DAY        then Date.today
-    when :LAST_DAY        then Date.yesterday
     when :THIS_WEEK       then Date.today.end_of_week
+    when :THIS_MONTH      then Date.today.end_of_month
+    when :THIS_QUARTER    then Date.today.end_of_quarter
+    when :THIS_YEAR       then Date.today.end_of_year
+    #past periods
+    when :LAST_DAY        then Date.yesterday
     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.end_of_week
     when :LAST_7_DAYS     then Date.today
-    when :THIS_MONTH      then Date.today.end_of_month
     when :LAST_MONTH      then Date.today.months_ago(1).end_of_month
-    when :THIS_QUARTER    then Date.today.end_of_quarter
     when :LAST_QUARTER    then Date.today.beginning_of_quarter.yesterday
     when :LAST_4_WEEKS    then Date.today
     when :LAST_3_MONTHS   then Date.today.end_of_month
     when :LAST_90_DAYS    then Date.today
-    when :THIS_YEAR       then Date.today.end_of_year
     when :LAST_YEAR       then Date.today.years_ago(1).end_of_year
     when :LAST_12_MONTHS  then Date.today.end_of_month
+
+      #future periods
+    when :NEXT_DAY        then Date.tomorrow
+    when :NEXT_WEEK       then Date.today.advance(:weeks => 1).end_of_week
+    when :NEXT_7_DAYS     then Date.today.advance(:days => 6)
+    when :NEXT_MONTH      then Date.today.advance(:months => 1).end_of_month
+    when :NEXT_QUARTER    then Date.today.advance(:quarters => 1).end_of_quarter
+    when :NEXT_4_WEEKS    then Date.today.advance(:weeks => 4)
+    when :NEXT_3_MONTHS   then Date.today.advance(:months => 3).end_of_month
+    when :NEXT_90_DAYS    then Date.today.advance(:days => 89)
+    when :NEXT_YEAR       then Date.today.advance(:years => 1).end_of_year
+    when :NEXT_12_MONTHS  then Date.today.advance(:months => 12)
+
+
     else
       raise "Unrecognized period symbol: #{symbol}"
     end

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090201170116
+# Schema version: 20090221110740
 #
 # Table name: users
 #
@@ -15,12 +15,12 @@
 #  remember_token_expires_at                        :datetime      
 #  activation_code                                  :string(40)    
 #  activated_at                                     :datetime      
-#  active                                           :boolean       not null
 #  transaction_amount_limit_type_int                :integer       default(2), not null
 #  transaction_amount_limit_value                   :integer       
 #  include_transactions_from_subcategories          :boolean       not null
 #  multi_currency_balance_calculating_algorithm_int :integer       default(0), not null
 #  default_currency_id                              :integer       default(1), not null
+#  invert_saldo_for_income                          :boolean       default(TRUE), not null
 #
 
 quentin:

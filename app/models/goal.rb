@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090201170116
+# Schema version: 20090221110740
 #
 # Table name: goals
 #
@@ -13,12 +13,14 @@
 #  category_id                   :integer       not null
 #  created_at                    :datetime      
 #  updated_at                    :datetime      
+#  currency_id                   :integer       
 #
 
 #require 'hash_enums'
 class Goal < ActiveRecord::Base
   extend HashEnums
   belongs_to :category
+  belongs_to :currency
 
   #has_many :historical_goals
 
@@ -29,6 +31,25 @@ class Goal < ActiveRecord::Base
 
   validates_presence_of :description, :value
   validates_numericality_of :value
+
+
+  def goal_type_and_currency
+    if self.goal_type == :percent
+      'percent'
+    else
+      self.currency.long_symbol
+    end
+  end
+
+  def goal_type_and_currency=(val)
+    if val == 'percent'
+      self.goal_type = :percent
+      self.currency = nil
+    else
+      self.goal_type = :vaue
+      self.currency = Currency.find_by_long_symbol(val)
+    end
+  end
 
   
   #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal

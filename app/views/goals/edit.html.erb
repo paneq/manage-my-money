@@ -22,13 +22,21 @@
   <%= form.text_field :value, :size => 5 %>
 
   <!--'jednostka' (combo: %, waluty) [goal_type?]-->
-  <%= form.enum_select :goal_type%></p>
+  <%#= form.enum_select :goal_type-%>
+
+<%= form.select :goal_type_and_currency, @values_for_goal_type_and_currency %>
+
+</p>
 
   <!--okres (combo) [period_type]-->
   <p><%= form.label 'period_type', 'W okresie' %>
   <%= form.enum_select :period_type%> (tutaj podobne wartości jak przy tworzeniu raportu ale w przyszłości) </p>
   (do tego pola period start i period end dokładnie jak w raportach)
   (ale w takim razie jak zapisać raport który nie ma końca?)
+
+<%= date_period_fields("goal_day", Date.today, Date.today, 'selected') %>
+
+
 
   <p>Powtarzaj plan w następnych okresach?</p>
 

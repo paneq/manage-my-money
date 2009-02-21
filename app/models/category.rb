@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090201170116
+# Schema version: 20090221110740
 #
 # Table name: categories
 #
@@ -13,6 +13,9 @@
 #  rgt               :integer       
 #  import_guid       :string(255)   
 #  imported          :boolean       
+#  type              :string(255)   
+#  email             :string(255)   
+#  bankinfo          :text          
 #
 
    

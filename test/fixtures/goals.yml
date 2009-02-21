@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090201170116
+# Schema version: 20090221110740
 #
 # Table name: goals
 #
@@ -13,6 +13,7 @@
 #  category_id                   :integer       not null
 #  created_at                    :datetime      
 #  updated_at                    :datetime      
+#  currency_id                   :integer       
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
@@ -21,7 +22,7 @@ one:
   description: MyString
   include_subcategories: false
   period_type_int: 1
-  goal_type_int: 1
+  goal_type_int: 0
   goal_completion_condition_int: 1
   category_id: 3
 

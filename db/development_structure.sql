@@ -3,7 +3,7 @@ CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "nam
 CREATE TABLE "category_report_options" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "inclusion_type_int" integer DEFAULT 0 NOT NULL, "report_id" integer NOT NULL, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
 CREATE TABLE "currencies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "symbol" varchar(255) NOT NULL, "long_symbol" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "long_name" varchar(255) NOT NULL, "user_id" integer);
 CREATE TABLE "exchanges" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "currency_a" decimal(8,4) NOT NULL, "currency_b" decimal(8,4) NOT NULL, "left_to_right" float NOT NULL, "right_to_left" float NOT NULL, "day" date NOT NULL, "user_id" integer);
-CREATE TABLE "goals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255), "include_subcategories" boolean, "period_type_int" integer, "goal_type_int" integer, "goal_completion_condition_int" integer, "value" float, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime);
+CREATE TABLE "goals" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255), "include_subcategories" boolean, "period_type_int" integer, "goal_type_int" integer, "goal_completion_condition_int" integer, "value" float, "category_id" integer NOT NULL, "created_at" datetime, "updated_at" datetime, "currency_id" integer);
 CREATE TABLE "reports" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "type" varchar(255), "name" varchar(255) NOT NULL, "period_type_int" integer NOT NULL, "period_start" date, "period_end" date, "report_view_type_int" integer NOT NULL, "is_predefined" boolean DEFAULT 'f' NOT NULL, "user_id" integer, "created_at" datetime, "updated_at" datetime, "depth" integer DEFAULT 0, "max_categories_values_count" integer DEFAULT 0, "category_id" integer, "period_division_int" integer DEFAULT 5, "temporary" boolean DEFAULT 'f' NOT NULL, "relative_period" boolean DEFAULT 'f' NOT NULL);
 CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
 CREATE TABLE "sessions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "session_id" varchar(255), "data" text, "updated_at" datetime);
@@ -82,3 +82,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090216182617');
 INSERT INTO schema_migrations (version) VALUES ('20090219102055');
 
 INSERT INTO schema_migrations (version) VALUES ('20090219104138');
+
+INSERT INTO schema_migrations (version) VALUES ('20090221110740');

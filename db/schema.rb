@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090219104138) do
+ActiveRecord::Schema.define(:version => 20090221110740) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(:version => 20090219104138) do
     t.integer  "category_id",                   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "currency_id"
   end
 
   add_index "goals", ["category_id"], :name => "index_goals_on_category_id"

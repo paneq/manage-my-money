@@ -29,7 +29,7 @@ class GoalsController < ApplicationController
   # GET /goals/new.xml
   def new
     @goal = Goal.new
-
+    prepare_values_for_goal_type_and_currency
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @goal }
@@ -39,6 +39,7 @@ class GoalsController < ApplicationController
   # GET /goals/1/edit
   def edit
     @goal = Goal.find(params[:id])
+    prepare_values_for_goal_type_and_currency
   end
 
   # POST /goals
@@ -86,4 +87,13 @@ class GoalsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+
+  private
+
+  def prepare_values_for_goal_type_and_currency
+    @values_for_goal_type_and_currency = @current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.id]}
+    @values_for_goal_type_and_currency << ['Procent wartości z podkategorii','percent']
+  end
+
 end

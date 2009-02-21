@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090201170116
+# Schema version: 20090221110740
 #
 # Table name: currencies
 #
@@ -51,7 +51,9 @@ class Currency < ActiveRecord::Base
   belongs_to  :user
 
 
+
   has_many :transfer_items
+  has_many :goals
   before_destroy :check_for_transfer_items
 
   validates_presence_of :symbol, :long_symbol, :name, :long_name
