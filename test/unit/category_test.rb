@@ -156,6 +156,7 @@ class CategoryTest < Test::Unit::TestCase
   def test_saldo_calculate_with_exchanges_closest_to_transaction
     @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
     @rupert.save!
+    @rupert = User.find(@rupert.id) #Otherwise category.user.multi_currency_balance_calculating_algorithm = :show_all_currencies, WHY?
     income_category = @rupert.categories[0]
     outcome_category = @rupert.categories[1]
     value = 100
@@ -180,6 +181,7 @@ class CategoryTest < Test::Unit::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / second_exchange_rate , :right_to_left => second_exchange_rate , :day => 3.days.ago.to_date)
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
 
+    @rupert.exchanges(true)
     saldo = income_category.saldo_for_period_new(6.days.ago.to_date, 2.days.ago.to_date)
 
     assert_equal 1, saldo.currencies.size
@@ -190,6 +192,7 @@ class CategoryTest < Test::Unit::TestCase
   def test_saldo_calculate_with_newest_exchanges
     @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_newest_exchanges
     @rupert.save!
+    @rupert = User.find(@rupert.id) #Otherwise category.user.multi_currency_balance_calculating_algorithm = :show_all_currencies, WHY?
     income_category = @rupert.categories[0]
     outcome_category = @rupert.categories[1]
     value = 100

@@ -47,6 +47,12 @@ class Money
     return @hash.clone
   end
 
+  #alias ?
+  def add(money)
+    self + money
+  end
+
+
   def +(money)
     self.clone.add!(money)
   end
@@ -73,6 +79,12 @@ class Money
   # sub(value, currency)
   def -(money)
     self.clone.sub!(money)
+  end
+
+
+  #alias ?
+  def sub(money)
+    self - money
   end
 
 

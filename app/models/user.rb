@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
       raise "Unknown category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
       find(:first, :conditions => ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
     end
+
+    def people_loans
+      find(:all, :conditions => [" type = 'LoanCategory' "])
+    end
   end
 
 
