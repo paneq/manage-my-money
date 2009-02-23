@@ -147,9 +147,11 @@
                   <li><%= link_to 'Kategorie', categories_path, :id => 'kategorie-menu-link' %></li>
                   <li><%= link_to 'Transfery', transfers_path, :id => 'transfery-menu-link'  %></li>
                   <li><%= link_to 'Waluty', currencies_path, :id => 'waluty-menu-link'  %></li>
-                  <li><a href="">Kursy</a><!--<%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %>--></li>
+                  <li><a href="">Kursy</a><%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %></li>
                   <li><%= link_to 'Raporty', reports_path, :id => 'raporty-menu-link'  %></li>
                   <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
+                  <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
+                  <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
 
 
                   <br />
@@ -161,11 +163,15 @@
               </ul>
 
               <% if logged_in? %>
-                <p><b>Szybki dostęp:</b></p>
-                <ul class="submenu3">
-                  <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.categories %>
-                </ul>
-                <br />
+                <% cache("#{@current_user.id}-quick-categories") do %>
+
+                  <p><b>Szybki dostęp:</b></p>
+                  <ul class="submenu3">
+                    <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.categories %>
+                  </ul>
+                  <br />
+
+                <% end %>
               <% end %>
 
 

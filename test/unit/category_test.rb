@@ -281,7 +281,7 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_save_with_parent_category_in_valid_set
-    @parent = @rupert.categories.top_of_type(:ASSET)
+    @parent = @rupert.categories.top.of_type(:ASSET).first
     category = Category.new(
       :name => 'test',
       :description => 'test',
@@ -298,7 +298,7 @@ class CategoryTest < Test::Unit::TestCase
 
   
   def test_should_not_save_without_user
-    @parent = @rupert.categories.top_of_type(:ASSET)
+    @parent = @rupert.categories.top.of_type(:ASSET).first
     category = Category.new(
       :name => 'test',
       :description => 'test',
@@ -340,7 +340,7 @@ class CategoryTest < Test::Unit::TestCase
     #      |-test
     #         |-child1
     #         |-child2
-    parent = @rupert.categories.top_of_type(:ASSET)
+    parent = @rupert.categories.top.of_type(:ASSET).first
     category = Category.new(
       :name => 'test',
       :description => 'test',
@@ -371,9 +371,9 @@ class CategoryTest < Test::Unit::TestCase
     #      |-child2
 
     @rupert.categories(true).find_by_name('test').destroy
-    parent = @rupert.categories(true).top_of_type(:ASSET)
+    parent = @rupert.asset
     
-    assert_equal 7, @rupert.categories.size #5 top categories and 2 children of asset category
+    assert_equal 7, @rupert.categories(true).size #5 top categories and 2 children of asset category
     assert_equal 2, parent.children.count
     assert_equal parent.children[0], child1
     assert_equal parent.children[1], child2
@@ -388,7 +388,7 @@ class CategoryTest < Test::Unit::TestCase
 
 
   def test_moves_transfer_items_when_destroyed
-    parent = @rupert.categories.top_of_type(:ASSET)
+    parent = @rupert.asset
     category = Category.new(
       :name => 'test',
       :description => 'test',
@@ -439,7 +439,7 @@ class CategoryTest < Test::Unit::TestCase
     
 
     prepare_sample_catagory_tree_for_jarek
-    category1 = @jarek.categories.top_of_type(:INCOME)
+    category1 = @jarek.categories.top.of_type(:INCOME).first
     category2 = @jarek.categories.find_by_name "child1"
 
     save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
@@ -514,7 +514,7 @@ class CategoryTest < Test::Unit::TestCase
 
   def test_name_with_path
     prepare_sample_catagory_tree_for_jarek
-    category1 = @jarek.categories.top_of_type(:INCOME)
+    category1 = @jarek.income
     category2 = @jarek.categories.find_by_name 'child1'
 
     assert_equal 'Przychody', category1.name_with_path

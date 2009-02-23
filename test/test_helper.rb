@@ -253,7 +253,7 @@ class Test::Unit::TestCase
   end
 
   def prepare_sample_catagory_tree_for_jarek
-    parent1 = @jarek.categories.top_of_type(:ASSET)
+    parent1 = @jarek.asset
     category = Category.new(
       :name => 'test',
       :description => 'test',

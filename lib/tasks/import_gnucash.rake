@@ -141,7 +141,7 @@ namespace :import do
         #chyba ze sa tylko po jednej - wtedy je utozsamiamy bez zmiany nazwy?
       puts "\n==Merging top categories"
       [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE ].each do |category_type|
-        top = user.categories.top_of_type(category_type)
+        top = user.categories.top.of_type(category_type).find(:first)
         if top_categories[category_type].size > 1
           top_categories[category_type].each do |item|
             item.parent = top

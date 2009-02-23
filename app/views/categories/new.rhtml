@@ -1,6 +1,6 @@
 <h1>Dodaj nową kategorię</h1>
 <div id="category-edit">
-  <% form_for :category, :url => {:action => :create } do |form| %>
+  <% form_for @category do |form| %>
 
     <%= error_messages_for :category, :message => nil %>
 
@@ -8,8 +8,8 @@
     <p id="description"> Opis: <%= form.text_field :description %></p>
 
     <p id="parent">
-    Wybierz kategorię nadrzędną:
-    <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', (@parent.id if @parent)), :id => 'parent-select' %>
+      Wybierz kategorię nadrzędną:
+      <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', (@parent.id if @parent)), :id => 'parent-select' %>
     </p>
 
     <p id="balance">
@@ -18,6 +18,12 @@
       <span id="currency">
         <%= collection_select :category, :opening_balance_currency_id, @currencies, :id, :long_name, {}, :id =>'currency-select' %>
       </span>
+    </p>
+
+    <p id="loan">
+      <p id="is_loan">Dłużnik / Wierzyciel: <%= form.check_box :type, {}, 'LoanCategory', 'Category' %> </p>
+      <p id="email"> E-mail: <%= form.text_field :email %> </p>
+      <p id="bankinfo"> Informacje do przelewu: <%= form.text_field :bankinfo %></p>
     </p>
 
     <p id="create">

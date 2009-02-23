@@ -36,27 +36,34 @@ class Category < ActiveRecord::Base
 
   belongs_to :user
 
+  named_scope :top, :conditions => ['parent_id IS NULL']
+  named_scope :of_type, lambda { |type|
+    raise "Unknown category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
+    { :conditions => {:category_type_int => Category.CATEGORY_TYPES[type] }}
+  }
+
+
   has_many :transfer_items do
     def older_than(day)
-      find :all, 
+      find :all,
         :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
         :conditions =>['transfers.day > ?', day]
     end
     
     def older_or_equal(day)
-      find :all, 
+      find :all,
         :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
         :conditions =>['transfers.day >= ?', day]
     end
     
     def between_dates(start_date, end_date)
-      find :all, 
+      find :all,
         :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
         :conditions =>['transfers.day > ? AND transfers.day < ?', start_date, end_date]
     end
     
     def between_or_equal_dates(start_date, end_date)
-      find :all, 
+      find :all,
         :joins => 'INNER JOIN Transfers as transfers on transfer_items.transfer_id = transfers.id',
         :conditions =>['transfers.day >= ? AND transfers.day <= ?', start_date, end_date]
     end
@@ -187,7 +194,7 @@ class Category < ActiveRecord::Base
     children.to_a.each do |c|
       c.parent = self.parent
       c.save!
-    end 
+    end
 
     TransferItem.update_all("category_id = #{self.parent.id}", "category_id = #{self.id}")
 
@@ -209,7 +216,7 @@ class Category < ActiveRecord::Base
 
   def before_validation
     if self.description.nil? or self.description.empty?
-      self.description = " " #self.type.to_s + " " + self.name  
+      self.description = " " #self.type.to_s + " " + self.name
     end
   end
 
@@ -297,7 +304,7 @@ class Category < ActiveRecord::Base
 
 
   # Oblicza udzial wartosci podkategorii w kategorii
-  # 
+  #
   # Parametry:
   #  share_type to jedno z [:percentage, :value] do usuniecia - nie obliczaj procentow, zawsze podawaj wartosci
   #  max_values_count liczba największych wartości do uwzględnienia do uwzglednienia, pozostale podkategorie znajduja sie w wartosci 'pozostale'

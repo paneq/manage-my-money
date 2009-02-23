@@ -16,12 +16,12 @@ class TransferTest < Test::Unit::TestCase
 
     one = @transfer.transfer_items.find_by_description 'one'
     assert_equal 100, one.value
-    assert_equal @rupert.categories.top_of_type(:EXPENSE), one.category
+    assert_equal @rupert.expense, one.category
     assert_equal @rupert.default_currency, one.currency
 
     two = @transfer.transfer_items.find_by_description 'two'
     assert_equal(-100, two.value)
-    assert_equal @rupert.categories.top_of_type(:INCOME), two.category
+    assert_equal @rupert.income, two.category
     assert_equal @rupert.default_currency, two.currency
     
   end
@@ -35,13 +35,13 @@ class TransferTest < Test::Unit::TestCase
       @transfer.update_attributes! :existing_transfer_items_attributes => {
         one.id.to_s => {
           'description' => 'new',
-          'category' => @rupert.categories.top_of_type(:ASSET),
+          'category' => @rupert.asset,
           'value' => '200',
           :transfer_item_type => 'income'
         },
         two.id.to_s => {
           'description' => 'new',
-          'category' => @rupert.categories.top_of_type(:LOAN),
+          'category' => @rupert.loan,
           'value' => '-200'
         }
       }
@@ -52,12 +52,12 @@ class TransferTest < Test::Unit::TestCase
 
     assert_equal('new', one.description)
     assert_equal 200, one.value
-    assert_equal @rupert.categories.top_of_type(:ASSET), one.category
+    assert_equal @rupert.asset, one.category
     assert_equal @rupert.default_currency, one.currency
 
     assert_equal('new', two.description)
     assert_equal(-200, two.value)
-    assert_equal @rupert.categories.top_of_type(:LOAN), two.category
+    assert_equal @rupert.loan, two.category
     assert_equal @rupert.default_currency, two.currency
   end
 
@@ -66,7 +66,7 @@ class TransferTest < Test::Unit::TestCase
     transfer = make_simple_transfer #creates good transfer
     transfer.transfer_items[0].value += 10 #makes it bad
     assert !transfer.valid?, "Transfer with two different sum of income and outcome elements should not be valid"
-    assert_match /Wartość.*różna/, transfer.errors.on('base')
+    assert_match( /Wartość.*różna/, transfer.errors.on('base'))
 
     transfer.transfer_items = [transfer.transfer_items.first]
     assert !transfer.valid?, "Transfer should have at least 2 elements to be valid"
@@ -92,14 +92,14 @@ class TransferTest < Test::Unit::TestCase
       'one' => {
         :description => 'one',
         :value => '100',
-        :category => @rupert.categories.top_of_type(:EXPENSE),
+        :category => @rupert.expense,
         :currency => @rupert.default_currency
       },
       'two' => {
         :description => 'two',
         :value => '100',
         :transfer_item_type => 'outcome',
-        :category => @rupert.categories.top_of_type(:INCOME),
+        :category => @rupert.income,
         :currency => @rupert.default_currency
       }
     }

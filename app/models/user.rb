@@ -41,15 +41,6 @@ class User < ActiveRecord::Base
                                                               ]
 
   has_many :categories, :order => 'category_type_int, lft', :dependent => :delete_all do
-    def top
-      find(:all, :conditions => ['parent_id IS NULL'])
-    end
-
-    def top_of_type(type)
-      raise "Unknown category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
-      find(:first, :conditions => ['parent_id IS NULL AND category_type_int = ?', Category.CATEGORY_TYPES[type]])
-    end
-
     def people_loans
       find(:all, :conditions => [" type = 'LoanCategory' "])
     end
@@ -58,7 +49,7 @@ class User < ActiveRecord::Base
 
   Category.CATEGORY_TYPES.keys.each do |category_type|
     define_method(category_type.to_s.downcase.to_sym) do
-      self.categories.top_of_type(category_type)
+      self.categories.top.of_type(category_type).find(:first)
     end
   end
 

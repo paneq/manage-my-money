@@ -72,6 +72,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources     :flow_reports, :controller => 'reports'
   map.resources     :goals
 
+  map.debtors       '/debtors', :controller => 'debtors', :action => 'index'
+  map.creditors       '/creditors', :controller => 'creditors', :action => 'index'
+
 
   map.home          '/', :controller => 'sessions', :action => 'default'
 

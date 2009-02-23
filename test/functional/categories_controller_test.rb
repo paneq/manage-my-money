@@ -359,7 +359,7 @@ class CategoriesControllerTest < Test::Unit::TestCase
 
 
   def test_show_menu
-    get :show, :id => @rupert.categories.top_of_type(:EXPENSE)
+    get :show, :id => @rupert.categories.top.of_type(:EXPENSE).find(:first)
     assert_menu ['quick', 'full', 'search'], '/categories/search'
   end
   

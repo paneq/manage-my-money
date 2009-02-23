@@ -4,6 +4,8 @@ class CategoriesController < ApplicationController
   before_filter :login_required
   before_filter :check_perm, :only => [:show , :remove, :search]
 
+  cache_sweeper :category_sweeper
+
   # @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
 
@@ -74,7 +76,7 @@ class CategoriesController < ApplicationController
   def edit
     @category = self.current_user.categories.find(params[:id])
     @parent = @category.parent
-    @top = self.current_user.categories.top_of_type(@category.category_type)
+    @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
   end
 
    
@@ -89,7 +91,7 @@ class CategoriesController < ApplicationController
       redirect_to categories_url
     else
       @parent = @category.parent
-      @top = self.current_user.categories.top_of_type(@category.category_type)
+      @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
       flash[:notice] = 'Nie udało się zaktualizować kategorii.'
       render :action => 'edit'
     end

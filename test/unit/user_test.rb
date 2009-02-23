@@ -124,26 +124,26 @@ class UserTest < Test::Unit::TestCase
     save_rupert
     base_categories = @rupert.categories.clone
     @rupert.categories.each do |category|
-      assert_equal category, @rupert.categories.top_of_type(category.category_type)
+      assert_equal category, @rupert.categories.top.of_type(category.category_type).find(:first)
     end
 
-    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    @parent = @rupert.categories.top.of_type(:EXPENSE).find(:first)
     category = Category.new(:name => 'test', :description => 'test', :category_type => :EXPENSE, :user => @rupert, :parent => @parent)
     @rupert.categories << category
     @rupert.save!
 
     assert_equal 5, base_categories.size
     assert_equal 6, @rupert.categories.count
-    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top_of_type(:EXPENSE)
+    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top.of_type(:EXPENSE).find(:first)
 
-    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    @parent = @rupert.categories.top.of_type(:EXPENSE).find(:first)
     category = Category.new(:name => 'test2', :description => 'test2', :category_type => :EXPENSE, :user => @rupert, :parent => @parent)
     @rupert.categories << category
     @rupert.save!
 
     assert_equal 5, base_categories.size
     assert_equal 7, @rupert.categories.count
-    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top_of_type(:EXPENSE)
+    assert_equal base_categories.find{|c| c.category_type == :EXPENSE}, @rupert.categories.top.of_type(:EXPENSE).find(:first)
   end
 
 
@@ -153,7 +153,7 @@ class UserTest < Test::Unit::TestCase
 
     categories_ids = @rupert.categories.map {|c| c.id}
 
-    @parent = @rupert.categories.top_of_type(:EXPENSE)
+    @parent = @rupert.categories.top.of_type(:EXPENSE).find(:first)
     category = Category.new(:name => 'test', :description => 'test', :category_type => :EXPENSE, :user => @rupert)
     category.parent = @parent
     @rupert.categories << category
@@ -233,7 +233,7 @@ class UserTest < Test::Unit::TestCase
   def test_top_categories_method
     save_rupert
     Category.CATEGORY_TYPES.keys.each do |category_type|
-      assert_equal @rupert.categories.top_of_type(category_type), rupert.send(category_type.to_s.downcase)
+      assert_equal @rupert.categories.top.of_type(category_type).find(:first), rupert.send(category_type.to_s.downcase)
     end
   end
 

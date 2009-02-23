@@ -157,7 +157,7 @@ class TransfersControllerTest < Test::Unit::TestCase
   def test_quick_transfer
     today = Date.today
     transfers = []
-    @asset = @rupert.categories.top_of_type(:ASSET)
+    @asset = @rupert.categories.top.of_type(:ASSET).first
     save_simple_transfer(:description => 'future', :day => today.end_of_month.tomorrow, :income => @asset)
     transfers << save_simple_transfer(:description => 'this_month', :day => today, :income => @asset)
     save_simple_transfer(:description => 'past', :day => today.beginning_of_month.yesterday, :income => @asset)
@@ -172,7 +172,7 @@ class TransfersControllerTest < Test::Unit::TestCase
       'category_id' => @asset.id.to_s,
       'currency_id' => @rupert.default_currency.id.to_s,
       'value' => '123.45',
-      'from_category_id' => @rupert.categories.top_of_type(:INCOME).id.to_s,
+      'from_category_id' => @rupert.categories.top.of_type(:INCOME).first.id.to_s,
     }
     assert_response :success
     transfers << @rupert.transfers(true).find_by_description('test')
