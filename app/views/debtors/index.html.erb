@@ -14,11 +14,11 @@
       <% @debtors.each do |info| %>
         <% loan = info[:loan] %>
         <tr>
-          <td><%= check_box_tag "send-#{loan.id}", true, true %></td>
+          <td><%= check_box_tag "send-#{loan.id}", true, !loan.email.blank? %></td>
           <td><%= h loan.name %></td>
           <td><%= h loan.email %></td>
           <td><%= print_saldo(info[:money]) %></td>
-          <td><%= check_box_tag "include-transfers-#{id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
+          <td><%= check_box_tag "include-transfers-#{loan.id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
         </tr>
         <tr style="display: none;" <%= obj_id('transfer-items-list', loan) -%> >
           <td colspan="5" style="margin: 0 auto;">

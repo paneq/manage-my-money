@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE></TITLE>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </HEAD>
+  <BODY>
+    <h1><% h @subject %></h1>
+    <div>
+      Niniejsza wiadomość została wygenerowana przy użyciu serwisu co-do-grosza.pl . <br />
+      Użytkownik <%= h @user.login %> pragnie Ci przypomnieć o twoim aktualnym zadłużeniu, które wynosi:
+      <b>
+        <% @money.each do |cur, val| %>
+          <%= val %>
+          <%= cur.long_symbol %>,
+        <% end %>
+      </b>
+      <% unless @text.nil? %>
+        <div>
+          Użytkownik przesyła do Ciebie także następującą wiadomość:
+          <div>
+            <% @text.split("\n").each do |line| %>
+              <%= h line %><br />
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% unless @transfers.nil? %>
+      <div>
+        Poniżej znajdziesz historię ostatnich <% @transfers.size %> transferów, jakie użytkownik zapisał na powiązanej z Tobą kategorii.
+      </div>
+      <table style="width: 80%">
+        <tr>
+          <th>Dzień</th>
+          <th>Opis transferu</th>
+          <th>Opis elementu transferu</th>
+          <th>Kwota</th>
+          <th>Saldo</th>
+        </tr>
+        <% @transfers.each do |transfer_info| %>
+          <% transfer = transfer_info[:transfer] %>
+          <% saldo = transfer_info[:saldo] %>
+          <% transfer_items = transfer.transfer_items.select{|ti| ti.category_id == @loan.id} %>
+          <% transfer_items.each do |transfer_item| %>
+            <tr>
+              <td>
+                <%= transfer.day %>
+              </td>
+              <td>
+                <%= transfer.description %>
+              </td>
+              <td>
+                <%= transfer_item.description %>
+              </td>
+              <td>
+                <%= transfer_item.value %>
+                <%= @currencies.find{|c| c.id == transfer_item.currency_id}.long_symbol %>
+              </td>
+              <td>
+                <% if transfer_item == transfer_items.last %>
+                  <b>
+                    <% saldo.each do |cur, val| %>
+                      <%= val %>
+                      <%= cur.long_symbol %>,
+                    <% end %>
+                  </b>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+    <% end %>
+  </BODY>
+</HTML>

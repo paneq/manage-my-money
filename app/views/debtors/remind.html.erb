@@ -1,0 +1,28 @@
+<h1>Wysyłanie przypomnień - podusmowanie</h1>
+
+<div>
+  <% unless @sent.empty? %>
+    Wysłano przypomnienia dla: <br />
+    <ul>
+      <% @sent.each do |loan| %>
+        <li>
+          <b><%= h loan.name -%></b> -
+          <%= h loan.email -%>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<div>
+  <% unless @errors.empty? %>
+    Wystąpiły następujące błędy w czasie wysyłania wiadomości: <br />
+    <ul>
+      <% @errors.each do |error| %>
+        <li>
+          <%= error -%>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

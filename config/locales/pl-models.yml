@@ -26,6 +26,8 @@ pl:
               blank: nie może być pusta
             opening_balance:
               not_a_number: `{{value}}` nie jest prawidłową liczbą
+            email:
+              invalid: jest nieprawidłowy
         currency:
           attributes:
             symbol:

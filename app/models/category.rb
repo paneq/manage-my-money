@@ -102,6 +102,7 @@ class Category < ActiveRecord::Base
   validates_numericality_of :opening_balance, :allow_nil => true
   validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
   validate :type_validation
+  validates_format_of :email, :allow_nil => true, :allow_blank => true, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i #should be in LoanCategory but cannot be
 
   def <=>(category)
     name <=> category.name
