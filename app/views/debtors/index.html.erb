@@ -1,9 +1,9 @@
 <h1>Lista dłużników</h1>
 
 <% form_tag '/debtors/remind' do -%>
-  
+
   <div>
-    <table>
+    <table style="width: 100%">
       <tr>
         <th>Wybierz</th>
         <th>Dłużnik</th>
@@ -12,13 +12,51 @@
         <th>Dołącz listę transakcji</th>
       </tr>
       <% @debtors.each do |info| %>
-        <% id = info[:loan].id %>
+        <% loan = info[:loan] %>
         <tr>
-          <td><%= check_box_tag "send-#{id}", true, true %></td>
-          <td><%= h info[:loan].name %></td>
-          <td><%= h info[:loan].email %></td>
-          <td><%= print_saldo(info[:loan].current_saldo) %></td>
-          <td><%= check_box_tag "include-transfers-#{id}", true, true %> <a href="#">Pokaż listę </a></td>
+          <td><%= check_box_tag "send-#{loan.id}", true, true %></td>
+          <td><%= h loan.name %></td>
+          <td><%= h loan.email %></td>
+          <td><%= print_saldo(info[:money]) %></td>
+          <td><%= check_box_tag "include-transfers-#{id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
+        </tr>
+        <tr style="display: none;" <%= obj_id('transfer-items-list', loan) -%> >
+          <td colspan="5" style="margin: 0 auto;">
+            <table style="width: 80%">
+              <tr>
+                <th>Dzień</th>
+                <th>Opisa transferu</th>
+                <th>Opisa elementu transferu</th>
+                <th>Kwota</th>
+                <th>Saldo</th>
+              </tr>
+              <% info[:transfers].each do |transfer_info| %>
+                <% transfer = transfer_info[:transfer] %>
+                <% saldo = transfer_info[:saldo] %>
+                <% transfer_items = transfer.transfer_items.select{|ti| ti.category_id == loan.id} %>
+                <% transfer_items.each do |transfer_item| %>
+                  <tr>
+                    <td>
+                      <%= transfer.day %>
+                    </td>
+                    <td>
+                      <%= transfer.description %>
+                    </td>
+                    <td>
+                      <%= transfer_item.description %>
+                    </td>
+                    <td>
+                      <%= transfer_item.value %>
+                      <%= @currencies.find{|c| c.id == transfer_item.currency_id}.long_symbol %>
+                    </td>
+                    <td>
+                      <%=  print_saldo(saldo) if transfer_item == transfer_items.last %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </table>
+          </td>
         </tr>
       <% end %>
     </table>

@@ -451,16 +451,18 @@ class Category < ActiveRecord::Base
     end
 
     money = Money.new()
+    currencies = {}
 
     TransferItem.sum(:value, algorithm).each do |set|
       if set.class == Array
         # group by currency
         currency, value = set
-        currency = Currency.find_by_id(currency)
+        currencies[currency] ||= Currency.find_by_id(currency)
+        currency = currencies[currency]
         money.add!(value.round(2), currency)
       else
         # calculated to one value in default currency
-        money.add!(set.to_f.round(2), Currency.find_by_id(self.user.default_currency))
+        money.add!(set.to_f.round(2), self.user.default_currency)
       end
     end
 

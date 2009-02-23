@@ -97,24 +97,24 @@ class LoanCategoryTest < Test::Unit::TestCase
     end
 
     #recent_unbalanced should give back last 20 transfers
-    assert_equal transfers[5..24], loan.recent_unbalanced
+    assert_equal transfers[5..24], loan.recent_unbalanced.map{|info| info[:transfer]}
 
     #make saldo = 0
     save_simple_transfer(:income => @rupert.asset, :outcome => loan, :value => loan.current_saldo.value(@zloty), :day => counter.get.days.ago.to_date)
     assert loan.current_saldo.empty?
 
     #when saldo is 0 then no unbalanced transfers should be returned
-    assert_equal [], loan.recent_unbalanced
+    assert_equal [], loan.recent_unbalanced.map{|info| info[:transfer]}
 
     transfers = []
     3.times do
       transfers << save_simple_transfer(:income => @rupert.asset, :outcome => loan, :value => 100, :day => counter.get.days.ago.to_date)
-      assert_equal transfers, loan.recent_unbalanced
+      assert_equal transfers, loan.recent_unbalanced.map{|info| info[:transfer]}
     end
 
     3.times do
       transfers << save_simple_transfer(:outcome => @rupert.asset, :income => loan, :value => 10, :day => counter.get.days.ago.to_date)
-      assert_equal transfers, loan.recent_unbalanced
+      assert_equal transfers, loan.recent_unbalanced.map{|info| info[:transfer]}
     end
   end
 

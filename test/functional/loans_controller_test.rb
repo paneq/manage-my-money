@@ -37,7 +37,7 @@ class LoansControllerTest < ActionController::TestCase
     save_simple_transfer(:outcome => rupert.asset, :income => rupert.loan.children.last)
 
     get :test
-    assert_equal [{:loan => rupert.loan.children.first, :money => Money.new(debtor_transfer_item.currency => debtor_transfer_item.value), :transfers => [debtor_transfer]}], assigns(:debtors)
+    assert_equal [{:loan => rupert.loan.children.first, :money => Money.new(debtor_transfer_item.currency => debtor_transfer_item.value), :transfers => [{:transfer => debtor_transfer, :saldo => Money.new(@zloty => debtor_transfer_item.value) }]}], assigns(:debtors)
     assert_not_nil assigns(:creditors)
   end
 end

@@ -30,7 +30,7 @@ class LoanCategory < Category
   
     while(!saldo.empty? && number < size)
       transfer = twenty[number]
-      transfers << transfer
+      transfers << {:transfer => transfer, :saldo => saldo.clone}
       items = transfer.transfer_items.select{|ti| ti.category_id == self.id }
       items.each do |item|
         currencies[item.currency_id] ||= Currency.find(item.currency_id)

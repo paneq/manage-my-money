@@ -12,11 +12,12 @@ class LoansController < ApplicationController
 
 
   def find_loans_with_transfers_and_saldo
+    @currencies = Currency.for_user(self.current_user).to_a
     @loans = []
-    @creditors = [] #table of hashes {:loan => category, :money => Money, :transfers => [t1,t2,t3...]}
+    @creditors = [] #table of hashes {:loan => category, :money => Money, :transfers => [ {:transfer => t, :saldo => Money}...]}
     @debtors = []
 
-    self.current_user.categories.people_loans.each do |loan|
+    @current_user.categories.people_loans.each do |loan|
       saldo = loan.current_saldo(:default)
       next if saldo.empty?
       credit = saldo.negative
