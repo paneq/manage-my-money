@@ -1,6 +1,6 @@
 class AddTemporaryOptionForReport < ActiveRecord::Migration
   def self.up
-    add_column :reports, :temporary, :boolean, :null => false, :default => :false
+    add_column :reports, :temporary, :boolean, :null => false, :default => '0'
   end
 
   def self.down

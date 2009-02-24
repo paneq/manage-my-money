@@ -1,24 +1,39 @@
 # Install the MySQL driver:
 #   gem install mysql
+<% require 'socket' %>
+<% machine_name = Socket.gethostname %>
 
 development:
+<% if machine_name == "puchatek" %>
+   adapter: postgresql
+   database: money_development
+   host: localhost
+   username: postgres
+   password:
+<% else %>
   adapter: sqlite3
   database: db/development.sqlite3
   host: localhost
+<% end %>
 
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
 
 test:
-<% require 'socket' %>
-<% machine_name = Socket.gethostname %>
-<% if machine_name == "stallman.rootnode.net" %>
+
+<% case machine_name; when "stallman.rootnode.net" then %>
   adapter: mysql
   database: rupert_3mt
   host: mysql.rootnode.net
   username: rupert_3mt
   password: FUmvAywRkVe2a
+<% when "puchatek" then %>
+  adapter: postgresql
+  database: money_test
+  host: localhost
+  username: postgres
+  password:
 <% else %>
   adapter: sqlite3
   database: db/test.sqlite3

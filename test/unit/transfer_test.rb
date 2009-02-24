@@ -47,8 +47,8 @@ class TransferTest < Test::Unit::TestCase
       }
     end
 
-    one = @transfer.transfer_items(true).first
-    two = @transfer.transfer_items(true).second
+    one = @transfer.transfer_items(true).find_by_id(one.id)
+    two = @transfer.transfer_items(true).find_by_id(two.id)
 
     assert_equal('new', one.description)
     assert_equal 200, one.value

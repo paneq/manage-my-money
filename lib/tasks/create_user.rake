@@ -8,9 +8,18 @@ namespace :user do
       u.login = 'admin'
       u.password = u.password_confirmation = '123456'
       u.email = 'admin@admin.com'
-      #u.active = true
       u.save!
       u.activate!
     end
+  end
+
+  desc "Create user with given name"
+  task :create => :environment do
+    u = User.new
+    u.login = ENV['user'] || ENV['login'] || ENV['name']
+    u.password = u.password_confirmation = '123456'
+    u.email = "#{u.login}@example.org"
+    u.save!
+    u.activate!
   end
 end

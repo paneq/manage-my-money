@@ -268,14 +268,28 @@ class Category < ActiveRecord::Base
     categories = get_categories_id(with_subcategories)
     transfers = Transfer.find(
       :all,
-      :select =>      'transfers.*, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
+      :select =>      'transfers.id, min(transfers.day) as mday, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
       :joins =>       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
       :group =>       'transfers.id, transfer_items.currency_id',
       :conditions =>  ['transfer_items.category_id IN (?) AND transfers.day >= ? AND transfers.day <= ?', categories, start_day, end_day],
-      :order =>       'transfers.day, transfers.id, transfer_items.currency_id')
-    
+      :order =>       'mday, transfers.id, transfer_items.currency_id')
+
+    transfers_full = Transfer.find(:all, :conditions => ['id IN (?)', transfers.map{|t| t.id}])
+    array = []
+    attributes = %w(value_for_currency currency_id)
+    transfers.each do |t|
+      new = transfers_full.find{|f| f.id == t.id}
+      clonned = new.clone
+      clonned.id = new.id
+      attributes.each do |atr|
+        clonned.write_attribute(atr, t.read_attribute(atr))
+      end
+      array << clonned
+    end
+    transfers = array
+
     list = []
-    last_transfer = :default
+    last_transfer = nil
     for t in transfers do
 
       value = t.read_attribute('value_for_currency').to_f.round(2)
@@ -287,7 +301,7 @@ class Category < ActiveRecord::Base
 
       currency = Currency.find(t.read_attribute('currency_id'))
 
-      if last_transfer != t
+      if last_transfer.nil? || last_transfer.id != t.id
         list << {:transfer => t, :money => Money.new()}
       end
       list.last[:money].add!(value, currency)
@@ -408,24 +422,38 @@ class Category < ActiveRecord::Base
     categories.collect! { |cat| cat.id }
     flow_categories = Category.find(
       :all,
-      :select =>      'categories.*,
+      :select =>      'categories.id,
                        ti2.value >=0 as income,
                        ti2.currency_id,
                        sum(abs(ti2.value)) as sum_value',
       :from => 'transfers as t',
       :joins =>       
-                      'INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id
+        'INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id
                        INNER JOIN categories on ti2.category_id = categories.id',
                        
-      :group =>       'ti2.category_id,
+      :group =>       'categories.id,
                        ti2.currency_id,
                        ti2.value >= 0',
       :conditions =>  ['ti2.category_id not in (?)
                         AND t.day >= ?
                         AND t.day <= ?
                         AND t.id IN (SELECT DISTINCT tt.id FROM transfers as tt INNER JOIN transfer_items as ti1 ON ti1.transfer_id = tt.id WHERE ti1.category_id in (?) )',
-        categories, period_start, period_end, categories],
-      :order =>       'categories.category_type_int, categories.lft')
+        categories, period_start, period_end, categories]
+    )
+    newf = Category.find(:all, :conditions => ['id IN (?)', flow_categories.map{|c| c.id}.uniq], :order => 'category_type_int, lft')
+    array = []
+    attributes = ['income', 'sum_value', 'currency_id']
+    flow_categories.each do |c|
+      new = newf.find { |f| f.id == c.id }
+      xyz = new.clone
+      xyz.id = new.id
+      attributes.each do |atr|
+        xyz.write_attribute(atr, c.read_attribute(atr))
+      end
+      array << xyz
+    end
+    flow_categories = array.sort{|a,b| [a.category_type_int, a.lft] <=>[b.category_type_int, b.lft]}
+
 
     flow_categories.map! do |cat|
       cur = Currency.find(cat.read_attribute('currency_id'))
@@ -436,7 +464,7 @@ class Category < ActiveRecord::Base
       }
     end
 
-    cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == '0'}
+    cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == 'f'}
 
     {:out => cash_out, :in => cash_in}
   end
@@ -506,9 +534,9 @@ class Category < ActiveRecord::Base
             (
               SELECT Id FROM exchanges as e WHERE
                 (
-                abs( julianday(t.day) - julianday(e.day) ) =
+                abs( t.day - e.day ) =
                   (
-                  SELECT min( abs( julianday(t.day) - julianday(e2.day) ) ) FROM exchanges as e2 WHERE
+                  SELECT min( abs( t.day - e2.day ) ) FROM exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
@@ -550,9 +578,9 @@ class Category < ActiveRecord::Base
             (
               SELECT Id FROM Exchanges as e WHERE
                 (
-                abs( julianday('now', 'start of day') - julianday(e.day) ) =
+                abs( current_date - e.day ) =
                   (
-                  SELECT min( abs( julianday('now', 'start of day') - julianday(e2.day) ) ) FROM Exchanges as e2 WHERE
+                  SELECT min( abs( current_date - e2.day ) ) FROM Exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))

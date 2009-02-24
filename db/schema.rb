@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(:version => 20090221110740) do
     t.text    "bankinfo"
   end
 
-  add_index "categories", ["id", "user_id", "category_type_int"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
+  add_index "categories", ["category_type_int", "id", "user_id"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
   add_index "categories", ["lft", "rgt"], :name => "index_categories_on_lft_and_rgt"
   add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
 
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(:version => 20090221110740) do
     t.datetime "updated_at"
   end
 
-  add_index "category_report_options", ["report_id", "category_id"], :name => "index_category_report_options_on_report_id_and_category_id"
+  add_index "category_report_options", ["category_id", "report_id"], :name => "index_category_report_options_on_report_id_and_category_id"
 
   create_table "currencies", :force => true do |t|
     t.string  "symbol",      :null => false
