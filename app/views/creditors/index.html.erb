@@ -1,2 +1,68 @@
-<h1>CreditorsController#index</h1>
-<p>Find me in app/views/creditors_controller/index.html.erb</p>
+<h1>Lista wierzycieli</h1>
+
+<div>
+  <table style="width: 100%">
+    <tr>
+      <th>Wierzyciel</th>
+      <th>Informacje bankowe</th>
+      <th>Kwota</th>
+      <th>Lista transakcji</th>
+      <th>Zapłacono</th>
+    </tr>
+    <% @creditors.each do |info| %>
+      <% loan = info[:loan] %>
+      <tr>
+        <td><%= h loan.name %></td>
+        <td><%= h loan.bankinfo %></td>
+        <td><%= print_saldo(info[:money]) %></td>
+        <td><%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj') -%></td>
+        <td>
+          <% form_tag '/creditors/pay' do %>
+            <%= hidden_field_tag :creditor, loan.id %>
+            <%= select_tag :payer, options_from_collection_for_select(@categories.clone.delete_if{|a,b| a == loan.id}, :first, :second)%>
+            <%= submit_tag 'Spłać' %>
+          <% end %>
+        </td>
+      </tr>
+      <tr style="display: none;" <%= obj_id('transfer-items-list', loan) -%> >
+        <td colspan="5" style="margin: 0 auto;">
+          <table style="width: 80%">
+            <tr>
+              <th>Dzień</th>
+              <th>Opisa transferu</th>
+              <th>Opisa elementu transferu</th>
+              <th>Kwota</th>
+              <th>Saldo</th>
+            </tr>
+            <% info[:transfers].each do |transfer_info| %>
+              <% transfer = transfer_info[:transfer] %>
+              <% saldo = transfer_info[:saldo] %>
+              <% transfer_items = transfer.transfer_items.select{|ti| ti.category_id == loan.id} %>
+              <% transfer_items.each do |transfer_item| %>
+                <tr>
+                  <td>
+                    <%= transfer.day %>
+                  </td>
+                  <td>
+                    <%= transfer.description %>
+                  </td>
+                  <td>
+                    <%= transfer_item.description %>
+                  </td>
+                  <td>
+                    <%= transfer_item.value %>
+                    <%= @currencies.find{|c| c.id == transfer_item.currency_id}.long_symbol %>
+                  </td>
+                  <td>
+                    <%=  print_saldo(saldo) if transfer_item == transfer_items.last %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </table>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+

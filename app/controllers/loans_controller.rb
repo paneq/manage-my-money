@@ -20,7 +20,7 @@ class LoansController < ApplicationController
     @current_user.categories.people_loans.each do |loan|
       saldo = loan.current_saldo(:default)
       next if saldo.empty?
-      credit = saldo.negative
+      credit = Money.new - saldo.negative
       debet = saldo.positive
       @loans << loan
       transfers = loan.recent_unbalanced
