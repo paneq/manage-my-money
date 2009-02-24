@@ -412,17 +412,19 @@ class Category < ActiveRecord::Base
                        ti2.value >=0 as income,
                        ti2.currency_id,
                        sum(abs(ti2.value)) as sum_value',
-      :joins =>       'INNER JOIN transfers t on categories.id = ti2.category_id
-                       INNER JOIN transfer_items ti on ti.transfer_id = t.id
-                       INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id',
+      :from => 'transfers as t',
+      :joins =>       
+                      'INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id
+                       INNER JOIN categories on ti2.category_id = categories.id',
+                       
       :group =>       'ti2.category_id,
                        ti2.currency_id,
                        ti2.value >= 0',
-      :conditions =>  ['ti.category_id in (?)
-                        and ti2.category_id not in (?)
+      :conditions =>  ['ti2.category_id not in (?)
                         AND t.day >= ?
-                        AND t.day <= ?',
-        categories, categories, period_start, period_end],
+                        AND t.day <= ?
+                        AND t.id IN (SELECT DISTINCT tt.id FROM transfers as tt INNER JOIN transfer_items as ti1 ON ti1.transfer_id = tt.id WHERE ti1.category_id in (?) )',
+        categories, period_start, period_end, categories],
       :order =>       'categories.category_type_int, categories.lft')
 
     flow_categories.map! do |cat|
