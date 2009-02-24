@@ -28,7 +28,7 @@ test:
   host: mysql.rootnode.net
   username: rupert_3mt
   password: FUmvAywRkVe2a
-<% when "puchatek" then %>
+<% when "puchatek", "arachno" then %>
   adapter: postgresql
   database: money_test
   host: localhost
