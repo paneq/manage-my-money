@@ -226,5 +226,144 @@ class DateExtensionsTest < Test::Unit::TestCase
   end
 
 
+  #this test doesnt test model, but rather method in test helper;)
+  #its really important !
+  def test_forced_date_and_time
+    forced_date = '03.01.2001'
+
+    with_dates(forced_date) do
+      assert_equal forced_date.to_date, Date.today
+      assert_equal forced_date.to_time, Time.now
+      assert_equal '02.01.2001'.to_date, Date.yesterday
+      assert_equal '01.01.2001'.to_time, 2.days.ago
+    end
+
+    assert_not_equal forced_date.to_date, Date.today
+    assert_not_equal forced_date.to_time, Time.now
+    assert_not_equal '02.01.2001'.to_date, Date.yesterday
+    assert_not_equal '01.01.2001'.to_time, 2.days.ago
+  end
+
+  def test_calculate
+
+    forced_date = '16.07.2008' #sroda, 3 tydzień lipca, III kwartał, 29 tydzień 2008
+
+    with_dates(forced_date) do
+      assert_actual_periods
+      assert_past_periods
+      assert_future_periods
+    end
+  end
+
+
+  private
+  def assert_actual_periods
+    range = Date.calculate :THIS_DAY
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '16.07.2008'.to_date, range.end
+
+    range = Date.calculate :THIS_WEEK
+    assert_equal '14.07.2008'.to_date, range.begin
+    assert_equal '20.07.2008'.to_date, range.end
+
+    range = Date.calculate :THIS_MONTH
+    assert_equal '01.07.2008'.to_date, range.begin
+    assert_equal '31.07.2008'.to_date, range.end
+
+    range = Date.calculate :THIS_QUARTER
+    assert_equal '01.07.2008'.to_date, range.begin
+    assert_equal '30.09.2008'.to_date, range.end
+
+    range = Date.calculate :THIS_YEAR
+    assert_equal '01.01.2008'.to_date, range.begin
+    assert_equal '31.12.2008'.to_date, range.end
+  end
+
+  def assert_past_periods
+
+    range = Date.calculate :LAST_DAY
+    assert_equal '15.07.2008'.to_date, range.begin
+    assert_equal '15.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_WEEK
+    assert_equal '07.07.2008'.to_date, range.begin
+    assert_equal '13.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_7_DAYS
+    assert_equal '10.07.2008'.to_date, range.begin
+    assert_equal '16.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_MONTH
+    assert_equal '01.06.2008'.to_date, range.begin
+    assert_equal '30.06.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_4_WEEKS
+    assert_equal '23.06.2008'.to_date, range.begin
+    assert_equal '16.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_QUARTER
+    assert_equal '01.04.2008'.to_date, range.begin
+    assert_equal '30.06.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_3_MONTHS
+    assert_equal '01.05.2008'.to_date, range.begin
+    assert_equal '31.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_90_DAYS
+    assert_equal '18.04.2008'.to_date, range.begin
+    assert_equal '16.07.2008'.to_date, range.end
+
+    range = Date.calculate :LAST_YEAR
+    assert_equal '01.01.2007'.to_date, range.begin
+    assert_equal '31.12.2007'.to_date, range.end
+
+    range = Date.calculate :LAST_12_MONTHS
+    assert_equal '01.08.2007'.to_date, range.begin
+    assert_equal '31.07.2008'.to_date, range.end
+  end
+
+  def assert_future_periods
+    range = Date.calculate :NEXT_DAY
+    assert_equal '17.07.2008'.to_date, range.begin
+    assert_equal '17.07.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_WEEK
+    assert_equal '21.07.2008'.to_date, range.begin
+    assert_equal '27.07.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_7_DAYS
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '22.07.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_MONTH
+    assert_equal '01.08.2008'.to_date, range.begin
+    assert_equal '31.08.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_4_WEEKS
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '13.08.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_QUARTER
+    assert_equal '01.10.2008'.to_date, range.begin
+    assert_equal '31.12.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_3_MONTHS
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '31.10.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_90_DAYS
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '13.10.2008'.to_date, range.end
+
+    range = Date.calculate :NEXT_YEAR
+    assert_equal '01.01.2009'.to_date, range.begin
+    assert_equal '31.12.2009'.to_date, range.end
+
+    range = Date.calculate :NEXT_12_MONTHS
+    assert_equal '16.07.2008'.to_date, range.begin
+    assert_equal '16.07.2009'.to_date, range.end
+  end
+
+
 
 end

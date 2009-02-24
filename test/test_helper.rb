@@ -7,6 +7,36 @@ require 'test_help'
 TEST_ON_STALLMAN = false
 TEST_ON_STALLMAN = true if Socket.gethostname == "stallman.rootnode.net"
 
+# Code for manipulating actual time in tests (from http://www.ruby-forum.com/topic/114087#267920)
+class Date
+  @@forced_today = nil
+  class << self
+    alias :unforced_today :today
+    def today
+      return @@forced_today ? @@forced_today : unforced_today
+    end
+    def forced_today=(now)
+      @@forced_today = now
+    end
+  end
+end unless Date.method_exists? :forced_today=
+
+class Time
+  @@forced_now = nil
+  class << self
+    alias :unforced_now :now
+    def now
+      return @@forced_now ? @@forced_now : unforced_now
+    end
+    def forced_now=(now)
+      @@forced_now = now
+    end
+  end
+end unless Time.method_exists? :forced_now=
+#end of actual date manipulation code
+
+
+
 class Test::Unit::TestCase
   include AuthenticatedTestHelper
   # Transactional fixtures accelerate your tests by wrapping each test method
@@ -368,5 +398,34 @@ class Test::Unit::TestCase
       @verification_errors << $!
     end
   end
+
+  
+  # Code for manipulating actual time in tests (from http://www.ruby-forum.com/topic/114087#267920)
+  def with_dates(*dates, &block)
+    dates.flatten.each do |date|
+      begin
+        Time.forced_now = case date
+        when String then DateTime.parse(date)
+        when Time then DateTime.parse(date.to_s)
+        else
+          date
+        end
+        Date.forced_today = Date.new(Time.now.year,
+                                     Time.now.month,
+                                     Time.now.day)
+        yield
+      rescue Exception => e
+        raise e
+      ensure
+        Time.forced_now = nil
+        Date.forced_today = nil
+      end
+    end
+  end
+
+  # end of Date maniputaion code
+
+
+
 
 end
