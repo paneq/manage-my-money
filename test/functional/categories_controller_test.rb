@@ -4,12 +4,9 @@ require 'categories_controller'
 # Re-raise errors caught by the controller.
 class CategoriesController; def rescue_action(e) raise e end; end
 
-class CategoriesControllerTest < Test::Unit::TestCase
+class CategoriesControllerTest < ActionController::TestCase
 
   def setup
-    @controller = CategoriesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
 
     save_currencies
     save_rupert

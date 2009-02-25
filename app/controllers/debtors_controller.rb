@@ -5,6 +5,12 @@ class DebtorsController < LoansController
   #he/she owes you money
   def index
     find_loans_with_transfers_and_saldo
+    if @debtors.empty? #no debtors
+      @possible = @current_user.categories.of_type(:LOAN) #categories that can become LoanCategory
+      @possible.delete_at(0) # remove top category
+      @possible -= @people_loans
+      render :action => :empty_index
+    end
   end
 
   #send reminds for people

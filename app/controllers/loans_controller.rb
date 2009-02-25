@@ -17,7 +17,8 @@ class LoansController < ApplicationController
     @creditors = [] #table of hashes {:loan => category, :money => Money, :transfers => [ {:transfer => t, :saldo => Money}...]}
     @debtors = []
 
-    @current_user.categories.people_loans.each do |loan|
+    @people_loans = @current_user.categories.people_loans
+    @people_loans.each do |loan|
       saldo = loan.current_saldo(:default)
       next if saldo.empty?
       credit = Money.new - saldo.negative

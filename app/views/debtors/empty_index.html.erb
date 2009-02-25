@@ -1,0 +1,27 @@
+<h1>Lista dłużników</h1>
+
+<div id="debtors_list">
+
+  <% if @people_loans.empty? %>
+    Twoja lista dłużników i wierzycieli jest pusta. <br />
+    <% if @possible.empty? %>
+      <% top = @current_user.categories.top.of_type(:LOAN).first %>
+      <%= link_to "Dodaj nowe osoby lub instytucje jako podkategorie do kategorii #{top.name}", new_category_path(:parent_category_id => top.id) %>
+    <% else %>
+      W celu obsługi dłużników i wierzycieli zaznacz w ustawieniach kategorii odpowiednią opcję.<br />
+      Możesz to uczynić dla następujących kategorii.<br />
+      <ul id="possible">
+        <% @possible.each do |category| %>
+          <% content_tag_for :li, category do %>
+            <%= h category.name %>
+            <%= link_to 'Edytuj', edit_category_path(category) %> |
+            <%= link_to 'Pokaż', category_path(category) %>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  <% else %>
+    Nikt nie jest Ci nic dłużny :-)
+  <% end %>
+
+</div>
