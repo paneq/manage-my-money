@@ -1,0 +1,7 @@
+author: Scott Patten
+summary: A Capistrano 2.0 extension that runs your tests before the final symlink
+homepage: http://spattendesign.com/2007/10/19/running-tests-on-deploy
+plugin: svn://svn.spattendesign.com/svn/plugins/run_tests_on_deploy
+license: MIT
+rails_version: 1.1.2+
+capistrano_version: 2.0.0+
