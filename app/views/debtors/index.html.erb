@@ -2,23 +2,27 @@
 
 <% form_tag '/debtors/remind' do -%>
 
-  <div>
+  <div id="debtors_list">
     <table style="width: 100%">
       <tr>
-        <th>Wybierz</th>
+
         <th>Dłużnik</th>
         <th>E-mail</th>
         <th>Kwota</th>
+        <th>Wyślij przypomnienie</th>
         <th>Dołącz listę transakcji</th>
+
       </tr>
       <% @debtors.each do |info| %>
         <% loan = info[:loan] %>
-        <tr>
-          <td><%= check_box_tag "send-#{loan.id}", true, !loan.email.blank? %></td>
-          <td><%= link_to loan.name, category_path(loan) %></td>
-          <td><%= h loan.email %></td>
-          <td><%= print_saldo(info[:money]) %></td>
-          <td><%= check_box_tag "include-transfers-#{loan.id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
+        <tr <%= obj_id('loan', loan) -%> >
+          
+          <td id="name"><%= link_to loan.name, category_path(loan) %></td>
+          <td id="email"><%= h loan.email %></td>
+          <td id="saldo"><%= print_saldo(info[:money]) %></td>
+          <td id="send"><%= check_box_tag "send-#{loan.id}", true, !loan.email.blank? %></td>
+          <td id="include"><%= check_box_tag "include-transfers-#{loan.id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
+
         </tr>
         <tr style="display: none;" <%= obj_id('transfer-items-list', loan) -%> >
           <td colspan="5" style="margin: 0 auto;">
@@ -35,7 +39,7 @@
                 <% saldo = transfer_info[:saldo] %>
                 <% transfer_items = transfer.transfer_items.select{|ti| ti.category_id == loan.id} %>
                 <% transfer_items.each do |transfer_item| %>
-                  <tr>
+                  <tr <%= obj_id('item', transfer_item) -%> >
                     <td>
                       <%= transfer.day %>
                     </td>
