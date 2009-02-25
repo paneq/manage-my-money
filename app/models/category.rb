@@ -290,6 +290,7 @@ class Category < ActiveRecord::Base
 
     list = []
     last_transfer = nil
+    currencies = {}
     for t in transfers do
 
       value = t.read_attribute('value_for_currency').to_f.round(2)
@@ -298,8 +299,9 @@ class Category < ActiveRecord::Base
         value = -value
       end
 
-
-      currency = Currency.find(t.read_attribute('currency_id'))
+      cur_id = t.read_attribute('currency_id')
+      currencies[cur_id] ||= Currency.find(cur_id)
+      currency = currencies[cur_id]
 
       if last_transfer.nil? || last_transfer.id != t.id
         list << {:transfer => t, :money => Money.new()}
@@ -455,8 +457,11 @@ class Category < ActiveRecord::Base
     flow_categories = array.sort{|a,b| [a.category_type_int, a.lft] <=>[b.category_type_int, b.lft]}
 
 
+    currencies = {}
     flow_categories.map! do |cat|
-      cur = Currency.find(cat.read_attribute('currency_id'))
+      cur_id = cat.read_attribute('currency_id')
+      currencies[cur_id] ||= Currency.find(cur_id)
+      cur = currencies[cur_id]
       {
         :category => cat,
         :currency => cur,
