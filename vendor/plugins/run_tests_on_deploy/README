@@ -1,5 +1,0 @@
-run_tests_on_deploy is a Capistrano 2.0 extension that runs all of your tests before the final symlink is made.
-
-Installation and usage instructions are in doc/index.html.
-
-Scott Patten
