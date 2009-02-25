@@ -1,0 +1,2 @@
+class InteligoController < ApplicationController
+end

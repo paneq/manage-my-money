@@ -1,0 +1,2 @@
+class GnucashController < ApplicationController
+end

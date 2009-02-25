@@ -39,7 +39,7 @@ ActionController::Routing::Routes.draw do |map|
   {
     :collection => {
       :search => :post
-      }
+    }
   }
   map.resources     :loan_categories, :controller => 'categories'
     
@@ -74,6 +74,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.debtors       '/debtors', :controller => 'debtors', :action => 'index'
   map.creditors       '/creditors', :controller => 'creditors', :action => 'index'
+  map.import        '/import', :controller => 'import', :action => 'import'
 
 
   map.home          '/', :controller => 'sessions', :action => 'default'

@@ -90,4 +90,10 @@ class DebtorsControllerTest < ActionController::TestCase
 
   end
 
+
+  def test_remind
+  
+  end
+
+
 end

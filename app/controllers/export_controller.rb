@@ -1,0 +1,2 @@
+class ExportController < CooperationController
+end

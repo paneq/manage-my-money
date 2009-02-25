@@ -1,0 +1,17 @@
+<div>
+
+  <% form_tag('/import/parse', :multipart => true) do  %>
+
+    Wybierz kategorię do której chcesz zaimportować transfery:
+    <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name_with_indentation, @category.id) %>
+
+    <br />
+
+    Wybierz plik do wysłania: <%= file_field_tag "file"  %><br/>
+
+    <%= submit_tag("Wyślij plik") %>
+
+  <% end %>
+
+
+</div>
