@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090221110740
+# Schema version: 20090226180602
 #
 # Table name: goals
 #
@@ -7,8 +7,8 @@
 #  description                   :string(255)   
 #  include_subcategories         :boolean       
 #  period_type_int               :integer       
-#  goal_type_int                 :integer       
-#  goal_completion_condition_int :integer       
+#  goal_type_int                 :integer       default(0)
+#  goal_completion_condition_int :integer       default(0)
 #  value                         :float         
 #  category_id                   :integer       not null
 #  created_at                    :datetime      

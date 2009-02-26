@@ -85,7 +85,6 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -118,7 +117,6 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -207,8 +205,8 @@ CREATE TABLE goals (
     description character varying(255),
     include_subcategories boolean,
     period_type_int integer,
-    goal_type_int integer,
-    goal_completion_condition_int integer,
+    goal_type_int integer DEFAULT 0,
+    goal_completion_condition_int integer DEFAULT 0,
     value double precision,
     category_id integer NOT NULL,
     created_at timestamp without time zone,
@@ -222,7 +220,6 @@ CREATE TABLE goals (
 --
 
 CREATE SEQUENCE goals_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -266,7 +263,6 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -340,7 +336,6 @@ CREATE TABLE transfer_items (
 --
 
 CREATE SEQUENCE transfer_items_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -372,7 +367,6 @@ CREATE TABLE transfers (
 --
 
 CREATE SEQUENCE transfers_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -417,7 +411,6 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -812,3 +805,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090219102055');
 INSERT INTO schema_migrations (version) VALUES ('20090219104138');
 
 INSERT INTO schema_migrations (version) VALUES ('20090221110740');
+
+INSERT INTO schema_migrations (version) VALUES ('20090226180602');

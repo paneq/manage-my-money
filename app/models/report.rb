@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090221110740
+# Schema version: 20090226180602
 #
 # Table name: reports
 #

@@ -53,6 +53,7 @@ class GoalsController < ApplicationController
         format.html { redirect_to(:action => :index) }
         format.xml  { render :xml => @goal, :status => :created, :location => @goal }
       else
+        prepare_values_for_goal_type_and_currency
         format.html { render :action => "new" }
         format.xml  { render :xml => @goal.errors, :status => :unprocessable_entity }
       end
@@ -70,6 +71,7 @@ class GoalsController < ApplicationController
         format.html { redirect_to(:action => :index) }
         format.xml  { head :ok }
       else
+        prepare_values_for_goal_type_and_currency
         format.html { render :action => "edit" }
         format.xml  { render :xml => @goal.errors, :status => :unprocessable_entity }
       end
@@ -93,7 +95,7 @@ class GoalsController < ApplicationController
 
   def prepare_values_for_goal_type_and_currency
     @values_for_goal_type_and_currency = @current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.id]}
-    @values_for_goal_type_and_currency << ['Procent wartości z podkategorii','percent']
+    @values_for_goal_type_and_currency << ['Procent wartości z nadkategorii','percent']
   end
 
 end

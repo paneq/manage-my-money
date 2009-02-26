@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090221110740) do
+ActiveRecord::Schema.define(:version => 20090226180602) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -85,10 +85,10 @@ ActiveRecord::Schema.define(:version => 20090221110740) do
     t.string   "description"
     t.boolean  "include_subcategories"
     t.integer  "period_type_int"
-    t.integer  "goal_type_int"
-    t.integer  "goal_completion_condition_int"
+    t.integer  "goal_type_int",                 :default => 0
+    t.integer  "goal_completion_condition_int", :default => 0
     t.float    "value"
-    t.integer  "category_id",                   :null => false
+    t.integer  "category_id",                                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "currency_id"

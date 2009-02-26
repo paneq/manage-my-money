@@ -1,0 +1,46 @@
+<% form_for(@goal) do |form| %>
+  <%= form.error_messages %>
+
+
+<!--nazwa [description]-->
+  <%= form.label :description, 'Nazwa: ' %><%= form.text_field :description  %><br/>
+  <!--kategoria combo [category_id]-->
+  <%= form.label :category, 'Dotyczy kategorii' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %><br/>
+
+  <!--dotyczy podkategorii (checkbox) [include_subcategories]-->
+  <p><%= form.label 'include_subcategories', 'Dotyczy podkategorii ' %>
+  <%= form.check_box :include_subcategories %></p>
+
+
+  <!--typ (combo: nie mniej, nie wiecej) [goal_completion_condition]-->
+  <p><%= form.label 'goal_completion_condition', 'Typ: ' %>
+  <%= form.enum_select :goal_completion_condition%>
+
+  <!--wartosc [value]-->
+  <%= form.text_field :value, :size => 5 %>
+
+  <!--'jednostka' (combo: %, waluty) [goal_type?]-->
+  <%#= form.enum_select :goal_type-%>
+
+<%= form.select :goal_type_and_currency, @values_for_goal_type_and_currency %>
+
+</p>
+
+  <!--okres (combo) [period_type]-->
+  <p><%= form.label 'period_type', 'W okresie' %>
+  <%= form.enum_select :period_type%> (tutaj podobne wartości jak przy tworzeniu raportu ale w przyszłości) </p>
+  (do tego pola period start i period end dokładnie jak w raportach)
+  (ale w takim razie jak zapisać raport który nie ma końca?)
+
+<%= date_period_fields("goal_day", Date.today, Date.today, 'selected', [:present, :future]) %>
+
+
+
+  <p>Powtarzaj plan w następnych okresach?</p>
+
+
+
+  <p>
+    <%= form.submit "Zapisz zmiany" %>
+  </p>
+<% end %>
