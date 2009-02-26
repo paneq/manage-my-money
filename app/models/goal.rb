@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090226180602
+# Schema version: 20090226214904
 #
 # Table name: goals
 #
@@ -14,6 +14,8 @@
 #  created_at                    :datetime      
 #  updated_at                    :datetime      
 #  currency_id                   :integer       
+#  period_start                  :date          
+#  period_end                    :date          
 #
 
 #require 'hash_enums'
@@ -25,7 +27,7 @@ class Goal < ActiveRecord::Base
   #has_many :historical_goals
 
 
-  define_enum :period_type, {:infinite => 0,:monthly => 1}
+  define_enum :period_type, [:SELECTED] + Date::RECOGNIZED_PERIODS
   define_enum :goal_type, {:percent=>0, :value=>1}
   define_enum :goal_completion_condition,{:at_least=>0, :at_most=>1}
 
@@ -46,7 +48,7 @@ class Goal < ActiveRecord::Base
       self.goal_type = :percent
       self.currency = nil
     else
-      self.goal_type = :vaue
+      self.goal_type = :value
       self.currency = Currency.find_by_long_symbol(val)
     end
   end

@@ -110,5 +110,11 @@ class ApplicationController < ActionController::Base
       return range.begin, range.end, symbol
     end
   end
+
+  def set_period_for(obj, period)
+    obj.period_start, obj.period_end, period_type = get_period(period)
+    obj.period_type = period_type if obj.respond_to? :period_type=
+  end
+
   
 end

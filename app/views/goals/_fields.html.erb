@@ -13,7 +13,7 @@
 
 
   <!--typ (combo: nie mniej, nie wiecej) [goal_completion_condition]-->
-  <p><%= form.label 'goal_completion_condition', 'Typ: ' %>
+  <p><%= form.label 'goal_completion_condition', 'Zadanie: ' %>
   <%= form.enum_select :goal_completion_condition%>
 
   <!--wartosc [value]-->
@@ -26,13 +26,14 @@
 
 </p>
 
-  <!--okres (combo) [period_type]-->
-  <p><%= form.label 'period_type', 'W okresie' %>
-  <%= form.enum_select :period_type%> (tutaj podobne wartości jak przy tworzeniu raportu ale w przyszłości) </p>
-  (do tego pola period start i period end dokładnie jak w raportach)
-  (ale w takim razie jak zapisać raport który nie ma końca?)
+  <!--okres (combo) [period_type]--> <!--
+  <%#*<p><%= form.label 'period_type',%> 'W okresie' %>
+  <%#= form.enum_select :period_type%> (tutaj podobne wartości jak przy tworzeniu raportu ale w przyszłości) </p>
+  <%#*(do tego pola period start i period end dokładnie jak w raportach)%>
+  <%#*(ale w takim razie jak zapisać raport który nie ma końca?)%>
+-->
 
-<%= date_period_fields("goal_day", Date.today, Date.today, 'selected', [:present, :future]) %>
+<%= date_period_fields("goal_day", @goal.period_start || Date.today, @goal.period_end || Date.today, @goal.period_type || 'selected', [:present, :future]) %>
 
 
 

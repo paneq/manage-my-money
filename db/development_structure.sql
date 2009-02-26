@@ -211,7 +211,9 @@ CREATE TABLE goals (
     category_id integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    currency_id integer
+    currency_id integer,
+    period_start date,
+    period_end date
 );
 
 
@@ -807,3 +809,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090219104138');
 INSERT INTO schema_migrations (version) VALUES ('20090221110740');
 
 INSERT INTO schema_migrations (version) VALUES ('20090226180602');
+
+INSERT INTO schema_migrations (version) VALUES ('20090226214904');

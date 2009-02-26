@@ -47,6 +47,8 @@ class GoalsController < ApplicationController
   def create
     @goal = Goal.new(params[:goal])
 
+    set_period_for(@goal, 'goal_day')
+
     respond_to do |format|
       if @goal.save
         flash[:notice] = 'Cel został utworzony.'
@@ -64,7 +66,7 @@ class GoalsController < ApplicationController
   # PUT /goals/1.xml
   def update
     @goal = Goal.find(params[:id])
-
+    set_period_for(@goal, 'goal_day')
     respond_to do |format|
       if @goal.update_attributes(params[:goal])
         flash[:notice] = 'Cel został zapisany.'
@@ -94,7 +96,7 @@ class GoalsController < ApplicationController
   private
 
   def prepare_values_for_goal_type_and_currency
-    @values_for_goal_type_and_currency = @current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.id]}
+    @values_for_goal_type_and_currency = @current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.long_symbol]}
     @values_for_goal_type_and_currency << ['Procent wartości z nadkategorii','percent']
   end
 

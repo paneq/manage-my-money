@@ -73,7 +73,8 @@ class ReportsController < ApplicationController
     end
 
     @report.user = @current_user
-    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{params[:report_type]}")
+    #    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{params[:report_type]}")
+    set_period_for(@report, "report_day_#{params[:report_type]}")
 
     if @report.relative_period
       @report.period_start = @report.period_end = nil
@@ -126,8 +127,8 @@ class ReportsController < ApplicationController
     report_param_name = @report.type_str.underscore.intern
     @report.relative_period = params[report_param_name][:relative_period]
 
-    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{@report.type_str}")
-
+    #    @report.period_start, @report.period_end, @report.period_type = get_period("report_day_#{@report.type_str}")
+    set_period_for(@report, "report_day_#{@report.type_str}")
     if @report.relative_period
       @report.period_start = @report.period_end = nil
     end
