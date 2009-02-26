@@ -6,12 +6,22 @@ require 'erb'
 module ApplicationHelper
   include Forms::ApplicationHelper
 
-  PERIODS = [[:SELECTED, 'Wybrane z menu']] + Date::PERIODS
-
   #Returns all periods including :Selected which cannote be computed by Date.compute
-  def get_periods
-    return PERIODS
+  def get_periods(periods = [:present, :past])
+    periods_table = [[:SELECTED, 'Wybrane z menu']]
+    periods.each do |period|
+      case period
+      when :present then periods_table += Date::ACTUAL_PERIODS
+      when :past then periods_table += Date::PAST_PERIODS
+      when :future then periods_table += Date::FUTURE_PERIODS
+      else
+        throw "Unknown period #{period}"
+      end
+    end
+    return periods_table
   end
+
+  module_function :get_periods
 
   # Returns id='name-#{obj.id}'
   def obj_id(name, obj)
@@ -61,9 +71,10 @@ module ApplicationHelper
 
   # TODO: Using  result += may be a bed solution. At least it is not ellegant
   # Is there another, better way to do it? Like using erb Templates ?
-  def date_period_fields(name, start_day = Date.today, end_day = Date.today, selected = 'SELECTED')
+  def date_period_fields(name, start_day = Date.today, end_day = Date.today, selected = 'SELECTED', periods = nil)
 
     name_id = name.gsub(/_/, '-')
+    select_periods = periods ? get_periods(periods) : get_periods
     select_name = name+'_period'
     start_field_name = get_date_start_field_name(name)
     end_field_name = get_date_end_field_name(name)
@@ -74,7 +85,7 @@ module ApplicationHelper
       <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:</label>
     HTML
 
-    result += select_tag select_name, options_from_collection_for_select(get_periods, :first, :second, selected)
+    result += select_tag select_name, options_from_collection_for_select(select_periods, :first, :second, selected)
 
     result += get_date_field_start(name, start_day)
     result += get_date_field_end(name, end_day)
@@ -101,7 +112,7 @@ module ApplicationHelper
     JS
 
 
-    Date::PERIODS.each do |period_type, period_name|
+    select_periods.delete_if{ |e| e[0] == :SELECTED}.each do |period_type, period_name|
       range = Date.calculate(period_type)
       function << "case '#{period_type.to_s}': \n"
       function << "  text1 = text1 + '#{range.begin}' ;\n"

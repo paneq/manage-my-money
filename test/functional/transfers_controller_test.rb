@@ -114,7 +114,7 @@ class TransfersControllerTest < Test::Unit::TestCase
 
   def test_search_responses
     day = { :day => 1.to_s, :month => 1.to_s, :year => 2020.to_s }
-    ApplicationHelper::PERIODS.each do |period, description|
+    ApplicationHelper::get_periods.each do |period, description|
       xhr :post, :search,
         :transfer_day_period => period.to_s,
         :transfer_day_start  => day,

@@ -34,7 +34,7 @@
   (do tego pola period start i period end dokładnie jak w raportach)
   (ale w takim razie jak zapisać raport który nie ma końca?)
 
-<%= date_period_fields("goal_day", Date.today, Date.today, 'selected') %>
+<%= date_period_fields("goal_day", Date.today, Date.today, 'selected', [:present, :future]) %>
 
 
 
