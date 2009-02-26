@@ -54,6 +54,28 @@ class Report < ActiveRecord::Base
     read_attribute :type
   end
 
+
+  def period_start
+    if relative_period && period_type != :SELECTED
+      Date.calculate_start(period_type)
+    else
+      self.read_attribute('period_start')
+    end
+  end
+
+
+  def period_end
+    if relative_period && period_type != :SELECTED
+      Date.calculate_end(period_type)
+    else
+      self.read_attribute('period_end')
+    end
+  end
+
+  def has_a_category?
+    !(@report.is_a?(MultipleCategoryReport) && @report.category_report_options.empty?) || (@report.share_report? && @report.category == nil)
+  end
+
   def self.sum_flow_values(values)
     if !values.empty? && values.size > 0
       values.inject(Money.new) do |mem, i|
@@ -64,21 +86,56 @@ class Report < ActiveRecord::Base
     end
   end
 
-  def period_start
-    if relative_period && period_type != :SELECTED
-      Date.calculate_start(period_type)
-    else
-      self.read_attribute('period_start')
+  def self.prepare_system_reports(user, set_fake_ids = true)
+    reports = []
+
+    #Struktura wydatków na pierwszym poziomie
+    r = ShareReport.new
+    r.user = user
+    r.category = user.expense
+    r.report_view_type = :pie
+    r.period_type = :SELECTED
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.depth = 1
+    r.max_categories_values_count = 10
+    r.name = "Struktura wydatków w ostatnim roku"
+    r.id = 0 if set_fake_ids
+    reports[0] = r
+
+    #Wydatki vs. Własności vs. Przychody
+    r = ValueReport.new
+    [user.expense, user.asset, user.income].each do |cat|
+      r.category_report_options << CategoryReportOption.new(:category => cat, :inclusion_type => :category_and_subcategories, :multiple_category_report => r)
     end
+    r.user = user
+    r.period_type = :SELECTED
+    r.report_view_type = :linear
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.period_division = :month
+    r.name = "Wydatki vs. Własności vs. Przychody"
+    r.id = 1 if set_fake_ids
+    reports[1] = r
+
+
+    #Przepływ gotówki
+    r = FlowReport.new
+    r.user = user
+    r.category_report_options << CategoryReportOption.new(:category => user.income, :inclusion_type => :category_only, :multiple_category_report => r)
+    r.period_type = :SELECTED
+    r.report_view_type = :text
+    r.period_start = 1.year.ago.to_date
+    r.period_end = Date.today
+    r.name = "Przepływ gotówki"
+    r.id = 2 if set_fake_ids
+    reports[2] = r
+
+    reports
   end
 
-  def period_end
-    if relative_period && period_type != :SELECTED
-      Date.calculate_end(period_type)
-    else
-      self.read_attribute('period_end')
-    end
-  end
+
+
 
   
 end

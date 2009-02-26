@@ -5,7 +5,7 @@ class ReportsController < ApplicationController
 
   def index
     @user_reports = Report.find :all, :conditions => ["user_id = ? AND temporary = ?", self.current_user.id, false]
-    @system_reports = prepare_system_reports
+    @system_reports = Report.prepare_system_reports(self.current_user)
   end
 
   def show
@@ -13,21 +13,22 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html do
         @virtual = params[:virtual]
-        if (@report.is_a?(MultipleCategoryReport) && @report.category_report_options.empty?) || (@report.share_report? && @report.category == nil)
+        unless @report.has_a_category?
           flash[:notice] = 'Nie można pokazać raportu, musisz wybrać kategorię. (Kategoria związana z tym raportem musiała zostać usunięta)'
           redirect_to edit_report_path(@report.id)
           return
         end
 
         if @report.flow_report?
-            @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
-            @in_sum = Report.sum_flow_values(@cash_flow[:in])
-            @out_sum = Report.sum_flow_values(@cash_flow[:out])
-            @delta = @in_sum - @out_sum
-            @currencies = (@cash_flow[:in] + @cash_flow[:out]).map {|h| h[:currency]}.uniq
-            render :template => 'reports/show_flow_report'
+          @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
+          @in_sum = Report.sum_flow_values(@cash_flow[:in])
+          @out_sum = Report.sum_flow_values(@cash_flow[:out])
+          @delta = @in_sum - @out_sum
+          @currencies = (@cash_flow[:in] + @cash_flow[:out]).map {|h| h[:currency]}.uniq
+          render :template => 'reports/show_flow_report'
         else
-          @values = calculate_and_cache_graph_data
+          @values, graph_data = GraphBuilder.calculate_and_build_graphs(@report)
+          cache_graph_data(@report, graph_data)
           @graphs = {}
           @values.keys.each do |currency|
             url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
@@ -39,24 +40,21 @@ class ReportsController < ApplicationController
     end
   end
 
-
+  
+  #action for flash_chart
   def get_graph_data
     throw 'No report found' unless get_report_from_params
-    report_from_cache = Rails.cache.read("REPORT##{params[:id]}")
+    report_from_cache = Rails.cache.read(report_cache_key(params[:id]))
     unless report_from_cache.nil?
       render :text => report_from_cache[params[:graph]], :layout => false
     else
-      render :text => create_empty_graph, :layout => false
+      render :text => GraphBuilder.create_empty_graph, :layout => false
     end
   end
-
-
-
 
   def new
     prepare_reports
     @report = Report.new
-
   end
 
   def create
@@ -134,7 +132,7 @@ class ReportsController < ApplicationController
       @report.period_start = @report.period_end = nil
     end
 
-#    @report.period_start, @report.period_end = get_period("report_day_#{@report.type_str}")
+    #    @report.period_start, @report.period_end = get_period("report_day_#{@report.type_str}")
     @report.temporary = false if @report.temporary && params[:commit] != 'Pokaż'
     if @report.update_attributes(params[report_param_name])
       if params[:commit] == 'Zapisz'
@@ -160,7 +158,7 @@ class ReportsController < ApplicationController
 
 
   def copy_report
-    report = prepare_system_reports(false)[params[:id].to_i]
+    report = Report.prepare_system_reports(self.current_user, false)[params[:id].to_i]
     if report.save!
       flash[:notice] = 'Raport zostal pomyslnie skopiowany'
     else
@@ -171,56 +169,18 @@ class ReportsController < ApplicationController
 
 
   private
-  def prepare_system_reports(set_fake_ids = true)
-    reports = []
-
-    #Struktura wydatków na pierwszym poziomie
-    r = ShareReport.new
-    r.user = self.current_user
-    r.category = self.current_user.expense
-    r.report_view_type = :pie
-    r.period_type = :SELECTED
-    r.period_start = 1.year.ago.to_date
-    r.period_end = Date.today
-    r.depth = 1
-    r.max_categories_values_count = 10
-    r.name = "Struktura wydatków w ostatnim roku"
-    r.id = 0 if set_fake_ids
-    reports[0] = r
-
-    #Wydatki vs. Własności vs. Przychody
-    r = ValueReport.new
-    [self.current_user.expense, self.current_user.asset, self.current_user.income].each do |cat|
-      r.category_report_options << CategoryReportOption.new(:category => cat, :inclusion_type => :category_and_subcategories, :multiple_category_report => r)
-    end
-    r.user = self.current_user
-    r.period_type = :SELECTED
-    r.report_view_type = :linear
-    r.period_start = 1.year.ago.to_date
-    r.period_end = Date.today
-    r.period_division = :month
-    r.name = "Wydatki vs. Własności vs. Przychody"
-    r.id = 1 if set_fake_ids
-    reports[1] = r
-
-
-    #Przepływ gotówki
-    r = FlowReport.new
-    r.user = self.current_user
-    r.category_report_options << CategoryReportOption.new(:category => self.current_user.income, :inclusion_type => :category_only, :multiple_category_report => r)
-    r.period_type = :SELECTED
-    r.report_view_type = :text
-    r.period_start = 1.year.ago.to_date
-    r.period_end = Date.today
-    r.name = "Przepływ gotówki"
-    r.id = 2 if set_fake_ids
-    reports[2] = r
-
-    reports
+  def cache_graph_data(report, graph_data)
+    Rails.cache.write(report_cache_key(report.id), graph_data, :expires_in => 10.minutes)
   end
+
 
   def get_report_partial_name(report)
     report.type_str.underscore + '_fields'
+  end
+
+  
+  def report_cache_key(id)
+    "REPORT##{id}"
   end
 
   def prepare_reports
@@ -236,274 +196,12 @@ class ReportsController < ApplicationController
   end
 
 
-  ###########################
-  # dobre kolorki do ustawienia: fdd84e, 6886b4, 72ae6e, d1695e, 8a6eaf, efaa43,
-  # tlo: 4a465a
-
-  def calculate_and_cache_graph_data
-    charts = nil
-    if @report.share_report?
-      charts, values = generate_share_report
-    elsif @report.value_report?
-      charts, values = generate_value_report
-    else
-      throw 'Wrong report type'
-    end
-    Rails.cache.write("REPORT##{@report.id}", charts, :expires_in => 10.minutes)
-    return values
-  end
-
-  def get_graph_object report
-    case report.report_view_type
-    when :bar then Bar.new
-    when :pie then Pie.new
-    when :linear then Line.new
-    end
-  end
-
-  
-
-  def self.get_colors
-    colours = []
-    0x000000.step(0xFFF0F0, 1500) do |num|
-      colours << "#%x"  % num
-    end
-    colours.shuffle
-  end
-
-  COLORS = get_colors
-
   def get_report_from_params
     if params[:virtual]
-      prepare_system_reports[params[:id].to_i]
+      Report.prepare_system_reports(self.current_user)[params[:id].to_i]
     else
       self.current_user.reports.find params[:id]
     end
   end
-
-
-  def generate_value_report
-    charts = {}
-    labels = Date.get_date_range_labels @report.period_start, @report.period_end, @report.period_division
-    chart_values = calculate_and_group_values_by_currencies(@report)
-    chart_values.each do |currency, categories|
-      chart = OpenFlashChart.new
-      chart.bg_colour = 0xffffff
-#      title = Title.new("Raport '#{@report.name}' dla waluty #{currency.long_symbol}")
-#      chart.title = title
-      min = nil
-      max = nil
-      categories.each do |label, values|
-        graph = get_graph_object @report
-        max ||= values.max
-        min ||= values.min
-        max = values.max if max < values.max
-        min = values.min if min > values.min
-        graph.values = values
-        graph.set_key(label,12)
-        graph.set_tooltip("#key# <br> Wartość: #val##{currency.symbol} <br> #x_label# ")
-        graph.colour = COLORS[rand(COLORS.size) ]
-        chart << graph
-      end
-      chart.x_axis = get_x_axis_for_value_report(labels)
-      chart.y_axis = get_y_axis_for_report(min, max)
-      charts[currency.long_symbol] = chart
-    end
-
-    pure_values = {}
-    chart_values.each do |currency, v|
-      pure_values[currency.long_symbol] = {}
-      pure_values[currency.long_symbol][:title] = "Raport '#{@report.name}' dla waluty #{currency.long_symbol} w okresie #{@report.period_start} do #{@report.period_end}"
-      pure_values[currency.long_symbol][:values] = v
-      pure_values[currency.long_symbol][:date_labels] = labels
-    end
-
-    return charts, pure_values
-  end
-
-
-  def calculate_and_group_values_by_currencies(report)
-    chart_values = {}
-    if self.current_user.multi_currency_balance_calculating_algorithm == :show_all_currencies
-      currencies = Currency.for_user_period(self.current_user, report.period_start, report.period_end)
-    else
-      currencies = [self.current_user.default_currency]
-    end
-    report.category_report_options.each do |option|
-      values = option.category.calculate_values(option.inclusion_type, report.period_division, report.period_start, report.period_end)
-      values.each do |value| #pair [type,money]
-        money = value[1]
-        cat_label = option.category.name
-        if value[0] == :category_and_subcategories
-          cat_label += ' (+podkategorie)'
-        end
-
-
-        currencies.each do |cur|
-          chart_values[cur] ||= {}
-          chart_values[cur][cat_label] ||= []
-          chart_values[cur][cat_label] << money.value(cur)
-        end
-      end
-    end
-    chart_values
-  end
-
-
-  def get_x_axis_for_value_report(labels)
-    x_axis = XAxis.new
-    x_axis_labels = XAxisLabels.new
-    x_axis_labels.labels = labels
-
-    if labels.size > 4
-      x_axis_labels.rotate = 'diagonal'
-    end
-
-    if labels.size > 10
-      x_axis_labels.steps = labels.size/10
-    end
-
-    x_axis.labels = x_axis_labels
-    x_axis
-  end
-
-
-  def get_y_axis_for_report(min,max, right = false)
-    
-    y_axis = if right
-        YAxisRight.new
-      else
-        YAxis.new
-    end
-
-    distance = (max - min).abs
-    distance = 10 if distance < 10
-    step = 10**( ( Math.log10( distance ) ).ceil() -1)
-
-    steps = distance.to_f/step.to_f
-
-    step /= case steps
-    when 1...3 then 4
-    when 3..6 then 2
-    else 1
-    end
-
-    liczba = max.abs / step
-    liczba = liczba.ceil if max >= 0
-    liczba = liczba.floor if max < 0
-    max_max = liczba * step
-    max_max *= -1 if max < 0
-
-    liczba = min.abs / step
-    liczba = liczba.floor if min >= 0
-    liczba = liczba.ceil if min < 0
-    min_min = liczba * step
-    min_min *= -1 if min < 0
-
-    y_axis.set_range(min_min, max_max, step)
-    y_axis
-  end
-
-
-  #todo - do some refactor here
-  def generate_share_report
-    depth = if @report.depth == -1
-      :all
-    else
-      @report.depth
-    end
-    values_in_currencies = @report.category.calculate_max_share_values @report.max_categories_values_count, depth, @report.period_start, @report.period_end
-
-    get_label = lambda {|hash|
-            if hash[:category].nil?
-              'Pozostałe'
-            else
-              hash[:category].name + (hash[:without_subcategories]?' (bez podkategorii)':'')
-            end
-        }
-
-    charts = {}
-    pure_values = {}
-    values_in_currencies.each do |cur, values|
-      title = "Raport '#{@report.name}' udziału podkategorii w kategorii #{@report.category.name} w okresie #{@report.period_start} do #{@report.period_end}<br/>dla waluty #{cur.long_symbol}"
-      chart = OpenFlashChart.new
-      chart.bg_colour = 0xffffff
-
-      rejected_values = []
-      unless values.all? {|val| val[:value].value(cur) >= 0 } || values.all? {|val| val[:value].value(cur) <= 0 }
-        rejected_values, values  = values.partition {|val| val[:value].value(cur) < 0 }
-      end
-
-      graph = get_graph_object @report
-
-      sum = values.sum{|val| val[:value].value(cur)}
-
-      pure_values[cur.long_symbol] = {}
-      pure_values[cur.long_symbol][:values] = []
-      pure_values[cur.long_symbol][:title] = title
-      values.each do |category_hash|
-        value = category_hash[:value].value(cur)
-        pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => (value/sum*100).round(2)}
-      end
-
-      rejected_values.each do |category_hash|
-        value = category_hash[:value].value(cur)
-        pure_values[cur.long_symbol][:values] << {:label => get_label.call(category_hash), :value => value, :percent => 0}
-      end
-
-
-
-      pure_values[cur.long_symbol][:sum] = sum
-
-
-      if @report.report_view_type == :pie
-        graph.values = values.map do |val|
-          PieValue.new(val[:value].value(cur), get_label.call(val))
-        end
-        graph.tooltip = "#percent# <br> #label# <br> Wartość: #val##{cur.symbol} z #{sum}#{cur.symbol}"
-        if values.count > 15
-          graph.set_no_labels()
-        end
-        graph.colours = COLORS
-      else
-        graph.values = values.map do |val|
-          value = val[:value].value(cur)
-          bv = BarValue.new(value)
-          bv.set_tooltip("#{(value/sum*100).round(2)}% <br> #x_label# <br> Wartość: #val##{cur.symbol} z #{sum}#{cur.symbol} ")
-          bv
-        end
-
-        x_axis = XAxis.new
-        x_axis_labels = XAxisLabels.new
-        x_axis_labels.labels = values.map {|val| get_label.call(val)}
-        x_axis_labels.rotate = 'diagonal'
-        x_axis.labels = x_axis_labels
-        chart.x_axis = x_axis
-        max = values.max{|val1, val2| val1[:value].value(cur) <=> val2[:value].value(cur) }[:value].value(cur)
-        chart.y_axis = get_y_axis_for_report(0, max)
-#        chart.y_axis_right = get_y_axis_for_report(0, (max/sum)*100, true) //not working well yet :/
-
-        y_legend = YLegend.new("Saldo w #{cur.long_symbol}")
-        y_legend.style = '{font-size: 22px; color: #000000;}'
-        chart.y_legend = y_legend
-
-      end
-      chart << graph
-      charts[cur.long_symbol] = chart
-    end
-    return charts, pure_values
-  end
-
-  def create_empty_graph
-    chart = OpenFlashChart.new
-    chart.bg_colour = 0xeeeeee
-    title = Title.new("\n\n\n\n\nSzukany raport przedawnił się, \n przeładuj stronę.")
-    title.style = '{font-size: 30px;}'
-    chart.title = title
-    chart << Pie.new
-    chart.to_s
-  end
-
-
 
 end
