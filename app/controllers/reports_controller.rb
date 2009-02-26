@@ -160,8 +160,7 @@ class ReportsController < ApplicationController
 
 
   def copy_report
-    report = prepare_system_reports[params[:id].to_i]
-    report.id = nil
+    report = prepare_system_reports(false)[params[:id].to_i]
     if report.save!
       flash[:notice] = 'Raport zostal pomyslnie skopiowany'
     else
@@ -172,7 +171,7 @@ class ReportsController < ApplicationController
 
 
   private
-  def prepare_system_reports
+  def prepare_system_reports(set_fake_ids = true)
     reports = []
 
     #Struktura wydatków na pierwszym poziomie
@@ -186,8 +185,8 @@ class ReportsController < ApplicationController
     r.depth = 1
     r.max_categories_values_count = 10
     r.name = "Struktura wydatków w ostatnim roku"
-    r.id = 0
-    reports[r.id] = r
+    r.id = 0 if set_fake_ids
+    reports[0] = r
 
     #Wydatki vs. Własności vs. Przychody
     r = ValueReport.new
@@ -201,24 +200,21 @@ class ReportsController < ApplicationController
     r.period_end = Date.today
     r.period_division = :month
     r.name = "Wydatki vs. Własności vs. Przychody"
-    r.id = 1
-    reports[r.id] = r
+    r.id = 1 if set_fake_ids
+    reports[1] = r
 
 
     #Przepływ gotówki
     r = FlowReport.new
     r.user = self.current_user
     r.category_report_options << CategoryReportOption.new(:category => self.current_user.income, :inclusion_type => :category_only, :multiple_category_report => r)
-#    r.categories << self.current_user.income
     r.period_type = :SELECTED
     r.report_view_type = :text
     r.period_start = 1.year.ago.to_date
     r.period_end = Date.today
     r.name = "Przepływ gotówki"
-    r.id = 2
-    reports[r.id] = r
-
-
+    r.id = 2 if set_fake_ids
+    reports[2] = r
 
     reports
   end

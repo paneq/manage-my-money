@@ -6,7 +6,7 @@ begin
   
   require 'selenium'
 
-  class MenuTest < Test::Unit::TestCase
+  class ReportsTest < Test::Unit::TestCase
     self.use_transactional_fixtures = false
     
     def setup
