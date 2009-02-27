@@ -59,12 +59,12 @@ module ApplicationHelper
 
 
   def add_transfer_item(transfer_item_type)
-    jsfunction_code = link_to_function 'Nowy element' do |page|
-      page.insert_html :bottom, "full-#{transfer_item_type.to_s.downcase}-items", :partial => '/transfers/transfer_item', :locals => {:hack => true}, :object => TransferItem.new(:transfer_item_type => transfer_item_type, :currency_id => @current_user.default_currency.id)
-    end
-    jsfunction_code.gsub! "onclick=\"try", "onclick=\"var my_uid = uid();\n try "; #TODO: wyjąc metodę UID  z head'a layoutu
-    jsfunction_code.gsub! "PUT_ID_HERE", "&quot; + my_uid +&quot;"
-    return jsfunction_code
+    text = render :partial => '/transfers/transfer_item', :locals => {:hack => true}, :object => TransferItem.new(:transfer_item_type => transfer_item_type, :currency_id => @current_user.default_currency.id)
+    jsfunction = "onclick=\"var my_uid = uid();\n"
+    jsfunction = "var my_uid = uid();\n $(this).up().down('table').insert('#{ escape_javascript(text) }'); return false;"
+    jsfunction.gsub! "PUT_ID_HERE", "'+ my_uid +'"
+    #TODO: wyjąc metodę UID  z head'a layoutu
+    return link_to_function 'Nowy element', jsfunction
   end
 
 

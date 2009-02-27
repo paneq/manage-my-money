@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
       @value ||= @category.saldo_at_end_of_day(Date.today.to_date, :show_all_currencies, @include_subcategories)
       @mode ||= :category
     else
-      @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC').map{ |t| {:transfer => t} }
+      @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC', :conditions => ['day >= ? AND day <= ?', @start_day, @end_day]).map{ |t| {:transfer => t} }
       @mode ||= :transfers
     end
   end
