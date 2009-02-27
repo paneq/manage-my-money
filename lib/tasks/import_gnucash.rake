@@ -73,7 +73,7 @@ namespace :import do
 
       unless file_name
 #        file_name = '/home/jarek/Desktop/cash_test'
-        file_name = '/home/jarek/Desktop/rupert.xml'
+        file_name = '/home/jarek/NetBeansProjects/other/rupert.xml'
         puts 'No file param given'
       end
 

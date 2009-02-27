@@ -70,8 +70,22 @@ class Date
     [:NEXT_12_MONTHS, 'Następne 12 miesięcy'],
   ]
 
+  PERIOD_CATEGORIES = [
+    [:DAY, 'Dzień'],
+    [:WEEK, 'Tydzień'],
+    [:MONTH, 'Miesiąc'],
+    [:QUARTER, 'Kwartał'],
+    [:YEAR, 'Rok'],
+    [:A_7_DAYS, '7 dni'],
+    [:A_4_WEEKS, '4 tygodnie'],
+    [:A_3_MONTHS, '3 miesiące'],
+    [:A_90_DAYS, '90 dni'],
+    [:A_12_MONTHS, '12 miesięcy'],
+  ]
+
+
   #  PERIODS = (ACTUAL_PERIODS + PAST_PERIODS + FUTURE_PERIODS)
-#  PERIODS = ACTUAL_PERIODS + PAST_PERIODS
+  #  PERIODS = ACTUAL_PERIODS + PAST_PERIODS
   RECOGNIZED_PERIODS = (ACTUAL_PERIODS + PAST_PERIODS + FUTURE_PERIODS).map {|symbol, name| symbol}
 
   @@cache = {}
@@ -126,13 +140,13 @@ class Date
 
   def self.calculate_end(symbol)
     return case symbol
-    #actual periods
+      #actual periods
     when :THIS_DAY        then Date.today
     when :THIS_WEEK       then Date.today.end_of_week
     when :THIS_MONTH      then Date.today.end_of_month
     when :THIS_QUARTER    then Date.today.end_of_quarter
     when :THIS_YEAR       then Date.today.end_of_year
-    #past periods
+      #past periods
     when :LAST_DAY        then Date.yesterday
     when :LAST_WEEK       then Date.today.beginning_of_week.yesterday.end_of_week
     when :LAST_7_DAYS     then Date.today
@@ -160,6 +174,28 @@ class Date
     else
       raise "Unrecognized period symbol: #{symbol}"
     end
+  end
+
+  def self.period_category(period)
+    case period
+    when :THIS_DAY, :LAST_DAY, :NEXT_DAY then :DAY
+    when :THIS_WEEK, :LAST_WEEK, :NEXT_WEEK then :WEEK
+    when :THIS_MONTH, :LAST_MONTH, :NEXT_MONTH then :MONTH
+    when :THIS_QUARTER, :LAST_QUARTER, :NEXT_QUARTER then :QUARTER
+    when :THIS_YEAR, :LAST_YEAR, :NEXT_YEAR then :YEAR
+    when :LAST_7_DAYS, :NEXT_7_DAYS then :A_7_DAYS
+    when :LAST_4_WEEKS, :NEXT_4_WEEKS then :A_4_WEEKS
+    when:LAST_3_MONTHS, :NEXT_3_MONTHS then :A_3_MONTHS
+    when :LAST_90_DAYS, :NEXT_90_DAYS then :A_90_DAYS
+    when :LAST_12_MONTHS, :NEXT_12_MONTHS then :A_12_MONTHS
+    else
+      raise "Unrecognized period symbol: #{symbol}"
+    end
+  end
+
+
+  def self.period_category_name(period)
+    PERIOD_CATEGORIES.find{|el|  el[0] == period_category(period)}[1]
   end
 
 

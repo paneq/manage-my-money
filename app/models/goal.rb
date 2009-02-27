@@ -58,13 +58,37 @@ class Goal < ActiveRecord::Base
   def actual_value
     if goal_type == :percent
       #calculate_percent
-      @goal.category.percent_of_parent_category(@goal.period_start, @goal.period_end, @goal.include_subcategories)
+      category.percent_of_parent_category(period_start, period_end, include_subcategories)
     else
       #calculate_money
-
+      money = category.saldo_for_period_new(period_start, period_end, :show_all_currencies, include_subcategories)
+      money.value(currency)
     end
   end
-  
+
+
+  def value_with_unit
+    "#{value}#{unit}"
+  end
+
+  def actual_value_with_unit
+    "#{actual_value}#{unit}"
+  end
+
+
+  def unit
+    @unit ||= if goal_type == :percent
+      '%'
+    else
+      currency.symbol
+    end
+  end
+
+  def period_description
+    "#{period_start} do #{period_end} (#{Date::period_category_name(period_type)})"
+  end
+
+
 #  #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
 #  def percent_of_parent_category
 #    category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
@@ -100,6 +124,14 @@ class Goal < ActiveRecord::Base
 #
 #  end
 
+
+  def positive?
+    if goal_completion_condition == :at_most
+      actual_value <= value
+    else
+      actual_value >= value
+    end
+  end
 
 end
 

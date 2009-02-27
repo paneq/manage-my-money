@@ -30,21 +30,21 @@ class GoalsControllerTest < ActionController::TestCase
 #    assert_redirected_to goal_path(assigns(:goal))
 #  end
 
-  test "should get edit" do
-    get :edit, :id => goals(:one).id
-    assert_response :success
-  end
+#  test "should get edit" do
+#    get :edit, :id => goals(:one).id
+#    assert_response :success
+#  end
 
 #  test "should update goal" do
 #    put :update, :id => goals(:one).id, :goal => { }
 #    assert_redirected_to goal_path(assigns(:goal))
 #  end
 
-  test "should destroy goal" do
-    assert_difference('Goal.count', -1) do
-      delete :destroy, :id => goals(:one).id
-    end
-
-    assert_redirected_to goals_path
-  end
+#  test "should destroy goal" do
+#    assert_difference('Goal.count', -1) do
+#      delete :destroy, :id => goals(:one).id
+#    end
+#
+#    assert_redirected_to goals_path
+#  end
 end

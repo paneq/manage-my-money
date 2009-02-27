@@ -1,17 +1,25 @@
 <h1>Twoje cele</h1>
-
-<table>
-  <tr><th>Nazwa</th><th>Zakładana wartość</th><th>Aktualna wartość</th><th>Na okres</th><th colspan="2">Akcje</th>
+<div class="nice-table">
+<table id="mytable" cellspacing="0" summary="Cele">
+  <tr>
+    <th scope="col" class="nobg nice-table">Nazwa</th>
+    <th scope="col" class="nice-table">Dla kategorii</th>
+    <th scope="col" class="nice-table">Zakładana wartość</th>
+    <th scope="col" class="nice-table">Aktualna wartość</th>
+    <th scope="col" class="nice-table">Na okres</th>
+    <th scope="col" class="nice-table" colspan="2">Akcje</th>
   </tr>
 
 <% for goal in @goals %>
+  <% atl_style_td = cycle('', 'alt', :name => 'alt_style_td')%>
   <tr>
-    <td><%=goal.description%></td>
-    <td><%=goal.value%></td>
-    <td>0</td>
-    <td><%=goal.period_type%></td>
-    <td><%= link_to 'Edytuj', edit_goal_path(goal) %></td>
-    <td><%= link_to 'Usuń', goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
+    <th scope="row" class="<%= cycle('spec', 'specalt') %> nice-table"><%=goal.description%></th>
+    <td class="nice-table <%=atl_style_td%>"><%=goal.category.name%></td>
+    <td class="nice-table <%=atl_style_td%>"><%=goal.value_with_unit%></td>
+    <td class="nice-table <%=atl_style_td%> <%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%=goal.actual_value_with_unit%></td>
+    <td class="nice-table <%=atl_style_td%>"><%=goal.period_description%></td>
+    <td class="nice-table <%=atl_style_td%>"><%= link_to 'Edytuj', edit_goal_path(goal) %></td>
+    <td class="nice-table <%=atl_style_td%>"><%= link_to 'Usuń', goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
@@ -19,3 +27,6 @@
 <br />
 
 <%= link_to 'Nowy cel', new_goal_path %>
+
+
+</div>
