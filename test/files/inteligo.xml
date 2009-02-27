@@ -9,6 +9,7 @@
 
     <operations>
 
+        <!-- THIS ONE WAS ALREADY IN DB -->
         <operation id='23'>
             <order-date>2008-11-27</order-date>
             <exec-date>2008-11-27</exec-date>
@@ -16,6 +17,8 @@
             <type>Płatność kartą</type>
             <amount curr='PLN'>-68.85</amount>
             <ending-balance curr='PLN'>-32.28</ending-balance>
+
+            <!-- popular food shop in Poland -->
             <description>Kwota operacji: 68.85 PLN
 CHATA POLSKA KASA 2 POZNAN 60688 PL
 Data wykonania: 2008-11-25

@@ -153,18 +153,23 @@ class Test::Unit::TestCase
     transfer = Transfer.new(:user => hash[:user])
     transfer.day = hash[:day]
     transfer.description = hash[:description]
+    transfer.import_guid = hash[:import_guid]
 
     transfer.transfer_items << TransferItem.new(
       :category => hash[:income],
       :currency => hash[:currency],
       :description => hash[:description],
-      :value => hash[:value])
+      :value => hash[:value],
+      :import_guid => hash[:import_guid]
+    )
 
     transfer.transfer_items << TransferItem.new(
       :category => hash[:outcome],
       :currency => hash[:currency],
       :description => hash[:description],
-      :value => -1*hash[:value])
+      :value => -1*hash[:value],
+      :import_guid => hash[:import_guid]
+    )
     return transfer
   end
 
@@ -429,8 +434,8 @@ class Test::Unit::TestCase
           date
         end
         Date.forced_today = Date.new(Time.now.year,
-                                     Time.now.month,
-                                     Time.now.day)
+          Time.now.month,
+          Time.now.day)
         yield
       rescue Exception => e
         raise e

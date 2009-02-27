@@ -16,8 +16,17 @@ class Nokogiri::XML::Document
 end
 
 
+class Nokogiri::XML::NodeSet
+  def find(what)
+    xpath(what).inner_html
+  end
+end
+
 class InteligoParser
   def self.parse(content, user, category)
+
+    warning_class = Struct.new(:text, :data)
+
     doc = Nokogiri::XML(content)
 
     operations = doc.xpath('//operation')
@@ -44,17 +53,28 @@ class InteligoParser
       other_category = nil
       unless other_side.empty?
         number = other_side.find('account')
-        # other_category = user.categories.find_by_account_number(number)
+        other_category = user.categories.find_by_bank_account_number(number)
       end
 
       puts id, order_date, amount, currency_long_symbol, "\n"
 
       import_guid = [bank_account_number_in_file, id].join('-')
-      # TODO: sprawdzanie czy taki transfer nie byl juz zaimportowany
+
+      warnings = []
+      previous_transfer = user.transfers.find_by_import_guid(import_guid)
+      unless previous_transfer
+        previous_transfer = user.
+          transfers.
+          find(:first,
+          :joins => 'INNER JOIN transfer_items ON transfers.id = transfer_items.transfer_id',
+          :conditions => ['day = ? AND transfer_items.value = ? AND transfer_items.currency_id = ?', order_date, amount, currency.id]) if currency
+      end
+      warnings << warning_class.new('Ten transfer został już najprawdopodobniej zaimportowany', previous_transfer) if previous_transfer
+
       t = Transfer.new(:day => order_date, :description => description, :import_guid => import_guid)
       t.transfer_items << TransferItem.new(:currency => currency, :value => amount.abs, :category => category, :transfer_item_type => item_type)
       t.transfer_items << TransferItem.new(:currency => currency, :value => amount.abs, :category => other_category, :transfer_item_type => other_item_type)
-      result << {:transfer => t, :warnings => []}
+      result << {:transfer => t, :warnings => warnings}
     end
 
     return result
