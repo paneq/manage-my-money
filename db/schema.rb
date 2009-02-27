@@ -132,11 +132,11 @@ ActiveRecord::Schema.define(:version => 20090226214904) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "transfer_items", :force => true do |t|
-    t.text    "description",                                               :null => false
-    t.decimal "value",       :precision => 12, :scale => 2,                :null => false
-    t.integer "transfer_id",                                               :null => false
-    t.integer "category_id",                                               :null => false
-    t.integer "currency_id",                                :default => 3, :null => false
+    t.text    "description",                                              :null => false
+    t.decimal "value",       :precision => 8, :scale => 2,                :null => false
+    t.integer "transfer_id",                                              :null => false
+    t.integer "category_id",                                              :null => false
+    t.integer "currency_id",                               :default => 3, :null => false
     t.string  "import_guid"
   end
 

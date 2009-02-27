@@ -1,12 +1,12 @@
 class ImportController < CooperationController
 
+  include FileRecognizer
+
   layout 'main'
 
 
   ACCEPTED_CONTENT_TYPES = %w(text/csv text/xml)
   INVALID_FILE_WARNING = 'Wysłano nieprawidłowy plik. Akceptowane są jedynie pliki XML dla Inteligo oraz CSV dla mBanku'
-  INVALID_FILE_INFO = 'Wystąpił błąd w czasie przetwarzania pliku.'
-
 
   def import
     @category = self.current_user.categories.find_by_id(params[:category_id]) if params[:category_id]
@@ -22,9 +22,25 @@ class ImportController < CooperationController
       return
     end
 
-    render :text => params[:file].read
-    #TODO parsowanie i pokazywanie strony gdzie rzeczy do wyboru
+    content = params[:file].read
+    file_name = params[:file].original_filename
+
+    recognized = recognize_file(content, file_name)
+    unless recognized
+      render_invalid_file_info
+      return
+    end
+
+    begin
+      @result = (recognized.to_s + '_parser').camelcase.constantize.parse(content, self.current_user, @category) # :inteligo => @result = InteligoParser.parse
+    rescue Exception => e
+      raise e if ENV['RAILS_ENV'] == 'development'
+      render_invalid_file_info
+      return
+    end
+    
     #CSV Mbanku => 1250
+
   end
 
   

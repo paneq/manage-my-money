@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<account-history>
+
+    <search>
+        <account>50102055581111100000000007</account>
+        <date since='2008-11-27' to='2009-02-25'/>
+        <filtering>Wszystkie</filtering>
+    </search>
+
+    <operations>
+
+        <operation id='23'>
+            <order-date>2008-11-27</order-date>
+            <exec-date>2008-11-27</exec-date>
+            <class>DEBIT</class>
+            <type>Płatność kartą</type>
+            <amount curr='PLN'>-68.85</amount>
+            <ending-balance curr='PLN'>-32.28</ending-balance>
+            <description>Kwota operacji: 68.85 PLN
+CHATA POLSKA KASA 2 POZNAN 60688 PL
+Data wykonania: 2008-11-25
+Karta nr: 5208
+            </description>
+        </operation>
+
+        <operation id='22'>
+            <order-date>2008-11-29</order-date>
+            <exec-date>2008-11-29</exec-date>
+            <class>CREDIT</class>
+            <type>Przelew QuickMoney</type>
+            <amount curr='PLN'>+1032.28</amount>
+            <ending-balance curr='PLN'>1000.00</ending-balance>
+            <description>Nr rach. 50 10205558 1111100000000000
+Tytuł: Za listopad na grudzien
+Data przygotowania: 2008-11-29
+            </description>
+            <other-side>
+                <owner>
+                    <line>ROBERT JAN</line>
+                    <line>ULICA</line>
+                    <line>12-345 MIASTO</line>
+                </owner>
+                <account>50102055581111100000000000</account>
+            </other-side>
+        </operation>
+  
+        <operation id='21'>
+            <order-date>2008-11-29</order-date>
+            <exec-date>2008-11-29</exec-date>
+            <class>DEBIT</class>
+            <type>Naliczenie odsetek</type>
+            <amount curr='PLN'>-0.04</amount>
+            <ending-balance curr='PLN'>999.96</ending-balance>
+            <description>Naliczenie odsetek</description>
+        </operation>
+
+        <operation id='20'>
+            <order-date>2008-12-01</order-date>
+            <exec-date>2008-12-01</exec-date>
+            <class>DEBIT</class>
+            <type>Przelew z rachunku</type>
+            <amount curr='PLN'>-306.00</amount>
+            <ending-balance curr='PLN'>654.44</ending-balance>
+            <description>Mateusz
+54-321 Miasteczko ul. Jakas Tam 3/4
+Nr banku: 11401964
+Nr rach.: 40114020040000350999999999
+Tytuł: Czynsz za grudzień
+Data przygotowania: 2008-11-29
+            </description>
+            <other-side>
+                <owner>
+                    <line>Mateusz</line>
+                    <line>54-321</line>
+                    <line>Miasteczko ul. Jakas Tam 3/4</line>
+                </owner>
+                <account>40114020040000350999999999</account>
+            </other-side>
+        </operation>
+
+        <operation id='19'>
+            <order-date>2008-12-01</order-date>
+            <exec-date>2008-12-01</exec-date>
+            <class>DEBIT</class>
+            <type>Opłata</type>
+            <amount curr='PLN'>-0.99</amount>
+            <ending-balance curr='PLN'>53.45</ending-balance>
+            <description>Prowizja za: przelew jednorazowy</description>
+        </operation>
+
+        <operation id='18'>
+            <order-date>2008-12-01</order-date>
+            <exec-date>2008-12-01</exec-date>
+            <class>DEBIT</class>
+            <type>Opłata</type>
+            <amount curr='PLN'>-0.99</amount>
+            <ending-balance curr='PLN'>482.71</ending-balance>
+            <description>Prowizja za: przelew jednorazowy</description>
+        </operation>
+  
+    </operations>
+</account-history>
