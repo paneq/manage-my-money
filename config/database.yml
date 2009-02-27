@@ -27,6 +27,9 @@ test:
   host: localhost
   username: postgres
   password:
+#  adapter: sqlite3
+#  database: db/test.sqlite3
+#  host: localhost
 <% end %>
 
 selenium:

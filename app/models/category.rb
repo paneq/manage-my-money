@@ -22,6 +22,7 @@
 
 require 'hash'
 require 'hash_enums'
+require 'sql_dialects'
 
 class Category < ActiveRecord::Base
   extend HashEnums
@@ -451,7 +452,7 @@ class Category < ActiveRecord::Base
       }
     end
 
-    cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == 'f'}
+    cash_in, cash_out = flow_categories.partition { |cat_hash| cat_hash[:category].read_attribute('income') == SqlDialects.get_false }#'f'}
 
     {:out => cash_out, :in => cash_in}
   end
@@ -552,9 +553,9 @@ class Category < ActiveRecord::Base
             (
               SELECT Id FROM exchanges as e WHERE
                 (
-                abs( t.day - e.day ) =
+                abs( #{SqlDialects.get_date('t.day')} - #{SqlDialects.get_date('e.day')} ) =
                   (
-                  SELECT min( abs( t.day - e2.day ) ) FROM exchanges as e2 WHERE
+                  SELECT min( abs( #{SqlDialects.get_date('t.day')} - #{SqlDialects.get_date('e2.day')} ) ) FROM exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
@@ -596,9 +597,9 @@ class Category < ActiveRecord::Base
             (
               SELECT Id FROM Exchanges as e WHERE
                 (
-                abs( current_date - e.day ) =
+                abs( #{SqlDialects.get_today} - #{SqlDialects.get_date('e.day')} ) =
                   (
-                  SELECT min( abs( current_date - e2.day ) ) FROM Exchanges as e2 WHERE
+                  SELECT min( abs( #{SqlDialects.get_today} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
                     ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
