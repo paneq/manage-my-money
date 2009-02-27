@@ -771,11 +771,11 @@ ul.submenu3 a:hover {
 
 
 .goal-positive {
-    color: #abdebe;
+    color: green;
 }
 
 .goal-negative {
-    color: #ff8518;
+    color: red;
 }
 
 

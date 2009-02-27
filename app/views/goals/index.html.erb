@@ -15,8 +15,8 @@
   <tr>
     <th scope="row" class="<%= cycle('spec', 'specalt') %> nice-table"><%=goal.description%></th>
     <td class="nice-table <%=atl_style_td%>"><%=goal.category.name%></td>
-    <td class="nice-table <%=atl_style_td%>"><%=goal.value_with_unit%></td>
-    <td class="nice-table <%=atl_style_td%> <%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%=goal.actual_value_with_unit%></td>
+    <td class="nice-table <%=atl_style_td%>"><%=goal.value_description%></td>
+    <td class="nice-table <%=atl_style_td%>"><span class="<%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%=goal.actual_value_with_unit%></span></td>
     <td class="nice-table <%=atl_style_td%>"><%=goal.period_description%></td>
     <td class="nice-table <%=atl_style_td%>"><%= link_to 'Edytuj', edit_goal_path(goal) %></td>
     <td class="nice-table <%=atl_style_td%>"><%= link_to 'Usuń', goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
