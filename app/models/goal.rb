@@ -28,8 +28,8 @@ class Goal < ActiveRecord::Base
 
 
   define_enum :period_type, [:SELECTED] + Date::RECOGNIZED_PERIODS
-  define_enum :goal_type, {:percent=>0, :value=>1}
-  define_enum :goal_completion_condition,{:at_least=>0, :at_most=>1}
+  define_enum :goal_type, {:percent => 0, :value => 1}
+  define_enum :goal_completion_condition, {:at_least => 0, :at_most => 1}
 
   validates_presence_of :description, :value
   validates_numericality_of :value
@@ -53,41 +53,52 @@ class Goal < ActiveRecord::Base
     end
   end
 
+
+
+  def actual_value
+    if goal_type == :percent
+      #calculate_percent
+      @goal.category.percent_of_parent_category(@goal.period_start, @goal.period_end, @goal.include_subcategories)
+    else
+      #calculate_money
+
+    end
+  end
   
-  #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
-  def percent_of_parent_category
-    category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
-  end
-
-  #mówi czy osiągnieto cel, czy to dobrze czy źle zależy od wartości :goal_completion_condition
-  def is_goal_reached
-
-  end
-
-  #ile punktów procentowych zostało do osiągnięcia celu
-  def percents_to_reach_goal
-
-  end
-
-  #ile pięniędzy zostało do osiągnięcia celu
-  def money_to_reach_goal
-
-  end
-
-  #o ile punktów procentowych przekroczono cel
-  def percents_of_goal_exceed
-
-  end
-
-  #o ile pieniędzy przekroczono cel
-  def money_of_goal_exceed
-
-  end
-
-  #zwraca różnicę w wykonaniu planu w tym i poprzednim okresie (procentowo lub w wartości)
-  def goal_realization_compared_to_last_period
-
-  end
+#  #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
+#  def percent_of_parent_category
+#    category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
+#  end
+#
+#  #mówi czy osiągnieto cel, czy to dobrze czy źle zależy od wartości :goal_completion_condition
+#  def is_goal_reached
+#
+#  end
+#
+#  #ile punktów procentowych zostało do osiągnięcia celu
+#  def percents_to_reach_goal
+#
+#  end
+#
+#  #ile pięniędzy zostało do osiągnięcia celu
+#  def money_to_reach_goal
+#
+#  end
+#
+#  #o ile punktów procentowych przekroczono cel
+#  def percents_of_goal_exceed
+#
+#  end
+#
+#  #o ile pieniędzy przekroczono cel
+#  def money_of_goal_exceed
+#
+#  end
+#
+#  #zwraca różnicę w wykonaniu planu w tym i poprzednim okresie (procentowo lub w wartości)
+#  def goal_realization_compared_to_last_period
+#
+#  end
 
 
 end

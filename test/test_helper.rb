@@ -81,12 +81,17 @@ class Test::Unit::TestCase
 
 
   def save_jarek
+    make_currencies
+    @zloty.save! if @zloty.id.nil?
     @jarek = User.new()
     @jarek.email = 'jarek@example.com'
     @jarek.login = 'jarek_xyz'
     @jarek.password = @jarek.login
     @jarek.password_confirmation = @jarek.login
     @jarek.transaction_amount_limit_type = :actual_month
+    @jarek.multi_currency_balance_calculating_algorithm = :show_all_currencies
+    @jarek.default_currency = @zloty
+    @jarek.invert_saldo_for_income = false
     @jarek.save!
     @jarek.activate!
   end
@@ -281,6 +286,19 @@ class Test::Unit::TestCase
     r.save!
     r
   end
+
+
+  # jarek
+  #   asset
+  #     test
+  #       child1
+  #       child2
+  #   income
+  #   expense
+  #   loan
+  #   balance
+  #
+  #
 
   def prepare_sample_catagory_tree_for_jarek
     parent1 = @jarek.asset

@@ -353,24 +353,7 @@ class Category < ActiveRecord::Base
   end
 
   #
-  def calculate_share_values(depth, period_start, period_end)
-    result = []
-    if self.leaf? || depth == 0
-      result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period_with_subcategories(period_start, period_end)}
-    elsif depth == :all
-      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
-      self.children.each do |sub_category|
-        result += sub_category.calculate_share_values(depth, period_start, period_end)
-      end
-    elsif depth > 0
-      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
-      self.children.each do |sub_category|
-        result += sub_category.calculate_share_values(depth-1, period_start, period_end)
-      end
-    end
-    result
-  end
-
+  
 
 
   # Podaje saldo/salda kategorii w podanym czasie
@@ -391,7 +374,6 @@ class Category < ActiveRecord::Base
     result = []
     dates = Date.split_period(period_division, period_start, period_end)
     
-    #    result[:category_only] = []
     dates.each do |date_range|
       result << [:category_only, saldo_for_period_new(date_range[0], date_range[1])] if inclusion_type == :category_only || inclusion_type == :both
       result << [:category_and_subcategories, saldo_for_period_with_subcategories(date_range[0], date_range[1])] if inclusion_type == :category_and_subcategories || inclusion_type == :both
@@ -473,6 +455,37 @@ class Category < ActiveRecord::Base
 
     {:out => cash_out, :in => cash_in}
   end
+
+
+  #wartośc moze nie miec sensu jesli w kategorii nadrżednej są kategorie o saldach o róznych znakach
+  def percent_of_parent_category(period_start, period_end, include_subcategories)
+
+    #TODO stop if top category
+
+#    algorithm = :calculate_with_newest_exchanges
+
+    parent_value = self.parent.saldo_for_period_new(period_start, period_end, :default, true)
+    self_value = self.saldo_for_period_new(period_start, period_end, :default, include_subcategories)
+
+    # zmienić parent value i self value na jedna walute!!! (znormalizować)
+    #
+
+    currency = self.user.default_currency
+
+    self_value = self_value.value(currency)
+
+    parent_value = parent_value.value(currency)
+
+    if parent_value == 0
+      return 0
+    else
+      return (self_value/parent_value*100).round(2)
+    end
+
+  end
+
+
+
 
   #======================
   private
@@ -625,6 +638,27 @@ class Category < ActiveRecord::Base
     end
     categories_to_sum.map! {|cat| cat.id}
   end
+
+
+  protected
+  def calculate_share_values(depth, period_start, period_end)
+    result = []
+    if self.leaf? || depth == 0
+      result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period_with_subcategories(period_start, period_end)}
+    elsif depth == :all
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
+      self.children.each do |sub_category|
+        result += sub_category.calculate_share_values(depth, period_start, period_end)
+      end
+    elsif depth > 0
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
+      self.children.each do |sub_category|
+        result += sub_category.calculate_share_values(depth-1, period_start, period_end)
+      end
+    end
+    result
+  end
+
 
 
 end

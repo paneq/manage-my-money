@@ -408,12 +408,41 @@ class CategoryTest < Test::Unit::TestCase
 
 
   #TODO
-  def test_calculate_share_values
-#    prepare_sample_catagory_tree_for_jarek
-#    category1 = @jarek.income
-#    category2 = @jarek.categories.find_by_name "child1"
-#
-#    save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
+  def test_calculate_max_share_values
+    prepare_sample_catagory_tree_for_jarek
+    category1 = @jarek.asset
+    category2 = @jarek.loan
+    test_category = @jarek.categories.find_by_name 'test'
+
+    assert_equal({}, category1.calculate_max_share_values(5, 3, 1.year.ago.to_date, 1.year.from_now.to_date))
+
+    save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100, :user => @jarek)
+
+    result = category1.calculate_max_share_values(5, 3, 1.year.ago.to_date, 1.year.from_now.to_date)
+
+    assert_equal 1, result.keys.size
+    assert_not_nil result[@zloty]
+    assert_equal 1, result[@zloty].size
+    assert_equal true, result[@zloty].first[:without_subcategories]
+    assert_equal 100, result[@zloty].first[:value].value(@zloty)
+    assert_equal category1, result[@zloty].first[:category]
+
+    save_simple_transfer(:income => test_category, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 50, :user => @jarek)
+
+    result = category1.calculate_max_share_values(5, 3, 1.year.ago.to_date, 1.year.from_now.to_date)
+
+    assert_equal 1, result.keys.size
+    assert_not_nil result[@zloty]
+    assert_equal 2, result[@zloty].size
+    assert_equal true, result[@zloty].first[:without_subcategories]
+    assert_equal 100, result[@zloty].first[:value].value(@zloty)
+    assert_equal category1, result[@zloty].first[:category]
+
+    assert_equal true, result[@zloty][1][:without_subcategories]
+    assert_equal 50, result[@zloty][1][:value].value(@zloty)
+    assert_equal test_category, result[@zloty][1][:category]
+
+
 
     
     #TODO
@@ -429,7 +458,43 @@ class CategoryTest < Test::Unit::TestCase
 
   #TODO
   def test_calculate_values
-    
+    prepare_sample_catagory_tree_for_jarek
+    category1 = @jarek.asset
+    category2 = @jarek.loan
+    test_category = @jarek.categories.find_by_name 'test'
+
+    result = category1.calculate_values(:category_and_subcategories, :none, 1.year.ago.to_date, 1.year.from_now.to_date)
+
+
+    assert_equal 1, result.size
+    assert_equal 2, result.first.size
+    assert_equal :category_and_subcategories, result.first.first
+    assert_equal Money.new, result.first.second
+
+
+    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+
+    assert_equal 2, result.size
+    assert_equal 2, result.first.size
+    assert_equal :category_and_subcategories, result.first.first
+    assert_equal Money.new, result.first.second
+    assert_equal 2, result.second.size
+    assert_equal :category_and_subcategories, result.second.first
+    assert_equal Money.new, result.second.second
+
+    save_simple_transfer(:income => category1, :outcome => category2, :day => '26.02.2008'.to_date, :currency => @zloty, :value => 123, :user => @jarek)
+
+    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+
+    assert_equal 2, result.size
+    assert_equal 2, result.first.size
+    assert_equal :category_and_subcategories, result.first.first
+    assert_equal 123, result.first.second.value(@zloty)
+    assert_equal 2, result.second.size
+    assert_equal :category_and_subcategories, result.second.first
+    assert_equal Money.new, result.second.second
+
+
   end
 
 
@@ -526,6 +591,48 @@ class CategoryTest < Test::Unit::TestCase
     category2.name = 'NowaNazwa'
     category2.save!
     assert_equal 'Zasoby:test:NowaNazwa', category2.name_with_path
+
+  end
+
+
+
+  def test_percent_of_parent_category
+    
+
+    @jarek.multi_currency_balance_calculating_algorithm = :calculate_with_newest_exchanges
+    @jarek.save!
+    @jarek = User.find(@jarek.id)
+
+    prepare_sample_catagory_tree_for_jarek
+
+    test_category = @jarek.categories.find_by_name 'test'
+    asset_category = @jarek.asset
+    child1_category = @jarek.categories.find_by_name 'child1'
+    loan_category = @jarek.loan
+
+
+    assert_equal 0, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, true)
+    assert_equal 0, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, false)
+
+    save_simple_transfer(:income => test_category, :outcome => loan_category, :day => Date.today, :currency => @zloty, :value => 123, :user => @jarek)
+
+    assert_equal 100, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, true)
+
+    save_simple_transfer(:income => child1_category, :outcome => loan_category, :day => Date.today, :currency => @zloty, :value => 12, :user => @jarek)
+
+    assert_equal 100, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, true)
+
+    assert_equal 91.11, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, false)
+
+    save_simple_transfer(:income => asset_category, :outcome => loan_category, :day => Date.today, :currency => @zloty, :value => 5, :user => @jarek)
+
+
+    assert_equal 96.43, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, true)
+
+    assert_equal 87.86, test_category.percent_of_parent_category(1.year.ago.to_date, 1.year.from_now.to_date, false)
+
+
+    #TODO: przetestowane są tylko pozytywne ścieżki...
 
   end
 
