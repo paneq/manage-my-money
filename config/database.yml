@@ -42,6 +42,6 @@ selenium:
 production:
   adapter: postgresql
   database: rupert_3mp
-  host: localhost
+  host: stallman.rootnode.net
   username: rupert_3mp
   password: Ok5f0R9lkMCR6
