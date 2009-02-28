@@ -16,9 +16,9 @@ development:
 
 test:
 <% case machine_name; when "stallman.rootnode.net" then %>
-  adapter: mysql
+  adapter: postgresql
   database: rupert_3mt
-  host: mysql.rootnode.net
+  host: localhost
   username: rupert_3mt
   password: FUmvAywRkVe2a
 <% else %>
@@ -40,8 +40,8 @@ selenium:
   password:
 
 production:
-  adapter: mysql
-  database: rupert_3m
-  host: mysql.rootnode.net
-  username: rupert_3m
+  adapter: postgresql
+  database: rupert_3mp
+  host: localhost
+  username: rupert_3mp
   password: Ok5f0R9lkMCR6
