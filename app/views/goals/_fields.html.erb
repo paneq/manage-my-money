@@ -26,19 +26,14 @@
 
 </p>
 
-  <!--okres (combo) [period_type]--> <!--
-  <%#*<p><%= form.label 'period_type',%> 'W okresie' %>
-  <%#= form.enum_select :period_type%> (tutaj podobne wartości jak przy tworzeniu raportu ale w przyszłości) </p>
-  <%#*(do tego pola period start i period end dokładnie jak w raportach)%>
-  <%#*(ale w takim razie jak zapisać raport który nie ma końca?)%>
--->
+ 
 
 <%= date_period_fields("goal_day", @goal.period_start || Date.today, @goal.period_end || Date.today, @goal.period_type || 'selected', [:present, :future]) %>
 
 
 
-  <p>Powtarzaj plan w następnych okresach?</p>
-
+  <p><%= form.label :is_cyclic, 'Powtarzaj plan w następnych okresach?' %>
+<%= form.check_box :is_cyclic %></p>
 
 
   <p>

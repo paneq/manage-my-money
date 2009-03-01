@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090227165910
+# Schema version: 20090301162726
 #
 # Table name: users
 #
@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_many :transfers, :dependent => :destroy
   has_many :transfer_items, :through => :transfers
   has_many :currencies, :dependent => :destroy
+  has_many :goals
 
   #TODO: To remove
   has_many :visible_currencies,

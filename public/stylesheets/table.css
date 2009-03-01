@@ -66,3 +66,12 @@ th.specalt {
 	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	color: #797268;
 }
+
+th.in-header {
+    border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background: #fff;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+

@@ -3,14 +3,18 @@ class GoalsController < ApplicationController
   layout 'main'
   before_filter :login_required
 
+  #before actions check if this is current user goal
+
   # GET /goals
   # GET /goals.xml
   def index
-    @goals = Goal.find(:all)
+    goals = Goal.find(:all, :order => ['period_end'])
+
+    @finished_goals, @actual_goals = goals.partition{ |g| g.is_finished}
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @goals }
+      format.xml  { render :xml => @actual_goals }
     end
   end
 
@@ -89,6 +93,32 @@ class GoalsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(goals_url) }
       format.xml  { head :ok }
+    end
+  end
+
+
+  def finish
+    @goal = Goal.find(params[:id])
+    if @goal.finish
+      flash[:notice] = 'Plan został zakończony.'
+    else
+      flash[:notice] = 'Plan nie został zakończony. Skontaktuj się z pomocą techniczną.'
+    end
+
+    respond_to do |format|
+      format.html { redirect_to(:action => :index) }
+    end
+
+  end
+
+
+  def history_index
+    @goal = Goal.find(params[:id])
+    @goals = @goal.all_goals_in_cycle
+
+    respond_to do |format|
+      format.html 
+      format.xml  { render :xml => @actual_goals }
     end
   end
 

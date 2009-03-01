@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090226214904) do
+ActiveRecord::Schema.define(:version => 20090301162726) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20090226214904) do
   end
 
   create_table "categories", :force => true do |t|
-    t.string  "name",                                 :null => false
+    t.string  "name",                                   :null => false
     t.string  "description"
     t.integer "category_type_int"
     t.integer "user_id"
@@ -40,10 +40,11 @@ ActiveRecord::Schema.define(:version => 20090226214904) do
     t.integer "lft"
     t.integer "rgt"
     t.string  "import_guid"
-    t.boolean "imported",          :default => false
+    t.boolean "imported",            :default => false
     t.string  "type"
     t.string  "email"
     t.text    "bankinfo"
+    t.string  "bank_account_number"
   end
 
   add_index "categories", ["category_type_int", "id", "user_id"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
@@ -94,6 +95,8 @@ ActiveRecord::Schema.define(:version => 20090226214904) do
     t.integer  "currency_id"
     t.date     "period_start"
     t.date     "period_end"
+    t.boolean  "is_cyclic"
+    t.integer  "cycle_group"
   end
 
   add_index "goals", ["category_id"], :name => "index_goals_on_category_id"
@@ -132,11 +135,11 @@ ActiveRecord::Schema.define(:version => 20090226214904) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "transfer_items", :force => true do |t|
-    t.text    "description",                                              :null => false
-    t.decimal "value",       :precision => 8, :scale => 2,                :null => false
-    t.integer "transfer_id",                                              :null => false
-    t.integer "category_id",                                              :null => false
-    t.integer "currency_id",                               :default => 3, :null => false
+    t.text    "description",                                               :null => false
+    t.decimal "value",       :precision => 12, :scale => 2,                :null => false
+    t.integer "transfer_id",                                               :null => false
+    t.integer "category_id",                                               :null => false
+    t.integer "currency_id",                                :default => 3, :null => false
     t.string  "import_guid"
   end
 

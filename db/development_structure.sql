@@ -76,7 +76,8 @@ CREATE TABLE categories (
     imported boolean DEFAULT false,
     type character varying(255),
     email character varying(255),
-    bankinfo text
+    bankinfo text,
+    bank_account_number character varying(255)
 );
 
 
@@ -117,7 +118,6 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -214,7 +214,11 @@ CREATE TABLE goals (
     updated_at timestamp without time zone,
     currency_id integer,
     period_start date,
-    period_end date
+    period_end date,
+    is_cyclic boolean,
+    is_finished boolean,
+    cycle_group integer,
+    user_id integer NOT NULL
 );
 
 
@@ -223,7 +227,6 @@ CREATE TABLE goals (
 --
 
 CREATE SEQUENCE goals_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -267,7 +270,6 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -328,7 +330,7 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(8,2) NOT NULL,
+    value numeric(12,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,
@@ -814,3 +816,7 @@ INSERT INTO schema_migrations (version) VALUES ('20090221110740');
 INSERT INTO schema_migrations (version) VALUES ('20090226180602');
 
 INSERT INTO schema_migrations (version) VALUES ('20090226214904');
+
+INSERT INTO schema_migrations (version) VALUES ('20090227165910');
+
+INSERT INTO schema_migrations (version) VALUES ('20090301162726');

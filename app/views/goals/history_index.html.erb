@@ -1,0 +1,35 @@
+<h1>Historia wykonania planu '<%= @goal.description %>' </h1>
+<div class="nice-table">
+  <table id="mytable" cellspacing="0" summary="Cele">
+    <tr>
+      <th scope="col" class="nobg nice-table">Nazwa</th>
+      <th scope="col" class="nice-table">Dla kategorii</th>
+      <th scope="col" class="nice-table">Zakładana wartość</th>
+      <th scope="col" class="nice-table">Aktualna wartość</th>
+      <th scope="col" class="nice-table">Na okres</th>
+      <th scope="col" class="nice-table" colspan="4">Akcje</th>
+    </tr>
+
+
+    <% for goal in @goals %>
+      <% atl_style_td = cycle('', 'alt', :name => 'alt_style_td')%>
+      <tr>
+        <th scope="row" class="<%= cycle('spec', 'specalt') %> nice-table"><%=goal.description%></th>
+        <td class="nice-table <%=atl_style_td%>"><%=goal.category.name%></td>
+        <td class="nice-table <%=atl_style_td%>"><%=goal.value_description%></td>
+        <td class="nice-table <%=atl_style_td%>"><span class="<%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%=goal.actual_value_with_unit%></span></td>
+        <td class="nice-table <%=atl_style_td%>"><%=goal.period_description%></td>
+        <td class="nice-table <%=atl_style_td%>" colspan="4"><%= link_to 'Usuń', goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
+      </tr>
+    <% end %>
+
+
+    
+  </table>
+
+  <br />
+
+  <%= link_to 'Wszystkie plany', goals_path %>
+
+
+</div>

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090227165910
+# Schema version: 20090301162726
 #
 # Table name: goals
 #
@@ -16,6 +16,10 @@
 #  currency_id                   :integer       
 #  period_start                  :date          
 #  period_end                    :date          
+#  is_cyclic                     :boolean       
+#  is_finished                   :boolean       
+#  cycle_group                   :integer       
+#  user_id                       :integer       not null
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

@@ -255,6 +255,22 @@ class DateExtensionsTest < Test::Unit::TestCase
     end
   end
 
+  def test_shift
+    date = '16.07.2008'.to_date #sroda, 3 tydzień lipca, III kwartał, 29 tydzień 2008
+
+    assert_equal '17.07.2008'.to_date, date.shift(:DAY)
+    assert_equal '23.07.2008'.to_date, date.shift(:WEEK)
+    assert_equal '16.08.2008'.to_date, date.shift(:MONTH)
+    assert_equal '16.10.2008'.to_date, date.shift(:QUARTER)
+    assert_equal '16.07.2009'.to_date, date.shift(:YEAR)
+    assert_equal '23.07.2008'.to_date, date.shift(:A_7_DAYS)
+    assert_equal '13.08.2008'.to_date, date.shift(:A_4_WEEKS)
+    assert_equal '16.10.2008'.to_date, date.shift(:A_3_MONTHS)
+    assert_equal '14.10.2008'.to_date, date.shift(:A_90_DAYS)
+    assert_equal '16.07.2009'.to_date, date.shift(:A_12_MONTHS)
+
+  end
+
 
   private
   def assert_actual_periods
