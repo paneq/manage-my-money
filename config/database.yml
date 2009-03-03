@@ -18,7 +18,7 @@ test:
 <% case machine_name; when "stallman.rootnode.net" then %>
   adapter: postgresql
   database: rupert_3mt
-  host: localhost
+  host: stallman.rootnode.net
   username: rupert_3mt
   password: FUmvAywRkVe2a
 <% else %>
