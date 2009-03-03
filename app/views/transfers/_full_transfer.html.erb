@@ -16,6 +16,7 @@
   <%= hidden_field_tag :embedded, embedded unless embedded %>
   <%= hidden_field_tag :include_subcategories, include_subcategories if include_subcategories %>
   <%= hidden_field_tag :current_category, current_category.id if current_category %>
+  <%= f.hidden_field :import_guid %>
 
   <% errorid = 'transfer-errors' %>
   <% errorid += "-#{transfer.id}" unless transfer.new_record? %>

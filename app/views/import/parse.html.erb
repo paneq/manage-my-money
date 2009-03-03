@@ -1,15 +1,26 @@
 <div>
   <% @result.each do |result| %>
-    
+
     <% transfer = result[:transfer] %>
-    <% warnings = result[:warning] %>
+    <% warnings = result[:warnings] %>
     <% div_id = 'transfer-edit-' + transfer.error_id.to_s %>
 
     <div>
       <%= switch(div_id, 'Pokaż / Ukryj') %> |
-      <%= h transfer.day  %> | 
+      <%= h transfer.day  %> |
       <%= h transfer.description  %>
       <div id="<%= div_id -%>" style="display: none;">
+        <% unless warnings.empty? %>
+          <div class="import_warnings">
+            <ul>
+            <% warnings.each do |warning| %>
+              <li>
+                <%= warning.description %>
+              </li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
         <%= render :partial => 'transfers/full_transfer', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
       </div>
     </div>

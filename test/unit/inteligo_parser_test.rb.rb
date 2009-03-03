@@ -33,9 +33,15 @@ class InteligoParserTest < Test::Unit::TestCase
     assert !warnings.empty? #because of t1
 
     warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 1032.28}[:warnings]
-    assert !warnings.empty? #because of t2
+    assert !warnings.empty? #because of t2 
  
-    #nie istniejaca waluta
+    #new currency -> CHF
+    warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 0.04}[:warnings]
+    assert !warnings.empty? #because of new currency
+    new_currency = warnings.first.data
+    assert new_currency.is_a? Currency
+    assert_equal 'CHF', new_currency.long_symbol
+    
   end
 
 end

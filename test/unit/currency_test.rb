@@ -175,4 +175,14 @@ class CurrencyTest < Test::Unit::TestCase
     assert @zloty.destroy
     assert_nil @zloty.why_not_destroyed
   end
+
+
+  def test_all
+    chf = 'CHF'
+    currency = Currency.new(:all => chf)
+    [:symbol, :long_symbol, :name, :long_name].each  do |field|
+      assert_equal chf, currency.send(field)
+    end
+  end
+
 end

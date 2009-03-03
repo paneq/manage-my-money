@@ -26,6 +26,7 @@ Karta nr: 5208
             </description>
         </operation>
 
+        <!-- IMPORTED FROM OTHER FILE -->
         <operation id='22'>
             <order-date>2008-11-29</order-date>
             <exec-date>2008-11-29</exec-date>
@@ -46,14 +47,15 @@ Data przygotowania: 2008-11-29
                 <account>50102055581111100000000000</account>
             </other-side>
         </operation>
-  
+
+        <!-- UNEXISTING CURRENCY -->
         <operation id='21'>
             <order-date>2008-11-29</order-date>
             <exec-date>2008-11-29</exec-date>
             <class>DEBIT</class>
             <type>Naliczenie odsetek</type>
-            <amount curr='PLN'>-0.04</amount>
-            <ending-balance curr='PLN'>999.96</ending-balance>
+            <amount curr='CHF'>-0.04</amount>
+            <ending-balance curr='CHF'>999.96</ending-balance>
             <description>Naliczenie odsetek</description>
         </operation>
 

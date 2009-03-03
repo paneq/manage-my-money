@@ -87,6 +87,14 @@ class Currency < ActiveRecord::Base
   end
 
 
+  # Sets all symbol and name fields to given value
+  def all=(symbol)
+    [:symbol, :long_symbol, :name, :long_name].each  do |field|
+      send(field.to_s + '=', symbol.to_s)
+    end
+  end
+
+
   private
 
 

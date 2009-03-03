@@ -25,7 +25,7 @@ end
 class InteligoParser
   def self.parse(content, user, category)
 
-    warning_class = Struct.new(:text, :data)
+    warning_class = Struct.new(:description, :data)
 
     doc = Nokogiri::XML(content)
 
@@ -37,6 +37,8 @@ class InteligoParser
     result = []
     types = [:income, :outcome]
     operations.each_with_index do |operation, index|
+      warnings = []
+
       id = operation['id']
       description = operation.find('description')
       order_date = operation.find('order-date').to_date
@@ -45,6 +47,12 @@ class InteligoParser
       currency_long_symbol = amount['curr']
       currencies[currency_long_symbol] ||= Currency.for_user(user).find_by_long_symbol(currency_long_symbol)
       currency = currencies[currency_long_symbol]
+      if currency.nil?
+        currency = Currency.new(:all => currency_long_symbol[0..2].upcase, :user => user)
+        currency.save!
+        currencies[currency_long_symbol] = currency
+        warnings << warning_class.new("Aby umożliwić zaimportowanie tego transferu została stworzona nowa waluta o symbolu: #{currency_long_symbol}", currency)
+      end
 
       amount = amount.inner_html.to_f
       item_type, other_item_type = amount > 0 ? types : types.reverse
@@ -56,11 +64,8 @@ class InteligoParser
         other_category = user.categories.find_by_bank_account_number(number)
       end
 
-      puts id, order_date, amount, currency_long_symbol, "\n"
-
       import_guid = [bank_account_number_in_file, id].join('-')
 
-      warnings = []
       previous_transfer = user.transfers.find_by_import_guid(import_guid)
       unless previous_transfer
         previous_transfer = user.
