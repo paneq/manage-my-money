@@ -36,7 +36,7 @@ class InteligoParser
 
     result = []
     types = [:income, :outcome]
-    operations.each do |operation|
+    operations.each_with_index do |operation, index|
       id = operation['id']
       description = operation.find('description')
       order_date = operation.find('order-date').to_date
@@ -71,7 +71,7 @@ class InteligoParser
       end
       warnings << warning_class.new('Ten transfer został już najprawdopodobniej zaimportowany', previous_transfer) if previous_transfer
 
-      t = Transfer.new(:day => order_date, :description => description, :import_guid => import_guid)
+      t = Transfer.new(:day => order_date, :description => description, :import_guid => import_guid, :error_id => index)
       t.transfer_items << TransferItem.new(:currency => currency, :value => amount.abs, :category => category, :transfer_item_type => item_type)
       t.transfer_items << TransferItem.new(:currency => currency, :value => amount.abs, :category => other_category, :transfer_item_type => other_item_type)
       result << {:transfer => t, :warnings => warnings}

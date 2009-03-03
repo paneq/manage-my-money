@@ -43,7 +43,32 @@ class ImportController < CooperationController
 
   end
 
-  
+
+  def create
+    @transfer = Transfer.new(params[:transfer])
+    @transfer.user = self.current_user
+    error_id = params[:error_id]
+    if @transfer.save
+      render :update do |page|
+        page.replace_html "transfer-edit-#{error_id}", :text => 'Transfer został pomyślnie zapisany'
+        # TODO, dodać jakieś mignięcie albo coś
+      end
+    else
+      render :update do |page|
+        page.replace_html "transfer-errors-#{error_id}", error_messages_for(:transfer, :message => nil)
+        @transfer.transfer_items.each do |ti|
+          if ti.valid?
+            page.replace_html "transfer-item-errors-#{ti.error_id}", ''
+          else
+            page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
+          end
+        end
+      end # render
+    end # if else
+
+  end
+
+
   private
 
 

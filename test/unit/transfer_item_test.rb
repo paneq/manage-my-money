@@ -95,8 +95,29 @@ class TransferItemTest < Test::Unit::TestCase
     @ti.valid?
     assert_equal 2, @ti.errors.on(:value).size
     errors = @ti.errors.on(:value).join(' ')
-    assert_match /nie jest prawidłową liczbą/, errors
-    assert_match /pusta/, errors
+    assert_match(/nie jest prawidłową liczbą/, errors)
+    assert_match(/pusta/, errors)
+
+    @ti = TransferItem.new
+    @ti.transfer_item_type=(:outcome)
+    @ti.value = "ABSURD"
+    @ti.valid?
+    assert_not_nil @ti.errors.on(:value)
+    assert_match( /nie jest prawidłową liczbą/, @ti.errors.on(:value))
+
+    @ti = TransferItem.new
+    @ti.value = "ABSURD"
+    @ti.transfer_item_type=(:income)
+    @ti.valid?
+    assert_not_nil @ti.errors.on(:value)
+    assert_match( /nie jest prawidłową liczbą/, @ti.errors.on(:value))
+
+    #TODO: To ma przechodzić !
+#    t = Transfer.new()
+#    ti = t.transfer_items.build(:value =>"ABSURD", :transfer_item_type => :income)
+#    assert !t.valid?
+#    assert !ti.errors.empty?
+#    assert_match( /nie jest prawidłową liczbą/, ti.errors.on(:value))
   end
 
 

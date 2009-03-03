@@ -63,6 +63,17 @@ class Transfer < ActiveRecord::Base
     return day <=> other_transfer.day
   end
 
+  
+  def error_id=(eid)
+    @error_id = eid
+  end
+
+
+  def error_id
+    return @error_id if new_record?
+    return id
+  end
+
 
   protected
 

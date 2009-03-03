@@ -174,7 +174,7 @@ class TransfersController < ApplicationController
           render :update do |page|
             page.replace_html 'transfer-errors', error_messages_for(:transfer, :message => nil)
             @transfer.transfer_items.each do |ti|
-              if ti.valid?
+              if ti.errors.empty? #ti.valid? runs validation once again. avoid it
                 page.replace_html "transfer-item-errors-#{ti.error_id}", ''
               else
                 page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')

@@ -1,14 +1,16 @@
 <div>
-  <% @result.each_with_index do |result, index| %>
-    <% div_id = 'transfer-edit-' + index.to_s %>
+  <% @result.each do |result| %>
+    
     <% transfer = result[:transfer] %>
     <% warnings = result[:warning] %>
+    <% div_id = 'transfer-edit-' + transfer.error_id.to_s %>
+
     <div>
       <%= switch(div_id, 'Pokaż / Ukryj') %> |
       <%= h transfer.day  %> | 
       <%= h transfer.description  %>
       <div id="<%= div_id -%>" style="display: none;">
-        <%= render :partial => 'transfers/full_transfer', :locals => result.merge(:hide_after_saved => true) %>
+        <%= render :partial => 'transfers/full_transfer', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
       </div>
     </div>
   <% end %>

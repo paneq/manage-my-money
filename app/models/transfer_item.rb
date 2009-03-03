@@ -5,7 +5,7 @@
 #
 #  id          :integer       not null, primary key
 #  description :text          not null
-#  value       :decimal(12, 2 not null
+#  value       :decimal(8, 2) not null
 #  transfer_id :integer       not null
 #  category_id :integer       not null
 #  currency_id :integer       default(3), not null
@@ -23,7 +23,7 @@ class TransferItem < ActiveRecord::Base
   validates_presence_of :currency
   
   validates_numericality_of :value
-  before_validation :multiply_depending_of_type
+  after_validation :multiply_depending_of_type
 
   def transfer_item_type=(tit)
     case tit.to_s.downcase

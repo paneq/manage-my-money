@@ -2,52 +2,62 @@
 <% current_category ||= nil %>
 <% include_subcategories ||= nil %>
 <% embedded ||= nil %>
-<% form_remote_for transfer do |f| %>
 
-<%= hidden_field_tag :embedded, embedded unless embedded %>
-<%= hidden_field_tag :include_subcategories, include_subcategories if include_subcategories %>
-<%= hidden_field_tag :current_category, current_category.id if current_category %>
+<% controller ||= :transfers %>
+<% array = [transfer] %>
+<% if controller != :transfers %>
+  <% array = [:transfer, transfer, {:url => {:action => :create, :controller => controller}}] %>
+<% end %>
 
-<% errorid = 'transfer-errors' %>
-<% errorid += "-#{transfer.id}" unless transfer.new_record? %>
+<% form_remote_for(*array) do |f| %>
 
-<div id="<%= errorid -%>">
-  
-</div>
-<div>
-  <h3>Opis</h3>
-  <%= f.text_area :description, :cols => 60, :rows => 4 %>
-</div>
 
-<hr class="hr-line-100prc" />
-  
-<div>
-  <h3>Data</h3>
-  <%= f.date_select :day  %>
-</div>
+  <%= hidden_field_tag :error_id, transfer.error_id %>
+  <%= hidden_field_tag :embedded, embedded unless embedded %>
+  <%= hidden_field_tag :include_subcategories, include_subcategories if include_subcategories %>
+  <%= hidden_field_tag :current_category, current_category.id if current_category %>
 
-<hr class="hr-line-100prc" />
-<% types = [[:outcome, 'Rozchód'],[:income, 'Przychód']] %>
-<% types.each do |type, name| %>
+  <% errorid = 'transfer-errors' %>
+  <% errorid += "-#{transfer.id}" unless transfer.new_record? %>
+  <% errorid += "-#{transfer.error_id}" if controller != :transfers %>
+
+  <div id="<%= errorid -%>">
+
+  </div>
   <div>
-    <h3><%= name -%></h3>
-	  <table id="full-<%= type.to_s -%>-items">
+    <h3>Opis</h3>
+    <%= f.text_area :description, :cols => 60, :rows => 4 %>
+  </div>
+
+  <hr class="hr-line-100prc" />
+
+  <div>
+    <h3>Data</h3>
+    <%= f.date_select :day  %>
+  </div>
+
+  <hr class="hr-line-100prc" />
+  <% types = [[:outcome, 'Rozchód'],[:income, 'Przychód']] %>
+  <% types.each do |type, name| %>
+    <div>
+      <h3><%= name -%></h3>
+      <table id="full-<%= type.to_s -%>-items">
         <tr>
           <td> <span>Kategoria</span> </td>
           <td> <span>Opis</span> </td>
           <td> <span>Wartość</span> </td>
           <td> <span>Waluta</span> </td>
         </tr>
-	    <%= render :partial => 'transfers/transfer_item', :collection => transfer.transfer_items.select {|ti| ti.transfer_item_type == type} %>
-	  </table>
+        <%= render :partial => 'transfers/transfer_item', :collection => transfer.transfer_items.select {|ti| ti.transfer_item_type == type} %>
+      </table>
       <%= add_transfer_item(type) %>
-  </div>
+    </div>
 
-  <%= "<hr class='hr-line-100prc' />" if types.first.first == type %>
+    <%= "<hr class='hr-line-100prc' />" if types.first.first == type %>
 
   <% end %>
-<hr class="hr-line-100prc" />
+  <hr class="hr-line-100prc" />
 
-<%= submit_tag 'Zapisz' %>
+  <%= submit_tag 'Zapisz' %>
 
 <% end %>
