@@ -44,13 +44,20 @@ class Goal < ActiveRecord::Base
                         :goal_completion_condition,
                         :period_start,
                         :period_end
+
+#  validates_presence_of :currency, :if => :goal_type_value
   validates_numericality_of :value
 
   validate :validate_goal_type_with_category
   validate :validate_period_type_with_is_cyclic
 
+
+  def goal_type_value
+    goal_type == :value
+  end
+
   def validate_goal_type_with_category
-    if !category.nil? && !goal_type == :percent && category.is_top?
+    if (!category.nil?) && goal_type == :percent && category.is_top?
       errors.add(:category, 'Dla danego typu planu wymagane jest aby wybrana kategoria miała nadkategorie')
     end 
   end
@@ -66,6 +73,7 @@ class Goal < ActiveRecord::Base
     if self.goal_type == :percent
       'percent'
     else
+      return nil if self.currency.nil?
       self.currency.long_symbol
     end
   end
@@ -193,17 +201,28 @@ class Goal < ActiveRecord::Base
   end
 
   def all_goals_in_cycle
-    Goal.find(:all, :order => ['period_end'], :conditions => ['cycle_group = ?', self.cycle_group])
+    Goal.find(:all, :order => ['period_end'], :conditions => ['user_id = ? AND cycle_group = ?', self.user.id, self.cycle_group])
   end
 
-  def create_new_goal_in_cycle
+  def create_next_goal_in_cycle
+    throw "Period type mismatch: #{period_type}" if period_type == :SELECTED
+    throw 'Goal is not cyclic' unless is_cyclic
     new_goal = self.clone
-    self.is_cyclic = false
+#    self.is_cyclic = false
     new_goal.period_start = self.period_start.shift(Date::period_category(period_type))
     new_goal.period_end = self.period_end.shift(Date::period_category(period_type))
+#    new_goal.is_cyclic = true
 
+    same_goal = Goal.first :conditions => ['period_start = ? AND period_end = ? AND cycle_group = ?', new_goal.period_start, new_goal.period_end, cycle_group]
 
-    new_goal
+    throw 'There is already goal in database' unless same_goal.nil?
+#    return nil unless same_goal.nil?
+
+    return new_goal
+  end
+
+  def self.find_cyclic_goals_to_copy
+    []
   end
 
 

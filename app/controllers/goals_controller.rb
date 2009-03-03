@@ -8,7 +8,7 @@ class GoalsController < ApplicationController
   # GET /goals
   # GET /goals.xml
   def index
-    goals = Goal.find(:all, :order => ['period_end'])
+    goals = self.current_user.goals.find(:all, :order => ['period_end'])
 
     @finished_goals, @actual_goals = goals.partition{ |g| g.is_finished}
 
@@ -21,7 +21,7 @@ class GoalsController < ApplicationController
   # GET /goals/1
   # GET /goals/1.xml
   def show
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +42,7 @@ class GoalsController < ApplicationController
 
   # GET /goals/1/edit
   def edit
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
     prepare_values_for_goal_type_and_currency
   end
 
@@ -51,6 +51,7 @@ class GoalsController < ApplicationController
   def create
     @goal = Goal.new(params[:goal])
 
+    @goal.user = self.current_user
     set_period_for(@goal, 'goal_day')
 
     respond_to do |format|
@@ -69,7 +70,7 @@ class GoalsController < ApplicationController
   # PUT /goals/1
   # PUT /goals/1.xml
   def update
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
     set_period_for(@goal, 'goal_day')
     respond_to do |format|
       if @goal.update_attributes(params[:goal])
@@ -87,7 +88,7 @@ class GoalsController < ApplicationController
   # DELETE /goals/1
   # DELETE /goals/1.xml
   def destroy
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
     @goal.destroy
 
     respond_to do |format|
@@ -98,7 +99,7 @@ class GoalsController < ApplicationController
 
 
   def finish
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
     if @goal.finish
       flash[:notice] = 'Plan został zakończony.'
     else
@@ -113,7 +114,7 @@ class GoalsController < ApplicationController
 
 
   def history_index
-    @goal = Goal.find(params[:id])
+    @goal = self.current_user.goals.find(params[:id])
     @goals = @goal.all_goals_in_cycle
 
     respond_to do |format|
@@ -126,7 +127,7 @@ class GoalsController < ApplicationController
   private
 
   def prepare_values_for_goal_type_and_currency
-    @values_for_goal_type_and_currency = @current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.long_symbol]}
+    @values_for_goal_type_and_currency = self.current_user.visible_currencies.map { |cur| [cur.long_symbol, cur.long_symbol]}
     @values_for_goal_type_and_currency << ['Procent wartości z nadkategorii','percent']
   end
 

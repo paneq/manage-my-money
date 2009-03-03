@@ -1,9 +1,17 @@
 :backgroundrb: 
   :port: 11006
   :ip: 0.0.0.0
+  :persistent_disabled: true
+  :log: foreground
 :schedules:
   :report_worker:
     :delete_temporary_reports:
+      :trigger_args:
+        :start: <%= Time.now + 5.seconds %>
+        :end: <%= Time.now + 5.years %>
+        :repeat_interval: <%= 3.hours %>
+  :goal_worker:
+    :create_goals_for_next_cycle:
       :trigger_args:
         :start: <%= Time.now + 5.seconds %>
         :end: <%= Time.now + 5.years %>
