@@ -15,6 +15,12 @@
   <% id = transfer_item.error_id %>
 <% end %>
 
+<% observe_me = "transfer_new_transfer_items_attributes_#{id}_description" %>
+<% complete_here = observe_me + '_complete' %>
+<% change_category = "transfer_new_transfer_items_attributes_#{id}_category_id"%>
+<% change_currency = "transfer_new_transfer_items_attributes_#{id}_currency_id"%>
+<% change_value = "transfer_new_transfer_items_attributes_#{id}_value"%>
+
 <% fields_for prefix, transfer_item do |transfer_form| -%>
 
   <tr style="margin: 0px; padding: 0px;">
@@ -23,12 +29,50 @@
   </tr>
   <tr class="transfer-item">
     <%= transfer_form.hidden_field :transfer_item_type %>
+    <td>
+      <%= transfer_form.text_field :description, :size=>40, :autocomplete => :off %>
+      <div class="auto_complete" id="<%= complete_here %>" >
+      </div>
+      <%= auto_complete_field observe_me,
+        :url => autocomplete_path,
+        :update => complete_here,
+        :min_chars => 3,
+        :select => 'complete',
+        :frequency => 0.3,
+        :after_update_element => <<-JS
+function(element, value) {
+  var x = document.getElementById('#{complete_here}');
+  aa = x.getElementsByTagName('li')
+  for(var i=0; i < aa.length; i++){
+    current_li = aa[i];
+    if(current_li.className == 'autocomplete_item selected') {
+      elements = current_li.getElementsByTagName('a')
+      for(var j=0; j < elements.length; j++){
+        el = elements[j]
+        
+        if(el.className == 'autocomplete-value') {
+          document.getElementById('#{change_value}').value = el.innerHTML;
+        }
+        if(el.className == 'autocomplete-category') {
+          document.getElementById('#{change_category}').value = el.innerHTML;
+        }
+        if(el.className == 'autocomplete-currency') {
+          document.getElementById('#{change_currency}').value = el.innerHTML;
+        }
+      }
+      break;
+    }
+  }
+}
+JS
+      %>
+    </td>
     <td> <%= transfer_form.select :category_id, @current_user.categories.map { |c| [c.name, c.id] } %> </td>
-    <td> <%= transfer_form.text_field :description, :size=>40 %> </td>
     <td> <%= transfer_form.text_field :value, :size=>5, :value => value %> </td>
     <td> <%= transfer_form.select :currency_id, @current_user.visible_currencies.map{|c| [c.long_symbol, c.id] } %></td>
     <td> <%= link_to_function "Usuń" , "$(this).up('.transfer-item').remove()" %>  </td>
   </tr>
+
 
 
 <% end -%>

@@ -1,0 +1,14 @@
+<ul class="autocomplete_list">
+  <% @transfer_items.each do |ti| %>
+    <li class="autocomplete_item">
+      <span class="complete"><%= ti.description %></span>
+      <span>
+        <%= ti.category.name -%>
+      </span>
+      <a class="autocomplete-value"><%= ti.value.abs -%></a>
+      <span><%= ti.currency.long_symbol -%></span>
+      <a class="autocomplete-category" style="display:none"><%= ti.category_id -%></a>
+      <a class="autocomplete-currency" style="display:none"><%= ti.currency_id -%></a>
+    </li>
+  <% end %>
+</ul>

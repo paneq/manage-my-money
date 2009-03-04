@@ -25,6 +25,17 @@ class TransferItem < ActiveRecord::Base
   validates_numericality_of :value
   after_validation :multiply_depending_of_type
 
+  define_index do
+    #fields
+    indexes description
+
+    #attributes
+    has transfer.user_id, :as => :user_id
+    has category_id
+
+    #set_property :delta => true #maybe in the future
+  end
+
   def transfer_item_type=(tit)
     case tit.to_s.downcase
     when 'income'

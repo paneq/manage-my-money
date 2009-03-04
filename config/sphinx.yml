@@ -1,0 +1,11 @@
+development:
+  min_prefix_len: 3
+  enable_star: 1
+
+test:
+  min_prefix_len: 3
+  enable_star: 1
+
+production:
+  min_prefix_len: 3
+  enable_star: 1

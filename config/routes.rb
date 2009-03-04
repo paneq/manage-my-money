@@ -83,7 +83,7 @@ ActionController::Routing::Routes.draw do |map|
   #map.register '/register', :controller => 'users', :action => 'create'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   
-  
+  map.autocomplete  '/autocomplete', :controller => 'autocomplete', :action => 'complete'
 
 
 
