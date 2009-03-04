@@ -70,6 +70,10 @@ module AutoCompleteMacrosHelper
     js_options[:frequency]  = "#{options[:frequency]}" if options[:frequency]
     js_options[:method]     = "'#{options[:method].to_s}'" if options[:method]
 
+    if protect_against_forgery? && js_options[:method] != "'get'"
+      js_options[:parameters] = "'#{request_forgery_protection_token}=' + encodeURIComponent('#{escape_javascript form_authenticity_token}')"
+    end
+
     { :after_update_element => :afterUpdateElement, 
       :on_show => :onShow, :on_hide => :onHide, :min_chars => :minChars }.each do |k,v|
       js_options[v] = options[k] if options[k]
@@ -106,14 +110,14 @@ module AutoCompleteMacrosHelper
   # 
   def text_field_with_auto_complete(object, method, tag_options = {}, completion_options = {})
     (completion_options[:skip_style] ? "" : auto_complete_stylesheet) +
-    text_field(object, method, tag_options) +
-    content_tag("div", "", :id => "#{object}_#{method}_auto_complete", :class => "auto_complete") +
-    auto_complete_field("#{object}_#{method}", { :url => { :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
+      text_field(object, method, tag_options) +
+      content_tag("div", "", :id => "#{object}_#{method}_auto_complete", :class => "auto_complete") +
+      auto_complete_field("#{object}_#{method}", { :url => { :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
   end
 
   private
-    def auto_complete_stylesheet
-      content_tag('style', <<-EOT, :type => Mime::CSS)
+  def auto_complete_stylesheet
+    content_tag('style', <<-EOT, :type => Mime::CSS)
         div.auto_complete {
           width: 350px;
           background: #fff;
@@ -137,7 +141,7 @@ module AutoCompleteMacrosHelper
           margin:0;
           padding:0;
         }
-      EOT
-    end
+    EOT
+  end
 
 end   
