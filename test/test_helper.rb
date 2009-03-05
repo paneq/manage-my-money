@@ -246,7 +246,7 @@ class Test::Unit::TestCase
 
 
   def require_memcached
-    unless `ps aux` =~ Regexp.new("memcached -d -p #{MEMCACHED_PORT}")
+    unless `ps aux` =~ Regexp.new("memcached.*-p #{MEMCACHED_PORT}")
       `memcached -d -p #{MEMCACHED_PORT}`
     end
   end

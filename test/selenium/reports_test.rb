@@ -11,6 +11,7 @@ begin
     
     def setup
       selenium_setup
+      require_memcached
       save_currencies
       save_rupert
       log_rupert

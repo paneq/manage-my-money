@@ -60,8 +60,9 @@ Rails::Initializer.run do |config|
   config.active_record.default_timezone = :utc
   
   config.i18n.default_locale = :pl
-  MEMCACHED_PORT = 11212
-  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "manage_my_money_#{RAILS_ENV}" }
+  MEMCACHED_PORT = 3043 #optimized for rootnode deploy
+  MEMCACHED_KEY = 'fI5YW5IP2gtvOczaGcpPpVbOsEDNmhH8SbiHiMO65hl7IxvPhtm2ApBug2Yr6Fik'
+  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "#{MEMCACHED_KEY}_manage_my_money_#{RAILS_ENV}" }
 end
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)
