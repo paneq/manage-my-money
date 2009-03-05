@@ -27,9 +27,9 @@
   </div>
   <div>
     <h3>Opis</h3>
-    <%= f.text_area :description, :cols => 60, :rows => 4 %>
+    <%= f.text_area :description, :cols => 60, :rows => 4, :onkeypress => 'alert(keyCode());' %>
     <% if autocomplete_transfer_description %>
-      <div class="auto_complete" id="transfer_description_auto_complete">
+      <div class="auto_complete" id="transfer_description_auto_complete" >
       </div>
       <%= auto_complete_field :transfer_description,
         :url => complete_transfer_path,

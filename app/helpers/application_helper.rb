@@ -64,7 +64,7 @@ module ApplicationHelper
     jsfunction = "var my_uid = uid();\n $(this).up().down('table').insert('#{ escape_javascript(text) }'); return false;"
     jsfunction.gsub! "PUT_ID_HERE", "'+ my_uid +'"
     #TODO: wyjąc metodę UID  z head'a layoutu
-    return link_to_function 'Nowy element', jsfunction
+    return link_to_function 'Nowy element', jsfunction, :id => "new-#{transfer_item_type}-transfer-item"
   end
 
 
