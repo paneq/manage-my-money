@@ -2,6 +2,7 @@
 <% current_category ||= nil %>
 <% include_subcategories ||= nil %>
 <% embedded ||= nil %>
+<% autocomplete_transfer_description ||= false %>
 
 <% controller ||= :transfers %>
 <% array = [transfer] %>
@@ -10,7 +11,6 @@
 <% end %>
 
 <% form_remote_for(*array) do |f| %>
-
 
   <%= hidden_field_tag :error_id, transfer.error_id %>
   <%= hidden_field_tag :embedded, embedded unless embedded %>
@@ -28,6 +28,15 @@
   <div>
     <h3>Opis</h3>
     <%= f.text_area :description, :cols => 60, :rows => 4 %>
+    <% if autocomplete_transfer_description %>
+      <div class="auto_complete" id="transfer_description_auto_complete">
+      </div>
+      <%= auto_complete_field :transfer_description,
+        :url => complete_transfer_path,
+        :min_chars => 3,
+        :frequency => 0.3
+      %>
+    <% end %>
   </div>
 
   <hr class="hr-line-100prc" />

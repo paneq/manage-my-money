@@ -31,6 +31,7 @@ class TransferItem < ActiveRecord::Base
 
     #attributes
     has transfer.user_id, :as => :user_id
+    has transfer.day, :as => :day
     has category_id
 
     #set_property :delta => true #maybe in the future

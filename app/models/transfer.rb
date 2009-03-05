@@ -33,6 +33,17 @@ class Transfer < ActiveRecord::Base
   validates_presence_of :day
   validates_presence_of :user
 
+  define_index do
+    #fields
+    indexes description
+
+    #attributes
+    has user_id
+    has day
+
+    #set_property :delta => true #maybe in the future
+  end
+
   def new_transfer_items_attributes=(transfer_items_attributes)
     transfer_items_attributes.each do |attributes|
       transfer_items.build(attributes[1].merge(:error_id =>attributes[0]))

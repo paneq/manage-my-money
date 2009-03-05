@@ -1,21 +1,28 @@
 <% all = [['quick', 'Szybki'],['full', 'Pelny'],['search','Wyszukaj']] %>
 <% current_category ||= nil %>
+<% autocomplete_transfer_description ||= false %>
 <% all.shift if current_category.nil? %>
 <% show = all.first %>
 
 <%= tab all, :name => :transfer %>
 
 <div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
-  
+
   <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
-  <% unless current_category.nil? %>
+  <% if current_category %>
     <div id="form-for-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
       <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
     </div>
   <% end %>
 
   <div id="form-for-transfer-full" <%= style_display_if { show.first == 'full'} %> >
-    <%= render :partial => 'transfers/full_transfer', :locals => { :current_category => current_category , :transfer => transfer, :embedded => true}  %>
+    <%= render :partial => 'transfers/full_transfer',
+      :locals => {
+      :current_category => current_category ,
+      :transfer => transfer,
+      :embedded => true,
+      :autocomplete_transfer_description => autocomplete_transfer_description
+    }  %>
   </div>
 
   <div id="form-for-transfer-search" <%= style_display_if { show.first == 'search'} %> >

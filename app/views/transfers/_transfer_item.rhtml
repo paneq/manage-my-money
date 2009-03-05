@@ -7,19 +7,20 @@
   <% id += transfer_item.transfer_item_type.to_s %>
   <% prefix = "transfer[new_transfer_items_attributes][#{id}]" %>
   <% value = nil %>
-
+  <% middle = 'new' %>
 <%  else %>
   <% # The book says that the place in prefix array should be filled by RoR with transfer_item.id %>
   <% prefix = "transfer[existing_transfer_items_attributes][]" %>
   <% value =  transfer_item.value.abs %>
   <% id = transfer_item.error_id %>
+  <% middle = 'existing' %>
 <% end %>
 
-<% observe_me = "transfer_new_transfer_items_attributes_#{id}_description" %>
+<% observe_me = "transfer_#{middle}_transfer_items_attributes_#{id}_description" %>
 <% complete_here = observe_me + '_complete' %>
-<% change_category = "transfer_new_transfer_items_attributes_#{id}_category_id"%>
-<% change_currency = "transfer_new_transfer_items_attributes_#{id}_currency_id"%>
-<% change_value = "transfer_new_transfer_items_attributes_#{id}_value"%>
+<% change_category = "transfer_#{middle}_transfer_items_attributes_#{id}_category_id"%>
+<% change_currency = "transfer_#{middle}_transfer_items_attributes_#{id}_currency_id"%>
+<% change_value = "transfer_#{middle}_transfer_items_attributes_#{id}_value"%>
 
 <% fields_for prefix, transfer_item do |transfer_form| -%>
 
@@ -34,7 +35,7 @@
       <div class="auto_complete" id="<%= complete_here %>" >
       </div>
       <%= auto_complete_field observe_me,
-        :url => autocomplete_path,
+        :url => complete_transfer_item_path,
         :update => complete_here,
         :min_chars => 3,
         :select => 'complete',
