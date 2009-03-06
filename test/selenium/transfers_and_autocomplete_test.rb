@@ -71,21 +71,22 @@ begin
           2.times { @selenium.click "new-#{item_type}-transfer-item" }
         end
         Kernel.sleep 0.3
-        
-        # first outcome item
+
+
+        # first income item
         # User again made some shopping in tesco: Jedzenie zakupione w tesco
-        outcome_description = "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/input"
-        assert @selenium.is_element_present(outcome_description)
-        @selenium.type_keys outcome_description, @transfers.third.description[0..3] #"Jedz"
+        income_description = "//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/input"
+        assert @selenium.is_element_present(income_description)
+        @selenium.type_keys income_description, @transfers.third.description[0..3] #"Jedz"
 
         # two autcompletes should be seen
         # one for @food and one for @rupert.asset
         Kernel.sleep 2
-        assert_equal 2.to_s, @selenium.get_xpath_count("//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/div/ul/li")
+        assert_equal 2.to_s, @selenium.get_xpath_count("//table[@id='full-income-items']/tbody/tr[3]/td[1]/div/ul/li")
 
         complete = nil
         (1..2).each do |nr|
-          checked = "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/div/ul/li[#{nr}]"
+          checked = "//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/div/ul/li[#{nr}]"
           text = @selenium.get_text checked
           if text =~ Regexp.new(@food.name)
             complete = checked
@@ -97,30 +98,30 @@ begin
         move_and_click complete #Click on the @food autocomplete option
 
         #check autocompleted description, category, value and currency
-        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/input").to_s
-        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[2]/select").to_s
-        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[3]/input").to_s
-        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[4]/select").to_s
+        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/input").to_s
+        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[2]/select").to_s
+        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[3]/input").to_s
+        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[4]/select").to_s
 
         # but we do not want dollar.
         # select PLN
-        @selenium.select "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[4]/select", @zloty.long_symbol
+        @selenium.select "//table[@id='full-income-items']/tbody[1]/tr[3]/td[4]/select", @zloty.long_symbol
 
 
 
         # second item
         # user is paying for rent once again
-        outcome_description = "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/input"
-        assert @selenium.is_element_present(outcome_description)
-        @selenium.type_keys outcome_description, "marz"
+        income_description = "//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/input"
+        assert @selenium.is_element_present(income_description)
+        @selenium.type_keys income_description, "marz"
 
         # four autcompletes should be seen
         Kernel.sleep 1.5
-        assert_equal 4.to_s, @selenium.get_xpath_count("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/div/ul/li")
+        assert_equal 4.to_s, @selenium.get_xpath_count("//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/div/ul/li")
 
         complete = nil
         (1..4).each do |nr|
-          checked = "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/div/ul/li[#{nr}]"
+          checked = "//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/div/ul/li[#{nr}]"
           text = @selenium.get_text checked
           if text =~ Regexp.new(@rent.name)
             complete = checked
@@ -132,10 +133,10 @@ begin
         move_and_click complete #Click on the @rent autocomplete option
 
         #check autocompleted description, category, value and currency
-        assert_equal @transfers.second.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/input").to_s
-        assert_equal @rent.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[2]/select").to_s
-        assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[3]/input").to_s
-        assert_equal @zloty.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[4]/select").to_s
+        assert_equal @transfers.second.description.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/input").to_s
+        assert_equal @rent.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[2]/select").to_s
+        assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[3]/input").to_s
+        assert_equal @zloty.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[4]/select").to_s
 
 
 
@@ -143,17 +144,21 @@ begin
         # we do not care about autocompletion here
         #
         # type description
-        @selenium.type_keys "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[1]/input", "FULFILLMENT to 1000 PLN"
+        @selenium.type_keys "//table[@id='full-income-items']/tbody[3]/tr[2]/td[1]/input", "FULFILLMENT to 1000 PLN"
 
         # select category
-        @selenium.select "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[2]/select", @rupert.asset.name
+        @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[2]/select", @rupert.asset.name
 
         # type value
-        @selenium.type_keys "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[3]/input", "1000"
+        @selenium.type_keys "//table[@id='full-income-items']/tbody[3]/tr[2]/td[3]/input", "1000"
 
         # select currency
-        @selenium.select "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
+        @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
         Kernel.sleep 10
+
+
+
+
       end
     end
 
