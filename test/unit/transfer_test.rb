@@ -70,7 +70,7 @@ class TransferTest < Test::Unit::TestCase
 
     transfer.transfer_items = [transfer.transfer_items.first]
     assert !transfer.valid?, "Transfer should have at least 2 elements to be valid"
-    assert_match /dwóch.*elementów/, transfer.errors.on('base').join(" ")
+    assert_match( /dwóch.*elementów/, transfer.errors.on('base').join(" "))
   end
 
   

@@ -65,10 +65,77 @@ class GoalTest < ActiveSupport::TestCase
     g2.save!
     assert_equal g2.id, g2.cycle_group
   end
-  
 
-  private
-  
+
+  def test_validations
+    prepare_sample_catagory_tree_for_jarek
+
+    g = Goal.new
+    assert !g.save
+    assert_equal 8, g.errors.size
+
+    assert g.errors.on(:description)
+    assert_equal 2, g.errors.on(:value).size
+    assert g.errors.on(:user)
+    assert g.errors.on(:category)
+    assert g.errors.on(:period_type)
+    assert g.errors.on(:period_start)
+    assert g.errors.on(:period_end)
+
+    g.description = 'aaa'
+    g.value = 'bbb'
+    g.user = @jarek
+    g.category = @jarek.income
+    g.period_type = :SELECTED
+    g.period_start = '12.12.2012'.to_date
+    g.period_end = '12.12.2012'.to_date
+
+    assert !g.save
+    assert_equal 2, g.errors.size
+    assert g.errors.on(:value)
+    assert_match(/wymagane jest/, g.errors.on(:category))
+
+    g.value = 1.1
+    g.category = @jarek.categories.find_by_name('test')
+    
+    assert g.save
+
+    g.category = @jarek.income
+    g.goal_type_and_currency = 'PLN'
+
+    assert g.save
+    
+    
+    g.is_cyclic = true
+    assert !g.save
+    assert_equal 1, g.errors.size
+    assert_match(/musisz wybrać okres/, g.errors.on(:period_type))
+
+    g.is_cyclic = false
+    assert g.save
+
+    g.is_cyclic = true
+    g.period_type = :NEXT_DAY
+    assert g.save
+  end
+
+  def test_text_properties
+    g = create_goal(true)
+    assert_not_nil g.goal_type_and_currency
+    assert_not_nil g.value_with_unit
+    assert_not_nil g.actual_value_with_unit
+    assert_not_nil g.unit
+    assert_not_nil g.period_description
+    assert_not_nil g.value_description
+  end
+
+  #TODO
+  #test_actual_value
+  #test_finish
+  #test_finished?
+  #test_positive?
+  #test_all_goals_in_cycle
+  #test_next_goal_in_cycle
 
 
 end

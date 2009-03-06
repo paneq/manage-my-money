@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090301162726
+# Schema version: 20090306160304
 #
 # Table name: goals
 #
@@ -16,8 +16,8 @@
 #  currency_id                   :integer       
 #  period_start                  :date          
 #  period_end                    :date          
-#  is_cyclic                     :boolean       
-#  is_finished                   :boolean       
+#  is_cyclic                     :boolean       not null
+#  is_finished                   :boolean       not null
 #  cycle_group                   :integer       
 #  user_id                       :integer       not null
 #

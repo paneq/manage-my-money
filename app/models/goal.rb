@@ -36,17 +36,18 @@ class Goal < ActiveRecord::Base
   define_enum :goal_completion_condition, {:at_least => 0, :at_most => 1}
 
   validates_presence_of :description,
-                        :value,
-                        :category,
-                        :user,
-                        :goal_type_and_currency,
-                        :period_type,
-                        :goal_completion_condition,
-                        :period_start,
-                        :period_end
+    :value,
+    :user,
+    :category,
+    :goal_type_and_currency,
+    :period_type,
+    :goal_completion_condition,
+    :period_start,
+    :period_end
 
-#  validates_presence_of :currency, :if => :goal_type_value
+  #  validates_presence_of :currency, :if => :goal_type_value
   validates_numericality_of :value
+
 
   validate :validate_goal_type_with_category
   validate :validate_period_type_with_is_cyclic
@@ -68,6 +69,13 @@ class Goal < ActiveRecord::Base
     end
   end
 
+  def after_save
+    if is_cyclic && cycle_group.nil?
+      update_attribute :cycle_group, id
+    elsif !is_cyclic && !cycle_group.nil?
+      update_attribute :cycle_group, nil
+    end
+  end
 
   def goal_type_and_currency
     if self.goal_type == :percent
@@ -88,8 +96,6 @@ class Goal < ActiveRecord::Base
     end
   end
 
-
-
   def actual_value
     if goal_type == :percent
       #calculate_percent
@@ -101,13 +107,6 @@ class Goal < ActiveRecord::Base
     end
   end
 
-  def after_save
-    if is_cyclic && cycle_group.nil?
-      update_attribute :cycle_group, id
-    elsif !is_cyclic && !cycle_group.nil?
-      update_attribute :cycle_group, nil
-    end
-  end
 
   def value_with_unit
     "#{value}#{unit}"
@@ -143,42 +142,6 @@ class Goal < ActiveRecord::Base
     "#{prefix} #{value_with_unit}"
   end
 
-  #  #ile procent kategorii nadrzędnej stanowi saldo tej kategorii w okresie zadanym przez Goal
-  #  def percent_of_parent_category
-  #    category.percent_of_parent_category(start_day, end_day)  #TODO do zaimplementowania w catgory
-  #  end
-  #
-  #  #mówi czy osiągnieto cel, czy to dobrze czy źle zależy od wartości :goal_completion_condition
-  #  def is_goal_reached
-  #
-  #  end
-  #
-  #  #ile punktów procentowych zostało do osiągnięcia celu
-  #  def percents_to_reach_goal
-  #
-  #  end
-  #
-  #  #ile pięniędzy zostało do osiągnięcia celu
-  #  def money_to_reach_goal
-  #
-  #  end
-  #
-  #  #o ile punktów procentowych przekroczono cel
-  #  def percents_of_goal_exceed
-  #
-  #  end
-  #
-  #  #o ile pieniędzy przekroczono cel
-  #  def money_of_goal_exceed
-  #
-  #  end
-  #
-  #  #zwraca różnicę w wykonaniu planu w tym i poprzednim okresie (procentowo lub w wartości)
-  #  def goal_realization_compared_to_last_period
-  #
-  #  end
-
-
   def positive?
     if goal_completion_condition == :at_most
       actual_value <= value
@@ -204,22 +167,18 @@ class Goal < ActiveRecord::Base
     Goal.find(:all, :order => ['period_end'], :conditions => ['user_id = ? AND cycle_group = ?', self.user.id, self.cycle_group])
   end
 
+  
   def create_next_goal_in_cycle
     throw "Period type mismatch: #{period_type}" if period_type == :SELECTED
     throw 'Goal is not cyclic' unless is_cyclic
     new_goal = self.clone
-#    self.is_cyclic = false
     new_goal.period_start = self.period_start.shift(Date::period_category(period_type))
     new_goal.period_end = self.period_end.shift(Date::period_category(period_type))
-#    new_goal.is_cyclic = true
-
     same_goal = Goal.first :conditions => ['period_start = ? AND period_end = ? AND cycle_group = ?', new_goal.period_start, new_goal.period_end, cycle_group]
-
     throw 'There is already goal in database' unless same_goal.nil?
-#    return nil unless same_goal.nil?
-
     return new_goal
   end
+
 
   def next_goal_in_cycle
     if is_cyclic
