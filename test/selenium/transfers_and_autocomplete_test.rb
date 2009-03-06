@@ -67,11 +67,40 @@ begin
         assert_equal @transfers.second.description, @selenium.get_value(field_id)
 
         # add 4 new transfer items on the site
-        [:income, :outcome].each do |item_type|
+        [:outcome, :income].each do |item_type|
           2.times { @selenium.click "new-#{item_type}-transfer-item" }
         end
-
+        Kernel.sleep 0.3
         
+        #first outcome item
+        outcome_description = "//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/input"
+        assert @selenium.is_element_present(outcome_description)
+        @selenium.type_keys outcome_description, "Jedz"
+
+        # two autcompletes should be seen
+        # one for @food and one for @rupert.asset
+        Kernel.sleep 2
+        assert_equal 2.to_s, @selenium.get_xpath_count("//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/div/ul/li")
+
+        complete = nil
+        (1..2).each do |nr|
+          checked = "//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/div/ul/li[#{nr}]"
+          text = @selenium.get_text checked
+          if text =~ Regexp.new(@food.description)
+            complete = checked
+            break
+          end
+        end
+        
+        assert_not_nil complete
+        move_and_click complete #Click on the @food autocomplete option
+
+        #check autocompleted description, category, value and currency
+        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/input").to_s
+        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[2]/select").to_s
+        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[3]/input").to_s
+        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[4]/select").to_s
+
       end
     end
 
@@ -109,7 +138,9 @@ begin
         :day => Date.yesterday.yesterday,
         :value => 250,
         :income => @food,
-        :outcome => @rupert.asset)
+        :outcome => @rupert.asset,
+        :currency => @dolar
+      )
       
     end
 
@@ -128,6 +159,7 @@ begin
     def move_and_click(locator)
       @selenium.mouse_over locator
       @selenium.click locator
+      Kernel.sleep 0.4
     end
 
   end
