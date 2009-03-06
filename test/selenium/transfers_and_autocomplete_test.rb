@@ -97,12 +97,14 @@ begin
         move_and_click complete #Click on the @food autocomplete option
 
         #check autocompleted description, category, value and currency
-        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/input").to_s
-        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[2]/select").to_s
-        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[3]/input").to_s
-        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[4]/select").to_s
+        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/input").to_s
+        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[2]/select").to_s
+        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[3]/input").to_s
+        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[4]/select").to_s
 
-
+        # but we do not want dollar.
+        # select PLN
+        @selenium.select "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[4]/select", @zloty.long_symbol
 
 
 
@@ -135,6 +137,23 @@ begin
         assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[3]/input").to_s
         assert_equal @zloty.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[4]/select").to_s
 
+
+
+        # third item
+        # we do not care about autocompletion here
+        #
+        # type description
+        @selenium.type_keys "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[1]/input", "FULFILLMENT to 1000 PLN"
+
+        # select category
+        @selenium.select "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[2]/select", @rupert.asset.name
+
+        # type value
+        @selenium.type_keys "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[3]/input", "1000"
+
+        # select currency
+        @selenium.select "//table[@id='full-outcome-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
+        Kernel.sleep 10
       end
     end
 
