@@ -72,6 +72,17 @@ begin
         end
         Kernel.sleep 0.3
 
+        # TRs with fields for adding elements
+        assert @selenium.is_element_present "//table[@id='full-outcome-items']/tbody[1]/tr[3]"
+        assert @selenium.is_element_present "//table[@id='full-outcome-items']/tbody[2]/tr[2]"
+
+        # delete two items, the first one and the second one, that was added
+        @selenium.click "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[5]/a" # tr[3] becuase it this tbody contains one tr (with descriptions for columns) more than other elements
+        @selenium.click "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[5]/a" # previous tbody was not removed
+
+        # TRs with fields for adding elements
+        assert !@selenium.is_element_present("//table[@id='full-outcome-items']/tbody[1]/tr[3]")
+        assert !@selenium.is_element_present("//table[@id='full-outcome-items']/tbody[2]/tr[2]")
 
         # first income item
         # User again made some shopping in tesco: Jedzenie zakupione w tesco
@@ -109,7 +120,7 @@ begin
 
 
 
-        # second item
+        # second income item
         # user is paying for rent once again
         income_description = "//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/input"
         assert @selenium.is_element_present(income_description)
@@ -140,7 +151,7 @@ begin
 
 
 
-        # third item
+        # third income item
         # we do not care about autocompletion here
         #
         # type description
@@ -154,10 +165,6 @@ begin
 
         # select currency
         @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
-        Kernel.sleep 10
-
-
-
 
       end
     end
