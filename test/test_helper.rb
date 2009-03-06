@@ -19,7 +19,7 @@ class Date
       @@forced_today = now
     end
   end
-end unless Date.method_exists? :forced_today=
+end unless Date.respond_to? :forced_today=
 
 class Time
   @@forced_now = nil
@@ -32,7 +32,7 @@ class Time
       @@forced_now = now
     end
   end
-end unless Time.method_exists? :forced_now=
+end unless Time.respond_to? :forced_now=
 #end of actual date manipulation code
 
 
