@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090301162726
+# Schema version: 20090306160304
 #
 # Table name: goals
 #
@@ -16,8 +16,8 @@
 #  currency_id                   :integer       
 #  period_start                  :date          
 #  period_end                    :date          
-#  is_cyclic                     :boolean       
-#  is_finished                   :boolean       
+#  is_cyclic                     :boolean       not null
+#  is_finished                   :boolean       not null
 #  cycle_group                   :integer       
 #  user_id                       :integer       not null
 #
@@ -221,9 +221,24 @@ class Goal < ActiveRecord::Base
     return new_goal
   end
 
-  def self.find_cyclic_goals_to_copy
-    []
+  def next_goal_in_cycle
+    if is_cyclic
+      Goal.first :conditions => ['period_start = ? AND cycle_group = ?', period_end + 1, cycle_group]
+    else
+      nil
+    end
   end
+
+
+  def self.find_cyclic_goals_to_copy
+    #zalozenia
+    #is_cyclic == true
+    #period_end == today #dyskusyjne :)
+    #is_finished == false
+    Goal.all :conditions => ['is_cyclic = ? AND period_end = ? AND is_finished = ?', true, Date.today, false]
+  end
+
+
 
 
 

@@ -215,8 +215,8 @@ CREATE TABLE goals (
     currency_id integer,
     period_start date,
     period_end date,
-    is_cyclic boolean,
-    is_finished boolean,
+    is_cyclic boolean DEFAULT false NOT NULL,
+    is_finished boolean DEFAULT false NOT NULL,
     cycle_group integer,
     user_id integer NOT NULL
 );
@@ -820,3 +820,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090226214904');
 INSERT INTO schema_migrations (version) VALUES ('20090227165910');
 
 INSERT INTO schema_migrations (version) VALUES ('20090301162726');
+
+INSERT INTO schema_migrations (version) VALUES ('20090306160304');

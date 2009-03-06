@@ -32,6 +32,7 @@ module BackgrounDRb
   class WorkerDummyLogger
     %w(info debug fatal error warn).each do |x|
       define_method(x) do |log_data|
+        RAILS_DEFAULT_LOGGER.send x, log_data
       end
     end
   end

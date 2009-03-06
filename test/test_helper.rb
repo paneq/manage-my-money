@@ -449,6 +449,35 @@ class Test::Unit::TestCase
   # end of Date maniputaion code
 
 
+  def create_goal(save = true, user = @jarek)
+    g = Goal.new
+
+    g.category = user.income
+    g.period_type = :SELECTED
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.goal_type_and_currency = 'PLN'
+    g.value = 2.2
+    g.description = 'Testowy plan'
+    g.user = user
+
+    g.save! if save
+    g
+  end
+
+  def assert_goals_equal(g1, g2)
+    assert_equal g1.user, g2.user
+    assert_equal g1.category, g2.category
+    assert_equal g1.period_type, g2.period_type
+    assert_equal g1.period_start, g2.period_start
+    assert_equal g1.period_end, g2.period_end
+    assert_equal g1.goal_type_and_currency, g2.goal_type_and_currency
+    assert_equal g1.value, g2.value
+    assert_equal g1.description, g2.description
+    assert_equal g1.is_cyclic, g2.is_cyclic
+    assert_equal g1.is_finished, g2.is_finished
+    assert_equal g1.cycle_group, g2.cycle_group
+  end
 
 
 end

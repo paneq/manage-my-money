@@ -40,24 +40,35 @@ class GoalTest < ActiveSupport::TestCase
 
 
   end
+
+
+  def test_set_cycle_group_on_save
+    g = create_goal(false)
+    g.period_type = :NEXT_WEEK
+    g.period_start = '01.01.2008'.to_date
+    g.period_end = '07.01.2008'.to_date
+    g.is_cyclic = true
+    g.save!
+    assert_equal g.id, g.cycle_group
+    g.is_cyclic = false
+    g.save!
+    assert_equal nil, g.cycle_group
+
+    g2 = create_goal(false)
+    g2.is_cyclic = false
+    g2.save!
+    assert_equal nil, g2.cycle_group
+    g2.period_type = :NEXT_WEEK
+    g2.period_start = '01.01.2008'.to_date
+    g2.period_end = '07.01.2008'.to_date
+    g2.is_cyclic = true
+    g2.save!
+    assert_equal g2.id, g2.cycle_group
+  end
   
 
   private
-  def create_goal
-    g = Goal.new
-
-    g.category = @jarek.income
-    g.period_type = :SELECTED
-    g.period_start = Date.today
-    g.period_end = Date.today
-    g.goal_type_and_currency = 'PLN'
-    g.value = 2.2
-    g.description = 'Testowy plan'
-    g.user = @jarek 
-
-    g.save!
-    g
-  end
+  
 
 
 end
