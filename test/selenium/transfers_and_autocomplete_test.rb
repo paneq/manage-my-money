@@ -33,7 +33,7 @@ begin
         @selenium.type_keys field_id, "Marz"
 
         #Nothing worked fine :-( so i just sleep to wait for autocomplete window
-        Kernel.sleep 2
+        Kernel.sleep 1.5
         # @selenium.wait_for_condition("document.getElementById('transfer_description_auto_comlete').innerHTML.length > 30", 3000)
         # @selenium.wait_for_condition("selenium.browserbot.getCurrentWindow().getElementById('transfer_description_auto_comlete').innerHTML.length > 30", 3000)
         # @selenium.wait_for_condition("this.browserbot.findElement('id=transfer_description_auto_comlete').innerHTML.length > 30", 3000)
@@ -72,10 +72,11 @@ begin
         end
         Kernel.sleep 0.3
         
-        #first outcome item
-        outcome_description = "//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/input"
+        # first outcome item
+        # User again made some shopping in tesco: Jedzenie zakupione w tesco
+        outcome_description = "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/input"
         assert @selenium.is_element_present(outcome_description)
-        @selenium.type_keys outcome_description, "Jedz"
+        @selenium.type_keys outcome_description, @transfers.third.description[0..3] #"Jedz"
 
         # two autcompletes should be seen
         # one for @food and one for @rupert.asset
@@ -84,9 +85,9 @@ begin
 
         complete = nil
         (1..2).each do |nr|
-          checked = "//table[@id='full-outcome-items']/tbody/tr[3]/td[1]/div/ul/li[#{nr}]"
+          checked = "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[1]/div/ul/li[#{nr}]"
           text = @selenium.get_text checked
-          if text =~ Regexp.new(@food.description)
+          if text =~ Regexp.new(@food.name)
             complete = checked
             break
           end
@@ -100,6 +101,39 @@ begin
         assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[2]/select").to_s
         assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[3]/input").to_s
         assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody/tr[3]/td[4]/select").to_s
+
+
+
+
+
+        # second item
+        # user is paying for rent once again
+        outcome_description = "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/input"
+        assert @selenium.is_element_present(outcome_description)
+        @selenium.type_keys outcome_description, "marz"
+
+        # four autcompletes should be seen
+        Kernel.sleep 1.5
+        assert_equal 4.to_s, @selenium.get_xpath_count("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/div/ul/li")
+
+        complete = nil
+        (1..4).each do |nr|
+          checked = "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/div/ul/li[#{nr}]"
+          text = @selenium.get_text checked
+          if text =~ Regexp.new(@rent.name)
+            complete = checked
+            break
+          end
+        end
+
+        assert_not_nil complete
+        move_and_click complete #Click on the @rent autocomplete option
+
+        #check autocompleted description, category, value and currency
+        assert_equal @transfers.second.description.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[1]/input").to_s
+        assert_equal @rent.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[2]/select").to_s
+        assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[3]/input").to_s
+        assert_equal @zloty.id.to_s, @selenium.get_selected_value("//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[4]/select").to_s
 
       end
     end
