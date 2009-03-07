@@ -21,6 +21,9 @@ role :db,  "s.rootnode.pl", :primary => true
 
 desc 'Change all files in latest release to be unreadible and unexecutable by people from same group and others'
 task :chmod_files do
+  run "echo $GEM_HOME"
+  run "echo $GEM_PATH"
+  run "echo $PATH"
   run "chmod -R go= #{latest_release}"
 end
 
