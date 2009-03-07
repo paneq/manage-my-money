@@ -24,7 +24,7 @@ task :chmod_files do
   run "chmod -R go= #{latest_release}"
 end
 
-task :test_var do
+task :show_var do
   run "echo $GEM_HOME"
   run "echo $GEM_PATH"
   run "echo $PATH"
@@ -50,4 +50,8 @@ end
 
 
 after "deploy:symlink", :chmod_files
-before "deploy:finalize_update", :test_var
+before "deploy:finalize_update", :show_var
+
+after "deploy", "deploy:cleanup"
+after "deploy:migrations", "deploy:cleanup"
+
