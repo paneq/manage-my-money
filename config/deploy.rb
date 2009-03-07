@@ -50,4 +50,4 @@ end
 
 
 after "deploy:symlink", :chmod_files
-before "deploy:symlink", :test_var
+before "deploy:finalize_update", :test_var
