@@ -86,7 +86,7 @@
 #   Scott Patten [2007-10-17]: plugin-ized the recipe
 #   Scott Patten [2007-10-17]: cleaned up documentation and formatted it for rdoc
 
-before "deploy:symlink", "deploy:run_tests"
+afert "deploy:finalize_update",  "deploy:run_tests"
 
 namespace :deploy do
   desc "Run the full tests on the deployed app.  To deploy without tests, try" +
