@@ -4,14 +4,22 @@
 <% machine_name = Socket.gethostname %>
 
 development:
-   adapter: postgresql
-   database: money_development
-   host: localhost
-   username: postgres
-   password:
+<% case machine_name; when "stallman.rootnode.net" then %>
+  adapter: postgresql
+  database: rupert_3md
+  host: stallman.rootnode.net
+  username: rupert_3md
+  password: jfDVgQk1Zk
+<% else %>
+  adapter: postgresql
+  database: money_development
+  host: localhost
+  username: postgres
+  password:
 #   adapter: sqlite3
 #   database: db/development.sqlite3
 #   host: localhost
+<% end %>
 
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
