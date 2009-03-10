@@ -53,8 +53,28 @@ namespace :backgroundrb do
 end
 
 
+namespace :sphinx do
+  desc "Updates links to sphinx indexes which are in shared directory"
+  task :update_symlink do
+    run <<-CDM
+      rm -rf #{latest_release}/db/sphinx &&
+      mkdir -p #{latest_release}/db/sphinx &&
+      ln -s #{shared_path}/sphinx/production #{latest_release}/db/sphinx/production &&
+      ln -s #{shared_path}/sphinx/development #{latest_release}/db/sphinx/development &&
+      ln -s #{shared_path}/sphinx/test #{latest_release}/db/sphinx/test
+    CDM
+  end
+
+  desc "Builds a new index for sphinx (for production)"
+  task :index do
+    run "cd #{latest_release} && rake ts:index RAILS_ENV=production"
+  end
+end
+
 before "deploy:finalize_update", :show_var
 after "deploy:finalize_update", :chmod_files
+
+after "deploy:finalize_update", "sphinx:update_symlink"
 
 after "deploy", "deploy:cleanup"
 after "deploy:migrations", "deploy:cleanup"
