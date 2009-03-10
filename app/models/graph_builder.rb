@@ -251,7 +251,7 @@ class GraphBuilder
     0x000000.step(0xFFF0F0, 1500) do |num|
       colours << "#%x"  % num
     end
-    #colours.shuffle
+    colours.shuffle
   end
 
   COLORS = get_colors
