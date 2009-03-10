@@ -18,6 +18,7 @@ role :app, "s.rootnode.pl"
 role :web, "s.rootnode.pl"
 role :db,  "s.rootnode.pl", :primary => true
 
+set :shared_children,   %w(system log pids backup sphinx)
 
 desc 'Change all files in latest release to be unreadible and unexecutable by people from same group and others'
 task :chmod_files do
@@ -72,6 +73,7 @@ namespace :sphinx do
 end
 
 namespace :backup do
+  desc 'Creates production database dump and makes a backup using rootnode backup system'
   task :database do
     db_backup_path = "#{shared_path}/backup/db"
     backup_name = '3mp_db_backup'
@@ -83,14 +85,49 @@ namespace :backup do
     run "backup --remove-older-than 1M #{backup_name}"
     run "backup -s #{backup_name}"
   end
+
+  desc 'Creates production sphinx indexes backup'
+  task :sphinx_indexes do
+    backup_path = "#{shared_path}/sphinx"
+    backup_name = "3mp_sphinx_backup"
+    run "backup #{backup_path} #{backup_name}"
+    run "backup --remove-older-than 1M #{backup_name}"
+    run "backup -s #{backup_name}"
+  end
+
+
+  desc 'Creates all releases backup'
+  task :releases do
+    backup_path = "#{releases_path}"
+    backup_name = "3mp_releases_backup"
+    run "backup #{backup_path} #{backup_name}"
+    run "backup --remove-older-than 1M #{backup_name}"
+    run "backup -s #{backup_name}"
+  end
+
+  desc 'Creates ruby, rails, gems, rake backup'
+  task :binaries do
+    dirs = %w(binary railsgems)
+    dirs.each do |name|
+      backup_path = "/home/rupert/#{name}"
+      backup_name = "3mp_files_#{name}"
+      run "backup #{backup_path} #{backup_name}"
+      run "backup --remove-older-than 1M #{backup_name}"
+      run "backup -s #{backup_name}"
+    end
+  end
 end
+
 
 before "deploy:finalize_update", :show_var
 after "deploy:finalize_update", :chmod_files
 
 after "deploy:finalize_update", "sphinx:update_symlink"
 
+after "deploy:finalize_update", 'backup:releases'
+
 before "deploy:migrate", 'backup:database'
+before "deploy:migrate", 'backup:sphinx_indexes'
 
 after "deploy", "deploy:cleanup"
 after "deploy:migrations", "deploy:cleanup"
