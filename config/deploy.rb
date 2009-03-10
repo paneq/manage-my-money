@@ -71,10 +71,25 @@ namespace :sphinx do
   end
 end
 
+namespace :backup do
+  task :database do
+    db_backup_path = "#{shared_path}/backup/db"
+    backup_name = '3mp_db_backup'
+    run "cd #{latest_release} && rake backup:database backup_path=#{db_backup_path} RAILS_ENV=production"
+    run "chmod -R 700 #{shared_path}/backup"
+    run "ls -al #{db_backup_path}"
+    run "backup #{db_backup_path} #{backup_name}"
+    run "backup --remove-older-than 1M #{backup_name}"
+    run "backup -s #{backup_name}"
+  end
+end
+
 before "deploy:finalize_update", :show_var
 after "deploy:finalize_update", :chmod_files
 
 after "deploy:finalize_update", "sphinx:update_symlink"
+
+before "deploy:migrate", 'backup:database'
 
 after "deploy", "deploy:cleanup"
 after "deploy:migrations", "deploy:cleanup"
