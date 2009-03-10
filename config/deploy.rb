@@ -75,6 +75,7 @@ namespace :backup do
   task :database do
     db_backup_path = "#{shared_path}/backup/db"
     backup_name = '3mp_db_backup'
+    run "mkdir -p #{db_backup_path}"
     run "cd #{latest_release} && rake backup:database backup_path=#{db_backup_path} RAILS_ENV=production"
     run "chmod -R 700 #{shared_path}/backup"
     run "ls -al #{db_backup_path}"
