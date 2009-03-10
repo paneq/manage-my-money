@@ -21,10 +21,14 @@ role :db,  "s.rootnode.pl", :primary => true
 
 desc 'Change all files in latest release to be unreadible and unexecutable by people from same group and others'
 task :chmod_files do
-  run "chmod -R go= #{latest_release}"
+  run "chmod -R go= #{release_path}"
 end
 
 task :show_var do
+  run "ruby --version"
+  run "gem --version"
+  run "rake --version"
+  run "gem list"
   run "echo $GEM_HOME"
   run "echo $GEM_PATH"
   run "echo $PATH"
@@ -49,8 +53,8 @@ namespace :backgroundrb do
 end
 
 
-after "deploy:symlink", :chmod_files
 before "deploy:finalize_update", :show_var
+after "deploy:finalize_update", :chmod_files
 
 after "deploy", "deploy:cleanup"
 after "deploy:migrations", "deploy:cleanup"
