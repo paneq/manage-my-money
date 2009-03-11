@@ -11,9 +11,11 @@ class ExchangeTest < Test::Unit::TestCase
   def test_validation
     e1 = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => @euro, :right_currency => @zloty, :day => Date.today, :user => @rupert)
     assert e1.save
-    e2 = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => @zloty, :right_currency => @euro, :day => Date.today, :user => @rupert)
+    e2 = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => @zloty, :right_currency => @euro, :day => Date.yesterday, :user => @rupert)
     assert e2.save
-      
+    e3 = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => @zloty, :right_currency => @euro, :day => Date.today, :user => @rupert)
+    assert !e3.save #already one with the same day, user, and currencies
+
     assert e1.left_currency.id < e1.right_currency.id
     assert e2.left_currency.id < e2.right_currency.id
     
@@ -41,15 +43,15 @@ class ExchangeTest < Test::Unit::TestCase
     assert_not_nil e.errors.on(:right_currency)
 
     #TODO napisać tak aby nie psuło innych testów - przedefiniuj tylko dla obiektu e
-#    Exchange.send(:define_method, :before_validation) do
-#    end
-#
-#    tbl = [@zloty, @euro]
-#    tbl.sort! {|a,b| a.id <=> b.id}
-#    e = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => tbl.second, :right_currency => tbl.first, :day => Date.today, :user => @rupert)
-#
-#    assert !e.valid?
-#    assert_not_nil e.errors.on(:base)
+    #    Exchange.send(:define_method, :before_validation) do
+    #    end
+    #
+    #    tbl = [@zloty, @euro]
+    #    tbl.sort! {|a,b| a.id <=> b.id}
+    #    e = Exchange.new(:left_to_right => 1.2, :right_to_left => 0.12, :left_currency => tbl.second, :right_currency => tbl.first, :day => Date.today, :user => @rupert)
+    #
+    #    assert !e.valid?
+    #    assert_not_nil e.errors.on(:base)
     
   end
 

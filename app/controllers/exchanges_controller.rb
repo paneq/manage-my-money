@@ -28,12 +28,13 @@ class ExchangesController < ApplicationController
       :currency_b => @c2.id,
       :user_id => self.current_user.id
     }
-    @exchange = Exchange.new
+    @exchange = flash[:exchange] || Exchange.new(:left_currency => @c1, :right_currency => @c2)
+    flash[:exchange]
   end
 
 
   def show
-
+    @exchange = self.current_user.exchanges.find_by_id(params[:id])
   end
 
 
@@ -44,41 +45,19 @@ class ExchangesController < ApplicationController
 
 
   def create
+    @c1 = params[:exchange][:left_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:left_currency])
+    @c2 = params[:exchange][:right_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:right_currency])
     @exchange = Exchange.new(params[:exchange])
     @exchange.user = self.current_user
     if @exchange.save
-      flash[:notice] = 'Exchange was successfully created.'
-      redirect_to exchanges_path
+      flash[:notice] = 'Utworzono nowy kurs'
     else
-      flash[:notice] = 'Exchange was NOT successfully created.'
-      render :action => 'new'
+      flash[:notice] = 'Utworzenie nowego kursu zakończyło się niepomyślnie.'
+      flash[:exchange] = @exchange
     end
+    redirect_to :back
   end
 
-
-  # remote
-  def create_remote
-    @exchange= Exchange.new(params[:exchange])
-    @exchange.user = self.current_user
-    where_insert = 'exchanges-list'
-    where_replace = 'new-exchange'
-    where_error = 'flash_notice'
-    if @exchange.save
-      render :update do |page|
-        page.remove where_replace
-        page.insert_html :bottom, where_insert, :partial => 'exchanges/exchange', :object => @exchange
-        page.visual_effect :highlight, "exchange-#{@exchange.id}"
-        @exchange = nil
-        page.insert_html :bottom, where_insert, :partial => 'exchanges/new_exchange'
-        page.replace_html where_error, :partial => 'currencies/empty'
-      end
-    else
-      render :update do |page|
-        page.visual_effect :highlight, where_error
-        page.replace_html where_error, :partial => 'exchanges/error', :object => "Adding exchange failed: #{ @exchange.errors.full_messages.join(', ') } "
-      end
-    end
-  end
 
   def edit
     render :action => :new_or_edit
@@ -93,6 +72,7 @@ class ExchangesController < ApplicationController
       render :action => :edit
     end
   end
+
 
   def destroy
     @exchange.destroy

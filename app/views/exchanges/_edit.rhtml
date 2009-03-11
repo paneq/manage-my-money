@@ -1,0 +1,39 @@
+<%= error_messages_for :exchange, :message => nil %>
+<% form_for @exchange do |f| %>
+  <p>
+    <label for="exchange_left_currency">
+      Pierwsza waluta:
+    </label>
+    <%= f.select :left_currency, @currencies.map{|c| [c.long_symbol, c.id] }, :selected => @exchange.left_currency.id %>
+  </p>
+
+  <p>
+    <label for="exchange_right_currency">
+      Druga waluta:
+    </label>
+    <%= f.select :right_currency, @currencies.map{|c| [c.long_symbol, c.id]}, :selected => @exchange.right_currency.id %>
+  </p>
+
+  <p>
+    <label for="exchange_left_to_right">
+      Kurs zamiany z pierwszej waluty na drugą
+    </label>
+    <%= f.text_field :left_to_right, :size => 8 %>
+  </p>
+
+  <p>
+    <label for="exchange_right_to_left">
+      Kurs zamiany z drugiej waluty na pierwszą
+    </label>
+    <%= f.text_field :right_to_left, :size => 8 %>
+  </p>
+
+  <p>
+    <label for="exchange_day">
+      Kurs na dzień:
+    </label>
+    <%= f.date_select :day %>
+  </p>
+
+  <%= f.submit 'Zapisz kurs' %>
+<% end %>

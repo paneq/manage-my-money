@@ -26,6 +26,7 @@ class Exchange < ActiveRecord::Base
   validates_presence_of :left_to_right, :right_to_left
   validates_numericality_of :left_to_right, :right_to_left, :greater_than => 0
   validates_presence_of :left_currency, :right_currency, :day
+  validates_uniqueness_of :day, :scope => [:user_id, :currency_a, :currency_b]
 
   #alias_method :original_save, :save
 

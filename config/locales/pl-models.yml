@@ -55,6 +55,8 @@ pl:
             right_to_left:
               blank: nie może być pusty
               not_a_number: `{{value}}` nie jest prawidłową liczbą
+            day:
+              taken: który został wybrany posiada już kurs w wybranych walutach
     models:
       user: Użytkownik
       report: Raport
@@ -62,6 +64,7 @@ pl:
       transfer: Transfer
       category: Kategoria
       currency: Waluta
+      exchange: Kurs
     attributes:
       report:
         name: Nazwa
@@ -80,11 +83,12 @@ pl:
         name: Krótka nazwa
         long_name: Długa nazwa
         system: Systemowa
-      exchanges:
+      exchange:
         left_currency: Pierwsza waluta
         right_currency: Druga waluta
         left_to_right: Kurs zamiany pierwszej waluty na drugą
         right_to_left: Kurs zamiany drugiej waluty na pierwszą
+        day: Dzień
 
 
 

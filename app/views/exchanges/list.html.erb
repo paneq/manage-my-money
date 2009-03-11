@@ -2,6 +2,7 @@
 <% c2_symbol = h @c2.long_symbol %>
 <h1>Kursy wymiany dla walut <%= c1_symbol -%> oraz <%= c2_symbol -%></h1>
 <div>
+
   <table id="exchanges-list">
     <th>
       Dzień
@@ -26,52 +27,14 @@
       </tr>
     <% end %>
   </table>
-  <%= will_paginate :next_label => I18n.translate(:sooner, :default => 'Sooner'), :prev_label => I18n.translate(:later, :default => 'Later') %>
+
+<%= will_paginate :next_label => I18n.translate(:sooner, :default => 'Sooner'), :prev_label => I18n.translate(:later, :default => 'Later') %>
 
 
   <%= tab [[:new, 'Nowy']], :name => :exchange, :active => :new -%>
-  <div id="form-for-exchange" style="border: 1px solid lightgrey; margin: 0pt; padding: 5px; background-color: rgb(255, 252, 220);">
-    <%= error_messages_for :exchange %>
-    <% form_for @exchange do |f| %>
 
-      <%= hidden_field_tag 'redirect_to', exchanges_list_path(:left_currency => @c1, :right_currency => @c2, :page => params[:page])%>
-
-      <p>
-        <label for="exchange_left_currency">
-          Pierwsza waluta:
-        </label>
-        <%= f.collection_select :left_currency, @currencies, :id, :name %>
-      </p>
-
-      <p>
-        <label for="exchange_right_currency">
-          Druga waluta:
-        </label>
-        <%= f.collection_select :right_currency, @currencies, :id, :name %>
-      </p>
-
-      <p>
-        <label for="exchange_left_to_right">
-          Kurs zamiany z pierwszej waluty na drugą
-        </label>
-        <%= f.text_field :left_to_right, :size => 8 %>
-      </p>
-
-      <p>
-        <label for="exchange_right_to_left">
-          Kurs zamiany z drugiej waluty na pierwszą
-        </label>
-        <%= f.text_field :right_to_left, :size => 8 %>
-      </p>
-
-      <p>
-        <label for="exchange_day">
-          Kurs na dzień:
-        </label>
-        <%= f.date_select :day %>
-      </p>
-
-      <%= f.submit 'Zapisz kurs' %>
-    <% end %>
+  <div id="form-for-exchange" style="border: 1px solid lightgrey; margin: 0pt; padding: 5px; background-color: rgb(255, 252, 220);" >
+    <%= render :partial => 'edit' %>
   </div>
+  
 </div>
