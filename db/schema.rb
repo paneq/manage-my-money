@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090306160304) do
+ActiveRecord::Schema.define(:version => 20090311194649) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -72,14 +72,15 @@ ActiveRecord::Schema.define(:version => 20090306160304) do
   add_index "currencies", ["id", "user_id"], :name => "index_currencies_on_id_and_user_id"
 
   create_table "exchanges", :force => true do |t|
-    t.decimal "currency_a",    :precision => 8, :scale => 4, :null => false
-    t.decimal "currency_b",    :precision => 8, :scale => 4, :null => false
-    t.float   "left_to_right",                               :null => false
-    t.float   "right_to_left",                               :null => false
+    t.integer "currency_a",                                  :null => false
+    t.integer "currency_b",                                  :null => false
+    t.decimal "left_to_right", :precision => 8, :scale => 4, :null => false
+    t.decimal "right_to_left", :precision => 8, :scale => 4, :null => false
     t.date    "day",                                         :null => false
     t.integer "user_id"
   end
 
+  add_index "exchanges", ["currency_a", "currency_b", "day", "user_id"], :name => "index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da"
   add_index "exchanges", ["day"], :name => "index_exchanges_on_day"
 
   create_table "goals", :force => true do |t|

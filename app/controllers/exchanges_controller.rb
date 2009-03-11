@@ -2,15 +2,15 @@ class ExchangesController < ApplicationController
   
   layout 'main'
   before_filter :login_required
-  before_filter :find_and_set_exchange, :only => [:show, :edit, :update, :destroy]
-  before_filter :check_perm_read, :only => [:show]
-  before_filter :check_perm_write, :only => [:edit, :update, :destroy]
+  before_filter :set_exchange, :only => [:show, :edit, :update, :destroy]
+  before_filter :set_currencies, :only => [:show, :new, :edit, :update]
   
 
   # Index of all pairs of possible currencies exchanges
   def index
     @currencies = Currency.for_user(self.current_user).find(:all, :order => 'user_id ASC, long_symbol ASC')
     @pairs = @currencies.combination(2)
+    @exchange = flash[:exchange] || Exchange.new(:left_currency => @currencies.first, :right_currency => @currencies.first)
   end
 
 
@@ -34,19 +34,19 @@ class ExchangesController < ApplicationController
 
 
   def show
-    @exchange = self.current_user.exchanges.find_by_id(params[:id])
+    render :action => :edit
   end
-
 
   def new
-    @exchange = Exchange.new
-    render :action => :new_or_edit
+    @exchange = Exchange.new(:left_currency => @currencies.first, :right_currency => @currencies.first)
+    render :action => :edit
   end
 
+  def edit
+  end
 
   def create
-    @c1 = params[:exchange][:left_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:left_currency])
-    @c2 = params[:exchange][:right_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:right_currency])
+    change_currencies_to_objects
     @exchange = Exchange.new(params[:exchange])
     @exchange.user = self.current_user
     if @exchange.save
@@ -59,16 +59,14 @@ class ExchangesController < ApplicationController
   end
 
 
-  def edit
-    render :action => :new_or_edit
-  end
-
   def update
+    change_currencies_to_objects
+    @exchange.user = self.current_user
     if @exchange.update_attributes(params[:exchange])
-      flash[:notice] = 'Exchange was successfully updated.'
+      flash[:notice] = 'Zaktualizowano kurs.'
       redirect_to @exchange
     else
-      flash[:notice] = 'Exchange was successfully updated.'
+      flash[:notice] = 'Aktualizacja kursu zakończyła się niepomyślnie.'
       render :action => :edit
     end
   end
@@ -78,26 +76,22 @@ class ExchangesController < ApplicationController
     @exchange.destroy
     redirect_to exchanges_path
   end
-  
+
+  protected
+
+  def set_exchange
+    @exchange = self.current_user.exchanges.find_by_id(params[:id])
+  end
+
+  def set_currencies
+    @currencies = Currency.for_user(self.current_user)
+  end
+
   private
-  
-  def find_and_set_exchange
-    @exchange = Exchange.find(params[:id])
+
+  def change_currencies_to_objects
+    @c1 = params[:exchange][:left_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:left_currency])
+    @c2 = params[:exchange][:right_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:right_currency])
   end
-  
-  def check_perm_read
-    if @exchange.user != nil and @exchange.user.id != self.current_user.id
-      flash[:notice] = 'You do not have permission to view this exchange'
-      @exchange= nil
-      redirect_to exchanges_path
-    end
-  end
-    
-  def check_perm_write
-    if @exchange.user == nil or @exchange.user.id != self.current_user.id
-      flash[:notice] = 'You do not have permission to modify this exchange'
-      @exchange = nil
-      redirect_to exchanges_path
-    end
-  end
+
 end

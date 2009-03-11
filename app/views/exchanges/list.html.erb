@@ -13,6 +13,9 @@
     <th>
       1 <%= c2_symbol -%>
     </th>
+    <th>
+      Akcje
+    </th>
     <% @exchanges.each do |e| %>
       <tr>
         <td>
@@ -23,6 +26,9 @@
         </td>
         <td>
           <%= "#{e.right_to_left} #{c1_symbol}" -%>
+        </td>
+        <td>
+          <%= link_to 'Edytuj', edit_exchange_path(e) -%>
         </td>
       </tr>
     <% end %>

@@ -1,0 +1,9 @@
+<% l = @exchange.left_currency %>
+<% r = @exchange.right_currency %>
+
+<h1>Edycja kursu</h1>
+
+<%= render :partial => 'edit' %>
+
+<%= link_to 'Pokaż listę kursów tych walut', exchanges_list_path(:left_currency => l, :right_currency => r) if l && r && l != r %> <br />
+<%= link_to 'Przejdź do listy możliwych kursów między walutami', exchanges_path %>

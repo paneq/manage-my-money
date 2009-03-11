@@ -8,7 +8,60 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
+--
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: -
+--
+
+CREATE PROCEDURAL LANGUAGE plpgsql;
+
+
 SET search_path = public, pg_catalog;
+
+--
+-- Name: crc32(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION crc32(word text) RETURNS bigint
+    AS $$
+          DECLARE tmp bigint;
+          DECLARE i int;
+          DECLARE j int;
+          DECLARE word_array bytea;
+          BEGIN
+            i = 0;
+            tmp = 4294967295;
+            word_array = decode(replace(word, E'\\', E'\\\\'), 'escape');
+            LOOP
+              tmp = (tmp # get_byte(word_array, i))::bigint;
+              i = i + 1;
+              j = 0;
+              LOOP
+                tmp = ((tmp >> 1) # (3988292384 * (tmp & 1)))::bigint;
+                j = j + 1;
+                IF j >= 8 THEN
+                  EXIT;
+                END IF;
+              END LOOP;
+              IF i >= char_length(word) THEN
+                EXIT;
+              END IF;
+            END LOOP;
+            return (tmp # 4294967295);
+          END
+        $$
+    LANGUAGE plpgsql IMMUTABLE STRICT;
+
+
+--
+-- Name: array_accum(anyelement); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE array_accum(anyelement) (
+    SFUNC = array_append,
+    STYPE = anyarray,
+    INITCOND = '{}'
+);
+
 
 SET default_tablespace = '';
 
@@ -118,6 +171,7 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -169,10 +223,10 @@ ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
 
 CREATE TABLE exchanges (
     id integer NOT NULL,
-    currency_a numeric(8,4) NOT NULL,
-    currency_b numeric(8,4) NOT NULL,
-    left_to_right double precision NOT NULL,
-    right_to_left double precision NOT NULL,
+    currency_a integer NOT NULL,
+    currency_b integer NOT NULL,
+    left_to_right numeric(8,4) NOT NULL,
+    right_to_left numeric(8,4) NOT NULL,
     day date NOT NULL,
     user_id integer
 );
@@ -183,7 +237,6 @@ CREATE TABLE exchanges (
 --
 
 CREATE SEQUENCE exchanges_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -227,6 +280,7 @@ CREATE TABLE goals (
 --
 
 CREATE SEQUENCE goals_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -270,6 +324,7 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -330,7 +385,7 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(12,2) NOT NULL,
+    value numeric(8,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,
@@ -639,6 +694,13 @@ CREATE INDEX index_exchanges_on_day ON exchanges USING btree (day);
 
 
 --
+-- Name: index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da ON exchanges USING btree (user_id, currency_a, currency_b, day);
+
+
+--
 -- Name: index_goals_on_category_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -822,3 +884,7 @@ INSERT INTO schema_migrations (version) VALUES ('20090227165910');
 INSERT INTO schema_migrations (version) VALUES ('20090301162726');
 
 INSERT INTO schema_migrations (version) VALUES ('20090306160304');
+
+INSERT INTO schema_migrations (version) VALUES ('20090311193005');
+
+INSERT INTO schema_migrations (version) VALUES ('20090311194649');

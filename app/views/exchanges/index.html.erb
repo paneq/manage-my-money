@@ -5,8 +5,13 @@
   <ul>
     <% @pairs.each do |c1, c2| %>
       <li>
-         <%= link_to h("#{c1.long_symbol} -> #{c2.long_symbol}"), exchanges_list_path(:left_currency => c1, :right_currency => c2) %>
+        <%= link_to h("#{c1.long_symbol} -> #{c2.long_symbol}"), exchanges_list_path(:left_currency => c1, :right_currency => c2) %>
       </li>
     <% end %>
   </ul>
+</div>
+
+<%= tab [[:new, 'Nowy']], :name => :exchange, :active => :new -%>
+<div id="form-for-exchange" style="border: 1px solid lightgrey; margin: 0pt; padding: 5px; background-color: rgb(255, 252, 220);" >
+  <%= render :partial => 'edit' %>
 </div>
