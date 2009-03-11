@@ -7,20 +7,33 @@ class ExchangesController < ApplicationController
   before_filter :check_perm_write, :only => [:edit, :update, :destroy]
   
 
+  # Index of all pairs of possible currencies exchanges
   def index
-    @currencies = (Currency.used_by(@current_user) + Currency.exchanged_by(@current_user)).uniq
-    @exchanges = {}
-    @currencies.each do |c1|
-      @exchanges[c1] = {}
-      @currencies.each do |c2|
-       next if c1 == c2
-       @exchanges[c1][c2] = [] #tutaj policz tabele
-      end
-    end
+    @currencies = Currency.for_user(self.current_user).find(:all, :order => 'user_id ASC, long_symbol ASC')
+    @pairs = @currencies.combination(2)
+  end
+
+
+  def list
+    @currencies = Currency.for_user(self.current_user)
+    @c1 = Currency.for_user(self.current_user).find_by_id(params[:left_currency])
+    @c2 = Currency.for_user(self.current_user).find_by_id(params[:right_currency])
+    @c1, @c2 = @c2, @c1 if @c2.id < @c1.id
+    
+    @exchanges = Exchange.paginate :page => params[:page],
+      :order => 'day DESC',
+      :per_page => 20,
+      :conditions => {
+      :currency_a => @c1.id,
+      :currency_b => @c2.id,
+      :user_id => self.current_user.id
+    }
+    @exchange = Exchange.new
   end
 
 
   def show
+
   end
 
 

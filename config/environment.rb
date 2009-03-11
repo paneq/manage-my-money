@@ -27,7 +27,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-   config.load_paths += %W( #{RAILS_ROOT}/app/sweepers )
+  config.load_paths += %W( #{RAILS_ROOT}/app/sweepers )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -63,6 +63,12 @@ Rails::Initializer.run do |config|
   MEMCACHED_PORT = 3043 #optimized for rootnode deploy
   MEMCACHED_KEY = 'fI5YW5IP2gtvOczaGcpPpVbOsEDNmhH8SbiHiMO65hl7IxvPhtm2ApBug2Yr6Fik'
   config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "#{MEMCACHED_KEY}_manage_my_money_#{RAILS_ENV}" }
+
+  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
+    :source => 'http://gems.github.com'
+
 end
+
+require "will_paginate"
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)

@@ -1,41 +1,12 @@
 <h1>Kursy wymiany walut</h1>
 
-<table id="exchanges-list" style="width: 100%" >
-  <tr style="width: 100%" >
-    <th>
-      Pierwsza waluta
-    </th>
-    
-    <th>
-      Druga waluta
-    </th>
-    
-    <th>
-      Kurs pierwszej względem drugiej
-    </th>
-    
-    <th>
-      Kurs drugiej względem pierwszej
-    </th>
-    
-    <th>
-      Data
-    </th>
-    
-    <th>
-      Akcje
-    </th>
-  </tr>
-  
-  <% #  render :partial => 'exchanges/exchange', :collection => @exchanges -%>
-  <%= render :partial => 'exchanges/new_exchange' %>
-
-</table>
-
-<br />
-
-<%= link_to 'Nowy kurs', new_exchange_path %>
-<br />
-<% @currencies.map %>
-
-<% # tab [[:quick, 'Wolny'], [:slow, 'Szybkie']], :name => :transfer, :active => :slow -%>
+<div id="currencies-pairs-list">
+  Przejdź do kursów wymiany dla następujących walut:
+  <ul>
+    <% @pairs.each do |c1, c2| %>
+      <li>
+         <%= link_to h("#{c1.long_symbol} -> #{c2.long_symbol}"), exchanges_list_path(:left_currency => c1, :right_currency => c2) %>
+      </li>
+    <% end %>
+  </ul>
+</div>

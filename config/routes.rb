@@ -86,6 +86,7 @@ ActionController::Routing::Routes.draw do |map|
   map.complete_transfer  '/autocomplete/transfer', :controller => 'autocomplete', :action => 'complete_transfer'
   map.complete_transfer_item  '/autocomplete/transfer_item', :controller => 'autocomplete', :action => 'complete_transfer_item'
 
+  map.exchanges_list '/exchanges/:left_currency/:right_currency', :controller => 'exchanges', :action => 'list'
 
 
   # Install the default routes as the lowest priority.
