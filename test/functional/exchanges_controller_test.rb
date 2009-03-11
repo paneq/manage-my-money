@@ -25,6 +25,8 @@ class ExchangesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'index'
 
+    assert_not_nil assigns(:pairs)
+
     assert_select 'div#currencies-pairs-list' do
       assert_select 'li', :count => 6 # 3 + 2 + 1 possible exchanges between currencies
       @currencies.each do |currency|
@@ -34,15 +36,70 @@ class ExchangesControllerTest < Test::Unit::TestCase
   end
 
   
-  #  def test_list
-  #    get :list
-  #
-  #    assert_response :success
-  #    assert_template 'list'
-  #
-  #    assert_not_nil assigns(:exchanges)
-  #  end
-  #
+  def test_list_listing
+    30.times do |nr|
+      Exchange.new(
+        :user => @rupert,
+        :left_currency => @zloty,
+        :right_currency => @chf,
+        :left_to_right => 0.25,
+        :right_to_left => 4,
+        :day => nr.days.ago.to_date).save!
+    end
+
+    get :list, :left_currency => @chf.id.to_s, :right_currency => @zloty.id.to_s
+  
+    assert_response :success
+    assert_template 'list'
+
+    [:currencies, :exchanges, :c1, :c2].each {|sym| assert_not_nil assigns(sym)}
+    assert_select 'table#exchanges-list' do
+      assert_select 'tr', :count => 20
+      assert_select 'tr', :text => Regexp.new(Date.today.to_s)
+      assert_select 'tr', :text => Regexp.new(19.days.ago.to_date.to_s)
+    end
+
+    assert_select 'div.pagination' do
+      assert_select '[class~=prev_page]', :text => 'Późniejsze'
+      assert_select '[class~=next_page]', :text => 'Wcześniejsze'
+    end
+  end
+
+
+  def test_list_page
+    30.times do |nr|
+      Exchange.new(
+        :user => @rupert,
+        :left_currency => @zloty,
+        :right_currency => @chf,
+        :left_to_right => 0.25,
+        :right_to_left => 4,
+        :day => nr.days.ago.to_date).save!
+    end
+
+    get :list,
+      :left_currency => @chf.id.to_s,
+      :right_currency => @zloty.id.to_s,
+      :page => 2
+
+    assert_response :success
+    assert_template 'list'
+
+    [:currencies, :exchanges, :c1, :c2].each {|sym| assert_not_nil assigns(sym)}
+    assert_select 'table#exchanges-list' do
+      assert_select 'tr', :count => 10
+      assert_select 'tr', :text => Regexp.new(20.days.ago.to_date.to_s)
+      assert_select 'tr', :text => Regexp.new(29.days.ago.to_date.to_s)
+    end
+
+    assert_select 'div.pagination'
+  end
+
+
+  def test_list_new_exchange
+
+  end
+
   #  def test_show
   #    get :show, :id => @first_id
   #

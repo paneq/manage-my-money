@@ -2,7 +2,7 @@
 <% c2_symbol = h @c2.long_symbol %>
 <h1>Kursy wymiany dla walut <%= c1_symbol -%> oraz <%= c2_symbol -%></h1>
 <div>
-  <table>
+  <table id="exchanges-list">
     <th>
       Dzień
     </th>
@@ -26,7 +26,7 @@
       </tr>
     <% end %>
   </table>
-  <%= will_paginate @exchanges %>
+  <%= will_paginate :next_label => I18n.translate(:sooner, :default => 'Sooner'), :prev_label => I18n.translate(:later, :default => 'Later') %>
 
 
   <%= tab [[:new, 'Nowy']], :name => :exchange, :active => :new -%>

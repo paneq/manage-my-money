@@ -60,7 +60,7 @@ module ApplicationHelper
 
   def add_transfer_item(transfer_item_type)
     text = render :partial => '/transfers/transfer_item', :locals => {:hack => true}, :object => TransferItem.new(:transfer_item_type => transfer_item_type, :currency_id => @current_user.default_currency.id)
-#    jsfunction = "onclick=\"var my_uid = uid();\n"
+    #    jsfunction = "onclick=\"var my_uid = uid();\n"
     jsfunction = "var my_uid = uid();\n $(this).up().down('table').insert('#{ escape_javascript(text) }'); return false;"
     jsfunction.gsub! "PUT_ID_HERE", "'+ my_uid +'"
     #TODO: wyjąc metodę UID  z head'a layoutu
@@ -234,6 +234,13 @@ module ApplicationHelper
     return erb.result(binding)
   end
 
+  include WillPaginate::ViewHelpers
+
+  def will_paginate_with_i18n(collection, options = {})
+    will_paginate_without_i18n(collection, options.merge(:prev_label => I18n.translate(:previous, :default => 'Previous'), :next_label => I18n.translate(:next, :default => 'Next')))
+  end
+
+  alias_method_chain :will_paginate, :i18n
 
   private
 
@@ -245,5 +252,6 @@ module ApplicationHelper
   def get_date_end_field_name(name)
     "#{name.gsub(/_/, '-')}-end"
   end
+
 
 end

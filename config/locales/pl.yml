@@ -3,6 +3,10 @@
 # by Jacek Becela (jacek.becela@gmail.com, http://github.com/ncr)
 
 pl:
+  previous: Poprzednie
+  next: Następne
+  later: Późniejsze
+  sooner: Wcześniejsze
   number:
     format:
       separator: ","
