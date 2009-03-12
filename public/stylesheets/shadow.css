@@ -1,0 +1,69 @@
+td.tl-shadow {
+    background-image: url('/images/bg/tl.jpg');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+}
+
+td.tm-shadow {
+    background-image: url('/images/bg/tm.jpg');
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+td.tr-shadow {
+    background-image: url('/images/bg/tr.jpg');
+    background-position: bottom left;
+    background-repeat: no-repeat;
+}
+
+td.ml-shadow {
+    background-image: url('/images/bg/ml.jpg');
+    background-repeat: repeat-y;
+    background-position: right;
+}
+
+td.mm-shadow {
+}
+
+td.mr-shadow {
+    background-image: url('/images/bg/mr.jpg');
+    background-repeat: repeat-y;
+    background-position: left;
+}
+
+td.bl-shadow {
+    background-image: url('/images/bg/bl.jpg');
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+td.bm-shadow {
+    background-image: url('/images/bg/bm.jpg');
+    background-repeat: repeat-x;
+    background-position: top;
+}
+
+td.br-shadow {
+    background-image: url('/images/bg/br.jpg');
+    background-position: top left;
+    background-repeat: no-repeat;
+}
+
+.shadow-x {
+    height: 20px;
+}
+
+.shadow-y {
+    width: 20px;
+}
+
+table.shadow {
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
+
+    border-top-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    border-right-style: none;
+}

@@ -5,6 +5,7 @@ require 'erb'
 
 module ApplicationHelper
   include Forms::ApplicationHelper
+  include ShadowHelper
 
   #Returns all periods including :Selected which cannote be computed by Date.compute
   def get_periods(periods = [:present, :past])
@@ -69,7 +70,7 @@ module ApplicationHelper
 
 
 
-  # TODO: Using  result += may be a bed solution. At least it is not ellegant
+  # TODO: Using  result += may be a bad solution. At least it is not ellegant
   # Is there another, better way to do it? Like using erb Templates ?
   def date_period_fields(name, start_day = Date.today, end_day = Date.today, selected = 'SELECTED', periods = nil)
 

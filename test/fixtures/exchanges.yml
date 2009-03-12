@@ -1,13 +1,13 @@
 # == Schema Information
-# Schema version: 20090306160304
+# Schema version: 20090311194649
 #
 # Table name: exchanges
 #
 #  id            :integer       not null, primary key
-#  currency_a    :decimal(8, 4) not null
-#  currency_b    :decimal(8, 4) not null
-#  left_to_right :float         not null
-#  right_to_left :float         not null
+#  currency_a    :integer       not null
+#  currency_b    :integer       not null
+#  left_to_right :decimal(8, 4) not null
+#  right_to_left :decimal(8, 4) not null
 #  day           :date          not null
 #  user_id       :integer       
 #
