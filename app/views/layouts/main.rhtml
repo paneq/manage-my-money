@@ -34,172 +34,74 @@
 
   </head>
 
-  <body>
+  <body style="background-image: url('/images/bg/bg2.png'); background-position: center top;">
 
-    <!-- #content: holds all except site footer - causes footer to stick to bottom -->
-    <div id="content">
+    <div style="width: 1000px; margin-left: auto; margin-right: auto;">
 
-      <!-- #header: holds the logo and top links -->
-      <div id="header" class="width">
+      <div id="page" style="width: 750px; background-color: white; float:left; background-image: url('/images/bg/test.jpg'); background-position: center top;">
+        <div style="padding: 0px 20px 0px 20px">
+          <div id="header" class="width">
+            <% link_to("/", :id=>'main-page-link') do -%>
+              <img style="margin: 0px; padding: 0px; width: 100%, height: 100%;" src="/images/bg/header_3m.jpg" alt="Manage My Money Logo"/>
+            <% end %>
+          </div>
+          <blockquote id="flash_notice">
+            <% if flash[:notice] %>
+              <%= flash[:notice] %>
+            <% end %>
+          </blockquote>
 
-        <% link_to("/", :id=>'main-page-link') do -%>
-          <img style="margin: 0px; padding: 0px; width: 100%, height: 100%;" src="/images/bg/header_3m.jpg" alt="Manage My Money Logo"/>
-        <% end %>
-        <!--
-        <ul>
-          <li><%= link_to "Main Page", :controller => :user , :action => :index -%></li>
-          <li><%= link_to "About us", :controller => :user , :action => :about -%></li>
-        </ul>
-        -->
+          <blockquote id="flash_error">
+            <% if flash[:error] %>
+              <%= flash[:error] %>
+            <% end %>
+          </blockquote>
+
+          <br />
+
+          <%= yield  %>
+
+        </div>
+        
+        <div style="height: 31px; width: 750px; background-image: url('/images/bg/png.png'); background-position: center top;" >
+        </div>
       </div>
-      <!-- #header end -->
+
+      <div style="width:200px; float: left; margin-left: 50px; background-image: url('/images/bg/bgsidebar.jpg');">
+        <p><b>
+            <% unless logged_in? -%>
+              Zaloguj się!
+            <% else -%>
+              Zalogowany: <%= self.current_user.login -%>
+            <% end -%>
+        </b></p>
+        <ul style="padding-left: 0px; width: auto;">
+          <% unless logged_in? %>
+            <li id="login"><%= link_to 'Logowanie', login_url, :id => 'logowanie-menu-link' %> </li>
+            <li id="register"><%= link_to 'Rejestracja', :action => :new, :controller => :users, :id => 'rejestracja-menu-link' %></li>
+          <% else %>
+
+            <li><%= link_to 'Kategorie', categories_path, :id => 'kategorie-menu-link' %></li>
+            <li><%= link_to 'Transfery', transfers_path, :id => 'transfery-menu-link'  %></li>
+            <li><%= link_to 'Waluty', currencies_path, :id => 'waluty-menu-link'  %></li>
+            <li><%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %></li>
+            <li><%= link_to 'Raporty', reports_path, :id => 'raporty-menu-link'  %></li>
+            <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
+            <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
+            <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
+            <li><%= link_to 'Import', import_path, :id => 'creditors-menu-link'  %></li>
 
 
-  <!-- #headerImg: holds the main header image or flash -->
-  <!--<div id="headerImg" class="width">Manage My Money</div>-->
-
-
-  <!-- #menu: the main large box site menu -->
-  <!--
-  <div id="menu" class="width">
-
-    <ul>
-      <li>
-        <a href="" onfocus="blur()">
-          <span class="title ">Category A</span>
-          <span class="desc">not implemented</span>        </a>      </li>
-      <li>
-        <a href="" class="forum" onfocus="blur()">
-          <span class="title ">Category B</span>
-          <span class="desc style3">not implemented</span>        </a>      </li>
-      <li>
-        <a href="" onfocus="blur()">
-          <span class="title ">Category C</span>
-          <span class="desc">not implemented</span>
-        </a>
-      </li>
-      <li>
-        <a href="" onfocus="blur()">
-          <span class="title ">Category D</span>
-          <span class="desc">not implemented</span>
-        </a>
-      </li>
-    </ul>
-
-  </div>
-  -->
-  <!-- #menu end -->
-
-
-  <!--<div class="logo-content-spacer width"></div>-->
-
-
-  <!-- #page: holds the page content -->
-      <div id="page">
-
-
-        <table cellspacing="0" cellpadding="0" style="width: 100%; border-spacing: 0px; border: 0px; border-collapse: collapse; padding: 0px; margin: 0px;">
-          <tr style="width: 100%; padding: 0px; margin: 0px;">
-            <td class="alignTop" style="width: 100%; padding-right: 30px; padding-left:10px; padding-top: 10px; padding-bottom: 20px;">
-
-
-              <blockquote id="flash_notice">
-                <% if flash[:notice] %>
-                  <%= flash[:notice] %>
-                <% end %>
-              </blockquote>
-
-              <blockquote id="flash_error">
-                <% if flash[:error] %>
-                  <%= flash[:error] %>
-                <% end %>
-              </blockquote>
-
-              <br />
-
-
-              <%= yield  %>
-
-
-
-            </td>
-
-
-
-            <td id="right_menu" class="lightBlueBg horzPad floatRight" style="width: 250px; padding: 0; margin: 0; padding-top: 20px;">
-              <h2>My Money <span class="dark">Menu</span></h2>
-              <p><b>
-                  <% unless logged_in? -%>
-                    Zaloguj się!
-                  <% else -%>
-                    Zalogowany: <%= self.current_user.login -%>
-                  <% end -%>
-              </b></p>
-              <ul class="submenu1">
-
-
-
-                <% unless logged_in? %>
-                  <li id="login"><%= link_to 'Logowanie', login_url, :id => 'logowanie-menu-link' %> </li>
-                  <li id="register"><%= link_to 'Rejestracja', :action => :new, :controller => :users, :id => 'rejestracja-menu-link' %></li>
-                <% else %>
-
-                  <li><%= link_to 'Kategorie', categories_path, :id => 'kategorie-menu-link' %></li>
-                  <li><%= link_to 'Transfery', transfers_path, :id => 'transfery-menu-link'  %></li>
-                  <li><%= link_to 'Waluty', currencies_path, :id => 'waluty-menu-link'  %></li>
-                  <li><%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %></li>
-                  <li><%= link_to 'Raporty', reports_path, :id => 'raporty-menu-link'  %></li>
-                  <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
-                  <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
-                  <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
-                  <li><%= link_to 'Import', import_path, :id => 'creditors-menu-link'  %></li>
-
-
-                  <br />
-                  <li id="logout"><%= link_to 'Wyloguj', logout_url, :id => 'wyloguj-menu-link'  %></li>
-                  <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user), :id => 'edycja-ustawien-menu-link'  %></li>
-                  <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
-                <% end %>
-
-              </ul>
-
-              <% if logged_in? %>
-                <% cache("#{@current_user.id}-quick-categories") do %>
-
-                  <p><b>Szybki dostęp:</b></p>
-                  <ul class="submenu3">
-                    <%= render :partial => "/categories/category_in_layout" , :collection => @current_user.categories %>
-                  </ul>
-                  <br />
-
-                <% end %>
-              <% end %>
-
-
-            </td>
-          </tr>
-        </table>
-      </div> <!-- end of page -->
-    </div> <!-- end of content -->
-    <!-- #footer: holds the site footer (logo and links) -->
-    <div id="footer" style="margin-top:20px;">
-
-      <!-- #bg: applies the site width and footer background -->
-      <div id="bg" class="width">
-
-
-        <ul>
-          <li><a href="http://www.opensourcetemplates.org">opensourcetemplates.org</a></li>
-          <li><a href="http://www.studio7designs.com" class="last">studio7designs.com</a></li>
+            <br />
+            <li id="logout"><%= link_to 'Wyloguj', logout_url, :id => 'wyloguj-menu-link'  %></li>
+            <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user), :id => 'edycja-ustawien-menu-link'  %></li>
+            <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
+          <% end %>
         </ul>
-
+        <div style="width: 200px; height: 20px; background-image: url('/images/bg/bgsidebar-bottom.jpg');">
+        </div>
       </div>
-      <!-- #bg end -->
 
     </div>
-    <!-- #footer end -->
-
-
   </body>
-
 </html>

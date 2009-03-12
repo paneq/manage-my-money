@@ -67,3 +67,18 @@ table.shadow {
     border-left-style: none;
     border-right-style: none;
 }
+
+
+td#shadow-left {
+    width: 20px;
+    
+    background-repeat: repeat-y;
+    background-position: right;
+}
+
+td#shadow-right {
+    width: 20px;
+    
+    background-repeat: repeat-y;
+    background-position: left;
+}

@@ -2,18 +2,17 @@ div.nice-table {
 	font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	color: #4f6b72;
 	background: #EAF2F5;
-    padding: 15px;
+    padding: 10px;
+    width: 100%;
 }
 
 #mytable {
-	width: 700px;
 	padding: 0;
 	margin: 0;
 }
 
 caption.nice-table {
 	padding: 0 0 5px 0;
-	width: 700px;
 	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	text-align: right;
 }
@@ -27,7 +26,7 @@ th.nice-table {
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	text-align: left;
-	padding: 6px 6px 6px 12px;
+	padding: 3px 3px 3px 6px;
 	background: #CAE8EA url(../images/data_table/bg_header.jpg) no-repeat;
 }
 
@@ -42,7 +41,7 @@ td.nice-table {
 	border-right: 1px solid #C1DAD7;
 	border-bottom: 1px solid #C1DAD7;
 	background: #fff;
-	padding: 6px 6px 6px 12px;
+	padding: 3px 3px 3px 6px;
 	color: #4f6b72;
 }
 
