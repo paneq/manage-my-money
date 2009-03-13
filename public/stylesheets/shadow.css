@@ -5,7 +5,7 @@ td.tl-shadow {
 }
 
 td.tm-shadow {
-    background-image: url('/images/bg/tm.jpg');
+    background-image: url('/images/bg/tm80.png');
     background-repeat: repeat-x;
     background-position: bottom;
 }
@@ -16,8 +16,10 @@ td.tr-shadow {
     background-repeat: no-repeat;
 }
 
+
+
 td.ml-shadow {
-    background-image: url('/images/bg/ml.jpg');
+    background-image: url('/images/bg/ml80.png');
     background-repeat: repeat-y;
     background-position: right;
 }
@@ -26,10 +28,12 @@ td.mm-shadow {
 }
 
 td.mr-shadow {
-    background-image: url('/images/bg/mr.jpg');
+    background-image: url('/images/bg/mr80.png');
     background-repeat: repeat-y;
     background-position: left;
 }
+
+
 
 td.bl-shadow {
     background-image: url('/images/bg/bl.jpg');
@@ -38,7 +42,7 @@ td.bl-shadow {
 }
 
 td.bm-shadow {
-    background-image: url('/images/bg/bm.jpg');
+    background-image: url('/images/bg/bm80.png');
     background-repeat: repeat-x;
     background-position: top;
 }
