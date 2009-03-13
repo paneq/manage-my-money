@@ -1,5 +1,5 @@
 td.tl-shadow {
-    background-image: url('/images/bg/tl.jpg');
+    background-image: url('/images/bg/tl80.png');
     background-position: bottom right;
     background-repeat: no-repeat;
 }
@@ -11,7 +11,7 @@ td.tm-shadow {
 }
 
 td.tr-shadow {
-    background-image: url('/images/bg/tr.jpg');
+    background-image: url('/images/bg/tr80.png');
     background-position: bottom left;
     background-repeat: no-repeat;
 }
@@ -36,7 +36,7 @@ td.mr-shadow {
 
 
 td.bl-shadow {
-    background-image: url('/images/bg/bl.jpg');
+    background-image: url('/images/bg/bl80.png');
     background-position: top right;
     background-repeat: no-repeat;
 }
@@ -48,7 +48,7 @@ td.bm-shadow {
 }
 
 td.br-shadow {
-    background-image: url('/images/bg/br.jpg');
+    background-image: url('/images/bg/br80.png');
     background-position: top left;
     background-repeat: no-repeat;
 }
