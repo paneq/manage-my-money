@@ -1,64 +1,131 @@
-td.tl-shadow {
-    background-image: url('/images/bg/tl80.png');
+
+/*
+ Grey 80 % shadow
+*/
+td.tl-shadow-80grey {
+    background-image: url('/images/bg/tl80grey.png');
     background-position: bottom right;
     background-repeat: no-repeat;
 }
 
-td.tm-shadow {
-    background-image: url('/images/bg/tm80.png');
+td.tm-shadow-80grey {
+    background-image: url('/images/bg/tm80grey.png');
     background-repeat: repeat-x;
     background-position: bottom;
 }
 
-td.tr-shadow {
-    background-image: url('/images/bg/tr80.png');
+td.tr-shadow-80grey {
+    background-image: url('/images/bg/tr80grey.png');
     background-position: bottom left;
     background-repeat: no-repeat;
 }
 
 
 
-td.ml-shadow {
-    background-image: url('/images/bg/ml80.png');
+td.ml-shadow-80grey {
+    background-image: url('/images/bg/ml80grey.png');
     background-repeat: repeat-y;
     background-position: right;
 }
 
-td.mm-shadow {
+td.mm-shadow-80grey {
 }
 
-td.mr-shadow {
-    background-image: url('/images/bg/mr80.png');
+td.mr-shadow-80grey {
+    background-image: url('/images/bg/mr80grey.png');
     background-repeat: repeat-y;
     background-position: left;
 }
 
 
 
-td.bl-shadow {
-    background-image: url('/images/bg/bl80.png');
+td.bl-shadow-80grey {
+    background-image: url('/images/bg/bl80grey.png');
     background-position: top right;
     background-repeat: no-repeat;
 }
 
-td.bm-shadow {
-    background-image: url('/images/bg/bm80.png');
+td.bm-shadow-80grey {
+    background-image: url('/images/bg/bm80grey.png');
     background-repeat: repeat-x;
     background-position: top;
 }
 
-td.br-shadow {
-    background-image: url('/images/bg/br80.png');
+td.br-shadow-80grey {
+    background-image: url('/images/bg/br80grey.png');
     background-position: top left;
     background-repeat: no-repeat;
 }
 
+/*
+  NavyBlue 60% shadow
+*/
+td.tl-shadow-60blue {
+    background-image: url('/images/bg/tl60blue.png');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+}
+
+td.tm-shadow-60blue {
+    background-image: url('/images/bg/tm60blue.png');
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+td.tr-shadow-60blue {
+    background-image: url('/images/bg/tr60blue.png');
+    background-position: bottom left;
+    background-repeat: no-repeat;
+}
+
+
+
+td.ml-shadow-60blue {
+    background-image: url('/images/bg/ml60blue.png');
+    background-repeat: repeat-y;
+    background-position: right;
+}
+
+td.mm-shadow-60blue {
+}
+
+td.mr-shadow-60blue {
+    background-image: url('/images/bg/mr60blue.png');
+    background-repeat: repeat-y;
+    background-position: left;
+}
+
+
+
+td.bl-shadow-60blue {
+    background-image: url('/images/bg/bl60blue.png');
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+td.bm-shadow-60blue {
+    background-image: url('/images/bg/bm60blue.png');
+    background-repeat: repeat-x;
+    background-position: top;
+}
+
+td.br-shadow-60blue {
+    background-image: url('/images/bg/br60blue.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+}
+
+
+
+/*
+  Table
+*/
 .shadow-x {
-    height: 20px;
+    height: 15px;
 }
 
 .shadow-y {
-    width: 20px;
+    width: 15px;
 }
 
 table.shadow {
