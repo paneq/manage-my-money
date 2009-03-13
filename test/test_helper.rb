@@ -4,8 +4,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
 # stallman cannot run selenium test :-)
-TEST_ON_STALLMAN = false
-TEST_ON_STALLMAN = true if Socket.gethostname == "stallman.rootnode.net"
+#TEST_ON_STALLMAN = false
+TEST_ON_STALLMAN = (Socket.gethostname == 'stallman.rootnode.net')
 
 # Code for manipulating actual time in tests (from http://www.ruby-forum.com/topic/114087#267920)
 class Date

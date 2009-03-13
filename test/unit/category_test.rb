@@ -636,6 +636,33 @@ class CategoryTest < Test::Unit::TestCase
 
   end
 
+
+
+
+  def test_assing_system_category
+    prepare_sample_catagory_tree_for_jarek
+
+    test_category = @jarek.categories.find_by_name 'test'
+
+    e = SystemCategory.create :name => 'Expenses'
+
+    test_category.system_categories << e
+
+
+    e.save!
+
+    test_category.save!
+
+    test_category.reload
+
+    assert [e.id], test_category.system_categories.map{|q| q.id }
+
+  end
+
+
+
+
+
   private
 
 

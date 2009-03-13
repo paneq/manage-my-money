@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090311194649
+# Schema version: 20090313212009
 #
 # Table name: categories
 #
@@ -97,6 +97,9 @@ class Category < ActiveRecord::Base
 
   has_many :category_report_options, :foreign_key => :category_id, :dependent => :destroy
   has_many :multiple_category_reports, :through => :category_report_options
+
+  has_and_belongs_to_many :system_categories
+
 
   attr_reader :opening_balance, :opening_balance_currency
 

@@ -153,6 +153,36 @@ ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
 
 
 --
+-- Name: categories_system_categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE categories_system_categories (
+    id integer NOT NULL,
+    category_id integer NOT NULL,
+    system_category_id integer NOT NULL
+);
+
+
+--
+-- Name: categories_system_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE categories_system_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: categories_system_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE categories_system_categories_id_seq OWNED BY categories_system_categories.id;
+
+
+--
 -- Name: category_report_options; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -377,6 +407,20 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
+-- Name: system_categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE system_categories (
+    name character varying(255) NOT NULL,
+    parent_id integer,
+    lft integer,
+    rgt integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
 -- Name: transfer_items; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -502,6 +546,13 @@ ALTER TABLE categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE categories_system_categories ALTER COLUMN id SET DEFAULT nextval('categories_system_categories_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE category_report_options ALTER COLUMN id SET DEFAULT nextval('category_report_options_id_seq'::regclass);
 
 
@@ -575,6 +626,14 @@ ALTER TABLE ONLY bdrb_job_queues
 
 ALTER TABLE ONLY categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories_system_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY categories_system_categories
+    ADD CONSTRAINT categories_system_categories_pkey PRIMARY KEY (id);
 
 
 --
@@ -886,3 +945,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090306160304');
 INSERT INTO schema_migrations (version) VALUES ('20090311193005');
 
 INSERT INTO schema_migrations (version) VALUES ('20090311194649');
+
+INSERT INTO schema_migrations (version) VALUES ('20090313212009');

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090311194649) do
+ActiveRecord::Schema.define(:version => 20090313212009) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -50,6 +50,11 @@ ActiveRecord::Schema.define(:version => 20090311194649) do
   add_index "categories", ["category_type_int", "id", "user_id"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
   add_index "categories", ["lft", "rgt"], :name => "index_categories_on_lft_and_rgt"
   add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
+
+  create_table "categories_system_categories", :id => false, :force => true do |t|
+    t.integer "category_id",        :null => false
+    t.integer "system_category_id", :null => false
+  end
 
   create_table "category_report_options", :force => true do |t|
     t.integer  "inclusion_type_int", :default => 0, :null => false
@@ -136,6 +141,15 @@ ActiveRecord::Schema.define(:version => 20090311194649) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "system_categories", :force => true do |t|
+    t.string   "name",       :null => false
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "transfer_items", :force => true do |t|
     t.text    "description",                                               :null => false
