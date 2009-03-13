@@ -198,6 +198,53 @@ class Goal < ActiveRecord::Base
   end
 
 
+  def self.find_past(user)
+    sql = <<-SQL
+    (
+      select
+        goals.*
+      from
+        goals,
+        (
+          select
+            cycle_group,
+            max(period_end) as max_end
+          from
+            goals
+          where
+            period_end < ?
+          group by
+            cycle_group
+        ) as goals_groups
+      where
+        goals.cycle_group = goals_groups.cycle_group
+        AND goals.period_end = goals_groups.max_end
+        AND user_id = ?
+
+     union
+
+      select
+        *
+      from
+        goals
+      where
+        (period_end < ? OR is_finished = ?)
+        AND is_cyclic = ?
+        AND user_id = ?
+     )
+      order by period_end
+    SQL
+
+   find_by_sql [sql, Date.today, user.id, Date.today, true, false, user.id ]
+
+  end
+
+
+  def self.find_actual(user)
+    all :conditions => ['period_end >= ? AND is_finished = ? AND user_id = ?', Date.today, false, user.id], :order => 'period_end'
+  end
+
+
 
 
 

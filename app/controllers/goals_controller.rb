@@ -8,9 +8,8 @@ class GoalsController < ApplicationController
   # GET /goals
   # GET /goals.xml
   def index
-    goals = self.current_user.goals.find(:all, :order => ['period_end'])
-
-    @finished_goals, @actual_goals = goals.partition{ |g| g.is_finished}
+    @actual_goals = Goal.find_actual(self.current_user)
+    @finished_goals = Goal.find_past(self.current_user)
 
     respond_to do |format|
       format.html # index.html.erb

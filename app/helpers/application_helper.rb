@@ -241,10 +241,11 @@ module ApplicationHelper
     def will_paginate_with_i18n(collection, options = {})
       will_paginate_without_i18n(collection, options.merge(:prev_label => I18n.translate(:previous, :default => 'Previous'), :next_label => I18n.translate(:next, :default => 'Next')))
     end
-    
+
+    alias_method_chain :will_paginate, :i18n
   end
 
-  alias_method_chain :will_paginate, :i18n
+  
 
   private
 

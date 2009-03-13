@@ -129,6 +129,132 @@ class GoalTest < ActiveSupport::TestCase
     assert_not_nil g.value_description
   end
 
+  def test_find_past
+    goals = []
+    assert_find_past(goals)
+
+    g = create_goal(false)
+    g.period_start = Date.yesterday
+    g.period_end = Date.yesterday
+    g.save!
+    goals << g
+    assert_find_past(goals)
+
+    g = create_goal(false)
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_finished = true
+    g.save!
+    goals << g
+    assert_find_past(goals)
+
+    g = create_goal(false)
+    g.period_start = Date.tomorrow
+    g.period_end = Date.tomorrow
+    g.is_finished = true
+    g.save!
+    goals << g
+    assert_find_past(goals)
+
+    g = create_goal(false)
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_finished = false
+    g.save!
+    assert_find_past(goals)
+
+    g = create_goal(false)
+    g.period_type = :NEXT_DAY
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_cyclic = true
+    g.save!
+    assert_find_past(goals)
+
+    g.period_type = :NEXT_DAY
+    g.period_start = Date.yesterday.yesterday
+    g.period_end = Date.yesterday.yesterday
+    g.save!
+    goals << g
+    assert_find_past(goals)
+
+    g2 = g.create_next_goal_in_cycle
+    g2.save!
+    
+    goals.delete(g)
+    goals << g2
+
+    assert_find_past(goals)
+
+    g3 = g2.create_next_goal_in_cycle
+    g3.save!
+    assert_find_past(goals)
+
+  end
+
+
+  def test_find_actual
+    goals = []
+    assert_find_actual goals
+
+    past_goals = []
+
+    g = create_goal(false)
+    g.period_start = Date.yesterday
+    g.period_end = Date.yesterday
+    g.save!
+    past_goals << g
+
+    g = create_goal(false)
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_finished = true
+    g.save!
+    past_goals << g
+
+    g = create_goal(false)
+    g.period_start = Date.tomorrow
+    g.period_end = Date.tomorrow
+    g.is_finished = true
+    g.save!
+    past_goals << g
+    assert_find_actual(goals)
+
+    g = create_goal(false)
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_finished = false
+    g.save!
+    goals << g
+    assert_find_actual(goals)
+
+    g = create_goal(false)
+    g.period_type = :NEXT_DAY
+    g.period_start = Date.today
+    g.period_end = Date.today
+    g.is_finished = false
+    g.is_cyclic = true
+    g.save!
+    goals << g
+    assert_find_actual(goals)
+
+    g.period_type = :NEXT_DAY
+    g.period_start = Date.yesterday.yesterday
+    g.period_end = Date.yesterday.yesterday
+    g.save!
+    goals.delete(g)
+    assert_find_actual(goals)
+
+    g2 = g.create_next_goal_in_cycle
+    g2.save!
+    g3 = g2.create_next_goal_in_cycle
+    g3.save!
+    goals << g3
+    assert_find_actual(goals)
+
+  end
+
+
   #TODO
   #test_actual_value
   #test_finish
@@ -136,6 +262,19 @@ class GoalTest < ActiveSupport::TestCase
   #test_positive?
   #test_all_goals_in_cycle
   #test_next_goal_in_cycle
+
+  private
+  def assert_find_past(goals)
+    past = Goal.find_past(@jarek)
+    assert_equal goals.map{|e|e.id}.sort, past.map{|e|e.id}.sort
+  end
+
+  def assert_find_actual(goals)
+    past = Goal.find_actual(@jarek)
+    assert_equal goals.map{|e|e.id}.sort, past.map{|e|e.id}.sort
+  end
+
+
 
 
 end

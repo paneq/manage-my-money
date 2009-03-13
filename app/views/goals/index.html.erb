@@ -18,12 +18,17 @@
     <% for fin_goal in @finished_goals %>
 
       <tr class="<%= cycle('', 'alt', :name => 'alt_style_td')%>">
-        <th scope="row" class="<%= cycle('spec', 'specalt') %> nice-table"><%=fin_goal.description%></th>
+        <th scope="row" class="spec"><%=fin_goal.description%></th>
         <td><%=fin_goal.category.name%></td>
         <td><%=fin_goal.value_description%></td>
         <td><span class="<%= (fin_goal.positive? ? "goal-positive":"goal-negative") %>"><%=fin_goal.actual_value_with_unit%></span></td>
         <td><%=fin_goal.period_description%></td>
-        <td colspan="4"><%= link_to 'Usuń', fin_goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
+        <td>
+          <%if fin_goal.is_cyclic %>
+            <%= link_to 'Historia', :action => 'history_index', :id => fin_goal.id %>
+          <%end%>
+        </td>
+        <td colspan="3"><%= link_to 'Usuń', fin_goal, :confirm => 'Czy jesteś tego pewien?', :method => :delete %></td>
       </tr>
     <% end %>
 

@@ -171,7 +171,6 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -237,6 +236,7 @@ CREATE TABLE exchanges (
 --
 
 CREATE SEQUENCE exchanges_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -280,7 +280,6 @@ CREATE TABLE goals (
 --
 
 CREATE SEQUENCE goals_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -324,7 +323,6 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -385,7 +383,7 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(8,2) NOT NULL,
+    value numeric(12,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,

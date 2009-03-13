@@ -64,8 +64,8 @@ Rails::Initializer.run do |config|
   MEMCACHED_KEY = 'fI5YW5IP2gtvOczaGcpPpVbOsEDNmhH8SbiHiMO65hl7IxvPhtm2ApBug2Yr6Fik'
   config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "#{MEMCACHED_KEY}_manage_my_money_#{RAILS_ENV}" }
 
-  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
-    :source => 'http://gems.github.com'
+#  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
+#    :source => 'http://gems.github.com'
 
 end
 
