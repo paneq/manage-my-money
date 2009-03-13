@@ -490,6 +490,14 @@ class Category < ActiveRecord::Base
   end
 
 
+  def system_category=(sys_category)
+    #TODO
+  end
+
+  def system_category
+    nil #TODO
+  end
+
 
 
   #======================

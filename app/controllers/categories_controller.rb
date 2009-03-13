@@ -54,6 +54,8 @@ class CategoriesController < ApplicationController
     @category = Category.new()
     @categories = @current_user.categories
     @currencies = @current_user.visible_currencies
+    @system_categories = SystemCategory.all_visible
+    @selected_system_category = @system_categories.find{|sc| sc.name ='Brak'}
   end
 
 
@@ -65,6 +67,8 @@ class CategoriesController < ApplicationController
       flash[:notice] ||= 'Utworzono nową kategorię'
       redirect_to categories_url
     else
+      @system_categories = SystemCategory.all_visible
+      @selected_system_category = @system_categories.find{|sc| sc.name ='Brak'}
       @categories = @current_user.categories
       @currencies = @current_user.visible_currencies
       flash[:notice] = 'Nie udało się utworzyć kategorii.'
@@ -77,6 +81,8 @@ class CategoriesController < ApplicationController
     @category = self.current_user.categories.find(params[:id])
     @parent = @category.parent
     @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
+    @system_categories = SystemCategory.all_visible
+    @selected_system_category = @system_categories.find{|sc| sc.name ='Brak'}
   end
 
    
@@ -92,6 +98,8 @@ class CategoriesController < ApplicationController
     else
       @parent = @category.parent
       @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
+      @system_categories = SystemCategory.all_visible
+      @selected_system_category = @system_categories.find{|sc| sc.name ='Brak'}
       flash[:notice] = 'Nie udało się zaktualizować kategorii.'
       render :action => 'edit'
     end

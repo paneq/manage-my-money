@@ -20,6 +20,13 @@
       </span>
     </p>
 
+    <p id="system_category">
+      Wybierz kategorię systemową (help needed):
+      <%= select_tag 'category[system_category]', options_from_collection_for_select(@system_categories, 'id', 'name', @selected_system_category.id), :id => 'system-category-select' %>
+    </p>
+
+
+
     <p id="loan">
       <p id="is_loan">Dłużnik / Wierzyciel: <%= form.check_box :type, {}, 'LoanCategory', 'Category' %> </p>
       <p id="email"> E-mail: <%= form.text_field :email %> </p>
