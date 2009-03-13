@@ -22,23 +22,23 @@ class CategoriesControllerTest < ActionController::TestCase
 
 
     assert_select 'div#categories-index' do
-      assert_select 'div#category-tree' do
-        assert_select 'div[id^=category-line]', @rupert.categories.count
+      assert_select 'table#category-tree' do
+        assert_select 'tr[id^=category-line]', @rupert.categories.count
       end
       @rupert.categories.count.times do |nr|
         category = @rupert.categories[nr]
 
         #test categories in valid order
-        assert_select "div#category-tree div:nth-child(#{nr+1})" do
-          assert_select "span#category-link" do
+        assert_select "table#category-tree tr:nth-child(#{nr+1})" do
+          assert_select "td#category-link" do
             assert_select "a > a", Regexp.new("#{category.name}")
           end
 
-          #test options
-          assert_select "span#category-options" do
+          #test place for saldo
+          assert_select "td#category-saldo-#{category.id}"
 
-            #test place for saldo
-            assert_select "span#category-saldo-#{category.id}"
+          #test options
+          assert_select "td#category-options" do
 
             #add subcategory link
             assert_select "a#add-subc-#{category.id}"
@@ -58,9 +58,9 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_select 'a[id^=del-subc]', rupert.categories.count - 5
     @rupert.categories.count.times do |nr|
       category = @rupert.categories[nr]
-      assert_select "div#category-tree div:nth-child(#{nr+1})" do
+      assert_select "table#category-tree tr:nth-child(#{nr+1})" do
         occures = category.is_top? ? 0 : 1
-        assert_select "span#category-options" do
+        assert_select "td#category-options" do
           assert_select "a#del-subc-#{category.id}", occures
         end
       end
@@ -325,7 +325,7 @@ class CategoriesControllerTest < ActionController::TestCase
     xhr :delete, :destroy, :id => @food
     assert_response :success
     assert_select_rjs :replace_html, 'category-tree' do
-      assert_select 'div[id^=category-line]', @rupert.categories.count
+      assert_select 'tr[id^=category-line]', @rupert.categories.count
     end
     assert_select_rjs :replace_html, 'flash_notice' do
       assert_select "a", /Usunięto/

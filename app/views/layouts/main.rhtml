@@ -40,7 +40,7 @@
 
       <div id="page" style="width: 750px; float:left;">
 
-        <% strong_shadow(:top, :style => 'background-color: white;') do %>
+        <% strong_shadow(:top, {:style => 'width: 750px;'}, :style => 'background-color: white;') do %>
 
           <div id="header" class="width">
             <% link_to("/", :id=>'main-page-link') do -%>
@@ -77,7 +77,7 @@
               Zalogowany: <%= self.current_user.login -%>
             <% end -%>
         </b></p>
-        <ul style="padding-left: 0px; width: auto;">
+        <ul id="main-sidebar" style="padding-left: 0px; width: auto;">
           <% unless logged_in? %>
             <li id="login"><%= link_to 'Logowanie', login_url, :id => 'logowanie-menu-link' %> </li>
             <li id="register"><%= link_to 'Rejestracja', :action => :new, :controller => :users, :id => 'rejestracja-menu-link' %></li>

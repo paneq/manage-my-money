@@ -1,27 +1,27 @@
 <% size = '20x20' %>
 
-<div <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>" title="<%= category.name_with_path -%>" >
+<tr <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= category.name_with_path -%>" >
 
-  <span id="category-link" class="floatLeft category verticalCenter" style="">
+  <td id="category-link">
     <a style="padding-left : <%= ( category.level  + 1 ) * 20 %>px;">
-      <%= image_tag "/images/bg/submenu1.gif", :style => 'align: left;' -%>
-      <a><%= link_to h(category.name), category_path(category), {:id => "show-category-stats-#{category.id}" } %></a>
+      <%= link_to h(category.name), category_path(category), {:id => "show-category-stats-#{category.id}" } %>
     </a>
-  </span>
+  </td>
 
-  <span id="category-options" class="floatRight category verticalCenter" style="">
-    <span id="category-saldo-<%= category.id -%>">
-      <% category.current_saldo.each do |currency, value| %>
-        <%= "#{value} #{currency.symbol}, " -%>
-      <% end %>
-    </span>
-    <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Dodaj podkategorię'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
-    <% unless category.is_top? %>
-      <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Usuń'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete), :title => 'Usuń', :id => "del-subc-#{category.id}" } %>
+  <td id="category-saldo-<%= category.id -%>">
+    <% category.current_saldo.each do |currency, value| %>
+      <%= "#{value} #{currency.symbol}, " -%>
     <% end %>
-  </span>
+  </td>
+  
+  <td id="category-options">
+      <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Dodaj podkategorię'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
+      <% unless category.is_top? %>
+        <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Usuń'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete), :title => 'Usuń', :id => "del-subc-#{category.id}" } %>
+      <% end %>
+  </td>
 
-</div>
+</tr>
 
 
 

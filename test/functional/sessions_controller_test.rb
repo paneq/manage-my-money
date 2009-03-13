@@ -16,14 +16,8 @@ class SessionsControllerTest < Test::Unit::TestCase
 
   def test_should_see_proper_menu_when_logging_in
     get :new
-    assert_select "ul.submenu1" do
-
-      assert_select "li#login", 1
+    assert_select "ul#main-sidebar" do
       assert_select "li#login", /Logowanie/
-
-      assert_select "li#register", 1
-      assert_select "li#register", /Rejestracja/
-
     end
   end
 
