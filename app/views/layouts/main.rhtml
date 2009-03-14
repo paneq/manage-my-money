@@ -61,8 +61,8 @@
       </div>
 
 
-      <div style="width:200px; float: left; margin-left: 50px;">
-        <div id="top-sidebar" style="background-image: url('/images/bg/bgsidebar.jpg');">
+      <div style="width:200px; float: left; margin-left: 50px; margin-top:20px;">
+        <% inner_shadow({:id => 'top-sidebar', :style => 'background-color: white;'}, :style => 'width: 170px;') do %>
           <p><b>
               <% unless logged_in? -%>
                 Zaloguj się!
@@ -93,9 +93,7 @@
               <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
             <% end %>
           </ul>
-          <div style="width: 200px; height: 20px; background-image: url('/images/bg/bgsidebar-bottom.jpg');">
-          </div>
-        </div>
+        <% end %>
 
         <% if logged_in? %>
           <%= render :partial => 'shared/bottom_sidebar' %>

@@ -1,5 +1,64 @@
 
 /*
+ Grey 80 % inner-shadow
+*/
+td.tl-inner-shadow-80grey {
+    background-image: url('/images/bg/tl-inner80grey.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+}
+
+td.tm-inner-shadow-80grey {
+    background-image: url('/images/bg/bm80grey.png');
+    background-repeat: repeat-x;
+    background-position: top;
+}
+
+td.tr-inner-shadow-80grey {
+    background-image: url('/images/bg/tr-inner80grey.png');
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
+
+
+td.ml-inner-shadow-80grey {
+    background-image: url('/images/bg/mr80grey.png');
+    background-repeat: repeat-y;
+    background-position: left;
+}
+
+td.mm-inner-shadow-80grey {
+}
+
+td.mr-inner-shadow-80grey {
+    background-image: url('/images/bg/ml80grey.png');
+    background-repeat: repeat-y;
+    background-position: right;
+}
+
+
+
+td.bl-inner-shadow-80grey {
+    background-image: url('/images/bg/bl-inner80grey.png');
+    background-position: bottom left;
+    background-repeat: no-repeat;
+}
+
+td.bm-inner-shadow-80grey {
+    background-image: url('/images/bg/tm80grey.png');
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+td.br-inner-shadow-80grey {
+    background-image: url('/images/bg/br-inner80grey.png');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+}
+
+
+/*
  Grey 80 % shadow
 */
 td.tl-shadow-80grey {
