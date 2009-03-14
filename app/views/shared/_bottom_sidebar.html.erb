@@ -1,0 +1,37 @@
+<div id="bottom-sidebar" style="maring-top: 30px;">
+
+  <% cache("#{@current_user.id}-quick-categories") do %>
+    <p><b>Szybki dostęp:</b></p>
+    <input onkeyup="
+      var ul = document.getElementById('categories-sidebar');
+      var lis = ul.getElementsByTagName('a');
+      var reg = new RegExp('.*' + value + '.*','i');
+      if (value == '' || value.length < 3) {
+        for(var i = 0; i < lis.length; i++){
+          lis[i].style.display = 'none';
+        }
+      } else {
+        for(var i = 0; i < lis.length; i++){
+          var element = lis[i];
+          if (element.innerHTML.match(reg)) {
+            element.style.display = 'block';
+          } else {
+            element.style.display = 'none';
+          }
+        }
+      }"></input>
+
+    <div id="categories-sidebar">
+      <%  @current_user.categories.each do |c| %>
+        <%= link_to "#{c.name} <br />",
+          category_path(c) ,
+          obj_hash_id('category-in-menu', c).merge(
+          :title => c.name_with_path,
+          :style => 'display: none;') -%>
+      <% end %>
+    </div>
+    <br />
+
+  <% end %>
+
+</div>
