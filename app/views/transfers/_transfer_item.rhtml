@@ -47,9 +47,9 @@ function(element, value) {
   for(var i=0; i < aa.length; i++){
     current_li = aa[i];
     if(current_li.className == 'autocomplete_item selected') {
-      elements = current_li.getElementsByTagName('a')
+      elements = current_li.getElementsByTagName('a');
       for(var j=0; j < elements.length; j++){
-        el = elements[j]
+        el = elements[j];
         
         if(el.className == 'autocomplete-value') {
           document.getElementById('#{change_value}').value = el.innerHTML;

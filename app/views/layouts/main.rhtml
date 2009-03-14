@@ -51,7 +51,7 @@
           <% [:notice, :error].each do |fla| %>
             <%= content_tag :blockquote, flash[fla], :id => "flash_#{fla}" %>
           <% end %>
-          
+
           <br />
 
           <%= yield  %>
@@ -61,38 +61,78 @@
       </div>
 
 
-      <div style="width:200px; float: left; margin-left: 50px; background-image: url('/images/bg/bgsidebar.jpg');">
-        <p><b>
-            <% unless logged_in? -%>
-              Zaloguj się!
-            <% else -%>
-              Zalogowany: <%= self.current_user.login -%>
-            <% end -%>
-        </b></p>
-        <ul id="main-sidebar" style="padding-left: 0px; width: auto;">
-          <% unless logged_in? %>
-            <li id="login"><%= link_to 'Logowanie', login_url, :id => 'logowanie-menu-link' %> </li>
-            <li id="register"><%= link_to 'Rejestracja', :action => :new, :controller => :users, :id => 'rejestracja-menu-link' %></li>
-          <% else %>
+      <div style="width:200px; float: left; margin-left: 50px;">
+        <div id="top-sidebar" style="background-image: url('/images/bg/bgsidebar.jpg');">
+          <p><b>
+              <% unless logged_in? -%>
+                Zaloguj się!
+              <% else -%>
+                Zalogowany: <%= self.current_user.login -%>
+              <% end -%>
+          </b></p>
+          <ul id="main-sidebar" style="padding-left: 0px; width: auto;">
+            <% unless logged_in? %>
+              <li id="login"><%= link_to 'Logowanie', login_url, :id => 'logowanie-menu-link' %> </li>
+              <li id="register"><%= link_to 'Rejestracja', :action => :new, :controller => :users, :id => 'rejestracja-menu-link' %></li>
+            <% else %>
 
-            <li><%= link_to 'Kategorie', categories_path, :id => 'kategorie-menu-link' %></li>
-            <li><%= link_to 'Transfery', transfers_path, :id => 'transfery-menu-link'  %></li>
-            <li><%= link_to 'Waluty', currencies_path, :id => 'waluty-menu-link'  %></li>
-            <li><%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %></li>
-            <li><%= link_to 'Raporty', reports_path, :id => 'raporty-menu-link'  %></li>
-            <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
-            <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
-            <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
-            <li><%= link_to 'Import', import_path, :id => 'creditors-menu-link'  %></li>
+              <li><%= link_to 'Kategorie', categories_path, :id => 'kategorie-menu-link' %></li>
+              <li><%= link_to 'Transfery', transfers_path, :id => 'transfery-menu-link'  %></li>
+              <li><%= link_to 'Waluty', currencies_path, :id => 'waluty-menu-link'  %></li>
+              <li><%= link_to 'Kursy', exchanges_path, :id => 'kursy-menu-link'  %></li>
+              <li><%= link_to 'Raporty', reports_path, :id => 'raporty-menu-link'  %></li>
+              <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
+              <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
+              <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
+              <li><%= link_to 'Import', import_path, :id => 'creditors-menu-link'  %></li>
 
 
-            <br />
-            <li id="logout"><%= link_to 'Wyloguj', logout_url, :id => 'wyloguj-menu-link'  %></li>
-            <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user), :id => 'edycja-ustawien-menu-link'  %></li>
-            <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
+              <br />
+              <li id="logout"><%= link_to 'Wyloguj', logout_url, :id => 'wyloguj-menu-link'  %></li>
+              <li><%= link_to 'Edycja ustawień', edit_user_url(self.current_user), :id => 'edycja-ustawien-menu-link'  %></li>
+              <li><%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %></li>
+            <% end %>
+          </ul>
+          <div style="width: 200px; height: 20px; background-image: url('/images/bg/bgsidebar-bottom.jpg');">
+          </div>
+        </div>
+
+        <div id="bottom-sidebar" style="maring-top: 30px;">
+          <% if logged_in? %>
+            <% cache("#{@current_user.id}-quick-categories") do %>
+              <p><b>Szybki dostęp:</b></p>
+              <input onkeyup="
+                var ul = document.getElementById('categories-sidebar');
+                var lis = ul.getElementsByTagName('a');
+                var reg = new RegExp('.*' + value + '.*','i');
+                if (value == '' || value.length < 3) {
+                  for(var i = 0; i < lis.length; i++){
+                    lis[i].style.display = 'none';
+                  }
+                } else {
+                  for(var i = 0; i < lis.length; i++){
+                    var element = lis[i];
+                    if (element.innerHTML.match(reg)) {
+                      element.style.display = 'block';
+                    } else {
+                      element.style.display = 'none';
+                    }
+                  }
+                }"></input>
+
+              <div id="categories-sidebar">
+                <%  @current_user.categories.each do |c| %>
+                  <%= link_to "#{c.name} <br />", 
+                    category_path(c) ,
+                    obj_hash_id('category-in-menu', c).merge(
+                    :title => c.name_with_path,
+                    :style => 'display: none;') -%>
+                <% end %>
+              </div>
+              <br />
+
+            <% end %>
           <% end %>
-        </ul>
-        <div style="width: 200px; height: 20px; background-image: url('/images/bg/bgsidebar-bottom.jpg');">
         </div>
       </div>
 
