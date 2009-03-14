@@ -61,8 +61,8 @@
       </div>
 
 
-      <div style="width:200px; float: left; margin-left: 50px; margin-top:20px;">
-        <% inner_shadow({:id => 'top-sidebar', :style => 'background-color: white;'}, :style => 'width: 170px;') do %>
+      <div style="width: 200px; float: left; margin-left: 50px; margin-top:20px;">
+        <% inner_shadow({:id => 'top-sidebar', :style => 'background-color: white; border: 1px solid #9BB3C2'}, :style => 'width: 169px;') do %>
           <p><b>
               <% unless logged_in? -%>
                 Zaloguj się!
@@ -96,7 +96,7 @@
         <% end %>
 
         <% if logged_in? %>
-          <% inner_shadow({:style => 'background-color: white; margin-top: 30px;'}, :style => 'width: 170px;') do %>
+          <% inner_shadow({:style => 'background-color: white; margin-top: 30px; border: 1px solid #9BB3C2'}, :style => 'width: 169px;') do %>
             <%= render :partial => 'shared/bottom_sidebar' %>
           <% end %>
         <% end %>
