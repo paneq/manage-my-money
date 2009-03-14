@@ -48,18 +48,10 @@
             <% end %>
           </div>
 
-          <blockquote id="flash_notice">
-            <% if flash[:notice] %>
-              <%= flash[:notice] %>
-            <% end %>
-          </blockquote>
-
-          <blockquote id="flash_error">
-            <% if flash[:error] %>
-              <%= flash[:error] %>
-            <% end %>
-          </blockquote>
-
+          <% [:notice, :error].each do |fla| %>
+            <%= content_tag :blockquote, flash[fla], :id => "flash_#{fla}" %>
+          <% end %>
+          
           <br />
 
           <%= yield  %>
