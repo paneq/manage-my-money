@@ -3,6 +3,7 @@
 #
 # Table name: system_categories
 #
+#  id         :integer       not null, primary key
 #  name       :string(255)   not null
 #  parent_id  :integer       
 #  lft        :integer       

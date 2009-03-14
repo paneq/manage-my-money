@@ -4,7 +4,7 @@
 <% include_subcategories ||= nil %>
 <% options = {:current_category => current_category_id, :include_subcategories => include_subcategories} %>
 
-<table id="<%= "transfer-details-id-#{id}" -%>" class="table-transfer-details width">
+<table id="<%= "transfer-details-id-#{id}" -%>" class="nice-table">
   <tr>
     <td colspan="<%=columns_count-%>" id="flash-notice-<%=id-%>" >
     </td>
@@ -12,9 +12,9 @@
 
   <% [:income, :outcome].each do |type| %>
     <tr class="line-income-outcome" >
-      <td colspan="<%=columns_count-%>" style="padding-left: 5px;">
+      <th colspan="<%=columns_count-%>" class="in-header" style="background-color: #EBAB63;">
         <%= I18n.t type, :scope => [:types] %>
-      </td>
+      </th>
     </tr>
     <%= render :partial => 'transfer_item_details' , :collection => transfer_details.transfer_items.of_type(type) %>
   <% end %>

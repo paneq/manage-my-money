@@ -157,29 +157,9 @@ ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
 --
 
 CREATE TABLE categories_system_categories (
-    id integer NOT NULL,
     category_id integer NOT NULL,
     system_category_id integer NOT NULL
 );
-
-
---
--- Name: categories_system_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE categories_system_categories_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
---
--- Name: categories_system_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE categories_system_categories_id_seq OWNED BY categories_system_categories.id;
 
 
 --
@@ -201,6 +181,7 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -266,7 +247,6 @@ CREATE TABLE exchanges (
 --
 
 CREATE SEQUENCE exchanges_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -353,6 +333,7 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -411,6 +392,7 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 --
 
 CREATE TABLE system_categories (
+    id integer NOT NULL,
     name character varying(255) NOT NULL,
     parent_id integer,
     lft integer,
@@ -421,13 +403,32 @@ CREATE TABLE system_categories (
 
 
 --
+-- Name: system_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE system_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: system_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE system_categories_id_seq OWNED BY system_categories.id;
+
+
+--
 -- Name: transfer_items; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(12,2) NOT NULL,
+    value numeric(8,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,
@@ -546,13 +547,6 @@ ALTER TABLE categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE categories_system_categories ALTER COLUMN id SET DEFAULT nextval('categories_system_categories_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE category_report_options ALTER COLUMN id SET DEFAULT nextval('category_report_options_id_seq'::regclass);
 
 
@@ -595,6 +589,13 @@ ALTER TABLE sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regc
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE system_categories ALTER COLUMN id SET DEFAULT nextval('system_categories_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE transfer_items ALTER COLUMN id SET DEFAULT nextval('transfer_items_id_seq'::regclass);
 
 
@@ -626,14 +627,6 @@ ALTER TABLE ONLY bdrb_job_queues
 
 ALTER TABLE ONLY categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
-
-
---
--- Name: categories_system_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY categories_system_categories
-    ADD CONSTRAINT categories_system_categories_pkey PRIMARY KEY (id);
 
 
 --
@@ -682,6 +675,14 @@ ALTER TABLE ONLY reports
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: system_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY system_categories
+    ADD CONSTRAINT system_categories_pkey PRIMARY KEY (id);
 
 
 --

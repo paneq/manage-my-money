@@ -2,24 +2,25 @@
 
   <% cache("#{@current_user.id}-quick-categories") do %>
     <p><b>Szybki dostęp:</b></p>
-    <input onkeyup="
-      var ul = document.getElementById('categories-sidebar');
-      var lis = ul.getElementsByTagName('a');
-      var reg = new RegExp('.*' + value + '.*','i');
-      if (value == '' || value.length < 3) {
-        for(var i = 0; i < lis.length; i++){
-          lis[i].style.display = 'none';
-        }
-      } else {
-        for(var i = 0; i < lis.length; i++){
-          var element = lis[i];
-          if (element.innerHTML.match(reg)) {
-            element.style.display = 'block';
-          } else {
-            element.style.display = 'none';
+    <form>
+      <input onkeyup="var ul = document.getElementById('categories-sidebar');
+        var lis = ul.getElementsByTagName('a');
+        var reg = new RegExp('.*' + value + '.*','i');
+        if (value == '' || value.length < 3) {
+          for(var i = 0; i < lis.length; i++){
+            lis[i].style.display = 'none';
           }
-        }
-      }"></input>
+        } else {
+          for(var i = 0; i < lis.length; i++){
+            var element = lis[i];
+            if (element.innerHTML.match(reg)) {
+              element.style.display = 'block';
+            } else {
+              element.style.display = 'none';
+            }
+          }
+        }" />
+    </form>
 
     <div id="categories-sidebar">
       <%  @current_user.categories.each do |c| %>

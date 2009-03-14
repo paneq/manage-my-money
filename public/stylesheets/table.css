@@ -30,7 +30,7 @@ table.nice-table tr td {
 }
 
 table.nice-table tr.alt td {
-    background: #F5FAFA;
+    background: #EDF1F1;
     color: #797268;
 }
 
@@ -42,7 +42,7 @@ table.nice-table tr th.spec {
 }
 
 table.nice-table tr.alt th.spec {
-    background: #f5fafa url(../images/data_table/bullet2.gif) no-repeat;
+    background: #EDF1F1 url(../images/data_table/bullet2.gif) no-repeat;
     color: #797268;
 }
 

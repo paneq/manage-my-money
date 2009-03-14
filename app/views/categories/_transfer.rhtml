@@ -10,7 +10,7 @@
 <% size = '15x15' %>
 <% text = 'Pokaż sczegóły' %>
 
-<tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('line-even', 'line-odd') %>" >
+<tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('', 'alt') %>" >
 
   <td class="transfer-table-border"> <%= transfer.day -%> </td>
   <td class="transfer-table-border"> <%= transfer.description -%> </td>
@@ -53,5 +53,5 @@
 </tr>
 
 <tr>
-  <td colspan="5" id="transfer-in-category-<%= transfer.id -%>" />
+  <td colspan="<%= mode == :transfers ? 3 : 6 -%>" id="transfer-in-category-<%= transfer.id -%>" style="background-color: #DBDEDE;"/>
 </tr>

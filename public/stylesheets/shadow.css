@@ -1,20 +1,20 @@
 
 /*
- Grey 80 % inner-shadow
+Grey 80 % inner-shadow
 */
-td.tl-inner-shadow-80grey {
+table.shadow tr td.tl-inner-shadow-80grey {
     background-image: url('/images/bg/tl-inner80grey.png');
     background-position: top left;
     background-repeat: no-repeat;
 }
 
-td.tm-inner-shadow-80grey {
+table.shadow tr td.tm-inner-shadow-80grey {
     background-image: url('/images/bg/bm80grey.png');
     background-repeat: repeat-x;
     background-position: top;
 }
 
-td.tr-inner-shadow-80grey {
+table.shadow tr td.tr-inner-shadow-80grey {
     background-image: url('/images/bg/tr-inner80grey.png');
     background-position: top right;
     background-repeat: no-repeat;
@@ -22,16 +22,16 @@ td.tr-inner-shadow-80grey {
 
 
 
-td.ml-inner-shadow-80grey {
+table.shadow tr td.ml-inner-shadow-80grey {
     background-image: url('/images/bg/mr80grey.png');
     background-repeat: repeat-y;
     background-position: left;
 }
 
-td.mm-inner-shadow-80grey {
+table.shadow tr td.mm-inner-shadow-80grey {
 }
 
-td.mr-inner-shadow-80grey {
+table.shadow tr td.mr-inner-shadow-80grey {
     background-image: url('/images/bg/ml80grey.png');
     background-repeat: repeat-y;
     background-position: right;
@@ -39,19 +39,19 @@ td.mr-inner-shadow-80grey {
 
 
 
-td.bl-inner-shadow-80grey {
+table.shadow tr td.bl-inner-shadow-80grey {
     background-image: url('/images/bg/bl-inner80grey.png');
     background-position: bottom left;
     background-repeat: no-repeat;
 }
 
-td.bm-inner-shadow-80grey {
+table.shadow tr td.bm-inner-shadow-80grey {
     background-image: url('/images/bg/tm80grey.png');
     background-repeat: repeat-x;
     background-position: bottom;
 }
 
-td.br-inner-shadow-80grey {
+table.shadow tr td.br-inner-shadow-80grey {
     background-image: url('/images/bg/br-inner80grey.png');
     background-position: bottom right;
     background-repeat: no-repeat;
@@ -59,21 +59,21 @@ td.br-inner-shadow-80grey {
 
 
 /*
- Grey 80 % shadow
+Grey 80 % shadow
 */
-td.tl-shadow-80grey {
+table.shadow tr td.tl-shadow-80grey {
     background-image: url('/images/bg/tl80grey.png');
     background-position: bottom right;
     background-repeat: no-repeat;
 }
 
-td.tm-shadow-80grey {
+table.shadow tr td.tm-shadow-80grey {
     background-image: url('/images/bg/tm80grey.png');
     background-repeat: repeat-x;
     background-position: bottom;
 }
 
-td.tr-shadow-80grey {
+table.shadow tr td.tr-shadow-80grey {
     background-image: url('/images/bg/tr80grey.png');
     background-position: bottom left;
     background-repeat: no-repeat;
@@ -81,16 +81,16 @@ td.tr-shadow-80grey {
 
 
 
-td.ml-shadow-80grey {
+table.shadow tr td.ml-shadow-80grey {
     background-image: url('/images/bg/ml80grey.png');
     background-repeat: repeat-y;
     background-position: right;
 }
 
-td.mm-shadow-80grey {
+table.shadow tr td.mm-shadow-80grey {
 }
 
-td.mr-shadow-80grey {
+table.shadow tr td.mr-shadow-80grey {
     background-image: url('/images/bg/mr80grey.png');
     background-repeat: repeat-y;
     background-position: left;
@@ -98,40 +98,40 @@ td.mr-shadow-80grey {
 
 
 
-td.bl-shadow-80grey {
+table.shadow tr td.bl-shadow-80grey {
     background-image: url('/images/bg/bl80grey.png');
     background-position: top right;
     background-repeat: no-repeat;
 }
 
-td.bm-shadow-80grey {
+table.shadow tr td.bm-shadow-80grey {
     background-image: url('/images/bg/bm80grey.png');
     background-repeat: repeat-x;
     background-position: top;
 }
 
-td.br-shadow-80grey {
+table.shadow tr td.br-shadow-80grey {
     background-image: url('/images/bg/br80grey.png');
     background-position: top left;
     background-repeat: no-repeat;
 }
 
 /*
-  NavyBlue 60% shadow
+NavyBlue 60% shadow
 */
-td.tl-shadow-60blue {
+table.shadow tr td.tl-shadow-60blue {
     background-image: url('/images/bg/tl60blue.png');
     background-position: bottom right;
     background-repeat: no-repeat;
 }
 
-td.tm-shadow-60blue {
+table.shadow tr td.tm-shadow-60blue {
     background-image: url('/images/bg/tm60blue.png');
     background-repeat: repeat-x;
     background-position: bottom;
 }
 
-td.tr-shadow-60blue {
+table.shadow tr td.tr-shadow-60blue {
     background-image: url('/images/bg/tr60blue.png');
     background-position: bottom left;
     background-repeat: no-repeat;
@@ -139,16 +139,17 @@ td.tr-shadow-60blue {
 
 
 
-td.ml-shadow-60blue {
+table.shadow tr td.ml-shadow-60blue {
     background-image: url('/images/bg/ml60blue.png');
     background-repeat: repeat-y;
     background-position: right;
 }
 
-td.mm-shadow-60blue {
+table.shadow tr td.mm-shadow-60blue {
+
 }
 
-td.mr-shadow-60blue {
+table.shadow tr td.mr-shadow-60blue {
     background-image: url('/images/bg/mr60blue.png');
     background-repeat: repeat-y;
     background-position: left;
@@ -156,19 +157,19 @@ td.mr-shadow-60blue {
 
 
 
-td.bl-shadow-60blue {
+table.shadow tr td.bl-shadow-60blue {
     background-image: url('/images/bg/bl60blue.png');
     background-position: top right;
     background-repeat: no-repeat;
 }
 
-td.bm-shadow-60blue {
+table.shadow tr td.bm-shadow-60blue {
     background-image: url('/images/bg/bm60blue.png');
     background-repeat: repeat-x;
     background-position: top;
 }
 
-td.br-shadow-60blue {
+table.shadow tr td.br-shadow-60blue {
     background-image: url('/images/bg/br60blue.png');
     background-position: top left;
     background-repeat: no-repeat;
@@ -177,7 +178,7 @@ td.br-shadow-60blue {
 
 
 /*
-  Table
+Table
 */
 .shadow-x {
     height: 15px;
@@ -201,14 +202,14 @@ table.shadow {
 
 td#shadow-left {
     width: 20px;
-    
+
     background-repeat: repeat-y;
     background-position: right;
 }
 
 td#shadow-right {
     width: 20px;
-    
+
     background-repeat: repeat-y;
     background-position: left;
 }
