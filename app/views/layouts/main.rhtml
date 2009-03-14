@@ -84,7 +84,7 @@
               <li><%= link_to 'Planowanie', goals_path, :id => 'planowanie-menu-link'  %></li>
               <li><%= link_to 'Dłużnicy', debtors_path, :id => 'debtors-menu-link'  %></li>
               <li><%= link_to 'Wierzyciele', creditors_path, :id => 'creditors-menu-link'  %></li>
-              <li><%= link_to 'Import', import_path, :id => 'creditors-menu-link'  %></li>
+              <li><%= link_to 'Import', import_path, :id => 'import-menu-link'  %></li>
 
 
               <br />
@@ -96,7 +96,9 @@
         <% end %>
 
         <% if logged_in? %>
-          <%= render :partial => 'shared/bottom_sidebar' %>
+          <% inner_shadow({:style => 'background-color: white; margin-top: 30px;'}, :style => 'width: 170px;') do %>
+            <%= render :partial => 'shared/bottom_sidebar' %>
+          <% end %>
         <% end %>
 
       </div>
