@@ -655,7 +655,52 @@ class CategoryTest < Test::Unit::TestCase
 
     test_category.reload
 
-    assert [e.id], test_category.system_categories.map{|q| q.id }
+    assert_equal [e.id], test_category.system_categories.map{|q| q.id }
+
+  end
+
+
+  def test_set_system_categories
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    test_category = @jarek.categories.find_by_name 'test'
+
+    system_category = SystemCategory.find_by_name 'Fruits'
+    test_category.system_category = system_category
+    test_category.save!
+    assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
+
+    system_category = SystemCategory.find_by_name 'Expenses'
+    test_category.system_category = system_category
+    test_category.save!
+    assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
+
+    test_category.system_category = nil
+    test_category.save!
+    assert_equal [], test_category.system_categories
+
+  end
+
+
+  def test_get_system_categories
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    test_category = @jarek.categories.find_by_name 'test'
+
+    system_category = SystemCategory.find_by_name 'Fruits'
+    
+    test_category.system_category = system_category
+    test_category.save!
+    assert_equal system_category.id, test_category.system_category.id
+
+    system_category = SystemCategory.find_by_name 'Expenses'
+    test_category.system_category = system_category
+    test_category.save!
+    assert_equal system_category.id, test_category.system_category.id
+
+    test_category.system_category = nil
+    test_category.save!
+    assert_nil test_category.system_category
 
   end
 

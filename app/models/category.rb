@@ -491,11 +491,15 @@ class Category < ActiveRecord::Base
 
 
   def system_category=(sys_category)
-    #TODO
+    if sys_category.nil?
+      self.system_category_ids=[]
+    else
+      self.system_category_ids= sys_category.self_and_ancestors.map{|a|a.id}
+    end
   end
 
   def system_category
-    nil #TODO
+    self.system_categories.max{|a,b| a.level <=> b.level}
   end
 
 

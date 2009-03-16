@@ -335,6 +335,29 @@ class Test::Unit::TestCase
     @jarek.save!
   end
 
+  def prepare_sample_system_category_tree
+    e = SystemCategory.create :name => 'Expenses'
+
+      f = SystemCategory.create :name => 'Food'
+
+        jf = SystemCategory.create :name => 'Junk Food'
+
+        fr = SystemCategory.create :name => 'Fruits'
+
+      c = SystemCategory.create :name => 'Clothes'
+
+    f.move_to_child_of e
+    jf.move_to_child_of f
+    fr.move_to_child_of f
+    c.move_to_child_of e
+
+    [e,f,jf,fr,c].each(&:save!)
+
+    assert_equal 5, SystemCategory.all.count
+
+  end
+
+
 
   def create_rupert_expenses_account_structure
     # EXPENSE -            [SELECTED]
