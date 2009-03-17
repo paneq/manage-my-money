@@ -21,9 +21,4 @@ class SystemCategory < ActiveRecord::Base
   validates_presence_of :name
 
 
-  #FIXME: update this after populating SystemCategory table
-  def self.all_visible
-    [SystemCategory.create(:id => 1, :name => 'Brak')]
-  end
-
 end

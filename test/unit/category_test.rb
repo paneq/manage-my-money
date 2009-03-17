@@ -702,6 +702,7 @@ class CategoryTest < Test::Unit::TestCase
     test_category.save!
     assert_nil test_category.system_category
 
+
   end
 
 
