@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class TransferItemTest < Test::Unit::TestCase
+class TransferItemTest < ActiveSupport::TestCase
 
   def setup
     @ti = TransferItem.new

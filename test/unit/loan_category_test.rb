@@ -10,7 +10,7 @@ class Counter
   end
 end
 
-class LoanCategoryTest < Test::Unit::TestCase
+class LoanCategoryTest < ActiveSupport::TestCase
 
   def setup
     save_rupert

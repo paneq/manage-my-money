@@ -38,7 +38,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_manage_my_money_session',
+    :key => '_manage_my_money_session',
     :secret      => '87c02fb0e6f62cddef49e95793bdf3accc4334ee7e12b697f8ce200e1700ec83b1ad23bcfc247748465055352f1fb5e437149ed2b7c1d55939b3c8d4dfcb7292'
   }
 
@@ -64,11 +64,19 @@ Rails::Initializer.run do |config|
   MEMCACHED_KEY = 'fI5YW5IP2gtvOczaGcpPpVbOsEDNmhH8SbiHiMO65hl7IxvPhtm2ApBug2Yr6Fik'
   config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "#{MEMCACHED_KEY}_manage_my_money_#{RAILS_ENV}" }
 
-#  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
-#    :source => 'http://gems.github.com'
+  #  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
+  #    :source => 'http://gems.github.com'
+
+
+  config.after_initialize do
+    class Date
+      include DateExtensions
+    end 
+  end
 
 end
 
 require "will_paginate"
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)
+

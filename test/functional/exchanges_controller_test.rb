@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'exchanges_controller'
+require 'test_helper'
 
 # Re-raise errors caught by the controller.
 class ExchangesController; def rescue_action(e) raise e end; end
@@ -7,10 +6,6 @@ class ExchangesController; def rescue_action(e) raise e end; end
 class ExchangesControllerTest < ActionController::TestCase
 
   def setup
-    @controller = ExchangesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
     save_currencies
     save_rupert
     log_rupert

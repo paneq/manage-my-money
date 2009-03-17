@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'hash'
 
-class HashTest < Test::Unit::TestCase
+class HashTest < ActiveSupport::TestCase
 
   def test_pass
     h = {:one => 1}

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CategoryTest < Test::Unit::TestCase
+class CategoryTest < ActiveSupport::TestCase
   #fixtures :categories
 
   def setup

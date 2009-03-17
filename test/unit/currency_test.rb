@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class CurrencyTest < Test::Unit::TestCase
+class CurrencyTest < ActiveSupport::TestCase
 
   def setup
     save_rupert

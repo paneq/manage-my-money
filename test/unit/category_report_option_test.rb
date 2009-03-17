@@ -1,4 +1,4 @@
 require 'test_helper'
 
-class CategoryReportTest < ActiveSupport::TestCase
+class CategoryReportOptionTest < ActiveSupport::TestCase
 end

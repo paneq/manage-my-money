@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class ExchangeTest < Test::Unit::TestCase
+class ExchangeTest < ActiveSupport::TestCase
 
   def setup
     save_currencies

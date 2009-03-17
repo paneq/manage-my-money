@@ -1,17 +1,10 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'sessions_controller'
+require 'test_helper'
 
 # Re-raise errors caught by the controller.
 class SessionsController; def rescue_action(e) raise e end; end
 
-class SessionsControllerTest < Test::Unit::TestCase
+class SessionsControllerTest < ActionController::TestCase
   fixtures :users
-
-  def setup
-    @controller = SessionsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
 
 
   def test_should_see_proper_menu_when_logging_in
@@ -52,14 +45,14 @@ class SessionsControllerTest < Test::Unit::TestCase
 
   def test_should_not_remember_me
     post :create, :login => 'quentin', :password => 'test', :remember_me => "0"
-    assert_equal [], @response.cookies["auth_token"]
+    assert_nil @response.cookies["auth_token"]
   end
 
 
   def test_should_delete_token_on_logout
     login_as :quentin
     get :destroy
-    assert_equal [], @response.cookies["auth_token"]
+    assert_nil @response.cookies["auth_token"]
   end
 
 

@@ -4,10 +4,6 @@ class LoansControllerTest < ActionController::TestCase
 
   def setup
     LoansController.send(:public, :find_loans_with_transfers_and_saldo)
-    @controller = LoansController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
     save_currencies
     save_rupert
     log_rupert

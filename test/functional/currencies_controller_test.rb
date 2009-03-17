@@ -5,21 +5,16 @@
 # update
 # destroy
 
-require File.dirname(__FILE__) + '/../test_helper'
-require 'currencies_controller'
+require 'test_helper'
 
 # Re-raise errors caught by the controller.
 class CurrenciesController; def rescue_action(e) raise e end; end
 
-class CurrenciesControllerTest < Test::Unit::TestCase
+class CurrenciesControllerTest < ActionController::TestCase
   # fixtures :currencies
 
   CURRENCY_FIELDS = [:name, :symbol, :long_name, :long_symbol]
   def setup
-    @controller = CurrenciesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    
     save_currencies
     save_rupert
     log_rupert

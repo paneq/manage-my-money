@@ -467,13 +467,9 @@ class Category < ActiveRecord::Base
 
     #TODO stop if top category
 
-#    algorithm = :calculate_with_newest_exchanges
-
     parent_value = self.parent.saldo_for_period_new(period_start, period_end, :default, true)
     self_value = self.saldo_for_period_new(period_start, period_end, :default, include_subcategories)
 
-    # zmienić parent value i self value na jedna walute!!! (znormalizować)
-    #
 
     currency = self.user.default_currency
 

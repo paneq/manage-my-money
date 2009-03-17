@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class TransferTest < Test::Unit::TestCase
+class TransferTest < ActiveSupport::TestCase
 
   def setup
     save_rupert

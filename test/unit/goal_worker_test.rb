@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require File.join(File.dirname(__FILE__) + "/../bdrb_test_helper")
-require "goal_worker"
+require 'test_helper'
+require 'bdrb_test_helper'
+require 'goal_worker'
 
 
-class GoalWorkerTest < Test::Unit::TestCase
+class GoalWorkerTest < ActiveSupport::TestCase
 
   def setup
     @worker = GoalWorker.new

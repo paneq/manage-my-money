@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'money'
 
-class MoneyTest < Test::Unit::TestCase
+class MoneyTest < ActiveSupport::TestCase
   
   
   def setup

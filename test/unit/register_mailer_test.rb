@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class RegisterMailerTest < Test::Unit::TestCase
+class RegisterMailerTest < ActiveSupport::TestCase
 #  FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures'
 #  CHARSET = "utf-8"
 #

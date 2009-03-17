@@ -1,6 +1,6 @@
 # Methods added to this helper will be available to all templates in the application.
 
-require File.expand_path(File.dirname(__FILE__) + '../../../lib/date_extensions')
+#require File.expand_path(File.dirname(__FILE__) + '../../../lib/date')
 require 'erb'
 
 module ApplicationHelper

@@ -4,7 +4,6 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
 # stallman cannot run selenium test :-)
-#TEST_ON_STALLMAN = false
 TEST_ON_STALLMAN = (Socket.gethostname == 'stallman.rootnode.net')
 
 # Code for manipulating actual time in tests (from http://www.ruby-forum.com/topic/114087#267920)
@@ -19,7 +18,7 @@ class Date
       @@forced_today = now
     end
   end
-end unless Date.respond_to? :forced_today=
+end
 
 class Time
   @@forced_now = nil
@@ -32,12 +31,12 @@ class Time
       @@forced_now = now
     end
   end
-end unless Time.respond_to? :forced_now=
+end
 #end of actual date manipulation code
 
 
 
-class Test::Unit::TestCase
+class ActiveSupport::TestCase
   include AuthenticatedTestHelper
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
@@ -249,6 +248,8 @@ class Test::Unit::TestCase
     unless `ps aux` =~ Regexp.new("memcached.*-p #{MEMCACHED_PORT}")
       `memcached -d -p #{MEMCACHED_PORT}`
     end
+
+    assert_match(/memcached.*-p #{MEMCACHED_PORT}/, `ps aux`)
   end
 
   

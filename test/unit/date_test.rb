@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DateExtensionsTest < Test::Unit::TestCase
+class DateTest < ActiveSupport::TestCase
   def test_split_into_days
     dates = Date.split_period(:day, 5.day.ago.to_date, Date.today)
     assert_equal 6, dates.count

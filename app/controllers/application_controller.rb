@@ -18,9 +18,6 @@ class ApplicationController < ActionController::Base
 
   filter_parameter_logging :password
 
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_money_session_id'
-
 
 
   def period_changed_start

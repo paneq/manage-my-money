@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'hash'
 
-class InteligoParserTest < Test::Unit::TestCase
+class InteligoParserTest < ActiveSupport::TestCase
 
   def setup
     save_currencies

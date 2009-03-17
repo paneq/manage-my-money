@@ -179,9 +179,9 @@ class ReportsController < ApplicationController
     report.type_str.underscore + '_fields'
   end
 
-  
+  #TODO consider dodac znacznik virtual
   def report_cache_key(id)
-    "REPORT##{id}"
+    "#{self.current_user.id}REPORT##{id}"
   end
 
   def prepare_reports

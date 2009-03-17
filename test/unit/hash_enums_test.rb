@@ -1,14 +1,8 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
 require 'hash_enums'
 require 'test_helper'
 
 class HashEnumsTest < ActiveSupport::TestCase
 
-
-
-  
 
   def test_has_define_enum_method
     temporary = Class.new do

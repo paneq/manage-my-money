@@ -17,7 +17,7 @@ class ReportGraphsTest < ActionController::IntegrationTest
     save_simple_transfer({})
     get "/reports/#{report_id}"
     assert_response :success
-    get "/reports/get_graph_data/#{report_id}.json?graph=PLN", :format => :json
+    get "/reports/get_graph_data/#{report_id}.json?graph=PLN"
     assert_response :success
     assert_match(/elements/, response.body)
   end
