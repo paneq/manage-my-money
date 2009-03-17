@@ -1,2 +1,2 @@
-#require 'rubygems'
-#Gem.clear_paths
+require 'rubygems'
+Gem.clear_paths
