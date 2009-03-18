@@ -10,7 +10,7 @@ class ExchangesController < ApplicationController
   def index
     @currencies = Currency.for_user(self.current_user).find(:all, :order => 'user_id ASC, long_symbol ASC')
     @pairs = @currencies.combination(2)
-    @exchange = flash[:exchange] || Exchange.new(:left_currency => @currencies.first, :right_currency => @currencies.first)
+    @exchange = flash[:exchange] || default_exchange
   end
 
 
@@ -37,14 +37,17 @@ class ExchangesController < ApplicationController
     render :action => :edit
   end
 
+
   def new
-    @exchange = Exchange.new(:left_currency => @currencies.first, :right_currency => @currencies.first)
+    @exchange = default_exchange
     render :action => :edit
   end
+
 
   def edit
   end
 
+  
   def create
     change_currencies_to_objects
     @exchange = Exchange.new(params[:exchange])
@@ -92,6 +95,12 @@ class ExchangesController < ApplicationController
   def change_currencies_to_objects
     @c1 = params[:exchange][:left_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:left_currency])
     @c2 = params[:exchange][:right_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:right_currency])
+  end
+
+  def default_exchange
+    default = self.current_user.default_currency
+    rest = Currency.for_user(@current_user) - [default]
+    Exchange.new(:left_currency => default, :right_currency => rest.first)
   end
 
 end

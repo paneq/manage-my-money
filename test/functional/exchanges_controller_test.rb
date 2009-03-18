@@ -100,17 +100,7 @@ class ExchangesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:exchange)
 
     assert_select 'div#show-exchange' do
-      assert_select 'form' do
-        assert_select 'select#exchange_left_currency' do
-          assert_select 'option[selected=selected]', @zloty.long_symbol
-        end
-        assert_select 'select#exchange_right_currency' do
-          assert_select 'option[selected=selected]', @chf.long_symbol
-        end
-        assert_select 'input#exchange_left_to_right'
-        assert_select 'input#exchange_right_to_left'
-        assert_select 'select[id^=exchange_day]', :count => 3
-      end
+      assert_exchange_form(@zloty, @chf)
     end
   end
 
@@ -177,52 +167,40 @@ class ExchangesControllerTest < ActionController::TestCase
 
     assert_select 'table#exchanges-list'
     assert_select 'div#errorExplanation'
-    
-    assert_select 'form' do
-      assert_select 'select#exchange_left_currency' do
-        assert_select 'option[selected=selected]', @euro.long_symbol
-      end
-      assert_select 'select#exchange_right_currency' do
-        assert_select 'option[selected=selected]', @euro.long_symbol
-      end
-      assert_select 'input[id=exchange_left_to_right][value=0.25]'
-      assert_select 'input[id=exchange_right_to_left][value=4]'
-      assert_select 'select[id^=exchange_day]', :count => 3
-    end
 
+    assert_exchange_form(@euro, @euro, '0.25', '4')
   end
 
-  #  def test_show
-  #    get :show, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'show'
-  #
-  #    assert_not_nil assigns(:exchange)
-  #    assert assigns(:exchange).valid?
-  #  end
-  #
-  #  def test_new
-  #    get :new
-  #
-  #    assert_response :success
-  #    assert_template 'new'
-  #
-  #    assert_not_nil assigns(:exchange)
-  #  end
-  #
 
-  #
-  #  def test_edit
-  #    get :edit, :id => @first_id
-  #
-  #    assert_response :success
-  #    assert_template 'edit'
-  #
-  #    assert_not_nil assigns(:exchange)
-  #    assert assigns(:exchange).valid?
-  #  end
-  #
+  def test_show_and_edit
+    e = save_exchange()
+    [:show, :edit].each do |action|
+      get action, :id => e.id
+
+      assert_response :success
+      assert_template 'edit'
+
+      assert_not_nil assigns(:exchange)
+      assert assigns(:exchange).valid?
+      assert_exchange_form(e.left_currency, e.right_currency, "%.4f" % e.left_to_right, "%.4f" % e.right_to_left) #showing 4 digits after comma/dot with Kernel.sprintf
+    end
+  end
+
+
+  def test_new
+    get :new
+
+    assert_response :success
+    assert_template 'edit'
+
+    assert_not_nil assigns(:exchange)
+
+    default = @rupert.default_currency
+    rest = Currency.for_user(@rupert) - [default]
+    assert_exchange_form(@rupert.default_currency, rest.first)
+  end
+  
+
   #  def test_update
   #    post :update, :id => @first_id
   #    assert_response :redirect
@@ -242,4 +220,48 @@ class ExchangesControllerTest < ActionController::TestCase
   #      Exchange.find(@first_id)
   #    }
   #  end
+
+  private
+
+
+  def make_exchange(options = {})
+    defaults = {
+      :left_currency => @euro,
+      :right_currency => @zloty,
+      :left_to_right => 4,
+      :right_to_left => 0.25,
+      :day => Date.today,
+      :user => @rupert
+    }
+    defaults.merge!(options)
+    Exchange.new(defaults)
+  end
+
+
+  def save_exchange(options = {})
+    e = make_exchange(options)
+    e.save!
+    e
+  end
+
+
+  def assert_exchange_form(left_currency, right_currency, left_input=nil, right_input=nil)
+    assert_select 'form' do
+      assert_select 'select#exchange_left_currency' do
+        assert_select 'option[selected=selected]', left_currency.long_symbol
+      end
+      assert_select 'select#exchange_right_currency' do
+        assert_select 'option[selected=selected]', right_currency.long_symbol
+      end
+
+      assert_select 'input#exchange_left_to_right'
+      assert_select 'input#exchange_right_to_left'
+      
+      assert_select "input[id=exchange_left_to_right][value=#{left_input.to_s}]" unless left_input.nil?
+      assert_select "input[id=exchange_right_to_left][value=#{right_input.to_s}]" unless left_input.nil?
+
+      assert_select 'select[id^=exchange_day]', :count => 3
+    end
+  end
+
 end
