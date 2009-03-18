@@ -17,6 +17,8 @@ class AutocompleteController < ApplicationController
       :limit => 5,
       :include => [:category, :currency]
     render :layout => false
+  rescue
+    render :nothing => :true
   end
 
 
@@ -29,6 +31,8 @@ class AutocompleteController < ApplicationController
       :order => 'day DESC',
       :limit => 5
     render :layout => false
+  rescue
+    render :nothing => :true
   end
 
 end
