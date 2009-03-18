@@ -49,7 +49,7 @@ class ExchangesControllerTest < ActionController::TestCase
 
     [:currencies, :exchanges, :c1, :c2].each {|sym| assert_not_nil assigns(sym)}
     assert_select 'table#exchanges-list' do
-      assert_select 'tr', :count => 20
+      assert_select 'tr', :count => 20 + 1
       assert_select 'tr', :text => Regexp.new(Date.today.to_s)
       assert_select 'tr', :text => Regexp.new(19.days.ago.to_date.to_s)
     end
@@ -82,7 +82,7 @@ class ExchangesControllerTest < ActionController::TestCase
 
     [:currencies, :exchanges, :c1, :c2].each {|sym| assert_not_nil assigns(sym)}
     assert_select 'table#exchanges-list' do
-      assert_select 'tr', :count => 10
+      assert_select 'tr', :count => 10 + 1
       assert_select 'tr', :text => Regexp.new(20.days.ago.to_date.to_s)
       assert_select 'tr', :text => Regexp.new(29.days.ago.to_date.to_s)
     end
@@ -99,7 +99,7 @@ class ExchangesControllerTest < ActionController::TestCase
 
     assert_not_nil assigns(:exchange)
 
-    assert_select 'div#form-for-exchange' do
+    assert_select 'div#show-exchange' do
       assert_select 'form' do
         assert_select 'select#exchange_left_currency' do
           assert_select 'option[selected=selected]', @zloty.long_symbol

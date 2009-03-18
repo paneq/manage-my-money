@@ -2,52 +2,64 @@
 <% c2_symbol = h @c2.long_symbol %>
 <h1>Kursy wymiany dla walut <%= c1_symbol -%> oraz <%= c2_symbol -%></h1>
 <div>
-
-  <table id="exchanges-list">
-    <th>
-      Dzień
-    </th>
-    <th>
-      1 <%= c1_symbol -%>
-    </th>
-    <th>
-      1 <%= c2_symbol -%>
-    </th>
-    <th>
-      Akcje
-    </th>
-    <% @exchanges.each do |e| %>
+  <% light_shadow do %>
+    <table id="exchanges-list" class="nice-table">
+      <th>
+        Dzień
+      </th>
+      <th>
+        1 <%= c1_symbol -%>
+      </th>
+      <th>
+        1 <%= c2_symbol -%>
+      </th>
+      <th>
+        Akcje
+      </th>
+      <% @exchanges.each do |e| %>
+        <tr>
+          <td>
+            <%= e.day -%>
+          </td>
+          <td>
+            <%= "#{e.left_to_right} #{c2_symbol}" -%>
+          </td>
+          <td>
+            <%= "#{e.right_to_left} #{c1_symbol}" -%>
+          </td>
+          <td>
+            <%= link_to 'Edytuj', edit_exchange_path(e) -%>
+          </td>
+        </tr>
+      <% end %>
+      <% if @exchanges.empty? %>
+        <tr>
+          <td colspan="4">
+            Nie utworzono jeszcze żadnego kursu dla tych dwóch walut.
+          </td>
+        </tr>
+      <% end %>
       <tr>
-        <td>
-          <%= e.day -%>
-        </td>
-        <td>
-          <%= "#{e.left_to_right} #{c2_symbol}" -%>
-        </td>
-        <td>
-          <%= "#{e.right_to_left} #{c1_symbol}" -%>
-        </td>
-        <td>
-          <%= link_to 'Edytuj', edit_exchange_path(e) -%>
+        <td colspan="4">
+          <%= will_paginate :next_label => I18n.translate(:sooner, :default => 'Sooner'), :prev_label => I18n.translate(:later, :default => 'Later') %>
         </td>
       </tr>
+    </table>
+  <% end %>
+
+
+
+
+  <% options = shadow_options do |opt| %>
+    <% opt[:top][:middle].call do %>
+      <%= tab [[:new, 'Nowy']], :exchange -%>
     <% end %>
-    <% if @exchanges.empty? %>
-      <tr>
-        <td colspan="3">
-          Nie utworzono jeszcze żadnego kursu dla tych dwóch walut.
-        </td>
-      </tr>
+  <% end %>
+
+
+  <% light_shadow({:class => 'long'}, {}, options) do %>
+    <% tab_container(:exchange) do %>
+      <%= render :partial => 'edit' %>
     <% end %>
-  </table>
-
-  <%= will_paginate :next_label => I18n.translate(:sooner, :default => 'Sooner'), :prev_label => I18n.translate(:later, :default => 'Later') %>
-
-
-  <%= tab [[:new, 'Nowy']], :name => :exchange, :active => :new -%>
-
-  <div id="form-for-exchange" style="border: 1px solid lightgrey; margin: 0pt; padding: 5px; background-color: rgb(255, 252, 220);" >
-    <%= render :partial => 'edit' %>
-  </div>
-
+  <% end %>
 </div>

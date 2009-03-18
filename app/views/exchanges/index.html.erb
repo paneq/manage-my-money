@@ -11,7 +11,15 @@
   </ul>
 </div>
 
-<%= tab [[:new, 'Nowy']], :name => :exchange, :active => :new -%>
-<div id="form-for-exchange" style="border: 1px solid lightgrey; margin: 0pt; padding: 5px; background-color: rgb(255, 252, 220);" >
-  <%= render :partial => 'edit' %>
-</div>
+<% options = shadow_options do |opt| %>
+  <% opt[:top][:middle].call do %>
+    <%= tab [[:new, 'Nowy']], :exchange -%>
+  <% end %>
+<% end %>
+
+
+<% light_shadow({:class => 'long'}, {}, options) do %>
+  <% tab_container(:exchange) do %>
+    <%= render :partial => 'edit' %>
+  <% end %>
+<% end %>

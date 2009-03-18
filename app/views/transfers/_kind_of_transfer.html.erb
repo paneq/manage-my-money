@@ -6,12 +6,12 @@
 
 <% options = shadow_options do |opt| %>
   <% opt[:top][:middle].call do %>
-    <%= tab all, :name => :transfer %>
+    <%= tab all, :transfer %>
   <% end %>
 <% end %>
 
 <% light_shadow({:class => 'long'}, {}, options) do %>
-  <div id="show-transfer" style="background-image: url('/images/bg/tabbg.png'); background-position: top; background-repeat: repeat-x; background-color: #97c8d6; border: none; padding: 5px; margin: 0;">
+  <% tab_container(:transfer) do %>
 
     <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
     <% if current_category %>
@@ -34,5 +34,5 @@
       <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
     </div>
 
-  </div>
+  <% end %>
 <% end %>

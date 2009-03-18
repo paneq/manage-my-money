@@ -12,11 +12,21 @@
 }
 
 .inactive-tab {
-    
+
 }
 
 .tab-element {
     height: 41px; /* 55 - 14(padding top of parent element)*/
     float: left;
     background-color: blue;
+}
+
+.tab-page {
+    background-image: url('/images/bg/tabbg.png');
+    background-position: top;
+    background-repeat: repeat-x;
+    background-color: #97c8d6;
+    border: none;
+    padding: 10px;
+    margin: 0;
 }
