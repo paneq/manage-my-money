@@ -22,7 +22,8 @@ class TransfersControllerTest < ActionController::TestCase
   
   def test_index_menu
     get :index
-    assert_menu ['full', 'search'], '/transfers/search'
+    assert_tab ['full', 'search'], :transfer
+    assert_transfer_pages('/transfers/search')
   end
 
 

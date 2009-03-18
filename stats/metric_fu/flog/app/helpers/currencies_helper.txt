@@ -1,1 +1,0 @@
-Total Flog = 0.0 (0.0 flog / method)

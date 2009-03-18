@@ -1,0 +1,1 @@
+xsltproc ../../../documents/mgr/apps/docbook-xsl-1.74.0/html/docbook.xsl installation.xml > installation.html

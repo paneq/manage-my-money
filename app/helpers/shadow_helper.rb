@@ -24,7 +24,7 @@ module ShadowHelper
   #   <div>This element will has white background</div>
   # end
   #
-  # inner_shadow :left, {:id => 'shadow-table-without-left-shadow'}, {:style => "background-color: white;", :id => 'inner-td-of-shadowed-table'}) do
+  # inner_shadow :left, {:style => "background-color: white;", :id => 'inner-td-of-shadowed-table'}, {:id => 'shadow-table-without-left-shadow'}) do
   #   <div>This element will has white background</div>
   # end
   def inner_shadow(*args, &block)
@@ -66,19 +66,67 @@ module ShadowHelper
   #   <div>This element will has white background</div>
   # end
   #
-  # shadow('60blue', :left, {:id => 'shadow-table-without-left-shadow'}, {:style => "background-color: white;", :id => 'inner-td-of-shadowed-table'}) do
+  # shadow('60blue', :left, {:style => "background-color: white;", :id => 'inner-td-of-shadowed-table'}, {:id => 'shadow-table-without-left-shadow'}) do
   #   <div>This element will has white background</div>
+  # end
+  #
+  # shadow '60blue', :left, {}, {}, {:top => {:left => 'Text in top left table corner.' }} do
+  #   <div></div>
   # end
   def shadow(*args, &block)
     inner_or_outer_shadow(:outer, *args, &block)
   end
 
 
+  #
+  # Helper for creating options for methods to create shadows.
+  # You can use it as last paramter in *shadow* methods
+  #
+  # in ERB template:
+  # <% opt = shadow_options do |opt| %>
+  # <%   opt[:top][:middle].call :style => 'height:100px;' do %>
+  #        <div>THIS TEXT WILL BE ON TOP MIDDLE SHADOW which will be 100px height</div>
+  # <%   end %>
+  # <% end %>
+  #
+  # opt => {:top => {:middle => {:style => 'height:100px;', :text => "<div>THIS TEXT WILL BE ON TOP MIDDLE SHADOW</div>" } } }
+  def shadow_options()
+    raise 'No block given' unless block_given?
+    output_hash = {}
+    call_hash = {}
+    [:top, :middle, :bottom]. each do |vertical|
+      call_hash[vertical] = {}
+      output_hash[vertical] = {}
+      [:left, :middle, :right]. each do |horizontal|
+        output_hash[vertical][horizontal] = {:text =>nil}
+        call_hash[vertical][horizontal] = Proc.new do |arg, &block|
+          output_hash[vertical][horizontal][:text] = capture(&block)
+          output_hash[vertical][horizontal].merge!(arg) if arg
+        end
+      end
+    end
+
+    yield call_hash 
+    output_hash
+  end
+
   private
 
-  # inner_or_outer_shadow(:inner, '80grey', :left, :right ... table-options, element-options
-  # inner_or_outer_shadow(:outer, '60blue' ... element-options
+  # inner_or_outer_shadow(:inner, '80grey', :left, :right ... element-options, table-shadow-boxes-content-hash do ... end
+  # inner_or_outer_shadow(:inner, '80grey', :left, :right ... element-options, table-options do ... end
+  # inner_or_outer_shadow(:outer, '60blue' ... element-options do ... end
+  # inner_or_outer_shadow :outer, '60blue', 'some text', ... element-options
   def inner_or_outer_shadow(*args, &block)
+    hashes = []
+    while args.last.is_a? Hash do
+      hashes << args.extract_options!
+    end
+    hashes.reverse!
+
+    content_options = hashes.first || {}
+    table_options = hashes.second || {}
+    element_contents = hashes.third || {}
+
     type = args.shift
 
     type = case type
@@ -90,12 +138,15 @@ module ShadowHelper
     style = args.shift
     raise 'Wrong argument' unless style.is_a? String
 
-    content_options = args.extract_options!
-    table_options = args.extract_options!
+    content_text = ''
+    unless block_given?
+      content_text = args.shift
+      raise 'Wrong argument' unless content_text.is_a? String
+    end
+
 
     table_options[:class] ||= 'shadow'
     content_options[:class] ||= 'mm-shadow'
-    raise 'No block given when required' unless block_given?
 
     top = !args.include?(:top)
     bottom = !args.include?(:bottom)
@@ -106,31 +157,58 @@ module ShadowHelper
 
     #top
     if top
+      content = element_contents[:top] || {}
       tr = ''
-      tr << "<td class=\"tl-#{type}-#{style} shadow-x shadow-y\"> </td>" if left
-      tr << "<td class=\"tm-#{type}-#{style} shadow-x\"> </td>"
-      tr << "<td class=\"tr-#{type}-#{style} shadow-x shadow-y\"> </td>" if right
-      text << "<tr>#{tr}</tr>"
+
+      element = content[:left] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "tl-#{type}-#{style} shadow-x shadow-y"}.merge(element) ) if left
+      
+      element = content[:middle] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "tm-#{type}-#{style} shadow-x"}.merge(element) )
+
+      element = content[:right] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "tr-#{type}-#{style} shadow-x shadow-y"}.merge(element) ) if right
+
+      text << content_tag(:tr, tr)
     end
 
     #middle
     begin
+      content = element_contents[:middle] || {}
       tr = ''
-      tr << "<td class=\"ml-#{type}-#{style} shadow-y\"> </td>" if left
-      tr << content_tag(:td, capture(&block), content_options)
-      tr << "<td class=\"mr-#{type}-#{style} shadow-y\"> </td>" if right
-      text << "<tr>#{tr}</tr>"
+
+      element = content[:left] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "ml-#{type}-#{style} shadow-y"}.merge(element) ) if left
+      
+      tr << content_tag(:td, (block_given? ? capture(&block) : content_text), content_options)
+      
+      element = content[:right] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "mr-#{type}-#{style} shadow-y"}.merge(element) ) if right
+
+      text << content_tag(:tr, tr)
     end
 
+    #bottom
     if bottom
+      content = element_contents[:bottom] || {}
       tr = ''
-      tr << "<td class=\"bl-#{type}-#{style} shadow-x shadow-y\"> </td>" if left
-      tr << "<td class=\"bm-#{type}-#{style} shadow-x\"> </td>"
-      tr << "<td class=\"br-#{type}-#{style} shadow-x shadow-y\"> </td>" if right
-      text << "<tr>#{tr}</tr>"
+
+      element = content[:left] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "bl-#{type}-#{style} shadow-x shadow-y"}.merge(element) ) if left
+      
+      element = content[:middle] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "bm-#{type}-#{style} shadow-x"}.merge(element) )
+
+      element = content[:right] || {}
+      tr << content_tag(:td, element.delete(:text), {:class => "br-#{type}-#{style} shadow-x shadow-y"}.merge(element) ) if right
+
+      text << content_tag(:tr, tr)
     end
 
-    #concat "<table class=\"shadow\" > #{text} </table>"
-    concat content_tag(:table, text, table_options)
+    if block_given?
+      concat content_tag(:table, text, table_options)
+    else
+      content_tag(:table, text, table_options)
+    end
   end
 end

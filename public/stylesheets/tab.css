@@ -1,0 +1,22 @@
+.tab-container {
+    float: left;
+    vertical-align: bottom;
+    padding: 5px 13px 5px 13px;
+}
+
+.active-tab {
+    background-repeat: repeat-x;
+    background-image: url('/images/bg/tabmenubg.png');
+    background-position: bottom;
+    background-color: #f3f3f3;
+}
+
+.inactive-tab {
+    
+}
+
+.tab-element {
+    height: 41px; /* 55 - 14(padding top of parent element)*/
+    float: left;
+    background-color: blue;
+}

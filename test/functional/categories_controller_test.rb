@@ -356,7 +356,8 @@ class CategoriesControllerTest < ActionController::TestCase
 
   def test_show_menu
     get :show, :id => @rupert.categories.top.of_type(:EXPENSE).find(:first)
-    assert_menu ['quick', 'full', 'search'], '/categories/search'
+    assert_tab ['quick', 'full', 'search'], :transfer
+    assert_transfer_pages('/categories/search')
   end
   
 end

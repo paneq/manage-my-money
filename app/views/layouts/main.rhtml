@@ -15,7 +15,7 @@
     <meta name="robots" content="index, follow, noarchive" />
     <meta name="googlebot" content="noarchive" />
 
-    <%= stylesheet_link_tag 'scaffold_new', 'html', 'layout', 'table', 'shadow' %>
+    <%= stylesheet_link_tag 'scaffold_new', 'html', 'layout', 'table', 'shadow', 'tab' %>
     <%= javascript_include_tag :defaults %>
     <%= javascript_tag "
     var uid = (
@@ -40,7 +40,7 @@
 
       <div id="page" style="width: 750px; float:left;">
 
-        <% strong_shadow(:top, {:style => 'width: 750px;'}, :style => 'background-color: white;') do %>
+        <% strong_shadow(:top, {:style => 'background-color: white;'}, {:style => 'width: 750px;'}) do %>
 
           <div id="header" class="width">
             <% link_to("/", :id=>'main-page-link') do -%>
@@ -55,14 +55,15 @@
           <br />
 
           <%= yield  %>
-
+        
         <% end %>
+
 
       </div>
 
 
       <div style="width: 200px; float: left; margin-left: 50px; margin-top:20px;">
-        <% inner_shadow({:id => 'top-sidebar', :style => 'background-color: white; border: 1px solid #9BB3C2'}, :style => 'width: 169px;') do %>
+        <% inner_shadow({:style => 'width: 169px;'}, {:id => 'top-sidebar', :style => 'background-color: white; border: 1px solid #9BB3C2'}) do %>
           <p><b>
               <% unless logged_in? -%>
                 Zaloguj się!
@@ -96,7 +97,7 @@
         <% end %>
 
         <% if logged_in? %>
-          <% inner_shadow({:style => 'background-color: white; margin-top: 30px; border: 1px solid #9BB3C2'}, :style => 'width: 169px;') do %>
+          <% inner_shadow({:style => 'width: 169px;'},{:style => 'background-color: white; margin-top: 30px; border: 1px solid #9BB3C2'}) do %>
             <%= render :partial => 'shared/bottom_sidebar' %>
           <% end %>
         <% end %>
@@ -106,3 +107,4 @@
     </div>
   </body>
 </html>
+

@@ -206,21 +206,35 @@ class ActiveSupport::TestCase
   end
 
 
-  def assert_menu(menu_items, action)
+
+
+  def assert_tab(menu_items, name)
+    name = name.to_s
     assert_select 'div#bottom-menu' do
-      assert_select 'span#kind-of-transfer > span', menu_items.size
-      assert_select 'span#kind-of-transfer' do
-        menu_items.each do |type|
-          assert_select "span#kind-of-transfer-#{type}" do
-            ['active','inactive'].each do |type2|
-              assert_select "span.kind-of-transfer-#{type2}-tab"
-            end
+      assert_select "div#kind-of-#{name}"
+      assert_select "div#kind-of-#{name} > div", menu_items.size
+
+      menu_items.each_with_index do |menu_type, menu_nr|
+        assert_select "div#kind-of-#{name}-#{menu_type}"
+
+        menu_items.size.times do |item_nr|
+          assert_select "div#kind-of-#{name}-#{menu_type} div:nth-child(#{item_nr+1})" do
+            klass = menu_nr == item_nr ? 'active-tab' : 'inactive-tab'
+            assert_select "td[class~=#{klass}]"
           end
         end
+
       end
-      assert_select 'div#form-for-transfer' do
-        assert_select 'div#form-for-transfer-full'
-        assert_select 'div#form-for-transfer-search' do
+
+    end
+  end
+
+
+  def assert_transfer_pages(action)
+    assert_select 'div#bottom-menu' do
+      assert_select 'div#show-transfer' do
+        assert_select 'div#show-transfer-full'
+        assert_select 'div#show-transfer-search' do
           assert_select "form[method=post][action=#{action}]" do
             assert_select 'p#transfer-day-period' do
               assert_select 'label'
@@ -240,6 +254,7 @@ class ActiveSupport::TestCase
           end
         end
       end
+
     end
   end
 
@@ -339,13 +354,13 @@ class ActiveSupport::TestCase
   def prepare_sample_system_category_tree
     e = SystemCategory.create :name => 'Expenses'
 
-      f = SystemCategory.create :name => 'Food'
+    f = SystemCategory.create :name => 'Food'
 
-        jf = SystemCategory.create :name => 'Junk Food'
+    jf = SystemCategory.create :name => 'Junk Food'
 
-        fr = SystemCategory.create :name => 'Fruits'
+    fr = SystemCategory.create :name => 'Fruits'
 
-      c = SystemCategory.create :name => 'Clothes'
+    c = SystemCategory.create :name => 'Clothes'
 
     f.move_to_child_of e
     jf.move_to_child_of f

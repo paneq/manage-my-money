@@ -4,29 +4,35 @@
 <% all.shift if current_category.nil? %>
 <% show = all.first %>
 
-<%= tab all, :name => :transfer %>
-
-<div id="form-for-transfer" style="background-color: #FFFCDC; border: 1px solid lightgrey; padding: 5px; margin: 0;">
-
-  <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
-  <% if current_category %>
-    <div id="form-for-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
-      <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
-    </div>
+<% options = shadow_options do |opt| %>
+  <% opt[:top][:middle].call do %>
+    <%= tab all, :name => :transfer %>
   <% end %>
+<% end %>
 
-  <div id="form-for-transfer-full" <%= style_display_if { show.first == 'full'} %> >
-    <%= render :partial => 'transfers/full_transfer',
-      :locals => {
-      :current_category => current_category ,
-      :transfer => transfer,
-      :embedded => true,
-      :autocomplete_transfer_description => autocomplete_transfer_description
-    }  %>
+<% light_shadow({:class => 'long'}, {}, options) do %>
+  <div id="show-transfer" style="background-image: url('/images/bg/tabbg.png'); background-position: top; background-repeat: repeat-x; background-color: #97c8d6; border: none; padding: 5px; margin: 0;">
+
+    <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
+    <% if current_category %>
+      <div id="show-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
+        <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
+      </div>
+    <% end %>
+
+    <div id="show-transfer-full" <%= style_display_if { show.first == 'full'} %> >
+      <%= render :partial => 'transfers/full_transfer',
+        :locals => {
+        :current_category => current_category ,
+        :transfer => transfer,
+        :embedded => true,
+        :autocomplete_transfer_description => autocomplete_transfer_description
+      }  %>
+    </div>
+
+    <div id="show-transfer-search" <%= style_display_if { show.first == 'search'} %> >
+      <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
+    </div>
+
   </div>
-
-  <div id="form-for-transfer-search" <%= style_display_if { show.first == 'search'} %> >
-    <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
-  </div>
-
-</div>
+<% end %>

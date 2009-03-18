@@ -1,0 +1,23 @@
+<div id="<%= menu_name %>">
+  <% all.each do |active, name| %>
+    <div id="<%= menu_name %>-<%= active %>" <%= " style='display:none'" unless active == selected %> >
+
+      <% all.each do |element, text| %>
+
+        <% if active == element %>
+          <div style="float: left;">
+            <%= light_shadow(text.to_s, :bottom, :class=>'tab-container active-tab') %>
+          </div>
+        <% else %>
+          <div style="float: left;">
+            <% light_shadow(:bottom, :class=>'tab-container inactive-tab') do %>
+              <a href="#" onclick="Element.show('<%= show_name + '-' + element.to_s %>'); Element.hide('<%= show_name + '-' + active.to_s %>'); Element.show('<%= menu_name + '-' + element.to_s %>'); Element.hide('<%= menu_name + '-' + active.to_s %>');">
+                <%= text.to_s %>
+              </a>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

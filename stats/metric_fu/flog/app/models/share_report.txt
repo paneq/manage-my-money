@@ -1,7 +1,0 @@
-Total Flog = 6.6 (6.6 flog / method)
-ShareReport#none: (6.6)
-     2.2: validates_numericality_of
-     1.1: validates_presence_of
-     1.1: define_enum
-     1.1: validates_inclusion_of
-     1.1: belongs_to

@@ -1,0 +1,72 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Instalacja Manage My Money</title><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id3569595"></a>Instalacja Manage My Money</h1></div><div><h2 class="subtitle"></h2></div><div><div class="author"><h3 class="author"><span class="firstname">Robert</span> <span class="surname">Pankowecki</span></h3></div></div><div><div class="author"><h3 class="author"><span class="firstname">Jaros&#322;aw</span> <span class="surname">Pleba&#324;ski</span></h3></div></div><div><p class="pubdate">17 marzec 2009</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#id3569840">1. Sposoby instalacji
+        </a></span></dt><dd><dl><dt><span class="section"><a href="#id3569939">Wst&#281;p</a></span></dt><dt><span class="section"><a href="#id3569993"></a></span></dt></dl></dd><dt><span class="chapter"><a href="#id3569997">2. 
+            Wymagania aplikacji
+        </a></span></dt><dd><dl><dt><span class="section"><a href="#id3570004">Wst&#281;p</a></span></dt><dt><span class="section"><a href="#id3570011">
+                Pakiety
+            </a></span></dt></dl></dd></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3569840"></a>Chapter 1. Sposoby instalacji
+        </h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id3569939">Wst&#281;p</a></span></dt><dt><span class="section"><a href="#id3569993"></a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id3569939"></a>Wst&#281;p</h2></div></div></div>
+            Istnieje bardzo du&#380;o mo&#380;liwych kombinacji w jakich mo&#380;e zosta&#263; wdro&#380;ona nasza aplikacja.
+            Im wi&#281;cej posiadasz do&#347;wiadczenia z Ruby on Rails tym bardziej ten proces jest dla Ciebie
+            oczywisty i tym wi&#281;cej mo&#380;liwo&#347;ci mo&#380;esz sobie wyobrazi&#263; i pewnie dok&#322;adnie wiesz co nale&#380;y
+            zrobi&#263; aby system dzia&#322;al poprawnie. Tym samym niniejsza instrukcja nie jest skierowana do
+            najbardziej do&#347;wiadczonych osób, lecz raczej do pocz&#261;tkuj&#261;cych, którzy chcieliby &#322;atwo
+            uzyska&#263; dzia&#322;aj&#261;cy system. Z tego powodu zdecydowali&#347;my si&#281; opisa&#263; i zautomatyzowa&#263; konfiguracj&#281;
+            aplikacji w dwóch mo&#380;liwych wariantach:
+
+            <div class="itemizedlist"><ul type="disc"><li>
+                        Globalna - U&#380;ytkownik posiada system Ubuntu i prawa administracyjne do niego oraz pragnie
+                        zainstalowa&#263; aplikacj&#281;, tak by by&#322;a dost&#281;pna dla wszystkich u&#380;ytkowników. Jak najwi&#281;ksza
+                        cz&#281;&#347;&#263; bibliotek zostanie zainstalowana globalnie, tak by mog&#322;a by&#263; w przysz&#322;o&#347;ci wspó&#322;dzielona.
+                    </li><li>
+                        Lokalna - U&#380;ytkownik posiada system Ubuntu, jednak brak mu wystarczaj&#261;cych praw administracyjnych.
+                        Cz&#281;&#347;&#263; niezb&#281;dnych do dzia&#322;ania bibliotek musi by&#263; ju&#380; dost&#281;pna w systemie, pozosta&#322;e zostan&#261;
+                        zainstalowane w katalogu domowym u&#380;ytkownika.
+                    </li></ul></div>
+
+            Poniewa&#380; dystrybucja Ubuntu pochodzi od Debiania do&#347;wiadczeni u&#380;ytkownicy powinni móc bez wi&#281;kszych problemów
+            skorzysta&#263; ze skryptów tak&#380;e w tej dystrybucji. Dla osób, które chc&#261; przetestowa&#263; w jak najszybszy sposób aplikacj&#281;
+            przygotowali&#347;my obraz systemu operacyjnego z wykonanymi ju&#380; wszystkimi krokami, który mo&#380;na uruchomi&#263; korzystaj&#261;c z
+            wirtualnej maszyny VirtualBox.
+
+        </div><div class="section" lang="en"><div class="titlepage"></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3569997"></a>Chapter 2. 
+            Wymagania aplikacji
+        </h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id3570004">Wst&#281;p</a></span></dt><dt><span class="section"><a href="#id3570011">
+                Pakiety
+            </a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id3570004"></a>Wst&#281;p</h2></div></div></div>
+            Zak&#322;adaj&#261;c, &#380;e nie chcesz skorzysta&#263; z naszego domy&#347;lnego systemu instalacji, mo&#380;esz spróbowa&#263; szcz&#281;&#347;cia samemu
+            dzi&#281;ki tej li&#347;cie wymaganych komponenetów. Przedstawiony sposób instalacji b&#281;dzie zak&#322;ada&#322;, &#380;e pracujemy na systemie
+            Ubuntu 8.10 i chcemy zainstalowa&#263; komponenty globalnie.
+        </div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id3570011"></a>
+                Pakiety
+            </h2></div></div></div>
+            Do dzia&#322;ania aplikacji wymagane s&#261; nast&#281;puj&#261;ce pakiety (lub czasem wystarcz&#261; odpowiadaj&#261;ce im binarki przekompilowane samodzielnie):
+            <div class="itemizedlist"><ul type="disc"><li><p>
+                        ruby - Wymagany w wersji conajmniej 1.8.7 ale nie 1.9. Instalacja:
+                        </p><pre class="programlisting">sudo apt-get install ruby-full</pre><p>
+                        Wersja:
+                        </p><pre class="programlisting">rupert@puchatek:~$ ruby -v
+ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
+                        </pre><p>
+                    </p></li><li><p>
+                        rubygems - Wymagane w wersji conajmniej 1.3.1 Instalacja na podstawie https://help.ubuntu.com/community/RubyOnRails :
+                        </p><pre class="programlisting">wget http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz
+tar xzvf rubygems-1.3.1.tgz
+cd rubygems-1.3.1
+sudo ruby setup.rb
+sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
+sudo gem update --system
+cd ..</pre><p>
+                    </p></li><li><p>
+                        rails - Wymagane w wersji 2.3.2 conajmniej. Instalacja:
+                            </p><pre class="programlisting">sudo gem install rails -v 2.3.2 --no-rdoc --no-ri</pre><p>
+                    </p></li><li><p>
+                        apache - Wymagany w wersji 2.2.9 conajmniej. Instalacja:
+                            </p><pre class="programlisting">sudo apt-get install apache2 apache2-dev</pre><p>
+                    </p></li><li><p>
+                        postgre - Wymagane w wersji 8.3. Instalacja:
+                            </p><pre class="programlisting">sudo apt-get install postgresql
+sudo apt-get install postgresql-client
+sudo apt-get install libpq-dev
+sudo apt-get install phppgadmin
+sudo gem install postgres</pre><p>
+                    </p></li></ul></div></div></div></div></body></html>

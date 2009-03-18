@@ -1,11 +1,11 @@
 # Methods added to this helper will be available to all templates in the application.
 
 #require File.expand_path(File.dirname(__FILE__) + '../../../lib/date')
-require 'erb'
 
 module ApplicationHelper
   include Forms::ApplicationHelper
   include ShadowHelper
+  include TabHelper
 
   #Returns all periods including :Selected which cannote be computed by Date.compute
   def get_periods(periods = [:present, :past])
@@ -173,68 +173,6 @@ module ApplicationHelper
     JS
   end
 
-
-  # Makes tab to show and hide elements <br />
-  #
-  # def tab([[:quick, 'Szybki'],[:full, 'Pelny'],[:search,'Wyszukaj']], :name => :transfer <br />
-  # Options : <br />
-  # * name - Required option
-  # * menu_prefix
-  # * menu_sufix
-  # * show_prefix
-  # * active ex. => :quick
-  # <br />
-  # Refactor, make it faster... ?
-  def tab(table, options = {})
-    defaults = {:name => :nil, :menu_prefix => 'kind-of', :menu_sufix => 'tab', :show_prefix => 'form-for', :active => :nil}
-    defaults.merge!(options)
-    throw ":menu_prefix and :show_prefix cannot be the same" if defaults[:menu_prefix].to_s == defaults[:show_prefix].to_s
-    throw ":name cannot be blank" if defaults[:name].blank?
-    all = table
-    show = nil
-    show = defaults[:active] if !defaults[:active].nil? && table.map{|element, name| element}.include?(defaults[:active])
-    show = table.first.first if show.nil?
-
-    menu_name = defaults[:menu_prefix].nil? ? defaults[:name].to_s : (defaults[:menu_prefix].to_s + "-" + defaults[:name].to_s)
-
-    active_class = menu_name + '-active'
-    active_class += ('-' + defaults[:menu_sufix].to_s) unless defaults[:menu_sufix].nil?
-
-    inactive_class = menu_name + '-inactive'
-    inactive_class += ('-' + defaults[:menu_sufix].to_s) unless defaults[:menu_sufix].nil?
-
-    show_name = defaults[:show_prefix].nil? ? defaults[:name].to_s : (defaults[:show_prefix].to_s + "-" + defaults[:name].to_s)
-
-    template =  %q{
-<b>
-  <span id="<%= menu_name %>">
-    <% all.each do |active, name| %>
-      <span id="<%= menu_name %>-<%= active %>" <%= " style='display:none'" unless active == show %> >
-
-        <% all.each do |element, text| %>
-
-          <% if active == element %>
-            <span class="<%= active_class %>">
-              <%= text.to_s %>
-            </span>
-          <% else %>
-            <span class="<%= inactive_class %>">
-              <a href="#" onclick="Element.show('<%= show_name + '-' + element.to_s %>'); Element.hide('<%= show_name + '-' + active.to_s %>'); Element.show('<%= menu_name + '-' + element.to_s %>'); Element.hide('<%= menu_name + '-' + active.to_s %>');">
-                <%= text.to_s %>
-              </a>
-            </span>
-          <% end %>
-
-        <% end %>
-      </span>
-    <% end %>
-  </span>
-</b>
-    }
-    erb = ERB.new(template)
-    return erb.result(binding)
-  end
-
   if defined? WillPaginate
 
     include WillPaginate::ViewHelpers
@@ -246,6 +184,13 @@ module ApplicationHelper
   end
 
   
+  protected
+
+  def block_to_partial(partial_name, options = {}, &block)
+    options.merge!(:body => capture(&block))
+    concat(render(:partial => partial_name, :locals => options), block.binding)
+  end
+
 
   private
 

@@ -213,3 +213,8 @@ td#shadow-right {
     background-repeat: repeat-y;
     background-position: left;
 }
+
+
+.long {
+    width: 690px; /* 750px of main div - 30px main shadow - 30px second shadow */
+}

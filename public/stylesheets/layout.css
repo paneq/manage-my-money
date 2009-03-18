@@ -676,30 +676,6 @@ ul.submenu3 a:hover {
     height: 30px;
 }
 
-.kind-of-transfer-active-tab {
-    background-color : #FFFCDC;
-    border : 1px solid lightgrey;
-    border-bottom : 0px;
-    padding-left : 10px;
-    padding-right : 10px;
-    padding-top : 5px;
-    padding-bottom : 4px;
-    margin-left : 10px;
-    margin-right : 10px;
-}
-
-.kind-of-transfer-inactive-tab {
-    background-color : #FFFFFF;
-    border : 1px solid lightgrey;
-    border-bottom : 1px;
-    padding-left : 10px;
-    padding-right : 10px;
-    padding-top : 5px;
-    padding-bottom : 3px;
-    margin-left : 10px;
-    margin-right : 10px;
-}
-
 .hr-line-80prc {
     border : none;
     border-top : 1px solid black;
