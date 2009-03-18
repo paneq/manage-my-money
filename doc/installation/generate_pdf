@@ -1,3 +1,3 @@
-xsltproc ../../../documents/mgr/apps/docbook-xsl-1.74.0/fo/test.xsl installation.xml > installation.fo
-../../../documents/mgr/apps/fop-0.95/fop -c ../../../documents/mgr/apps/fop-0.95/conf/fop.xconf installation.fo installation.pdf
+xsltproc ../../../documents/mgr/apps/docbook-xsl/fo/test.xsl installation.xml > installation.fo
+../../../documents/mgr/apps/fop/fop -c ../../../documents/mgr/apps/fop/conf/fop.xconf installation.fo installation.pdf
 rm installation.fo
