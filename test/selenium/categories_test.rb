@@ -6,7 +6,7 @@ begin
   
   require 'selenium'
 
-  class CategoriesTest < Test::Unit::TestCase
+  class CategoriesTest < ActiveSupport::TestCase
     self.use_transactional_fixtures = false
     
     def setup
@@ -20,12 +20,19 @@ begin
 
     def teardown
       @selenium.stop unless $selenium
+      @verification_errors.each do |e|
+        puts
+        puts e
+        puts e.backtrace
+        puts '---'
+      end
+
       assert_equal [], @verification_errors
+
       @selenium = nil
-      Test::Unit::TestCase.use_transactional_fixtures = true
+      ActiveSupport::TestCase.use_transactional_fixtures = true
     end
-
-
+    
     # Tworzenie nowej kategorii
     # nr 1.2.1 main
     # test version 1.2
@@ -49,7 +56,7 @@ begin
       @selenium.wait_for_page_to_load "10000"
 
       children_ids = @rupert.asset.children.map{|c| c.id}
-      children_divs = children_ids.map{|id| "//div[@id='category-line-#{id}']"}
+      children_divs = children_ids.map{|id| "//tr[@id='category-line-#{id}']"}
       children_divs.each  do |ch_div|
         selenium_assert {assert @selenium.is_element_present ch_div}
       end
@@ -88,7 +95,7 @@ begin
       @selenium.wait_for_page_to_load "10000"
 
       assert_not_nil @rupert.expense.children.first
-      selenium_assert {assert @selenium.is_element_present "//div[@id='category-line-#{@rupert.expense.children.first.id}']"}
+      selenium_assert {assert @selenium.is_element_present "//tr[@id='category-line-#{@rupert.expense.children.first.id}']"}
     end
 
 
@@ -113,7 +120,7 @@ begin
       assert_match(/Usunięto/, flash)
 
       #check if child of destroed category was moved to the same level as destroyed category used to be on.
-      @selenium.is_ordered "//div[@id='category-line-#{@house.id}']", "//div[@id='category-line-#{@healthy.id}']"
+      @selenium.is_ordered "//tr[@id='category-line-#{@house.id}']", "//tr[@id='category-line-#{@healthy.id}']"
 
       #check saldo of parent category of destroyed category. It should contain now transfers from removed category so the saldo should be different.
       saldo = @selenium.get_text "category-saldo-#{@expense_category.id}"
@@ -182,7 +189,7 @@ begin
 
       # R4
       # Category is child of valid category
-      @selenium.is_ordered "//div[@id='category-line-#{@rent.id}']", "//div[@id='category-line-#{@food.id}']"
+      @selenium.is_ordered "//tr[@id='category-line-#{@rent.id}']", "//tr[@id='category-line-#{@food.id}']"
 
       # R5
       # Changed description

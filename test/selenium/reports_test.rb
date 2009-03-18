@@ -6,7 +6,7 @@ begin
   
   require 'selenium'
 
-  class ReportsTest < Test::Unit::TestCase
+  class ReportsTest < ActiveSupport::TestCase
     self.use_transactional_fixtures = false
     
     def setup
@@ -31,7 +31,7 @@ begin
       assert_equal [], @verification_errors
 
       @selenium = nil
-      Test::Unit::TestCase.use_transactional_fixtures = true
+      ActiveSupport::TestCase.use_transactional_fixtures = true
     end
 
 

@@ -6,7 +6,7 @@ begin
   
   require 'selenium'
 
-  class MenuTest < Test::Unit::TestCase
+  class MenuTest < ActiveSupport::TestCase
     self.use_transactional_fixtures = false
     
     def setup
@@ -21,13 +21,16 @@ begin
     def teardown
       @selenium.stop unless $selenium
       @verification_errors.each do |e|
+        puts
+        puts e
         puts e.backtrace
+        puts '---'
       end
-      
+
       assert_equal [], @verification_errors
 
       @selenium = nil
-      Test::Unit::TestCase.use_transactional_fixtures = true
+      ActiveSupport::TestCase.use_transactional_fixtures = true
     end
 
 

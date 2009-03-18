@@ -11,7 +11,7 @@ begin
 
   require 'selenium'
 
-  class TransfersAndAutocompleteTest < Test::Unit::TestCase
+  class TransfersAndAutocompleteTest < ActiveSupport::TestCase
     self.use_transactional_fixtures = false
 
     def setup
@@ -21,6 +21,22 @@ begin
       create_rupert_expenses_account_structure
       log_rupert
       @selenium.set_context("Transfers Test")
+    end
+
+
+    def teardown
+      @selenium.stop unless $selenium
+      @verification_errors.each do |e|
+        puts
+        puts e
+        puts e.backtrace
+        puts '---'
+      end
+
+      assert_equal [], @verification_errors
+
+      @selenium = nil
+      ActiveSupport::TestCase.use_transactional_fixtures = true
     end
 
 
@@ -167,14 +183,6 @@ begin
         @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
 
       end
-    end
-
-    
-    def teardown
-      @selenium.stop unless $selenium
-      assert_equal [], @verification_errors
-      @selenium = nil
-      Test::Unit::TestCase.use_transactional_fixtures = true
     end
 
 
