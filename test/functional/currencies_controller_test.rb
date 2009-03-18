@@ -42,7 +42,7 @@ class CurrenciesControllerTest < ActionController::TestCase
             end
             assert_select "td#system"
             assert_select "td#options" do
-              ['show', 'edit', 'del'].each do |action|
+              ['show', 'edit', 'dest'].each do |action|
                 assert_select "a##{action}-cur-#{c.id}"
               end
             end

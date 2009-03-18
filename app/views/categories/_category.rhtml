@@ -15,9 +15,9 @@
   </td>
   
   <td id="category-options">
-      <%= link_to image_tag('/images/folder-new.png', :size => size , :alt => 'Dodaj podkategorię'), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
+      <%= link_to new_img(), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
       <% unless category.is_top? %>
-        <%= link_to_remote image_tag("/images/user-trash-full.png" , :size => size , :alt => 'Usuń'), {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete), :title => 'Usuń', :id => "del-subc-#{category.id}" } %>
+        <%= link_to_remote destroy_img, {:url => category_url(category), :method => :delete}, { :href => url_for(:action => :destroy, :id => category, :method => :delete), :title => 'Usuń', :id => "dele-subc-#{category.id}" } %>
       <% end %>
   </td>
 

@@ -54,13 +54,13 @@ class CategoriesControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_template 'index'
-    assert_select 'a[id^=del-subc]', rupert.categories.count - 5
+    assert_select 'a[id^=dele-subc]', rupert.categories.count - 5
     @rupert.categories.count.times do |nr|
       category = @rupert.categories[nr]
       assert_select "table#category-tree tr:nth-child(#{nr+1})" do
         occures = category.is_top? ? 0 : 1
         assert_select "td#category-options" do
-          assert_select "a#del-subc-#{category.id}", occures
+          assert_select "a#dele-subc-#{category.id}", occures
         end
       end
     end

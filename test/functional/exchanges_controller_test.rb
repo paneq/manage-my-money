@@ -201,25 +201,33 @@ class ExchangesControllerTest < ActionController::TestCase
   end
   
 
-  #  def test_update
-  #    post :update, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'show', :id => @first_id
-  #  end
-  #
-  #  def test_destroy
-  #    assert_nothing_raised {
-  #      Exchange.find(@first_id)
-  #    }
-  #
-  #    post :destroy, :id => @first_id
-  #    assert_response :redirect
-  #    assert_redirected_to :action => 'list'
-  #
-  #    assert_raise(ActiveRecord::RecordNotFound) {
-  #      Exchange.find(@first_id)
-  #    }
-  #  end
+  def test_update
+    e = save_exchange()
+    put :update, :id => e.id,
+      :exchange => {
+      :left_to_right => 8.to_s,
+      :right_to_left => 0.125.to_s,
+      :left_currency => e.left_currency.id,
+      :right_currency => e.right_currency.id
+    }
+    assert_response :redirect
+    assert_redirected_to :action => 'show', :id => e.id
+
+    e = Exchange.find(e.id)
+    assert_equal 8, e.left_to_right
+    assert_equal 0.125, e.right_to_left
+  end
+
+
+  def test_destroy
+    e = save_exchange()
+  
+    post :destroy, :id => e.id
+    assert_response :redirect
+    assert_redirected_to :action => 'list', :left_currency =>  e.left_currency.id, :right_currency => e.right_currency.id
+  
+    assert_nil Exchange.find_by_id(e.id)
+  end
 
   private
 

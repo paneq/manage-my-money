@@ -77,11 +77,13 @@ class ExchangesController < ApplicationController
 
   def destroy
     @exchange.destroy
-    redirect_to exchanges_path
+    redirect_to exchanges_list_path(:left_currency => @exchange.left_currency, :right_currency => @exchange.right_currency)
   end
+
 
   protected
 
+  
   def set_exchange
     @exchange = self.current_user.exchanges.find_by_id(params[:id])
   end
@@ -90,8 +92,10 @@ class ExchangesController < ApplicationController
     @currencies = Currency.for_user(self.current_user)
   end
 
+
   private
 
+  
   def change_currencies_to_objects
     @c1 = params[:exchange][:left_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:left_currency])
     @c2 = params[:exchange][:right_currency] = Currency.for_user(self.current_user).find_by_id(params[:exchange][:right_currency])

@@ -110,7 +110,7 @@ begin
       @selenium.wait_for_page_to_load "10000"
 
       #Remove category with name 'food'
-      @selenium.click "//a[@id='del-subc-#{@food.id}']"
+      @selenium.click "//a[@id='dele-subc-#{@food.id}']"
 
       #Wait for ajax
       @selenium.wait_for_condition("selenium.getText(\"flash_notice\") != \"\"", 3000) #Not sure if written ok... Give ma a note if sth goes wrong here

@@ -1,4 +1,3 @@
-<% size = '20x20' %>
 <tr id="currency-<%= currency.id -%>" class="<%= cycle('line-even', 'line-odd')-%>" >
   <td id="name"><%=h currency.name %></td>
   <td id="symbol"><%=h currency.symbol %></td>
@@ -6,8 +5,8 @@
   <td id="long_symbol"><%=h currency.long_symbol %></td>
   <td id="system"><%=  currency.user_id.nil? ? 'Tak' : 'Nie' -%></td>
   <td id="options" style="text-align: center; ">
-    <%= link_to image_tag('/images/system-search.png',:alt => 'Pokaż', :size => size, :style => 'margin: 3px;'), currency_path(currency), obj_hash_id('show-cur', currency).merge(:title => 'Pokaż') %>
-    <%= link_to image_tag('/images/edit-copy.png', :alt => 'Edytuj', :size => size, :style => 'margin: 3px;'), edit_currency_path(currency), obj_hash_id('edit-cur', currency).merge(:title => 'Edytuj')  %>
-    <%= link_to image_tag('/images/user-trash-full.png', :alt => 'Usuń', :size => size, :style => 'margin: 3px;'), currency_path(currency), obj_hash_id('del-cur', currency).merge(:confirm => 'Czy na pewno usunąć ?', :method => :delete, :title => 'Usuń') %>
+    <%= link_to_show currency %>
+    <%= link_to_edit currency %>
+    <%= link_to_destroy currency %>
   </td>
 </tr>

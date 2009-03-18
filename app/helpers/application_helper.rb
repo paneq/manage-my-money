@@ -6,6 +6,7 @@ module ApplicationHelper
   include Forms::ApplicationHelper
   include ShadowHelper
   include TabHelper
+  include LinkActionHelper
 
   #Returns all periods including :Selected which cannote be computed by Date.compute
   def get_periods(periods = [:present, :past])

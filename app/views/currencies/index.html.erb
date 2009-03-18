@@ -1,36 +1,38 @@
 <div id="currencies-index">
   <h1>Waluty</h1>
 
-  <table id="currencies-list" style="width: 100%">
-    <tr style="width: 100%" >
+  <% light_shadow do %>
+    <table id="currencies-list" class ="nice-table">
+      <tr style="width: 100%" >
 
-      <th>
-        Nazwa
-      </th>
+        <th>
+          Nazwa
+        </th>
 
-      <th>
-        Symbol
-      </th>
+        <th>
+          Symbol
+        </th>
 
-      <th>
-        Długa nazwa
-      </th>
+        <th>
+          Długa nazwa
+        </th>
 
-      <th>
-        Długi symbol
-      </th>
+        <th>
+          Długi symbol
+        </th>
 
-      <th>
-        Systemowa
-      </th>
+        <th>
+          Systemowa
+        </th>
 
-      <th>
-        Akcje
-      </th>
-    </tr>
+        <th>
+          Akcje
+        </th>
+      </tr>
 
-    <%= render :partial => 'currency', :collection => @currencies %>
+      <%= render :partial => 'currency', :collection => @currencies %>
 
-  </table>
+    </table>
+  <% end %>
   <%= link_to 'Dodaj nową walutę', new_currency_path, :id => 'add-cur' -%>
 </div>

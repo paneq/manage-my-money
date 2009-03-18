@@ -28,7 +28,8 @@
             <%= "#{e.right_to_left} #{c1_symbol}" -%>
           </td>
           <td>
-            <%= link_to 'Edytuj', edit_exchange_path(e) -%>
+            <%= link_to_edit(e) -%>
+            <%= link_to_destroy(e) -%>
           </td>
         </tr>
       <% end %>

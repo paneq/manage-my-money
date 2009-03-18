@@ -7,6 +7,11 @@ pl:
   next: Następne
   later: Późniejsze
   sooner: Wcześniejsze
+  new: Dodaj
+  edit: Edytuj
+  destroy: Usuń
+  show: Pokaż
+  update: Aktualizuj
   number:
     format:
       separator: ","
