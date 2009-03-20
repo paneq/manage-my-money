@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090313212009) do
+ActiveRecord::Schema.define(:version => 20090320114536) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -143,12 +143,14 @@ ActiveRecord::Schema.define(:version => 20090313212009) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "system_categories", :force => true do |t|
-    t.string   "name",       :null => false
+    t.string   "name",              :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
+    t.integer  "category_type_int"
   end
 
   create_table "transfer_items", :force => true do |t|
