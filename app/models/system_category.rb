@@ -14,19 +14,6 @@
 #  category_type_int :integer       
 #
 
-# == Schema Information
-# Schema version: 20090313212009
-#
-# Table name: system_categories
-#
-#  id         :integer       not null, primary key
-#  name       :string(255)   not null
-#  parent_id  :integer       
-#  lft        :integer       
-#  rgt        :integer       
-#  created_at :datetime      
-#  updated_at :datetime      
-#
 require 'hash_enums'
 
 class SystemCategory < ActiveRecord::Base
@@ -40,14 +27,13 @@ class SystemCategory < ActiveRecord::Base
 
   define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
-  #from http://railspikes.com/2008/2/1/loading-seed-data
-  # given a hash of attributes including the ID, look up the record by ID.
-  # If it does not exist, it is created with the rest of the options.
-  # If it exists, it is updated with the given options.
-  #
-  # Raises an exception if the record is invalid to ensure seed data is loaded correctly.
-  #
-  # Returns the record.
+  default_scope :order => "category_type_int, lft"
+
+  def name_with_indentation
+    '..'*level + name
+  end
+
+
   def self.create_or_update(options = {})
     id = options.delete(:id)
     record = find_by_id(id) || new
@@ -58,8 +44,9 @@ class SystemCategory < ActiveRecord::Base
     if block_given?
       children_array = []
       yield(children_array)
-      children_array.each do |cat|
-        cat.move_to_child_of(record)
+      children_array.sort!{|a,b| a.name <=> b.name}
+      children_array.each do |child|
+        child.move_to_child_of(record)
       end
     end
 
@@ -72,17 +59,5 @@ class SystemCategory < ActiveRecord::Base
 
     record
   end
-
-
-#  def after_save
-#    unless self.category_type_int.nil?
-#      descendants.each do |a|
-#        a.category_type_int = self.category_type_int
-#        a.save!
-#      end
-#    end
-#  end
-
-
 
 end

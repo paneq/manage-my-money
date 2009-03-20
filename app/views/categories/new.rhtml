@@ -22,7 +22,7 @@
 
     <p id="system_category">
       Wybierz kategorię systemową (help needed):
-      <%= collection_select :category, :system_category_id, @system_categories, :id, :name, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
+      <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
     </p>
 
 
