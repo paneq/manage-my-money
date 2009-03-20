@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20090313212009
+# Schema version: 20090320114536
 #
 # Table name: transfer_items
 #
 #  id          :integer       not null, primary key
 #  description :text          not null
-#  value       :decimal(8, 2) not null
+#  value       :decimal(12, 2 not null
 #  transfer_id :integer       not null
 #  category_id :integer       not null
 #  currency_id :integer       default(3), not null
