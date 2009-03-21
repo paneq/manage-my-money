@@ -637,26 +637,15 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
 
-
-
   def test_assing_system_category
     prepare_sample_catagory_tree_for_jarek
-
     test_category = @jarek.categories.find_by_name 'test'
-
     e = SystemCategory.create :name => 'Expenses'
-
     test_category.system_categories << e
-
-
     e.save!
-
     test_category.save!
-
     test_category.reload
-
     assert_equal [e.id], test_category.system_categories.map{|q| q.id }
-
   end
 
 
@@ -670,12 +659,26 @@ class CategoryTest < ActiveSupport::TestCase
     test_category.save!
     assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
 
+    test_category.system_category_id = system_category.id
+    test_category.save!
+    assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
+
+
     system_category = SystemCategory.find_by_name 'Expenses'
     test_category.system_category = system_category
     test_category.save!
     assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
 
+    test_category.system_category_id = system_category.id
+    test_category.save!
+    assert_equal system_category.self_and_ancestors.map{|s|s.id}.sort, test_category.system_categories.map{|c|c.id}.sort
+
+
     test_category.system_category = nil
+    test_category.save!
+    assert_equal [], test_category.system_categories
+
+    test_category.system_category_id = nil
     test_category.save!
     assert_equal [], test_category.system_categories
 
@@ -692,15 +695,18 @@ class CategoryTest < ActiveSupport::TestCase
     test_category.system_category = system_category
     test_category.save!
     assert_equal system_category.id, test_category.system_category.id
+    assert_equal system_category.id, test_category.system_category_id
 
     system_category = SystemCategory.find_by_name 'Expenses'
     test_category.system_category = system_category
     test_category.save!
     assert_equal system_category.id, test_category.system_category.id
+    assert_equal system_category.id, test_category.system_category_id
 
     test_category.system_category = nil
     test_category.save!
     assert_nil test_category.system_category
+    assert_nil test_category.system_category_id
 
 
   end

@@ -131,7 +131,8 @@ class CategoriesControllerTest < ActionController::TestCase
       :description => 'test description',
       :parent => parent_category.id,
       :opening_balance => '1 200',
-      :opening_balance_currency_id => @zloty.id
+      :opening_balance_currency_id => @zloty.id,
+      :system_category_id => ''
     }
     assert_redirected_to :action => :index
 
@@ -140,6 +141,27 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_equal parent_category, created_category.parent
     assert created_category.saldo_at_end_of_day(Date.today).currencies.include?(@zloty)
     assert_equal 1200, created_category.saldo_at_end_of_day(Date.today).value(@zloty)
+    assert_nil created_category.system_category
+  end
+
+
+  def test_create_with_system_category
+    system_food = SystemCategory.find_by_name('Jedzenie')
+    parent_category = @rupert.expense
+    post :create, :category => {
+      :name => 'test name',
+      :description => 'test description',
+      :parent => parent_category.id,
+      :opening_balance => '1 200',
+      :system_category_id => system_food.id,
+      :opening_balance_currency_id => @zloty.id
+    }
+    assert_redirected_to :action => :index
+
+    created_category = @rupert.categories.find_by_name('test name')
+    assert_not_nil created_category
+    assert_equal parent_category, created_category.parent
+    assert_equal system_food.id, created_category.system_category.id
   end
 
 
@@ -274,7 +296,8 @@ class CategoriesControllerTest < ActionController::TestCase
       :description => 'new_loan_description',
       :category_type => income_category.category_type,
       :category_type_int => income_category.category_type_int,
-      :parent => income_category.id
+      :parent => income_category.id,
+      :system_category_id => ''
     }
 
     assert_redirected_to :action => :index
@@ -299,7 +322,8 @@ class CategoriesControllerTest < ActionController::TestCase
       :description => 'new_healthy_description',
       :parent => @expense_category.id,
       :category_type => @loan_category.category_type,
-      :category_type_int => @loan_category.category_type_int
+      :category_type_int => @loan_category.category_type_int,
+      :system_category_id => ''
     }
 
     assert_redirected_to :action => :index
@@ -309,6 +333,7 @@ class CategoriesControllerTest < ActionController::TestCase
     @healthy = @rupert.categories.find(@healthy.id) #newset version of category
     assert_equal 'new_healthy_name', @healthy.name
     assert_equal 'new_healthy_description', @healthy.description
+    assert_nil @healthy.system_category
     assert_equal @expense_category, @healthy.parent
 
     #changing type should failed
@@ -316,6 +341,21 @@ class CategoriesControllerTest < ActionController::TestCase
 
   end
 
+  def test_update_with_system_category
+    create_rupert_expenses_account_structure
+    system_food = SystemCategory.find_by_name('Jedzenie')
+    parent_category = @rupert.expense
+    put :update, :id => @healthy.id, :category => {
+      :name => 'test name',
+      :description => 'test description',
+      :parent => parent_category.id,
+      :system_category_id => system_food.id,
+    }
+    assert_redirected_to :action => :index
+
+    updated_category = @rupert.categories.find_by_name('test name')
+    assert_equal system_food.id, updated_category.system_category.id
+  end
 
   def test_update_to_loan
     category = Category.new(:name => 'sejtenik', :parent => rupert.loan, :user => @rupert)

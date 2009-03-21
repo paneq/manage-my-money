@@ -86,7 +86,7 @@ class CategoriesController < ApplicationController
   def update
     @category = self.current_user.categories.find(params[:id])
     attr = params[:category]
-    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo)
+    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id)
     @category[:type] = attr[:type] if attr[:type] && [Category, LoanCategory].map{|klass| klass.to_s}.include?(attr[:type])
     @category.parent = self.current_user.categories.find(attr[:parent].to_i) if !@category.is_top? and attr[:parent]
     if @category.save

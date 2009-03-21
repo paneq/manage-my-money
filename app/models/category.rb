@@ -486,7 +486,7 @@ class Category < ActiveRecord::Base
   end
 
   def system_category_id=(sys_category_id)
-    unless sys_category_id.empty?
+    unless sys_category_id.blank?
       self.system_category=(SystemCategory.find(sys_category_id))
     else
       self.system_category= nil
