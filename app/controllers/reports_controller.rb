@@ -124,7 +124,9 @@ class ReportsController < ApplicationController
     @report = self.current_user.reports.find params[:id]
 
     report_param_name = @report.type_str.underscore.intern
-    @report.relative_period = params[report_param_name][:relative_period]
+
+    rel_period = params[report_param_name][:relative_period]
+    @report.relative_period = rel_period unless rel_period.nil?
 
     @report.set_period(get_period "report_day_#{@report.type_str}")
     if @report.relative_period

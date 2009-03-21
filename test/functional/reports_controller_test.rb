@@ -71,17 +71,98 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
 
+  test "should create share report" do
+    assert_difference('Report.count') do
+      post :create,
+        :share_report => share_report_hash,
+        :report_type => 'ShareReport',
+        :report_day_ShareReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_share_report(created)
+  end
+
+
+  test "should not create share report with errors" do
+    assert_no_difference('Report.count') do
+      post :create,
+        :share_report => share_report_hash.merge(:depth=>'ERROR'),
+        :report_type => 'ShareReport',
+        :report_day_ShareReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_select "h2", /nie został zachowany/
+  end
+
+
   #TODO
-  test "should create" do
+  test "should create value report" do
+
+  end
+
+  #TODO
+  test "should not create value report with errors" do
+
+  end
+
+  #TODO
+  test "should create flow report" do
+
+  end
+
+  #TODO
+  test "should not create flow report with errors" do
+
+  end
+
+
+
+  #TODO
+  test "should update value report" do
+
+  end
+  
+  #TODO
+  test "should not update value report with errors" do
 
   end
 
 
   #TODO
-  test "should update" do
+  test "should update flow report" do
 
   end
 
+  #TODO
+  test "should not update flow report with errors" do
+
+  end
+
+
+  test "should update share report" do
+    @report = create_share_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :share_report => share_report_hash,
+      :report_day_ShareReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_share_report(created)
+  end
+
+
+  test "should not update share report with errors" do
+    @report = create_share_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :share_report => share_report_hash.merge(:depth=>'ERROR'),
+      :report_day_ShareReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_select "h2", /nie został zachowany/
+  end
 
 
   test "should see index form" do
@@ -185,37 +266,54 @@ class ReportsControllerTest < ActionController::TestCase
 
   def assert_category_options(report_type, new_or_existing)
     assert_select 'div#categories-options' do
-        assert_select 'div#category-option', :count => @jarek.categories.size
-        @jarek.categories.each do |cat|
-          assert_select "div#category-option", :text => /#{cat.name}.*/ do
-            assert_select "select[id^=#{report_type}_#{new_or_existing}_category_report_options_]" do
-              case report_type
-              when 'flow_report'
-                assert_select "option", :count => 2
-                ['category_only','none'].each do |opt|
+      assert_select 'div#category-option', :count => @jarek.categories.size
+      @jarek.categories.each do |cat|
+        assert_select "div#category-option", :text => /#{cat.name}.*/ do
+          assert_select "select[id^=#{report_type}_#{new_or_existing}_category_report_options_]" do
+            case report_type
+            when 'flow_report'
+              assert_select "option", :count => 2
+              ['category_only','none'].each do |opt|
                 assert_select "option[value=#{opt}]"
               end
-              when 'value_report'
-                if cat.name != 'Zasoby' && cat.name != 'test'
-                  assert_select "option", :count => 2
-                  ['category_only','none'].each do |opt|
-                    assert_select "option[value=#{opt}]"
-                  end
-                else
-                  assert_select "option", :count => 4
-                  ['category_only','none', 'both', 'category_and_subcategories'].each do |opt|
-                    assert_select "option[value=#{opt}]"
-                  end
+            when 'value_report'
+              if cat.name != 'Zasoby' && cat.name != 'test'
+                assert_select "option", :count => 2
+                ['category_only','none'].each do |opt|
+                  assert_select "option[value=#{opt}]"
+                end
+              else
+                assert_select "option", :count => 4
+                ['category_only','none', 'both', 'category_and_subcategories'].each do |opt|
+                  assert_select "option[value=#{opt}]"
                 end
               end
-              
-#              assert_select "option[value=both][selected=selected]"
             end
+              
+            #              assert_select "option[value=both][selected=selected]"
           end
         end
       end
+    end
   end
 
-  
+  def share_report_hash
+    {
+      :name => 'Test report',
+      :report_view_type => :pie,
+      :depth => 1,
+      :max_categories_values_count => 3,
+      :category_id => @jarek.expense.id,
+    }
+  end
+
+  def assert_changed_share_report(updated)
+    assert_not_nil updated
+    assert_equal ShareReport, updated.class
+    assert_equal :pie, updated.report_view_type
+    assert_equal 1, updated.depth
+    assert_equal 3, updated.max_categories_values_count
+    assert_equal @jarek.expense.id, updated.category.id
+  end
 
 end
