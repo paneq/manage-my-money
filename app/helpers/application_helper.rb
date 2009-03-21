@@ -11,15 +11,9 @@ module ApplicationHelper
   #Returns all periods including :Selected which cannote be computed by Date.compute
   def get_periods(periods = [:present, :past])
     periods_table = [[:SELECTED, 'Wybrane z menu']]
-    periods.each do |period|
-      case period
-      when :present then periods_table += Date::ACTUAL_PERIODS
-      when :past then periods_table += Date::PAST_PERIODS
-      when :future then periods_table += Date::FUTURE_PERIODS
-      else
-        throw "Unknown period #{period}"
-      end
-    end
+    periods_table += Date::ACTUAL_PERIODS if periods.include?(:present)
+    periods_table += Date::PAST_PERIODS if periods.include?(:past)
+    periods_table += Date::FUTURE_PERIODS if periods.include?(:future)
     return periods_table
   end
 

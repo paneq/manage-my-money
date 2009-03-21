@@ -3,7 +3,6 @@ require 'test_helper'
 
 class ReportsControllerTest < ActionController::TestCase
 
-#  fixtures :users
 
   def setup
     save_jarek
@@ -76,6 +75,13 @@ class ReportsControllerTest < ActionController::TestCase
   test "should create" do
 
   end
+
+
+  #TODO
+  test "should update" do
+
+  end
+
 
 
   test "should see index form" do
@@ -153,15 +159,9 @@ class ReportsControllerTest < ActionController::TestCase
       assert_select "input#flow_report_submit[type=submit]"
     end
   end
-  
-  
+
   
   #TODO
-  test "should update" do
-    
-  end
-
-
   test "should see flow report" do
     get :show, :id => create_flow_report(@jarek).id
     assert_response :success
