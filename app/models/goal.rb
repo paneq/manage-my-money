@@ -24,6 +24,7 @@
 
 #require 'hash_enums'
 class Goal < ActiveRecord::Base
+  include Periodable
   extend HashEnums
   belongs_to :category
   belongs_to :currency

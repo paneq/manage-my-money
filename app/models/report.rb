@@ -23,6 +23,7 @@
 #
 
 class Report < ActiveRecord::Base
+  include Periodable
   extend HashEnums
   define_enum :period_type, [:SELECTED] + Date::RECOGNIZED_PERIODS
   define_enum :report_view_type, [:pie, :linear, :text, :bar]

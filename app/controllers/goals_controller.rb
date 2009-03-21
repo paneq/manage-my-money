@@ -5,8 +5,6 @@ class GoalsController < ApplicationController
 
   #before actions check if this is current user goal
 
-  # GET /goals
-  # GET /goals.xml
   def index
     @actual_goals = Goal.find_actual(self.current_user)
     @finished_goals = Goal.find_past(self.current_user)
@@ -17,8 +15,6 @@ class GoalsController < ApplicationController
     end
   end
 
-  # GET /goals/1
-  # GET /goals/1.xml
   def show
     @goal = self.current_user.goals.find(params[:id])
 
@@ -28,8 +24,6 @@ class GoalsController < ApplicationController
     end
   end
 
-  # GET /goals/new
-  # GET /goals/new.xml
   def new
     @goal = Goal.new
     prepare_values_for_goal_type_and_currency
@@ -39,19 +33,15 @@ class GoalsController < ApplicationController
     end
   end
 
-  # GET /goals/1/edit
   def edit
     @goal = self.current_user.goals.find(params[:id])
     prepare_values_for_goal_type_and_currency
   end
 
-  # POST /goals
-  # POST /goals.xml
   def create
     @goal = Goal.new(params[:goal])
-
     @goal.user = self.current_user
-    set_period_for(@goal, 'goal_day')
+    @goal.set_period(get_period 'goal_day')
 
     respond_to do |format|
       if @goal.save
@@ -66,11 +56,9 @@ class GoalsController < ApplicationController
     end
   end
 
-  # PUT /goals/1
-  # PUT /goals/1.xml
   def update
     @goal = self.current_user.goals.find(params[:id])
-    set_period_for(@goal, 'goal_day')
+    @goal.set_period(get_period 'goal_day')
     respond_to do |format|
       if @goal.update_attributes(params[:goal])
         flash[:notice] = 'Cel został zapisany.'
@@ -84,8 +72,6 @@ class GoalsController < ApplicationController
     end
   end
 
-  # DELETE /goals/1
-  # DELETE /goals/1.xml
   def destroy
     @goal = self.current_user.goals.find(params[:id])
     @goal.destroy
