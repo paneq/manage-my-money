@@ -170,7 +170,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_should_destroy_user
     save_rupert
-    save_currencies
+    prepare_currencies
     rupert_id = @rupert.id
 
     @parent = @rupert.expense

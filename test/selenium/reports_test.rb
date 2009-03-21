@@ -12,7 +12,7 @@ begin
     def setup
       selenium_setup
       require_memcached
-      save_currencies
+      prepare_currencies
       save_rupert
       log_rupert
       @selenium.set_context("Reports Test")

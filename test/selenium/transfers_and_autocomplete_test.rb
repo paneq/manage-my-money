@@ -16,7 +16,7 @@ begin
 
     def setup
       selenium_setup
-      save_currencies
+      prepare_currencies
       save_rupert
       create_rupert_expenses_account_structure
       log_rupert

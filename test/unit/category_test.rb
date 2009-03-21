@@ -4,7 +4,7 @@ class CategoryTest < ActiveSupport::TestCase
   #fixtures :categories
 
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
     save_jarek
   end

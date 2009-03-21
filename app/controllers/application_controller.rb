@@ -18,19 +18,6 @@ class ApplicationController < ActionController::Base
 
   filter_parameter_logging :password
 
-
-
-  def period_changed_start
-    @start_day = calculate_start_day(params['time'])
-    render :layout => false, :template => 'application/period_changed_start'
-  end
-
-  def period_changed_end
-    @end_day = calculate_end_day(params['time'])
-    render :layout => false, :template => 'application/period_changed_end'
-  end
-
-
   private
 
   def create_empty_transfer

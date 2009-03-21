@@ -15,7 +15,7 @@ class CurrenciesControllerTest < ActionController::TestCase
 
   CURRENCY_FIELDS = [:name, :symbol, :long_name, :long_symbol]
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
     log_rupert
   end

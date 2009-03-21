@@ -7,7 +7,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
   def setup
 
-    save_currencies
+    prepare_currencies
     save_rupert
     prepare_sample_system_category_tree
     log_rupert

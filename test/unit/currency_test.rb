@@ -4,7 +4,7 @@ class CurrencyTest < ActiveSupport::TestCase
 
   def setup
     save_rupert
-    save_currencies
+    prepare_currencies
   end
 
 

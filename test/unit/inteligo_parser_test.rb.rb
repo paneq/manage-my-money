@@ -4,7 +4,7 @@ require 'hash'
 class InteligoParserTest < ActiveSupport::TestCase
 
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
     
     @rupert.categories << Category.new(:name => 'Inteligo', :description =>'inteligo main')

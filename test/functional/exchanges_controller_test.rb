@@ -6,7 +6,7 @@ class ExchangesController; def rescue_action(e) raise e end; end
 class ExchangesControllerTest < ActionController::TestCase
 
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
     log_rupert
     @chf = Currency.new(:user => @rupert, :all => 'CHF')

@@ -3,7 +3,7 @@ require 'test_helper'
 class ExchangeTest < ActiveSupport::TestCase
 
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
   end
 

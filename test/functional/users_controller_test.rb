@@ -11,7 +11,7 @@ class UsersControllerTest < ActionController::TestCase
 
   def setup
     UsersController.send(:public, :current_user=)
-    save_currencies
+    prepare_currencies
   end
 
 

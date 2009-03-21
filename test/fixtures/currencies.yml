@@ -11,8 +11,18 @@
 #  user_id     :integer       
 #
 
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-one:
-  id: 1
-two:
-  id: 2
+zloty:
+  symbol: zl
+  long_symbol: PLN
+  name: Złoty
+  long_name: Polski złoty
+dolar:
+  symbol: $
+  long_symbol: USD
+  name: Dolar
+  long_name: Dolar amerykański
+euro:
+  symbol: €
+  long_symbol: EUR
+  name: Euro
+  long_name: Europejskie euro

@@ -61,9 +61,10 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 
+  fixtures :currencies
+
   def save_rupert
-    make_currencies
-    @zloty.save! if @zloty.id.nil?
+    prepare_currencies
     @rupert = User.new()
     @rupert.email = 'email@example.com'
     @rupert.login = 'rupert_xyz'
@@ -80,8 +81,7 @@ class ActiveSupport::TestCase
 
 
   def save_jarek
-    make_currencies
-    @zloty.save! if @zloty.id.nil?
+    prepare_currencies
     @jarek = User.new()
     @jarek.email = 'jarek@example.com'
     @jarek.login = 'jarek_xyz'
@@ -96,21 +96,14 @@ class ActiveSupport::TestCase
   end
 
 
-  def make_currencies
+  def prepare_currencies
     unless @currencies
-      @zloty = Currency.new(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
-      @dolar = Currency.new(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykańcki')
-      @euro = Currency.new(:symbol => '€', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'Europejckie euro')
+      @zloty = currencies(:zloty)
+      @dolar = currencies(:dolar)
+      @euro = currencies(:euro)
       @currencies = [@zloty, @euro, @dolar]
     end
   end
-
-
-  def save_currencies
-    make_currencies
-    @currencies.each {|currency| currency.save!}
-  end
-
 
   def log_rupert
     log_user(@rupert)

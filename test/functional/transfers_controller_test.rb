@@ -7,7 +7,7 @@ class TransfersControllerTest < ActionController::TestCase
 
 
   def setup
-    save_currencies
+    prepare_currencies
     save_rupert
     log_rupert
   end

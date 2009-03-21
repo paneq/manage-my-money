@@ -5,7 +5,7 @@ class MoneyTest < ActiveSupport::TestCase
   
   
   def setup
-    save_currencies
+    prepare_currencies
   end
   
   
