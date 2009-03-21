@@ -29,24 +29,35 @@ class TransferTest < ActiveSupport::TestCase
 
   def test_update_with_items
     save_transfer
+    @transfer = Transfer.find_by_id(@transfer.id)
+    assert_not_nil @transfer
     one = @transfer.transfer_items.first
     two = @transfer.transfer_items.second
-    assert_nothing_raised do
-      @transfer.update_attributes! :existing_transfer_items_attributes => {
-        one.id.to_s => {
-          'description' => 'new',
-          'category' => @rupert.asset,
-          'value' => '200',
-          :transfer_item_type => 'income'
-        },
-        two.id.to_s => {
-          'description' => 'new',
-          'category' => @rupert.loan,
-          'value' => '-200'
-        }
-      }
-    end
+    @transfer.attributes = {
+      :day => Date.today,
+      :description => 'new_description',
+      :transfer_items_attributes => [{
+          :currency_id => @rupert.default_currency.id,
+          :description => 'new',
+          :category => @rupert.asset,
+          :value => '200',
+          :transfer_item_type => 'income',
+          :_delete => '0',
+          :id => one.id
+        },{
+          :currency_id => @rupert.default_currency.id,
+          :description => 'new',
+          :category => @rupert.loan,
+          :value => '-200',
+          :_delete => '0',
+          :id => two.id
+        }]
+    }
+    assert @transfer.save
 
+    @transfer = Transfer.find_by_id(@transfer.id)
+    assert @transfer.save
+    assert_equal 2, @transfer.transfer_items.count()
     one = @transfer.transfer_items(true).find_by_id(one.id)
     two = @transfer.transfer_items(true).find_by_id(two.id)
 
@@ -88,14 +99,14 @@ class TransferTest < ActiveSupport::TestCase
 
   def save_transfer
     @transfer = Transfer.new :day => Date.today, :user => @rupert, :description => 'test',
-      :new_transfer_items_attributes => {
-      'one' => {
+      :transfer_items_attributes => {
+      '0' => {
         :description => 'one',
         :value => '100',
         :category => @rupert.expense,
         :currency => @rupert.default_currency
       },
-      'two' => {
+      '1' => {
         :description => 'two',
         :value => '100',
         :transfer_item_type => 'outcome',

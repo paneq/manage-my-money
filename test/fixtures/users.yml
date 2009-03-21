@@ -32,7 +32,7 @@ quentin:
   created_at: <%= 5.days.ago.to_s :db %>
   activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9b 
   activated_at: <%= 5.days.ago.to_s :db %>
-  transaction_amount_limit_type_int: <%= User.TRANSACTION_AMOUNT_LIMIT_TYPES[:actual_month]%>
+  transaction_amount_limit_type_int: <%= User.TRANSACTION_AMOUNT_LIMIT_TYPES[:this_month]%>
 
 aaron:
   id: 2

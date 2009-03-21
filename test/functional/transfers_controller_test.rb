@@ -76,7 +76,7 @@ class TransfersControllerTest < ActionController::TestCase
 
 
   def test_index_actual_month
-    @rupert.update_attribute 'transaction_amount_limit_type', :actual_month
+    @rupert.update_attribute 'transaction_amount_limit_type', :this_month
     transfers = []
     today = Date.today
     (today.beginning_of_month..today.end_of_month).each do |day|
@@ -92,7 +92,7 @@ class TransfersControllerTest < ActionController::TestCase
 
 
   def test_index_actual_and_last_month
-    @rupert.update_attribute 'transaction_amount_limit_type', :actual_and_last_month
+    @rupert.update_attribute 'transaction_amount_limit_type', :this_and_last_month
     transfers = []
     today = Date.today
     last_month = Date.today.last_month

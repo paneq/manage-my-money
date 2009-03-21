@@ -5,23 +5,23 @@
   <h3>Rozchód</h3>
   <table id="quick-income-items">
     <tr>
-      <td> <span>Do kategorii</span> </td>
-      <td> <span>Opis</span> </td>
-      <td> <span>Wartość</span> </td>
-	  <td> <span>Waluta</span> </td>
-      <td> <span>Data </span> </td>
+      <td> Do kategorii</td>
+      <td> Opis</td>
+      <td> Wartość </td>
+      <td> Waluta </td>
+      <td> Data  </td>
     </tr>
-	<tr>
+    <tr>
       <td> <%= select_tag 'data[category_id]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
       <td> <%= text_field_tag 'data[description]','', { :size=>35 } %> </td>
       <td> <%= text_field_tag 'data[value]','', { :size=>5 } %> </td>
-	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
+      <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
       <td> <%= date_select  :data, :day  %> </td>
       <%= hidden_field_tag  'data[from_category_id]', id %>
       <%= hidden_field_tag :current_category, id %>
-	</tr>
+    </tr>
   </table>
-  
+
   <span><%= submit_tag 'Zapisz' %></span>
 <% end %>
 
@@ -33,21 +33,21 @@
   <h3>Przychód</h3>
   <table id="quick-outcome-items">
     <tr>
-      <td> <span>Z kategorii</span> </td>
-      <td> <span>Opis</span> </td>
-      <td> <span>Wartość</span> </td>
-	  <td> <span>Waluta</span> </td>
-      <td> <span>Data </span> </td>
+      <td> Z kategorii </td>
+      <td> Opis </td>
+      <td> Wartość </td>
+      <td> Waluta </td>
+      <td> Data  </td>
     </tr>
-	<tr>
+    <tr>
       <td> <%= select_tag 'data[from_category_id]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , choosen ) %> </td>
       <td> <%= text_field_tag 'data[description]','', { :size=>35 } %> </td>
       <td> <%= text_field_tag 'data[value]','', { :size=>5 } %> </td>
-	  <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
+      <td> <%= select 'data', 'currency_id', @current_user.visible_currencies.collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %></td>
       <td> <%= date_select  :data, :day  %> </td>
       <%= hidden_field_tag  'data[category_id]', id %>
       <%= hidden_field_tag :current_category, id %>
-	</tr>
+    </tr>
   </table>
 
   <span><%= submit_tag 'Zapisz' %></span>

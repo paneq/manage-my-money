@@ -162,6 +162,85 @@ class UserTest < ActiveSupport::TestCase
     categories_ids.insert(3, category.id)
     assert_equal categories_ids, @rupert.categories(true).map {|c| c.id}
   end
+
+
+  def test_should_properly_list_newest_transfers
+    save_rupert
+    @rupert.transaction_amount_limit_type = :transaction_count
+    @rupert.transaction_amount_limit_value = 10
+    @rupert.save!
+
+    transfers = []
+    3.times do |nr|
+      5.times do  #5 transfers per each day
+        transfers << save_simple_transfer(:day => nr.days.ago.to_date, :user => @rupert)
+      end
+    end
+
+    assert_equal 10, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
+    assert_equal Date.yesterday, @rupert.newest_transfers.map(&:day).min
+
+    @rupert.transaction_amount_limit_value = 5
+    @rupert.save!
+    
+    assert_equal 5, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).min
+
+    @rupert.transfers.destroy_all
+
+    #==
+    @rupert.transaction_amount_limit_type = :week_count
+    @rupert.transaction_amount_limit_value = 2
+    @rupert.save!
+
+    3.times do |nr|
+      5.times do  #5 transfers per each day
+        transfers << save_simple_transfer(:day => nr.weeks.ago.to_date, :user => @rupert)
+      end
+    end
+
+    assert_equal 10, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
+    assert_equal 1.week.ago.to_date, @rupert.newest_transfers.map(&:day).min
+
+    @rupert.transaction_amount_limit_value = 1
+    @rupert.save!
+
+    assert_equal 5, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
+    assert_equal Date.today, @rupert.newest_transfers.map(&:day).min
+
+    @rupert.transfers.destroy_all
+
+    #==
+
+    @rupert.transaction_amount_limit_type = :this_month
+    @rupert.transaction_amount_limit_value = nil
+    @rupert.save!
+
+    Date.calculate(:THIS_MONTH).each do |a_day|
+      transfers << save_simple_transfer(:day => a_day, :user => @rupert)
+    end
+
+    Date.calculate(:LAST_MONTH).each do |a_day|
+      transfers << save_simple_transfer(:day => a_day, :user => @rupert)
+    end
+
+    assert_equal Date.calculate(:THIS_MONTH).count, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today.end_of_month, @rupert.newest_transfers.map(&:day).max
+    assert_equal Date.today.beginning_of_month, @rupert.newest_transfers.map(&:day).min
+
+    @rupert.transaction_amount_limit_type = :this_and_last_month
+    @rupert.transaction_amount_limit_value = nil
+    @rupert.save!
+
+    assert_equal Date.calculate(:THIS_MONTH).count + Date.calculate(:LAST_MONTH).count, @rupert.newest_transfers.to_a.count
+    assert_equal Date.today.end_of_month, @rupert.newest_transfers.map(&:day).max
+    assert_equal Date.today.last_month.beginning_of_month, @rupert.newest_transfers.map(&:day).min
+  end
+
   #  def test_should_not_save_user_with_no_transaction_amount_limit_value_when_needed
   #    test_user = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :week_count})
   #    test_user.save
@@ -207,7 +286,7 @@ class UserTest < ActiveSupport::TestCase
         r.category_report_options.each { |cro| elements[:category_report_options] << cro.id }
       end
     end
-#    elements[:goals] = @rupert.goals.map{|g| g.id} NOT IMLEMENTED YET
+    #    elements[:goals] = @rupert.goals.map{|g| g.id} NOT IMLEMENTED YET
     elements[:currencies] = @rupert.currencies.map{|cur| cur.id}
     elements[:exchanges] = @rupert.exchanges.map{|exc| exc.id}
 
@@ -241,7 +320,7 @@ class UserTest < ActiveSupport::TestCase
 
 
   def create_user(options = {})
-    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :actual_month }.merge(options))
+    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :this_month }.merge(options))
     record.save
     record
   end

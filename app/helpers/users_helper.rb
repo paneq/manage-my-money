@@ -93,8 +93,6 @@ module UsersHelper
 
   ##
   # Zwraca opis danej opcji ustawień użytkownika związanej z przeliczaniem walut
-  # author JP
-  #
   def get_desc_for_calculating_algorithm(name)
     case name
       when :show_all_currencies
@@ -118,17 +116,15 @@ ze sobą kursów'
 
   ##
   # Zwraca opis danej opcji ustawień użytkownika związanej z wyświetlaniem transakcji
-  # author JP
-  #
   def get_desc_for_transaction_amount_limit_type(name)
     case name
       when :transaction_count
         'Pokazuj określoną liczbę transakcji'
       when :week_count
         'Pokazuj transakcje z określonej liczby tygodni'
-      when :actual_month
+      when :this_month
         'Pokazuj transakcje z aktualnego miesiąca'
-      when :actual_and_last_month
+      when :this_and_last_month
         'Pokazuj transakcje z aktualnego i poprzedniego miesiąca'
       else
         throw "No description for " + name

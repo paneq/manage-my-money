@@ -16,21 +16,10 @@
     <meta name="googlebot" content="noarchive" />
 
     <%= stylesheet_link_tag 'scaffold_new', 'html', 'layout', 'table', 'shadow', 'tab' %>
-    <%= javascript_include_tag :defaults %>
-    <%= javascript_tag "
-    var uid = (
-    function(){
-    var id=0;
-    return function(){
-    return id++ ;
-    };
-    }
-    )();
-    "
-
-
-  %>
-
+    <%= javascript_include_tag :defaults, 'delegate' %>
+    <% javascript_tag do %>
+      <%= yield(:jstemplates) %>
+    <% end -%>
 
   </head>
 
@@ -44,7 +33,7 @@
 
           <div id="header" class="width">
             <% link_to("/", :id=>'main-page-link') do -%>
-              <img style="margin: 0px; padding: 0px; width: 100%, height: 100%;" src="/images/bg/header_3m.jpg" alt="Manage My Money Logo"/>
+              <img style="margin: 0px; padding: 0px;" src="/images/bg/header_3m.jpg" alt="Manage My Money Logo"/>
             <% end %>
           </div>
 
@@ -54,8 +43,9 @@
 
           <br />
 
-          <%= yield  %>
-        
+          <div id="container">
+            <%= yield  %>
+          </div>
         <% end %>
 
 

@@ -271,14 +271,15 @@ class Category < ActiveRecord::Base
   # Returns array of hashes{:transfer => tr, :money => Money object, :saldo => Money object}
   def transfers_with_saldo_for_period_new(start_day, end_day, with_subcategories = false)
     categories = get_categories_id(with_subcategories)
-    transfers = Transfer.find(
-      :all,
-      :select =>      'transfers.id, min(transfers.day) as mday, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
-      :joins =>       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
-      :group =>       'transfers.id, transfer_items.currency_id',
-      :conditions =>  ['transfer_items.category_id IN (?) AND transfers.day >= ? AND transfers.day <= ?', categories, start_day, end_day],
-      :order =>       'mday, transfers.id, transfer_items.currency_id')
-
+    transfers = Transfer.send(:with_exclusive_scope) do
+      Transfer.find(
+        :all,
+        :select =>      'transfers.id, min(transfers.day) as mday, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
+        :joins =>       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
+        :group =>       'transfers.id, transfer_items.currency_id',
+        :conditions =>  ['transfer_items.category_id IN (?) AND transfers.day >= ? AND transfers.day <= ?', categories, start_day, end_day],
+        :order =>       'mday, transfers.id, transfer_items.currency_id')
+    end
     transfers_full = Transfer.find(:all, :conditions => ['id IN (?)', transfers.map{|t| t.id}])
     array = []
     attributes = %w(value_for_currency currency_id)

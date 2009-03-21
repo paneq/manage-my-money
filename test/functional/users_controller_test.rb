@@ -206,7 +206,7 @@ class UsersControllerTest < ActionController::TestCase
   protected
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-      :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :actual_month }.merge(options)
+      :password => 'komandosi', :password_confirmation => 'komandosi', :transaction_amount_limit_type => :this_month }.merge(options)
   end
 
   

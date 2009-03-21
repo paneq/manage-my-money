@@ -26,10 +26,30 @@ class Transfer < ActiveRecord::Base
   belongs_to :user
 
   has_many :currencies, :through => :transfer_items
-  
-  after_update :save_transfer_items
+  default_scope :order => 'day ASC, id ASC'
 
-  validates_associated :transfer_items
+
+  named_scope :newest, lambda { |newest_type, *args|
+    transaction_amount_limit = args.shift
+    case newest_type
+    when :transaction_count : # 2 args required, limit and count of all
+      { :limit => transaction_amount_limit, :offset => args.shift - transaction_amount_limit}
+    when :week_count # 1 args required : weeks count
+      start_day = (transaction_amount_limit - 1).weeks.ago.to_date.beginning_of_week
+      end_day = Date.today.end_of_week
+      {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
+    when :this_month # 0 args required
+      range = Date.calculate(:THIS_MONTH)
+      {:conditions => ['day >= ? AND day <= ?', range.begin, range.end]}
+    when :this_and_last_month # 0 args required
+      {:conditions => ['day >= ? AND day <= ?', Date.calculate_start(:LAST_MONTH), Date.calculate_end(:THIS_MONTH)]}
+    else
+      raise 'Unkown type of user transaction limit'
+    end
+  }
+
+  accepts_nested_attributes_for :transfer_items, :allow_destroy => true
+  
   validates_presence_of :day
   validates_presence_of :user
 
@@ -44,45 +64,8 @@ class Transfer < ActiveRecord::Base
     #set_property :delta => true #maybe in the future
   end
 
-  def new_transfer_items_attributes=(transfer_items_attributes)
-    transfer_items_attributes.each do |attributes|
-      transfer_items.build(attributes[1].merge(:error_id =>attributes[0]))
-    end
-  end
-
-
-  def existing_transfer_items_attributes=(transfer_items_attributes)
-    transfer_items.reject(&:new_record?).each do |transfer_item|
-      attributes = transfer_items_attributes[transfer_item.id.to_s]
-      if attributes
-        transfer_item.attributes = attributes
-      else
-        transfer_items.delete(transfer_item)
-      end
-    end
-  end
-
-
-  def save_transfer_items
-    transfer_items.each do |transfer_item|
-      transfer_item.save(false)
-    end
-  end
-
-
   def <=>(other_transfer)
     return day <=> other_transfer.day
-  end
-
-  
-  def error_id=(eid)
-    @error_id = eid
-  end
-
-
-  def error_id
-    return @error_id if new_record?
-    return id
   end
 
 

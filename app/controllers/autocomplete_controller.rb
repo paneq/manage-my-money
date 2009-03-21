@@ -3,7 +3,7 @@ class AutocompleteController < ApplicationController
 
 
   def complete_transfer_item
-    atr = params[:transfer][:new_transfer_items_attributes] || params[:transfer][:existing_transfer_items_attributes]
+    atr = params[:transfer][:transfer_items_attributes]
     text = atr[atr.keys.first][:description]
     text << ' '
 
@@ -16,6 +16,7 @@ class AutocompleteController < ApplicationController
       :order => 'day DESC',
       :limit => 5,
       :include => [:category, :currency]
+    @transfer_items.compact!
     render :layout => false
   rescue
     render :nothing => :true
@@ -30,6 +31,7 @@ class AutocompleteController < ApplicationController
       :conditions => {:user_id => self.current_user.id},
       :order => 'day DESC',
       :limit => 5
+    @transfers.compact!
     render :layout => false
   rescue
     render :nothing => :true

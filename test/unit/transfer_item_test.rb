@@ -113,11 +113,11 @@ class TransferItemTest < ActiveSupport::TestCase
     assert_match( /nie jest prawidłową liczbą/, @ti.errors.on(:value))
 
     #TODO: To ma przechodzić !
-#    t = Transfer.new()
-#    ti = t.transfer_items.build(:value =>"ABSURD", :transfer_item_type => :income)
-#    assert !t.valid?
-#    assert !ti.errors.empty?
-#    assert_match( /nie jest prawidłową liczbą/, ti.errors.on(:value))
+    t = Transfer.new()
+    ti = t.transfer_items.build(:value =>"ABSURD", :transfer_item_type => :income)
+    assert !t.valid?
+    assert !ti.errors.empty?
+    assert_match( /nie jest prawidłową liczbą/, ti.errors.on(:value))
   end
 
 
@@ -128,22 +128,6 @@ class TransferItemTest < ActiveSupport::TestCase
       assert_equal 1, [@ti.errors.on(relation)].flatten.size
       assert_match(/pusta/, @ti.errors.on(relation))
     end
-  end
-
-
-  def test_error_id
-    t = save_simple_transfer
-    @ti = t.transfer_items[0]
-    assert !@ti.new_record?
-    assert_equal @ti.id, @ti.error_id
-
-    t = make_simple_transfer
-    @ti = t.transfer_items[0]
-    assert @ti.new_record?
-    assert_equal nil, @ti.error_id
-
-    @ti.error_id = 10
-    assert_equal 10, @ti.error_id
   end
 
 end

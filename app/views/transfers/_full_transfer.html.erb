@@ -1,8 +1,5 @@
-
 <% current_category ||= nil %>
 <% include_subcategories ||= nil %>
-<% embedded ||= nil %>
-<% autocomplete_transfer_description ||= false %>
 
 <% controller ||= :transfers %>
 <% array = [transfer] %>
@@ -10,61 +7,65 @@
   <% array = [:transfer, transfer, {:url => {:action => :create, :controller => controller}}] %>
 <% end %>
 
-<% form_remote_for(*array) do |f| %>
+<% form_remote_for(*array) do |form| %>
+  <% form_id = form_element_uid(form) %>
+  <% unless @jsgenerated %>
+    <% content_for :jstemplates do -%>
+      <% [:income, :outcome].each do |ti_type| %>
+        <%= "var #{ti_type.to_s}_transfer_item='#{generate_template(form, :transfer_items, {:transfer_item_type => ti_type},{:partial => 'transfers/transfer_item'})}'" %>
+      <% end %>
+    <% end -%>
+    <% @jsgenerated = true %>
+  <% end %>
 
-  <%= hidden_field_tag :error_id, transfer.error_id %>
-  <%= hidden_field_tag :embedded, embedded unless embedded %>
+  <%= hidden_field_tag :form_id, form_id %>
   <%= hidden_field_tag :include_subcategories, include_subcategories if include_subcategories %>
   <%= hidden_field_tag :current_category, current_category.id if current_category %>
-  <%= f.hidden_field :import_guid %>
+  <%= form.hidden_field :import_guid %>
 
-  <% errorid = 'transfer-errors' %>
-  <% errorid += "-#{transfer.id}" unless transfer.new_record? %>
-  <% errorid += "-#{transfer.error_id}" if controller != :transfers %>
-
-  <div id="<%= errorid -%>">
-
+  <div id="<%= form_id -%>errors">
   </div>
   <div>
     <h3>Opis</h3>
-    <%= f.text_area :description, :cols => 60, :rows => 4, :onkeypress => 'alert(keyCode());' %>
-    <% if autocomplete_transfer_description %>
-      <div class="auto_complete" id="transfer_description_auto_complete" >
-      </div>
-      <%= auto_complete_field :transfer_description,
-        :url => complete_transfer_path,
-        :min_chars => 4,
-        :frequency => 0.3
-      %>
-    <% end %>
+    <%= form.text_area :description, :cols => 60, :rows => 4, :id => form_id + 'description' %>
+    <div class="auto_complete" id="<%= form_id -%>description_auto_complete" >
+    </div>
+    <%= auto_complete_field form_id + 'description',
+      :url => complete_transfer_path,
+      :min_chars => 4,
+      :frequency => 0.3
+  %>
   </div>
 
   <hr class="hr-line-100prc" />
 
   <div>
     <h3>Data</h3>
-    <%= f.date_select :day  %>
+    <%= form.date_select :day  %>
   </div>
 
-  <hr class="hr-line-100prc" />
-  <% types = [[:outcome, 'Rozchód'],[:income, 'Przychód']] %>
-  <% types.each do |type, name| %>
+
+  <% items = transfer.transfer_items.group_by {|ti| ti.transfer_item_type} %>
+  <% [:outcome, :income].each do |form_type| %>
     <div>
-      <h3><%= name -%></h3>
-      <table id="full-<%= type.to_s -%>-items">
+      <h3><%= I18n.translate(form_type) -%></h3>
+      <table id="<%= form_id + form_type.to_s -%>_items">
         <tr>
-          <td> <span>Opis</span> </td>
-          <td> <span>Kategoria</span> </td>
-          <td> <span>Wartość</span> </td>
-          <td> <span>Waluta</span> </td>
+          <td>Opis</td>
+          <td>Kategoria</td>
+          <td>Wartość</td>
+          <td>Waluta</td>
+          <td></td>
         </tr>
-        <%= render :partial => 'transfers/transfer_item', :collection => transfer.transfer_items.select {|ti| ti.transfer_item_type == type} %>
+        <% items[form_type].each do |item| %>
+          <% form.fields_for :transfer_items, item do |item_form| %>
+            <%= render :partial => 'transfers/transfer_item', :locals => {:f => item_form} %>
+          <% end %>
+        <% end %>
       </table>
-      <%= add_transfer_item(type) %>
+
     </div>
-
-    <%= "<hr class='hr-line-100prc' />" if types.first.first == type %>
-
+    <%= link_to 'Dodaj', "##{form_type.to_s}_transfer_item", :class => "add_nested_item", :rel => "#{form_id + form_type.to_s}_items" %>
   <% end %>
   <hr class="hr-line-100prc" />
 

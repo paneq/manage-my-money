@@ -12,6 +12,8 @@ pl:
   destroy: Usuń
   show: Pokaż
   update: Aktualizuj
+  income: Przychód
+  outcome: Rozchód
   number:
     format:
       separator: ","

@@ -1,9 +1,9 @@
 <div>
-  <% @result.each do |result| %>
+  <% @result.each_with_index do |result, index| %>
 
     <% transfer = result[:transfer] %>
     <% warnings = result[:warnings] %>
-    <% div_id = 'transfer-edit-' + transfer.error_id.to_s %>
+    <% div_id = 'transfer-edit-' + index.to_s %>
 
     <div>
       <%= switch(div_id, 'Pokaż / Ukryj') %> |

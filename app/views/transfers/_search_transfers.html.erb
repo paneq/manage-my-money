@@ -10,7 +10,7 @@
 
   <%  end %>
 
-  <%= date_period_fields("transfer_day", @start_day, @end_day) %>
+  <%= date_period_fields("transfer_day", (@start_day || Date.today), (@end_day || Date.today)) %>
   <%= submit_tag '&nbsp; Szukaj &nbsp;' %>
 
 <% end %>

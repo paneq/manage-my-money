@@ -14,8 +14,8 @@ module HashEnums
   #   extend HashEnums
   #   define_enum :transaction_amount_limit_type, [:transaction_count,
   #                                                :week_count,
-  #                                                :actual_month,
-  #                                                :actual_and_last_month
+  #                                                :this_month,
+  #                                                :this_and_last_month
   #                                               ]
   # end
   #

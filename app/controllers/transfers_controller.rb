@@ -11,30 +11,12 @@ class TransfersController < ApplicationController
   # TODO: Refactor
   def index
     create_empty_transfer
-    options = {:order => 'day ASC, id ASC'}.merge case self.current_user.transaction_amount_limit_type
-    when :transaction_count :
-        { :limit => self.current_user.transaction_amount_limit_value, :order => 'day DESC, id DESC', :reverse => true}
-    when :week_count
-      start_day = (self.current_user.transaction_amount_limit_value - 1).weeks.ago.to_date.beginning_of_week
-      end_day = Date.today.end_of_week
-      {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
-    when :actual_month
-      range = Date.calculate(:THIS_MONTH)
-      {:conditions => ['day >= ? AND day <= ?', range.begin, range.end]}
-    when :actual_and_last_month
-      start_day = Date.calculate_start(:LAST_MONTH)
-      end_day = Date.calculate_end(:THIS_MONTH)
-      {:conditions => ['day >= ? AND day <= ?', start_day, end_day]}
-    else
-      {}
-    end
-    @transfers = self.current_user.transfers.find(:all, options.block(:reverse)).map{ |t| {:transfer => t} }
-    @transfers.reverse! if options[:reverse]
+    @transfers = self.current_user.newest_transfers.map{|t| {:transfer => t} }
   end
 
 
   def search
-    @range = get_period('transfer_day', true)
+    @range = get_period_range('transfer_day')
     @transfers = self.
       current_user.
       transfers.
@@ -63,7 +45,7 @@ class TransfersController < ApplicationController
     
     if @transfer.save
       render_transfer_table do |page|
-        page.replace_html 'form-for-transfer-quick', :partial=>'transfers/quick_transfer', :locals => { :current_category => @category }
+        page.replace_html 'show-transfer-quick', :partial=>'transfers/quick_transfer', :locals => { :current_category => @category }
       end
     else
       # TODO: change it so there will be a notice that something went wrong
@@ -107,7 +89,7 @@ class TransfersController < ApplicationController
         render :update do |page|
           page.replace_html "transfer-in-category-#{@transfer.id}",
             :partial => 'transfers/full_transfer',
-            :locals => { :current_category => @category , :transfer => @transfer, :embedded => true, :include_subcategories => @include_subcategories }
+            :locals => { :current_category => @category , :transfer => @transfer, :include_subcategories => @include_subcategories }
         end
       end
     end
@@ -115,9 +97,9 @@ class TransfersController < ApplicationController
 
 
   def update
-    params[:transfer][:existing_transfer_items_attributes] ||= {}
     @transfer = self.current_user.transfers.find_by_id(params[:id])
-    if @transfer.update_attributes(params[:transfer])
+    @transfer.attributes = params[:transfer]
+    if @transfer.save
       respond_to do |format|
         format.html {}
         format.js do
@@ -135,21 +117,7 @@ class TransfersController < ApplicationController
         end
       end
     else
-      respond_to do |format|
-        format.html {}
-        format.js do
-          render :update do |page|
-            page.replace_html "transfer-errors-#{@transfer.id}", error_messages_for(:transfer, :message => nil)
-            @transfer.transfer_items.each do |ti|
-              if ti.valid?
-                page.replace_html "transfer-item-errors-#{ti.error_id}", ''
-              else
-                page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
-              end
-            end
-          end
-        end #format.js
-      end
+      show_transfer_errors()
     end
   end
 
@@ -163,38 +131,22 @@ class TransfersController < ApplicationController
         format.js do
           render_transfer_table do |page|
             create_empty_transfer
-            page.replace_html 'form-for-transfer-full', :partial=>'transfers/full_transfer', :locals => {:current_category => @category, :embedded => true, :transfer => @transfer}
+            page.replace_html 'show-transfer-full', :partial=>'transfers/full_transfer', :locals => {:current_category => @category, :transfer => @transfer}
           end
         end
       end
     else
-      respond_to do |format|
-        format.html {}
-        format.js do
-          render :update do |page|
-            page.replace_html 'transfer-errors', error_messages_for(:transfer, :message => nil)
-            @transfer.transfer_items.each do |ti|
-              if ti.errors.empty? #ti.valid? runs validation once again. avoid it
-                page.replace_html "transfer-item-errors-#{ti.error_id}", ''
-              else
-                page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
-              end
-            end
-          end
-        end #format.js
-
-      end
+      show_transfer_errors()
     end
   end
 
 
   def destroy
-    # TODO: if else ??
     @transfer.destroy
     respond_to do |format|
       format.html do
         flash[:notice] = 'Transfer został usunięty'
-        redirect_to :action => 'show', :controller => 'categories', :id => session[:category_id]
+        redirect_to transfers_path
       end
       format.js { render_transfer_table }
     end
@@ -214,4 +166,16 @@ class TransfersController < ApplicationController
     end
   end
 
+  def show_transfer_errors
+    respond_to do |format|
+      format.html {}
+      format.js do
+        where = extract_form_errors_id
+        render :update do |page|
+          page.replace_html where, error_messages_for(:transfer, :message => nil)
+        end
+      end #format.js
+    end
+  end
+  
 end

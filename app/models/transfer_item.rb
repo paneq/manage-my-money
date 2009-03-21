@@ -5,7 +5,7 @@
 #
 #  id          :integer       not null, primary key
 #  description :text          not null
-#  value       :decimal(12, 2 not null
+#  value       :decimal(8, 2) not null
 #  transfer_id :integer       not null
 #  category_id :integer       not null
 #  currency_id :integer       default(3), not null
@@ -66,15 +66,4 @@ class TransferItem < ActiveRecord::Base
     @multiply = nil
   end
 
-
-  def error_id=(eid)
-    @error_id = eid
-  end
-
-
-  def error_id
-    return @error_id if new_record?
-    return id
-  end
-  
 end

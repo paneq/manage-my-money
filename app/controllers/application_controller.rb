@@ -17,8 +17,18 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
 
   filter_parameter_logging :password
+  helper :all
 
-  private
+  
+  protected
+
+  def extract_form_id
+    params[:form_id]
+  end
+
+  def extract_form_errors_id
+    extract_form_id + 'errors'
+  end
 
   def create_empty_transfer
     @transfer = Transfer.new(:day => Date.today)
@@ -95,5 +105,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  
+
+  def get_period_range(period)
+    get_period(period, true)
+  end
+
 end

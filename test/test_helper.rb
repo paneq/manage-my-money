@@ -70,7 +70,7 @@ class ActiveSupport::TestCase
     @rupert.login = 'rupert_xyz'
     @rupert.password = @rupert.login
     @rupert.password_confirmation = @rupert.login
-    @rupert.transaction_amount_limit_type = :actual_month
+    @rupert.transaction_amount_limit_type = :this_month
     @rupert.multi_currency_balance_calculating_algorithm = :show_all_currencies
     @rupert.default_currency = @zloty
     @rupert.invert_saldo_for_income = false
@@ -87,7 +87,7 @@ class ActiveSupport::TestCase
     @jarek.login = 'jarek_xyz'
     @jarek.password = @jarek.login
     @jarek.password_confirmation = @jarek.login
-    @jarek.transaction_amount_limit_type = :actual_month
+    @jarek.transaction_amount_limit_type = :this_month
     @jarek.multi_currency_balance_calculating_algorithm = :show_all_currencies
     @jarek.default_currency = @zloty
     @jarek.invert_saldo_for_income = false

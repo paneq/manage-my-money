@@ -29,16 +29,16 @@ class User < ActiveRecord::Base
   extend HashEnums
   
   define_enum :transaction_amount_limit_type, [:transaction_count, 
-                                               :week_count,
-                                               :actual_month,
-                                               :actual_and_last_month
-                                               ]
+    :week_count,
+    :this_month,
+    :this_and_last_month
+  ]
   define_enum :multi_currency_balance_calculating_algorithm, [:show_all_currencies,
-                                                              :calculate_with_newest_exchanges,
-                                                              :calculate_with_exchanges_closest_to_transaction,
-                                                              :calculate_with_newest_exchanges_but,
-                                                              :calculate_with_exchanges_closest_to_transaction_but
-                                                              ]
+    :calculate_with_newest_exchanges,
+    :calculate_with_exchanges_closest_to_transaction,
+    :calculate_with_newest_exchanges_but,
+    :calculate_with_exchanges_closest_to_transaction_but
+  ]
 
   has_many :categories, :order => 'category_type_int, lft', :dependent => :delete_all do
     def people_loans
@@ -54,7 +54,22 @@ class User < ActiveRecord::Base
   end
 
 
-  has_many :transfers, :dependent => :destroy
+  has_many :transfers, :dependent => :destroy    
+   
+  def newest_transfers
+    opt = case self.transaction_amount_limit_type
+    when :transaction_count :
+        [transaction_amount_limit_value, transfers.count]
+    when :week_count :
+        [transaction_amount_limit_value]
+    else
+      nil
+    end
+    transfers(true).newest(self.transaction_amount_limit_type, *opt)
+  end
+
+
+
   has_many :transfer_items, :through => :transfers
   has_many :currencies, :dependent => :destroy
   has_many :goals
@@ -78,7 +93,7 @@ class User < ActiveRecord::Base
 
 
   before_create :create_top_categories
-#  before_destroy :remove_all_data
+  #  before_destroy :remove_all_data
 
   
   def create_top_categories
@@ -106,7 +121,7 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :transaction_amount_limit_type_int, :in => User.TRANSACTION_AMOUNT_LIMIT_TYPES.values
   validates_inclusion_of    :multi_currency_balance_calculating_algorithm_int, :in => User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.values
   validates_presence_of     :transaction_amount_limit_value, :if => :transaction_amount_limit_with_value?
-  validates_numericality_of :transaction_amount_limit_value, :greater_than => 0, :if => :transaction_amount_limit_with_value? 
+  validates_numericality_of :transaction_amount_limit_value, :greater_than => 0, :if => :transaction_amount_limit_with_value?
 
   #used for conditional validation of transaction_amount_limit_value
   def transaction_amount_limit_with_value?
@@ -132,22 +147,22 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email
   validates_format_of       :email,    :with => Authentication.email_regex, :message => 'nie przypomina poprawnego adresu'
 
-  before_create :make_activation_code 
+  before_create :make_activation_code
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login,
-                  :email,
-                  :name,
-                  :password,
-                  :password_confirmation,
-                  :multi_currency_balance_calculating_algorithm,
-                  :include_transactions_from_subcategories,
-                  :transaction_amount_limit_value,
-                  :transaction_amount_limit_type,
-                  :default_currency_id,
-                  :invert_saldo_for_income
+    :email,
+    :name,
+    :password,
+    :password_confirmation,
+    :multi_currency_balance_calculating_algorithm,
+    :include_transactions_from_subcategories,
+    :transaction_amount_limit_value,
+    :transaction_amount_limit_type,
+    :default_currency_id,
+    :invert_saldo_for_income
 
 
   # Activates the user in the database.
@@ -170,7 +185,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
-  # uff.  this is really an authorization, not authentication routine.  
+  # uff.  this is really an authorization, not authentication routine.
   # We really need a Dispatch Chain here or something.
   # This will also let us return a human error message.
   #

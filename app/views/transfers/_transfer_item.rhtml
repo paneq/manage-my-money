@@ -1,82 +1,34 @@
-<% hack ||= false %>
-<% if transfer_item.new_record? %>
-  <% # Hack is only used for new items added via JS %>
-  <% # If rendered by RoR hack is not required <-> I know it is complicated %>
-  <% id = 'PUT_ID_HERE' if hack %>
-  <% id = transfer_item.object_id.abs.to_s unless hack %>
-  <% id += transfer_item.transfer_item_type.to_s %>
-  <% prefix = "transfer[new_transfer_items_attributes][#{id}]" %>
-  <% value = nil %>
-  <% middle = 'new' %>
-<%  else %>
-  <% # The book says that the place in prefix array should be filled by RoR with transfer_item.id %>
-  <% prefix = "transfer[existing_transfer_items_attributes][]" %>
-  <% value =  transfer_item.value.abs %>
-  <% id = transfer_item.error_id %>
-  <% middle = 'existing' %>
-<% end %>
+<% unique_id = form_element_uid(f) %>
+<tr class="transfer_item">
+  <%=  f.hidden_field :transfer_item_type %>
 
-<% observe_me = "transfer_#{middle}_transfer_items_attributes_#{id}_description" %>
-<% complete_here = observe_me + '_complete' %>
-<% change_category = "transfer_#{middle}_transfer_items_attributes_#{id}_category_id"%>
-<% change_currency = "transfer_#{middle}_transfer_items_attributes_#{id}_currency_id"%>
-<% change_value = "transfer_#{middle}_transfer_items_attributes_#{id}_value"%>
+  <td>
+    <%= f.text_field :description, :size=>40, :autocomplete => :off, :id => unique_id + 'description' %>
+    <div class="auto_complete" id="<%=unique_id%>description_complete" >
+    </div>
+    <%= auto_complete_field "#{unique_id}description",
+      :url => complete_transfer_item_path,
+      :update => "#{unique_id}description_complete",
+      :min_chars => 4,
+      :select => 'complete',
+      :frequency => 0.3,
+      :after_update_element => "function(element, value) { after_complete_transfer_item('#{unique_id}'); }" %>
+  </td>
 
-<% fields_for prefix, transfer_item do |transfer_form| -%>
+  <td>
+    <%= f.select :category_id, @current_user.categories.map { |c| [c.name, c.id] }, {}, {:id => unique_id + 'category_id'} %>
+  </td>
 
-  <tr style="margin: 0px; padding: 0px;">
-    <td id="transfer-item-errors-<%= id -%>" colspan="5" style="margin: 0px; padding: 0px;">
-    </td>
-  </tr>
-  <tr class="transfer-item">
-    <%= transfer_form.hidden_field :transfer_item_type %>
-    <td>
-      <%= transfer_form.text_field :description, :size=>40, :autocomplete => :off %>
-      <div class="auto_complete" id="<%= complete_here %>" >
-      </div>
-      <%= auto_complete_field observe_me,
-        :url => complete_transfer_item_path,
-        :update => complete_here,
-        :min_chars => 4,
-        :select => 'complete',
-        :frequency => 0.3,
-        :after_update_element => <<-JS
-function(element, value) {
-  var x = document.getElementById('#{complete_here}');
-  aa = x.getElementsByTagName('li')
-  for(var i=0; i < aa.length; i++){
-    current_li = aa[i];
-    if(current_li.className == 'autocomplete_item selected') {
-      elements = current_li.getElementsByTagName('a');
-      for(var j=0; j < elements.length; j++){
-        el = elements[j];
-        
-        if(el.className == 'autocomplete-value') {
-          document.getElementById('#{change_value}').value = el.innerHTML;
-        }
-        if(el.className == 'autocomplete-category') {
-          document.getElementById('#{change_category}').value = el.innerHTML;
-        }
-        if(el.className == 'autocomplete-currency') {
-          document.getElementById('#{change_currency}').value = el.innerHTML;
-        }
-      }
-      break;
-    }
-  }
-}
-JS
-      %>
-    </td>
-    <td> <%= transfer_form.select :category_id, @current_user.categories.map { |c| [c.name, c.id] } %> </td>
-    <td> <%= transfer_form.text_field :value, :size=>5, :value => value %> </td>
-    <td> <%= transfer_form.select :currency_id, @current_user.visible_currencies.map{|c| [c.long_symbol, c.id] } %></td>
-    <td> <%= link_to_function "Usuń" , "$(this).up('.transfer-item').remove()" %>  </td>
-  </tr>
+  <td>
+    <% v = (f.object.errors.on(:value) || f.object.value.nil?) ? f.object.value_before_type_cast : f.object.value.abs %>
+    <%= f.text_field :value, :size=>5, :value => v, :id => unique_id + 'value' %>
+  </td>
 
+  <td>
+    <%= f.select :currency_id, @current_user.visible_currencies.map{|c| [c.long_symbol, c.id] },{}, {:id => unique_id + 'currency_id'} %>
+  </td>
 
-
-<% end -%>
-
-
-
+  <td>
+    <%= remove_link(f) -%>
+  </td>
+</tr>
