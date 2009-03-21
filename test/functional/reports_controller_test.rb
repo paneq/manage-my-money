@@ -3,7 +3,7 @@ require 'test_helper'
 
 class ReportsControllerTest < ActionController::TestCase
 
-  fixtures :users
+#  fixtures :users
 
   def setup
     save_jarek
@@ -72,6 +72,7 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
 
+  #TODO
   test "should create" do
 
   end
@@ -155,7 +156,7 @@ class ReportsControllerTest < ActionController::TestCase
   
   
   
-
+  #TODO
   test "should update" do
     
   end
