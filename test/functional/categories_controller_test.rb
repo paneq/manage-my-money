@@ -9,6 +9,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
     save_currencies
     save_rupert
+    prepare_sample_system_category_tree
     log_rupert
   end
 
@@ -94,11 +95,25 @@ class CategoriesControllerTest < ActionController::TestCase
     @rupert.visible_currencies.count.times do |nr|
       assert_select "select#currency-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.visible_currencies[nr].long_name}")
     end
+
+    #test all system categories can be choosen
+    @rupert.categories.count.times do |nr|
+      assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.categories[nr].name}")
+    end
+
+    assert_select 'select#system-category-select' do
+      assert_select "option", :count => (SystemCategory.count + 1) do
+        SystemCategory.all.map(&:id).each do |opt|
+          assert_select "option[value=#{opt}]"
+        end
+        assert_select 'option', 'Brak'
+      end
+    end
   end
 
   # test if proper parent_category is selected when user came to the site
   # from link to create subcategory of some category
-  def test_new_and_proper_selcted_element_when_given_parent_category
+  def test_new_and_proper_selected_element_when_given_parent_category
     parent_category = @rupert.expense
     get :new, :parent_category_id => parent_category.id
     assert_response :success
@@ -227,6 +242,26 @@ class CategoriesControllerTest < ActionController::TestCase
         assert_select 'p#bankinfo', 1
       end
     end
+  end
+
+  def test_edit_select_system_category
+    create_rupert_expenses_account_structure
+    system_food = SystemCategory.find_by_name('Jedzenie')
+    @food.system_category = system_food
+    @food.save!
+    get :edit, :id => @food.id
+    assert_response :success
+    assert_template 'edit'
+
+    assert_select 'select#system-category-select' do
+      assert_select "option", :count => (SystemCategory.count + 1) do
+        SystemCategory.all.map(&:id).each do |opt|
+          assert_select "option[value=#{opt}]"
+        end
+        assert_select "option[value=#{system_food.id}][selected=selected]", system_food.name_with_indentation
+      end
+    end
+
   end
 
 

@@ -354,7 +354,7 @@ class ActiveSupport::TestCase
   def prepare_sample_system_category_tree
     e = SystemCategory.create :name => 'Expenses'
 
-    f = SystemCategory.create :name => 'Food'
+    f = SystemCategory.create :name => 'Jedzenie'
 
     jf = SystemCategory.create :name => 'Junk Food'
 
