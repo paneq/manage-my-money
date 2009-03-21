@@ -3,7 +3,7 @@
 
 <% form_for(@current_user) do |f| -%>
 
-<%= error_messages_for :current_user %>
+<%= error_messages_for :current_user, :header_message => "Ustawienia nie zostały zapisane z powodu błedów" %>
 
 <fieldset style="margin-top: 1em">
 <legend>Konto użytkownika</legend>

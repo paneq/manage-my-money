@@ -41,6 +41,24 @@ pl:
             long_name:
               blank: nie może być pusta
               taken: została już zajęta
+        goal:
+            wrong_parent_category: Dla danego typu planu wymagane jest aby wybrana kategoria miała nadkategorie
+            period_could_not_be_cyclic: Aby móc powtarzać plan musisz wybrać konkretny okres z listy
+            attributes:
+                value:
+                    blank: nie może być pusta
+                description:
+                    blank: nie może być pusta
+        report:
+            should_have_at_least_one_category: Powinna być wybrana conajmiej jedna kategoria
+            attributes:
+                name:
+                    blank: nie może być pusta
+        user:
+            attributes:
+                login:
+                    blank: nie może być pusty
+                    too_short: jest za krótki (minimalnie {{count}} znaki)
         exchange:
           wrong_order: Nieprawidłowa kolejność walut. Zamień je miejscami wraz z kursami.
           attributes:
@@ -65,6 +83,7 @@ pl:
       category: Kategoria
       currency: Waluta
       exchange: Kurs
+      goal: Cel
     attributes:
       report:
         name: Nazwa
@@ -89,6 +108,18 @@ pl:
         left_to_right: Kurs zamiany pierwszej waluty na drugą
         right_to_left: Kurs zamiany drugiej waluty na pierwszą
         day: Dzień
+      goal:
+          category: Kategoria
+          value: Wartość
+          description: Nazwa
+      report:
+          max_categories_values_count: Maksymalna ilość wyników
+          name: Nazwa
+      user:
+          transaction_amount_limit_value: Ilośc wyświetlanych transakcji
+          password: Hasło
+          password_confirmation: Potwierdzenie hasła
+
 
 
 

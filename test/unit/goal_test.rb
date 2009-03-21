@@ -93,7 +93,7 @@ class GoalTest < ActiveSupport::TestCase
     assert !g.save
     assert_equal 2, g.errors.size
     assert g.errors.on(:value)
-    assert_match(/wymagane jest/, g.errors.on(:category))
+    assert_match(/wymagane jest/, g.errors.on(:base))
 
     g.value = 1.1
     g.category = @jarek.categories.find_by_name('test')
@@ -109,7 +109,7 @@ class GoalTest < ActiveSupport::TestCase
     g.is_cyclic = true
     assert !g.save
     assert_equal 1, g.errors.size
-    assert_match(/musisz wybrać okres/, g.errors.on(:period_type))
+    assert_match(/musisz wybrać.*okres/, g.errors.on(:base))
 
     g.is_cyclic = false
     assert g.save

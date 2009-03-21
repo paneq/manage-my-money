@@ -38,10 +38,10 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r.name = "Testowy raport"
     r.period_type = :LAST_WEEK
     assert !r.save
-    assert r.errors.on(:category_report_options)
+    assert r.errors.on(:base)
     r.category_report_options = []
     assert !r.save
-    assert r.errors.on(:category_report_options)
+    assert r.errors.on(:base)
     assert_equal 1, r.errors.count
   end
 

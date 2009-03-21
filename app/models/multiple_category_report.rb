@@ -32,7 +32,7 @@ class MultipleCategoryReport < Report
 
   def has_at_least_one_category?
      unless category_report_options != nil && category_report_options.size > 0
-       errors.add(:category_report_options, "Powinna być wybrana conajmiej jedna kategoria")
+       errors.add_to_base(:should_have_at_least_one_category)
      end
   end
 

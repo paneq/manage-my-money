@@ -60,13 +60,13 @@ class Goal < ActiveRecord::Base
 
   def validate_goal_type_with_category
     if (!category.nil?) && goal_type == :percent && category.is_top?
-      errors.add(:category, 'Dla danego typu planu wymagane jest aby wybrana kategoria miała nadkategorie')
+      errors.add_to_base(:wrong_parent_category)
     end 
   end
 
   def validate_period_type_with_is_cyclic
     if period_type == :SELECTED && is_cyclic
-      errors.add(:period_type, 'Aby móc powtarzać plan musisz wybrać okres z listy')
+      errors.add_to_base(:period_could_not_be_cyclic)
     end
   end
 
