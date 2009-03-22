@@ -81,6 +81,8 @@ begin
         move_and_click second_complete
         assert_equal @transfers.second.description, @selenium.get_value(field_id)
 
+        @selenium.type field_id, 'Completely new transfer'
+
         # add 4 new transfer items on the site
         [:outcome, :income].each do |item_type|
           2.times { @selenium.click "new_#{item_type}_transfer_item" }
@@ -110,7 +112,19 @@ begin
         test_usable outcome_table_path + tbody_gen(3,1) #one element
 
 
+        # first outcome item -> fill
+        outcome_td = outcome_table_path + tbody_gen(3,1,1)
+        outcome_description = outcome_td.clone << "input"
+        @selenium.type_keys path_constructor(outcome_description), "Wydatki za tysiaka"
 
+        # select category
+        @selenium.select path_constructor(outcome_table_path + tbody_gen(3,1,2) << 'select'), @rupert.asset.name
+
+        # type value
+        @selenium.type_keys path_constructor(outcome_table_path + tbody_gen(3,1,3) << 'input'), "1000"
+
+        # select currency
+        @selenium.select path_constructor(outcome_table_path + tbody_gen(3,1,4) << 'select'), @zloty.long_symbol
 
         # first income item
         # User again made some shopping in tesco: Jedzenie zakupione w tesco
@@ -194,16 +208,32 @@ begin
         @selenium.type_keys path_constructor(income_description), "FULFILLMENT to 1000 PLN"
 
         # select category
-        @selenium.select path_constructor(income_table_path + tbody_gen(3,1,2) << 'select'), @rupert.asset.name
+        @selenium.select path_constructor(income_table_path + tbody_gen(3,1,2) << 'select'), @rupert.expense.name
 
-        # type value
-        @selenium.type_keys path_constructor(income_table_path + tbody_gen(3,1,3) << 'input'), "200"
+        # type invalid value
+        @selenium.type_keys path_constructor(income_table_path + tbody_gen(3,1,3) << 'input'), "2000" #One zero too much. We want an error to occure
 
         # select currency
         @selenium.select path_constructor(income_table_path + tbody_gen(3,1,4) << 'select'), @zloty.long_symbol
 
+        #submit invalid form
+        @selenium.click path_constructor( %w(div[@id='show-transfer-full'] form input[@name='commit'][@type='submit'][@value='Zapisz'] ) )
+
+        Kernel.sleep 2
+        @selenium.is_text_present "Wartość elementów typu przychód i rozchód jest różna"
+
+        # type valid value
+        @selenium.type path_constructor(income_table_path + tbody_gen(3,1,3) << 'input'), "200" #valid value
+
+        #submit valid form
+        @selenium.click path_constructor( %w(div[@id='show-transfer-full'] form input[@name='commit'][@type='submit'][@value='Zapisz'] ) )
+        Kernel.sleep 2
+
+        text = @selenium.get_text "//table[@id='transfers-table']/tbody/tr[last() - 2]/td[2]"
+        assert_match(/new transfer/, text)
       end
     end
+
 
 
     private
