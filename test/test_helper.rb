@@ -97,13 +97,25 @@ class ActiveSupport::TestCase
 
 
   def prepare_currencies
-    unless @currencies
-      @zloty = currencies(:zloty)
-      @dolar = currencies(:dolar)
-      @euro = currencies(:euro)
-      @currencies = [@zloty, @euro, @dolar]
-    end
+    (@selenium ? make_currencies : fixture_currencies) unless @currencies
   end
+
+  
+  def make_currencies
+    @zloty = Currency.create!(:symbol => 'zl', :long_symbol => 'PLN', :name => 'Złoty', :long_name =>'Polski złoty')
+    @dolar = Currency.create!(:symbol => '$', :long_symbol => 'USD', :name => 'Dolar', :long_name =>'Dolar amerykański')
+    @euro = Currency.create!(:symbol => 'E', :long_symbol => 'EUR', :name => 'Euro', :long_name =>'Europejckie euro')
+    @currencies = [@zloty, @euro, @dolar]
+  end
+
+
+  def fixture_currencies
+    @zloty = currencies(:zloty)
+    @dolar = currencies(:dolar)
+    @euro = currencies(:euro)
+    @currencies = [@zloty, @euro, @dolar]
+  end
+
 
   def log_rupert
     log_user(@rupert)

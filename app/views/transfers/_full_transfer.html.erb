@@ -25,24 +25,21 @@
 
   <div id="<%= form_id -%>errors">
   </div>
-  <div>
-    <h3>Opis</h3>
-    <%= form.text_area :description, :cols => 60, :rows => 4, :id => form_id + 'description' %>
-    <div class="auto_complete" id="<%= form_id -%>description_auto_complete" >
-    </div>
-    <%= auto_complete_field form_id + 'description',
-      :url => complete_transfer_path,
-      :min_chars => 4,
-      :frequency => 0.3
-  %>
+
+  <h3>Opis</h3>
+  <%= form.text_area :description, :cols => 60, :rows => 4, :id => form_id + 'description' %>
+  <div class="auto_complete" id="<%= form_id -%>description_auto_complete" >
   </div>
+  <%= auto_complete_field form_id + 'description',
+    :url => complete_transfer_path,
+    :min_chars => 4,
+    :frequency => 0.3
+%>
 
   <hr class="hr-line-100prc" />
 
-  <div>
-    <h3>Data</h3>
-    <%= form.date_select :day  %>
-  </div>
+  <h3>Data</h3>
+  <%= form.date_select :day  %>
 
 
   <% items = transfer.transfer_items.group_by {|ti| ti.transfer_item_type} %>
@@ -64,10 +61,12 @@
         <% end %>
       </table>
 
+      <%= link_to 'Dodaj', "##{form_type.to_s}_transfer_item", :class => "add_nested_item", :rel => "#{form_id + form_type.to_s}_items", :id => "new_#{form_type}_transfer_item" %>
+      <hr class="hr-line-100prc" />
     </div>
-    <%= link_to 'Dodaj', "##{form_type.to_s}_transfer_item", :class => "add_nested_item", :rel => "#{form_id + form_type.to_s}_items" %>
+
   <% end %>
-  <hr class="hr-line-100prc" />
+  
 
   <%= submit_tag 'Zapisz' %>
 

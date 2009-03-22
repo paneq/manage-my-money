@@ -43,8 +43,7 @@ begin
     def test_on_transfers_site
       save_my_transfers
       execute_with_autocomplete do
-        field_id = 'transfer_description'
-        field_autocomplete_id = field_id + '_auto_complete'
+        field_id = "css=div[id=show-transfer-full] textarea[id^=transfer_new][id$=description]"
         @selenium.open '/transfers'
         @selenium.type_keys field_id, "Marz"
 
@@ -61,7 +60,7 @@ begin
           @selenium.is_text_present t.description
         end
         
-        assert_equal 2.to_s, @selenium.get_xpath_count("//div[@id='#{field_autocomplete_id}']/ul/li")  # selenium.rb -> get_number method has a really funny comment which explains why this method returns string instead of number
+        assert_equal 2.to_s, @selenium.get_xpath_count("//div[@class='auto_complete'][1]/ul/li")  # selenium.rb -> get_number method has a really funny comment which explains why this method returns string instead of number
 
         # selecet the second autocomplete option by keyboard
         # i made a small reserch and from all options this one is most probably to work
@@ -78,42 +77,59 @@ begin
         # @selenium.key_up field_autocomplete_id, "\40"
 
         # So let's click the second element by mouse
-        second_complete = "//div[@id='#{field_autocomplete_id}']/ul/li[2]"
+        second_complete = "//div[@class='auto_complete'][1]/ul/li[2]"
         move_and_click second_complete
         assert_equal @transfers.second.description, @selenium.get_value(field_id)
 
         # add 4 new transfer items on the site
         [:outcome, :income].each do |item_type|
-          2.times { @selenium.click "new-#{item_type}-transfer-item" }
+          2.times { @selenium.click "new_#{item_type}_transfer_item" }
         end
         Kernel.sleep 0.3
 
-        # TRs with fields for adding elements
-        assert @selenium.is_element_present "//table[@id='full-outcome-items']/tbody[1]/tr[3]"
-        assert @selenium.is_element_present "//table[@id='full-outcome-items']/tbody[2]/tr[2]"
+        outcome_table_path = %w(div[@id='show-transfer-full'] form div[4] table[1])
 
-        # delete two items, the first one and the second one, that was added
-        @selenium.click "//table[@id='full-outcome-items']/tbody[1]/tr[3]/td[5]/a" # tr[3] becuase it this tbody contains one tr (with descriptions for columns) more than other elements
-        @selenium.click "//table[@id='full-outcome-items']/tbody[2]/tr[2]/td[5]/a" # previous tbody was not removed
+        # tr w column descriptions
+        test_present outcome_table_path + tbody_gen(1,1)
 
         # TRs with fields for adding elements
-        assert !@selenium.is_element_present("//table[@id='full-outcome-items']/tbody[1]/tr[3]")
-        assert !@selenium.is_element_present("//table[@id='full-outcome-items']/tbody[2]/tr[2]")
+        test_usable outcome_table_path + tbody_gen(1,2)
+        test_usable outcome_table_path + tbody_gen(2,1)
+        test_usable outcome_table_path + tbody_gen(3,1)
+
+        # delete two items, the first one (was at the beggining on the site) and the second (that was added few seconds ago)
+        @selenium.click(path_constructor(outcome_table_path + tbody_gen(1,2) << "td[last()]/a")) # tr[2] becuase it this tbody contains one tr (with descriptions for columns) more than other elements
+        @selenium.click(path_constructor(outcome_table_path + tbody_gen(2,1) << "td[last()]/a")) # previous tbody was not removed
+
+        # no removed elements
+        test_acts_as_deleted_tr outcome_table_path + tbody_gen(1,2)
+        test_acts_as_deleted_tr outcome_table_path + tbody_gen(2,1)
+
+        # yes for unremoved elements and columns descriptions
+        test_usable outcome_table_path + tbody_gen(1,1) #description
+        test_usable outcome_table_path + tbody_gen(3,1) #one element
+
+
+
 
         # first income item
         # User again made some shopping in tesco: Jedzenie zakupione w tesco
-        income_description = "//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/input"
-        assert @selenium.is_element_present(income_description)
-        @selenium.type_keys income_description, @transfers.third.description[0..3] #"Jedz"
+        income_table_path = %w(div[@id='show-transfer-full'] form div[5] table[1])
+        income_td = income_table_path + tbody_gen(1,2,1)
+        income_description = income_td.clone << "input"
+
+        test_present income_description
+        @selenium.type_keys path_constructor(income_description), @transfers.third.description[0..3] #"Jedz"
 
         # two autcompletes should be seen
         # one for @food and one for @rupert.asset
-        Kernel.sleep 2
-        assert_equal 2.to_s, @selenium.get_xpath_count("//table[@id='full-income-items']/tbody/tr[3]/td[1]/div/ul/li")
+        Kernel.sleep 1.5
+        where = path_constructor(income_td + %w(div ul li))
+        assert_equal 2.to_s, @selenium.get_xpath_count(where), "Should be 2 elements like: #{where}"
 
         complete = nil
         (1..2).each do |nr|
-          checked = "//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/div/ul/li[#{nr}]"
+          checked = path_constructor(income_td.clone + %w(div ul) << "li[#{nr}]")
           text = @selenium.get_text checked
           if text =~ Regexp.new(@food.name)
             complete = checked
@@ -125,30 +141,32 @@ begin
         move_and_click complete #Click on the @food autocomplete option
 
         #check autocompleted description, category, value and currency
-        assert_equal @transfers.third.description.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[1]/input").to_s
-        assert_equal @food.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[2]/select").to_s
-        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[3]/input").to_s
-        assert_equal @dolar.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[1]/tr[3]/td[4]/select").to_s
+        assert_equal @transfers.third.description.to_s, @selenium.get_value(path_constructor(income_description)).to_s
+        assert_equal @food.id.to_s, @selenium.get_selected_value(path_constructor(income_table_path + tbody_gen(1,2,2) << 'select')).to_s
+        assert_equal @transfers.third.transfer_items.first.value.abs.to_s, @selenium.get_value(path_constructor(income_table_path + tbody_gen(1,2,3) << 'input')).to_s
+        assert_equal @dolar.id.to_s, @selenium.get_selected_value(path_constructor(income_table_path + tbody_gen(1,2,4) << 'select')).to_s
 
         # but we do not want dollar.
         # select PLN
-        @selenium.select "//table[@id='full-income-items']/tbody[1]/tr[3]/td[4]/select", @zloty.long_symbol
+        @selenium.select path_constructor(income_table_path + tbody_gen(1,2,4) << 'select'), @zloty.long_symbol
 
 
 
         # second income item
         # user is paying for rent once again
-        income_description = "//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/input"
-        assert @selenium.is_element_present(income_description)
-        @selenium.type_keys income_description, "marz"
+        income_td = income_table_path + tbody_gen(2,1,1)
+        income_description = income_td.clone << "input"
+        test_present income_description
+        @selenium.type_keys path_constructor(income_description), "marz"
 
         # four autcompletes should be seen
         Kernel.sleep 1.5
-        assert_equal 4.to_s, @selenium.get_xpath_count("//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/div/ul/li")
+        where = path_constructor(income_td + %w(div ul li))
+        assert_equal 4.to_s, @selenium.get_xpath_count(where)
 
         complete = nil
         (1..4).each do |nr|
-          checked = "//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/div/ul/li[#{nr}]"
+          checked = path_constructor(income_td.clone + %w(div ul) << "li[#{nr}]")
           text = @selenium.get_text checked
           if text =~ Regexp.new(@rent.name)
             complete = checked
@@ -160,10 +178,10 @@ begin
         move_and_click complete #Click on the @rent autocomplete option
 
         #check autocompleted description, category, value and currency
-        assert_equal @transfers.second.description.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[1]/input").to_s
-        assert_equal @rent.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[2]/select").to_s
-        assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[3]/input").to_s
-        assert_equal @zloty.id.to_s, @selenium.get_selected_value("//table[@id='full-income-items']/tbody[2]/tr[2]/td[4]/select").to_s
+        assert_equal @transfers.second.description.to_s, @selenium.get_value(path_constructor(income_description)).to_s
+        assert_equal @rent.id.to_s, @selenium.get_selected_value(path_constructor(income_table_path + tbody_gen(2,1,2) << 'select')).to_s
+        assert_equal @transfers.second.transfer_items.first.value.abs.to_s, @selenium.get_value(path_constructor(income_table_path + tbody_gen(2,1,3) << 'input')).to_s
+        assert_equal @zloty.id.to_s, @selenium.get_selected_value(path_constructor(income_table_path + tbody_gen(2,1,4) << 'select')).to_s
 
 
 
@@ -171,16 +189,18 @@ begin
         # we do not care about autocompletion here
         #
         # type description
-        @selenium.type_keys "//table[@id='full-income-items']/tbody[3]/tr[2]/td[1]/input", "FULFILLMENT to 1000 PLN"
+        income_td = income_table_path + tbody_gen(3,1,1)
+        income_description = income_td.clone << "input"
+        @selenium.type_keys path_constructor(income_description), "FULFILLMENT to 1000 PLN"
 
         # select category
-        @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[2]/select", @rupert.asset.name
+        @selenium.select path_constructor(income_table_path + tbody_gen(3,1,2) << 'select'), @rupert.asset.name
 
         # type value
-        @selenium.type_keys "//table[@id='full-income-items']/tbody[3]/tr[2]/td[3]/input", "1000"
+        @selenium.type_keys path_constructor(income_table_path + tbody_gen(3,1,3) << 'input'), "200"
 
         # select currency
-        @selenium.select "//table[@id='full-income-items']/tbody[3]/tr[2]/td[4]/select", @zloty.long_symbol
+        @selenium.select path_constructor(income_table_path + tbody_gen(3,1,4) << 'select'), @zloty.long_symbol
 
       end
     end
@@ -233,6 +253,85 @@ begin
       @selenium.mouse_over locator
       @selenium.click locator
       Kernel.sleep 0.4
+    end
+
+
+    def test_present(*args)
+      path_enumerator(*args) do |selector|
+        assert @selenium.is_element_present(selector), "Should occure on the site: #{selector}"
+        
+      end
+    end
+
+
+    def test_usable(*args)
+      selector = nil
+      path_enumerator(*args) do |selector|
+        assert @selenium.is_element_present(selector), "Should occure on the site: #{selector}"
+      end
+      assert @selenium.is_visible(selector), "Should be visible on the site: #{selector}"
+    end
+
+
+    def test_not_present(*args)
+      selector = path_constructor(*args)
+      assert !@selenium.is_element_present(selector), "Should not occure on the site: #{selector}"
+    end
+
+
+    def test_not_visible(*args)
+      selector = path_constructor(*args)
+      assert !@selenium.is_visible(selector), "Should not occure on the site: #{selector}"
+    end
+
+
+    def test_acts_as_deleted_tr(*args)
+      test_present(*args)
+      test_not_visible(*args)
+      hash = args.extract_options!
+      args << "td[last()]"
+      args << "input[@value=1]"
+      args << hash
+      test_present(*args)
+    end
+
+
+    def path_enumerator(*args)
+      raise "Code block required" unless block_given?
+
+      defaults = {:start => '//'}
+      options = args.extract_options!
+      defaults.merge!(options)
+
+      args = args.flatten
+      elements = []
+
+      args.size.times do
+        elements << args.shift
+        selector = defaults[:start] + elements.join('/')
+        yield selector
+      end
+    end
+
+
+    def path_constructor(*args)
+      defaults = {:start => '//'}
+      options = args.extract_options!
+      defaults.merge!(options)
+
+      args = args.flatten
+      return defaults[:start] + args.join('/')
+    end
+
+
+    # tbody_gen(1) => ["tbody[1]"]
+    # tbody_gen(1, 2) => ["tbody[1]", "tr[2]"]
+    # tbody_gen(1, 2, 3) => ["tbody[1]", "tr[2]", "td[3]"]
+    def tbody_gen(tbody, tr = nil, td = nil)
+      table = ["tbody[#{tbody}]"]
+      table << ["tr[#{tr}]"] if tr
+      table << ["td[#{td}]"] if td
+      table
     end
 
   end

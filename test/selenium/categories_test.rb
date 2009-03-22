@@ -82,7 +82,7 @@ begin
       selenium_assert {assert @selenium.is_element_present 'errorExplanation'}
 
       @selenium.type "category_name", "Portfel"
-      @selenium.type "category_opening_balance", "1 200P" #User has mad a mistke
+      @selenium.type "category_opening_balance", "1 200P" #User has mad a mistke      
       @selenium.select 'currency-select', @euro.long_name
       @selenium.click "category_submit"
       @selenium.wait_for_page_to_load "10000"
