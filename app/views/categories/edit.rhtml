@@ -1,39 +1,50 @@
 <h1>Edycja kategorii</h1>
 <div id="category-edit">
-  <% form_for :category, @category, :url => category_path(@category), :html => {:method => :put} do |form| %>
+  <% form_for :category, @category, :url => category_path(@category), :html => {:method => :put, :class=>'style2'} do |form| %>
 
     <%= error_messages_for :category, :message => nil %>
 
-    <p id="name"> Nazwa: <%= form.text_field :name %> </p>
-    <p id="description"> Opis: <%= form.text_field :description %></p>
+    <ul>
+      <li id="name">
+        <%= form.label :name, 'Nazwa'%><%= form.text_field :name %>
+      </li>
 
-    <% if !@category.is_top? %>
-      <p id="parent">
-        Wybierz kategorię nadrzędną:
-        <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
-      </p>
+      <li id="description">
+        <%= form.label :description, 'Opis'%><%= form.text_field :description %>
+      </li>
 
-    <% end %>
+      <% if !@category.is_top? %>
+        <li id="parent">
+          <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
+          <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+        </li>
+      <% end %>
 
-    <p id="system_category">
-      Wybierz kategorię systemową (help needed):
-      <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
-    </p>
+      <li id="system_category">
+        <%= form.label :system_category, 'Kategoria systemowa'%>
+        <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
+      </li>
 
+      <li>
+        <% if @category.can_become_loan_category? %>
+          <fieldset style="margin-top: 1em">
+          <legend>Dłużnik / Wierzyciel</legend>
+          <p id="loan">
+            <li id="is_loan"><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?'%><%= form.check_box :type, {}, 'LoanCategory', 'Category' %></li>
+            <li id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %></li>
+            <li id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></li>
+          </p>
+          </fieldset>
+        <% end %>
+      </li>
+      <li id="update">
+          <%= form.submit "Zapisz zmiany" %>
+      </li>
+    </ul>
 
-    <% if @category.can_become_loan_category? %>
-      <p id="loan">
-        <p id="is_loan">Dłużnik / Wierzyciel: <%= form.check_box :type, {}, 'LoanCategory', 'Category' %> </p>
-        <p id="email"> E-mail: <%= form.text_field :email %> </p>
-        <p id="bankinfo"> Informacje do przelewu: <%= form.text_field :bankinfo %></p>
-      </p>
-    <% end %>
-
-    <p id="update">
-      <%= form.submit "Zapisz zmiany" %>
-    </p>
   <% end %>
 </div>
 
-
+<div style="margin: 5px 5px 5px 15px;">
 <%= link_to 'Powróć do listy kategorii', categories_url %>
+</div>

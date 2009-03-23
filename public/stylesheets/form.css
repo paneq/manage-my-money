@@ -1,0 +1,38 @@
+form.style2{
+    padding: 20px;
+    margin: 0;
+    font-size: small;
+    font-family:"Lucida Grande",Tahoma,Arial,sans-serif;
+}
+
+form.style2 label{
+    float:none;
+    color:#333333;
+    font-size:95%;
+    border:medium none;
+    display:block;
+    font-weight:bold;
+    line-height:150%;
+    padding:0 0 1px;
+
+}
+
+
+form.style2 input, form.style2 select {
+    color:#333333;
+    font-size:100%;
+}
+
+form.style2 ul {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    width:100%;
+}
+
+form.style2 li {
+    clear:both;
+    display:block;
+    margin:0;
+    padding:4px 5px 16px 9px;
+}

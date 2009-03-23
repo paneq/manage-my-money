@@ -225,11 +225,11 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'edit'
     assert_select 'div#category-edit' do
-      assert_select 'p#name', 1
-      assert_select 'p#description', 1
-      assert_select 'p#parent', 0
-      assert_select 'p#loan', 0
-      assert_select 'p#update', 1
+      assert_select 'li#name', 1
+      assert_select 'li#description', 1
+      assert_select 'li#parent', 0
+      assert_select 'li#loan', 0
+      assert_select 'li#update', 1
     end
     assert_select "input#category_name[value='#{@rupert.income.name}']"
     assert_select "input#category_description[value='#{@rupert.income.description}']"
@@ -243,7 +243,7 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'edit'
     assert_select 'div#category-edit' do
-      assert_select 'p#parent', 1
+      assert_select 'label#parent', 1
       assert_select 'p#loan', 0
       assert_select 'option[selected=selected]', @expense_category.name
     end
@@ -259,9 +259,9 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_template 'edit'
     assert_select 'div#category-edit' do
       assert_select 'p#loan' do
-        assert_select 'p#is_loan', 1
-        assert_select 'p#email', 1
-        assert_select 'p#bankinfo', 1
+        assert_select 'li#is_loan', 1
+        assert_select 'li#email', 1
+        assert_select 'li#bankinfo', 1
       end
     end
   end

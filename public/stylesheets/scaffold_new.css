@@ -1,68 +1,72 @@
 
 pre {
-  background-color: #eee;
-  padding: 10px;
-  font-size: 11px;
-  white-space: pre-wrap;       /* css-3 */
-  white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
-  /*width: 99%;*/
+    background-color: #eee;
+    padding: 10px;
+    font-size: 11px;
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    /*width: 99%;*/
 }
 
 
 .fieldWithErrors {
-  padding: 2px;
-  background-color: #668FA3;
-  display: table;
+    padding: 2px;
+    background-color: #cccccc; /* #668FA3;*/
+    display: table;
 }
 
 #errorExplanation {
-  width: 400px;
-  border: 2px solid black;
-  padding: 7px;
-  background-color: #f0f0f0;
+    width: 400px;
+    border: 1px dashed black;
+    padding: 7px;
+    background-color: #f0f0f0;
+}
+
+div.errorExplanation {
+    margin-bottom: 10px;
 }
 
 #errorExplanation h2 {
-  text-align: left;
-  font-weight: bold;
-  padding: 5px 5px 5px 15px;
-  font-size: 12px;
-  margin: -7px;
-  background-color: #668FA3;
-  color: #fff;
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    background-color: #cccccc; /*#668FA3;*/
+    color: black;
 }
 
 #errorExplanation p {
-  color: #333;
-  margin-bottom: 0;
-  padding: 5px;
+    color: #333;
+    margin-bottom: 0;
+    padding: 5px;
 }
 
 #errorExplanation ul li {
-  font-size: 12px;
-  list-style: square;
+    font-size: 12px;
+    list-style: square;
 }
 
 div.uploadStatus {
-  margin: 5px;
+    margin: 5px;
 }
 
 div.progressBar {
-  margin: 5px;
+    margin: 5px;
 }
 
 div.progressBar div.border {
-  background-color: #fff;
-  border: 1px solid grey;
-  width: 100%;
+    background-color: #fff;
+    border: 1px solid grey;
+    width: 100%;
 }
 
 div.progressBar div.background {
-  background-color: #333;
-  height: 18px;
-  width: 0%;
+    background-color: #333;
+    height: 18px;
+    width: 0%;
 }
 
