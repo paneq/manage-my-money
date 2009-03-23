@@ -23,7 +23,7 @@ class SystemCategory < ActiveRecord::Base
 
   acts_as_nested_set
 
-  validates_presence_of :name
+  validates_presence_of :name, :category_type
 
   define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
@@ -39,6 +39,7 @@ class SystemCategory < ActiveRecord::Base
     record = find_by_id(id) || new
     record.id = id
     record.attributes = options
+    record.category_type ||= :BALANCE #we set this default type, because we must set it before save, but in the end this type will be set with root record type
     record.save!
 
     if block_given?

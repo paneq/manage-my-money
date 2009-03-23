@@ -354,18 +354,19 @@ class ActiveSupport::TestCase
 
     @jarek.categories << child1 << child2
     @jarek.save!
+
   end
 
   def prepare_sample_system_category_tree
-    e = SystemCategory.create :name => 'Expenses'
+    e = SystemCategory.create :name => 'Expenses', :category_type => :EXPENSE
 
-    f = SystemCategory.create :name => 'Jedzenie'
+    f = SystemCategory.create :name => 'Jedzenie', :category_type => :EXPENSE
 
-    jf = SystemCategory.create :name => 'Junk Food'
+    jf = SystemCategory.create :name => 'Junk Food', :category_type => :EXPENSE
 
-    fr = SystemCategory.create :name => 'Fruits'
+    fr = SystemCategory.create :name => 'Fruits', :category_type => :EXPENSE
 
-    c = SystemCategory.create :name => 'Clothes'
+    c = SystemCategory.create :name => 'Clothes', :category_type => :EXPENSE
 
     f.move_to_child_of e
     jf.move_to_child_of f

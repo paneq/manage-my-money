@@ -639,8 +639,9 @@ class CategoryTest < ActiveSupport::TestCase
 
   def test_assing_system_category
     prepare_sample_catagory_tree_for_jarek
-    test_category = @jarek.categories.find_by_name 'test'
-    e = SystemCategory.create :name => 'Expenses'
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    e = SystemCategory.create :name => 'Expenses', :category_type => :EXPENSE
     test_category.system_categories << e
     e.save!
     test_category.save!
@@ -652,7 +653,8 @@ class CategoryTest < ActiveSupport::TestCase
   def test_set_system_categories
     prepare_sample_catagory_tree_for_jarek
     prepare_sample_system_category_tree
-    test_category = @jarek.categories.find_by_name 'test'
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
 
     system_category = SystemCategory.find_by_name 'Fruits'
     test_category.system_category = system_category
@@ -688,7 +690,8 @@ class CategoryTest < ActiveSupport::TestCase
   def test_get_system_categories
     prepare_sample_catagory_tree_for_jarek
     prepare_sample_system_category_tree
-    test_category = @jarek.categories.find_by_name 'test'
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
 
     system_category = SystemCategory.find_by_name 'Fruits'
     
@@ -712,7 +715,18 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
 
+  test "system_category_type_validation" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    test_category = @jarek.categories.find_by_name 'test'
 
+    system_category = SystemCategory.find_by_name 'Fruits'
+
+    test_category.system_category = system_category
+    assert !test_category.save
+    assert_match(/systemowa powinna być tego samego typu/, test_category.errors.on(:base))
+
+  end
 
 
   private
@@ -721,11 +735,11 @@ class CategoryTest < ActiveSupport::TestCase
 
   def make_category(options = {})
     category = Category.new({
-      :name => 'test',
-      :description => 'test',
-      :user => @rupert,
-      :parent => @rupert.asset}.
-      merge(options)
+        :name => 'test',
+        :description => 'test',
+        :user => @rupert,
+        :parent => @rupert.asset}.
+        merge(options)
     )
   end
 
@@ -734,6 +748,20 @@ class CategoryTest < ActiveSupport::TestCase
     c = make_category(options)
     c.save!
     return c
+  end
+
+
+  def save_expense_category_jarek
+    parent = @jarek.expense
+    category = Category.new(
+      :name => 'test_expense',
+      :description => 'test',
+      :user => @jarek,
+      :parent => parent
+    )
+
+    @jarek.categories << category
+    @jarek.save!
   end
 
   

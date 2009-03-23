@@ -7,9 +7,9 @@ class SystemCategoryTest < ActiveSupport::TestCase
   end
   
   test "save with parent" do
-    e = SystemCategory.create :name => 'Expenses'
+    e = SystemCategory.create :name => 'Expenses', :category_type => :EXPENSE
 
-    s = SystemCategory.create :name => 'Food'
+    s = SystemCategory.create :name => 'Food', :category_type => :EXPENSE
 
     s.move_to_child_of e
 

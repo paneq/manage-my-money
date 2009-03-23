@@ -108,6 +108,7 @@ class Category < ActiveRecord::Base
   validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
   validate :type_validation
   validates_format_of :email, :allow_nil => true, :allow_blank => true, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i #should be in LoanCategory but cannot be
+  validate :system_category_type_validation
 
   def <=>(category)
     name <=> category.name
@@ -218,6 +219,13 @@ class Category < ActiveRecord::Base
       errors.add(:base, "Tylko nienajwyższa kategoria typu 'Zobowiązania' może reprezentować Dłużnika lub Wierzyciela")
     end
   end
+
+  def system_category_type_validation
+    if !self.system_category.nil? && self.category_type != self.system_category.category_type
+      errors.add(:base, 'Kategoria systemowa powinna być tego samego typu nadrzędnego co dana kategoria')
+    end
+  end
+
 
 
   def before_validation
