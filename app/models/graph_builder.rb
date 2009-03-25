@@ -1,6 +1,5 @@
 class GraphBuilder
 
-
   def self.calculate_and_build_graphs(report)
     charts = nil
     if report.share_report?

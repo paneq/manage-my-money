@@ -29,7 +29,6 @@ class Goal < ActiveRecord::Base
   belongs_to :category
   belongs_to :currency
   belongs_to :user
-  #has_many :historical_goals
 
 
   define_enum :period_type, [:SELECTED] + Date::RECOGNIZED_PERIODS
@@ -99,10 +98,8 @@ class Goal < ActiveRecord::Base
 
   def actual_value
     if goal_type == :percent
-      #calculate_percent
       category.percent_of_parent_category(period_start, period_end, include_subcategories)
     else
-      #calculate_money
       money = category.saldo_for_period_new(period_start, period_end, :show_all_currencies, include_subcategories)
       money.value(currency)
     end

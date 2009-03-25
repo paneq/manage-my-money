@@ -154,19 +154,29 @@ class Category < ActiveRecord::Base
   def opening_balance_before_type_cast
     @opening_balance
   end
+
+
   #Required for rails validation of fields that are not in database
   def opening_balance_currency_before_type_cast
     @opening_balance_currency
   end
+
+
   def opening_balance=(ob)
     @opening_balance = ob unless ob.blank? #so => allow_nil works properly
   end
+
+
   def opening_balance_currency=(obc)
     @opening_balance_currency = obc unless obc.blank?
   end
+
+
   def opening_balance_currency_id
     return @opening_balance_currency.id if @opening_balance_currency.is_a? Currency
   end
+
+
   def opening_balance_currency_id=(currency_id)
     self.opening_balance_currency= Currency.find_by_id(currency_id)
   end
@@ -366,9 +376,6 @@ class Category < ActiveRecord::Base
     values_in_currencies
   end
 
-  #
-  
-
 
   # Podaje saldo/salda kategorii w podanym czasie
   #
@@ -415,7 +422,6 @@ class Category < ActiveRecord::Base
   #         }
   # ],
   # :out => [] }
-
   def self.calculate_flow_values(categories, period_start, period_end)
     categories.collect! { |cat| cat.id }
     flow_categories = Category.find(
@@ -502,6 +508,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+
   def system_category_id
     unless self.system_category.nil?
       self.system_category.id
@@ -509,6 +516,7 @@ class Category < ActiveRecord::Base
       nil
     end
   end
+
 
   def system_category=(sys_category)
     if sys_category.nil?
@@ -518,6 +526,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+
   def system_category
     self.system_categories.max{|a,b| a.level <=> b.level}
   end
@@ -526,7 +535,6 @@ class Category < ActiveRecord::Base
 
   #======================
   private
-
 
 
   def universal_saldo(algorithm = :default, with_subcategories = false, additional_condition="", *params)
