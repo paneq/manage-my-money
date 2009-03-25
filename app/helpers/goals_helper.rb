@@ -7,24 +7,17 @@ module GoalsHelper
     end
   end
 
-
-
   def finished_goals_header_text
     text = 'Zakończone plany'
     text += ': brak' if @finished_goals.empty?
     text
   end
 
+
   def actual_goals_header_text
     text = 'Aktualne plany'
     text += ': brak' if @actual_goals.empty?
     text
   end
-
-
-
-
-
-
 
 end

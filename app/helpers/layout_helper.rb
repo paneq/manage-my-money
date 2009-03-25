@@ -1,6 +1,3 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
 module LayoutHelper
   def title(page_title, show_title = true)
     @content_for_title = page_title.to_s

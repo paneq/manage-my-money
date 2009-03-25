@@ -1,2 +1,0 @@
-module CooperationHelper
-end
