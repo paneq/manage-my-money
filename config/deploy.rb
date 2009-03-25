@@ -18,12 +18,18 @@ role :app, "s.rootnode.pl"
 role :web, "s.rootnode.pl"
 role :db,  "s.rootnode.pl", :primary => true
 
-set :shared_children,   %w(system log pids backup sphinx)
+set :shared_children,   %w(system log pids backup sphinx config)
 
 desc 'Change all files in latest release to be unreadible and unexecutable by people from same group and others'
 task :chmod_files do
   run "chmod -R go= #{release_path}"
 end
+
+desc 'Copies files from shared/config to app/config. Ex: site_keys.yml, database.yml, sphinx.yml'
+task :copy_config do
+  run "cp #{shared_path}/config/*.yml #{release_path}/config/"
+end
+
 
 task :show_var do
   run "ruby --version"
@@ -120,6 +126,7 @@ end
 
 
 before "deploy:finalize_update", :show_var
+after "deploy:finalize_update", :copy_config
 after "deploy:finalize_update", :chmod_files
 
 after "deploy:finalize_update", "sphinx:update_symlink"

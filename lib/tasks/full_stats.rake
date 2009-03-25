@@ -5,8 +5,8 @@ namespace :stats do
   task :full do
     
     #settings
-    start_rev = 226
-    end_rev = 311
+    start_rev = 312
+    end_rev = 493
     machine_name = Socket.gethostname
     case machine_name
     when 'arachno'

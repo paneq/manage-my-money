@@ -434,20 +434,21 @@ class ActiveSupport::TestCase
   end
 
 
-  TABLES = %w{transfer_items transfers category_report_options reports goals exchanges currencies categories users}
+  TABLES = %w{transfer_items exchanges transfers category_report_options reports goals categories users currencies}
   def selenium_setup
     raise 'No selenium test on stallman' if TEST_ON_STALLMAN
     @verification_errors = []
     if $selenium
       @selenium = $selenium
     else
-      @selenium = Selenium::SeleniumDriver.new("127.0.0.1", 4444, "*custom /usr/lib/firefox-3.0.7/firefox -p Selenium", "http://127.0.0.1:3031/", 10000);
+      @selenium = Selenium::SeleniumDriver.new("127.0.0.1", 4444, "*custom /usr/lib/firefox-3.0.7/firefox -p Selenium", "http://127.0.0.1:7000/", 10000);
       @selenium.start
     end
     
 
     #setup
     @selenium.open	"/selenium/setup?clear_tables=#{TABLES.join(',')}"
+    Kernel.sleep 5
   end
 
 

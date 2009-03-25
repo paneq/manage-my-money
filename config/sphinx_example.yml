@@ -1,34 +1,27 @@
-<% require 'socket' %>
-<% machine_name = Socket.gethostname %>
-
 development:
   morphology: none
   min_word_len: 4
   min_prefix_len: 4
   enable_star: 1
-  port: 3312
+  port: 4000
 
 test:
   morphology: none
   min_word_len: 4
   min_prefix_len: 4
   enable_star: 1
-<% case machine_name; when "stallman.rootnode.net" then %>
-  port: 3041
-<% else %>
-  port: 11214
-<% end %>
+  port: 4001
 
 selenium:
   morphology: none
   min_word_len: 4
   min_prefix_len: 4
   enable_star: 1
-  port: 11213
+  port: 4002
 
 production:
   morphology: none
   min_word_len: 4
   min_prefix_len: 4
   enable_star: 1
-  port: 3042
+  port: 4003

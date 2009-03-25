@@ -13,7 +13,7 @@ end
 namespace :selenium do
   desc 'Runs server for selenium tests'
   task :servers do
-    `echo 'Starting app server and selenium server' & ./script/server -e selenium -p 3031 & selenium`
+    `echo 'Starting app server and selenium server' & ./script/server -e selenium -p 7000 & selenium`
   end
 
   desc 'Runs selenium tests'

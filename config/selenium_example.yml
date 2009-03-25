@@ -20,9 +20,8 @@ browsers:
   firefox: 'firefox'
   # safari: '/Applications/Safari.app/Contents/MacOS/Safari'
 
-#should work on stallman too
-port_start: 3031
-port_end: 3031
+port_start: 7000
+port_end: 7000
 start_server: true
 
 #base_url_path: '/'
