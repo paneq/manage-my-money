@@ -34,6 +34,8 @@ class Report < ActiveRecord::Base
   validates_inclusion_of :period_type, :in => Report.PERIOD_TYPES.keys
   validates_presence_of :name
 
+  attr_accessor :virtual
+
   #used for conditional validation
   def period_type_custom?
     period_type == :SELECTED
@@ -131,6 +133,8 @@ class Report < ActiveRecord::Base
     r.name = "Przepływ gotówki"
     r.id = 2 if set_fake_ids
     reports[2] = r
+
+    reports.each {|rep| rep.virtual = true}
 
     reports
   end

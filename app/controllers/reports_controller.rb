@@ -1,5 +1,7 @@
 class ReportsController < ApplicationController
 
+  #FIXME this is what we call 'bad fat controller'
+
   layout 'main'
   before_filter :login_required
 
@@ -10,41 +12,28 @@ class ReportsController < ApplicationController
 
   def show
     @report = get_report_from_params
-    respond_to do |format|
-      format.html do
-        @virtual = params[:virtual]
-        unless @report.has_a_category?
-          flash[:notice] = 'Nie można pokazać raportu, musisz wybrać kategorię. (Kategoria związana z tym raportem musiała zostać usunięta)'
-          redirect_to edit_report_path(@report.id)
-          return
-        end
+    @virtual = params[:virtual]
+    unless @report.has_a_category?
+      flash[:notice] = 'Nie można pokazać raportu, musisz wybrać kategorię. (Kategoria związana z tym raportem musiała zostać usunięta)'
+      redirect_to edit_report_path(@report.id)
+      return
+    end
 
-        if @report.flow_report?
-          @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
-          @in_sum = Report.sum_flow_values(@cash_flow[:in])
-          @out_sum = Report.sum_flow_values(@cash_flow[:out])
-          @delta = @in_sum - @out_sum
-          @currencies = (@cash_flow[:in] + @cash_flow[:out]).map {|h| h[:currency]}.uniq
-          render :template => 'reports/show_flow_report'
-        else
-          @values, graph_data = GraphBuilder.calculate_and_build_graphs(@report)
-          cache_graph_data(@report, graph_data)
-          @graphs = {}
-          @values.keys.each do |currency|
-            url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
-            @graphs[currency] = open_flash_chart_object(600,500, url_for(url))
-          end
-          render :template => 'reports/show_graph_report'
-        end
-      end
+    if @report.flow_report?
+      prepare_flow_report_variables
+      render 'reports/show_flow_report'
+    else
+      prepare_graph_report_variables
+      cache_graph_data(@report, @graph_data)
+      render 'reports/show_graph_report'
     end
   end
 
   
-  #action for flash_chart
+  #callback action for flash_chart
   def get_graph_data
     throw 'No report found' unless get_report_from_params
-    report_from_cache = Rails.cache.read(report_cache_key(params[:id]))
+    report_from_cache = Rails.cache.read(report_cache_key(params[:id], params[:virtual]))
     unless report_from_cache.nil?
       render :text => report_from_cache[params[:graph]], :layout => false
     else
@@ -72,7 +61,7 @@ class ReportsController < ApplicationController
       raise 'Unknown Report Class'
     end
 
-    @report.user = @current_user
+    @report.user = self.current_user
     @report.set_period(get_period "report_day_#{params[:report_type]}")
 
     if @report.relative_period
@@ -170,7 +159,7 @@ class ReportsController < ApplicationController
 
   private
   def cache_graph_data(report, graph_data)
-    Rails.cache.write(report_cache_key(report.id), graph_data, :expires_in => 10.minutes)
+    Rails.cache.write(report_cache_key(report.id, report.virtual), graph_data, :expires_in => 10.minutes)
   end
 
 
@@ -179,8 +168,8 @@ class ReportsController < ApplicationController
   end
 
   #TODO consider dodac znacznik virtual
-  def report_cache_key(id)
-    "#{self.current_user.id}REPORT##{id}"
+  def report_cache_key(id, virtual)
+    "#{self.current_user.id}REPORT##{id}##{virtual}"
   end
 
   def prepare_reports
@@ -193,6 +182,24 @@ class ReportsController < ApplicationController
     @flow_report.period_start = @value_report.period_start = @share_report.period_start = 1.year.ago.at_beginning_of_year.to_date
     @flow_report.period_end = @value_report.period_end = @share_report.period_end = Date.today
     @share_report.max_categories_values_count = 10
+  end
+
+
+  def prepare_flow_report_variables
+    @cash_flow = Category.calculate_flow_values(@report.category_report_options.map{|cro| cro.category}, @report.period_start, @report.period_end)
+    @in_sum = Report.sum_flow_values(@cash_flow[:in])
+    @out_sum = Report.sum_flow_values(@cash_flow[:out])
+    @delta = @in_sum - @out_sum
+    @currencies = (@cash_flow[:in] + @cash_flow[:out]).map {|h| h[:currency]}.uniq
+  end
+
+  def prepare_graph_report_variables
+    @values, @graph_data = GraphBuilder.calculate_and_build_graphs(@report)
+    @graphs = {}
+    @values.keys.each do |currency|
+      url = {:controller => 'reports', :action => 'get_graph_data', :id => @report.id, :graph => currency, :format => 'json', :virtual => params[:virtual]}
+      @graphs[currency] = open_flash_chart_object(600,500, url_for(url))
+    end
   end
 
 

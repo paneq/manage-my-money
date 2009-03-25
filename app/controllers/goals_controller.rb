@@ -3,83 +3,61 @@ class GoalsController < ApplicationController
   layout 'main'
   before_filter :login_required
 
-  #before actions check if this is current user goal
 
   def index
     @actual_goals = Goal.find_actual(self.current_user)
     @finished_goals = Goal.find_past(self.current_user)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @actual_goals }
-    end
   end
+
 
   def show
     @goal = self.current_user.goals.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @goal }
-    end
   end
+
 
   def new
     @goal = Goal.new
     prepare_values_for_goal_type_and_currency
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @goal }
-    end
   end
+
 
   def edit
     @goal = self.current_user.goals.find(params[:id])
     prepare_values_for_goal_type_and_currency
   end
 
+
   def create
     @goal = Goal.new(params[:goal])
     @goal.user = self.current_user
     @goal.set_period(get_period 'goal_day')
-
-    respond_to do |format|
-      if @goal.save
-        flash[:notice] = 'Cel został utworzony.'
-        format.html { redirect_to(:action => :index) }
-        format.xml  { render :xml => @goal, :status => :created, :location => @goal }
-      else
-        prepare_values_for_goal_type_and_currency
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @goal.errors, :status => :unprocessable_entity }
-      end
+    if @goal.save
+      flash[:notice] = 'Cel został utworzony.'
+      redirect_to(:action => :index)
+    else
+      prepare_values_for_goal_type_and_currency
+      render :action => "new"
     end
   end
+
 
   def update
     @goal = self.current_user.goals.find(params[:id])
     @goal.set_period(get_period 'goal_day')
-    respond_to do |format|
-      if @goal.update_attributes(params[:goal])
-        flash[:notice] = 'Cel został zapisany.'
-        format.html { redirect_to(:action => :index) }
-        format.xml  { head :ok }
-      else
-        prepare_values_for_goal_type_and_currency
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @goal.errors, :status => :unprocessable_entity }
-      end
+    if @goal.update_attributes(params[:goal])
+      flash[:notice] = 'Cel został zapisany.'
+      redirect_to(:action => :index)
+    else
+      prepare_values_for_goal_type_and_currency
+      render :action => "edit"
     end
   end
+
 
   def destroy
     @goal = self.current_user.goals.find(params[:id])
     @goal.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(goals_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(goals_url)
   end
 
 
@@ -91,21 +69,13 @@ class GoalsController < ApplicationController
       flash[:notice] = 'Plan nie został zakończony. Skontaktuj się z pomocą techniczną.'
     end
 
-    respond_to do |format|
-      format.html { redirect_to(:action => :index) }
-    end
-
+    redirect_to(:action => :index)
   end
 
 
   def history_index
     @goal = self.current_user.goals.find(params[:id])
     @goals = @goal.all_goals_in_cycle
-
-    respond_to do |format|
-      format.html 
-      format.xml  { render :xml => @actual_goals }
-    end
   end
 
 

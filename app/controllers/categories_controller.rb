@@ -8,7 +8,7 @@ class CategoriesController < ApplicationController
 
   cache_sweeper :category_sweeper
 
-  # @NOTE: this line should be somewhere else
+  #FIXME @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
 
   def show
@@ -112,7 +112,7 @@ class CategoriesController < ApplicationController
       flash[:notice] = 'You do not have permission to view this category'
       @category = nil
       redirect_to :action => :show_categories , :controller => :category
-      #why doesn't it work ? There is no flash ?
+      #FIXME why doesn't it work ? There is no flash ?
     end
   end
 
