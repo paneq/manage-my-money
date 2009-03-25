@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: category_report_options
 #

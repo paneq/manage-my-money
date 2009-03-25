@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: users
 #
@@ -27,8 +27,8 @@ quentin:
   id: 1
   login: quentin
   email: quentin@example.com
-  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password: efedd8411cfa585bb641ec73e7e78a822c69be95 # test
+  salt: salt
+  crypted_password: <%= User.password_digest('test', 'salt') %>
   created_at: <%= 5.days.ago.to_s :db %>
   activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9b 
   activated_at: <%= 5.days.ago.to_s :db %>
@@ -38,8 +38,8 @@ aaron:
   id: 2
   login: aaron
   email: aaron@example.com
-  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password: efedd8411cfa585bb641ec73e7e78a822c69be95 # test
+  salt: salt
+  crypted_password: <%= User.password_digest('test', 'salt') %>
   created_at: <%= 1.days.ago.to_s :db %>
   activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a 
   transaction_amount_limit_type_int: <%= User.TRANSACTION_AMOUNT_LIMIT_TYPES[:week_count]%>

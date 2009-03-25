@@ -6,12 +6,23 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
- RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+
+Rails::Configuration.class_eval do
+  include FileSiteKeys #defined in preinitializer
+end
+
+
 Rails::Initializer.run do |config|
+  config.apply_file_keys
+  REST_AUTH_SITE_KEY = config.rest_auth_site_key
+  REST_AUTH_DIGEST_STRETCHES = config.rest_auth_digest_stretches
+  MEMCACHED_PORT = config.memcached_port
+  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -38,8 +49,8 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :key => '_manage_my_money_session',
-    :secret      => '87c02fb0e6f62cddef49e95793bdf3accc4334ee7e12b697f8ce200e1700ec83b1ad23bcfc247748465055352f1fb5e437149ed2b7c1d55939b3c8d4dfcb7292'
+    :key => config.session_key,
+    :secret      => config.session_secret
   }
 
   # Use the database for sessions instead of the cookie-based default,
@@ -60,9 +71,7 @@ Rails::Initializer.run do |config|
   config.active_record.default_timezone = :utc
   
   config.i18n.default_locale = :pl
-  MEMCACHED_PORT = 3043 #optimized for rootnode deploy
-  MEMCACHED_KEY = 'fI5YW5IP2gtvOczaGcpPpVbOsEDNmhH8SbiHiMO65hl7IxvPhtm2ApBug2Yr6Fik'
-  config.cache_store = :mem_cache_store, "127.0.0.1:#{MEMCACHED_PORT}", { :namespace => "#{MEMCACHED_KEY}_manage_my_money_#{RAILS_ENV}" }
+  config.cache_store = :mem_cache_store, "127.0.0.1:#{config.memcached_port}", { :namespace => "#{config.memcached_key}_manage_my_money_#{config.environment}" }
 
   #  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
   #    :source => 'http://gems.github.com'
@@ -80,3 +89,7 @@ require "will_paginate"
 
 ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)
 
+
+
+
+Rails::Initializer

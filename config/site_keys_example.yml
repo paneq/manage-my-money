@@ -1,0 +1,34 @@
+development:
+    session_key: 3m_session_dev
+    session_secret: secret_dev_01234567890123456789
+    memcached_port: 6000
+    memcached_key: key_dev
+    rest_auth_site_key: rest_key_dev_01234567890123456789
+    rest_auth_digest_stretches: 1
+
+test:
+    session_key: 3m_session_test
+    session_secret: secret_test_01234567890123456789
+    memcached_port: 6000
+    memcached_key: key_test
+    rest_auth_site_key: rest_key_test_01234567890123456789
+    rest_auth_digest_stretches: 1
+
+selenium:
+    session_key: 3m_session_selenium
+    session_secret: secret_selenium_01234567890123456789
+    memcached_port: 6000
+    memcached_key: key_selenium
+    rest_auth_site_key: rest_key_selenium_01234567890123456789
+    rest_auth_digest_stretches: 1
+
+production:
+    #read environment.rb
+    session_key: 3m_session
+    session_secret: your_secret_key_for_verifying_cookie_session_data_integrity._if_you_change_this_key,_all_old_sessions_will_become_invalid!_make_sure_the_secret_is_at_least_30_characters_and_all_random,_no_regular_words_or_you'll_be_exposed_to_dictionary_attacks
+    memcached_port: 6000
+    memcached_key: YOU_MUST_KNOW_IF_IT_SHOULD_BE_LONG_OR_RANDOM
+    # read initializers/site_keys.rb
+    # Changing this value will make all passwords invalid in your production database. Be carefull to write proper migrations if doing so...
+    rest_auth_site_key: MAKE_IT_LONG_AND_RANDOM
+    rest_auth_digest_stretches: 10
