@@ -249,6 +249,8 @@ class CategoryTest < ActiveSupport::TestCase
       end
       t.transfer_items << TransferItem.new(:category => outcome, :currency => @zloty, :description => '', :value => -1*value*number)
       t.transfer_items << TransferItem.new(:category => outcome, :currency => @euro, :description => '', :value => -1*value*number)
+      
+      t.conversions.build(:exchange => Exchange.new(:left_currency => @zloty, :right_currency => @euro, :left_to_right => 0.25, :right_to_left => 4))
 
       t.save!
     end

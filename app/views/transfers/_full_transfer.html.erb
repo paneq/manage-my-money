@@ -9,11 +9,20 @@
 
 <% form_remote_for(*array) do |form| %>
   <% form_id = form_element_uid(form) %>
+
   <% unless @jsgenerated %>
     <% content_for :jstemplates do -%>
+
       <% [:income, :outcome].each do |ti_type| %>
         <%= "var #{ti_type.to_s}_transfer_item='#{generate_template(form, :transfer_items, {:transfer_item_type => ti_type},{:partial => 'transfers/transfer_item'})}'" %>
       <% end %>
+
+      <%= "var conversion='#{generate_template(form, :conversions, {}, :partial => 'conversions/conversion')}' " %>
+
+      <% @exchanges.each do |e| %>
+        <%= "var #{js_var(e)} ='#{generate_template(form, :conversions, {}, :object => Conversion.new(:exchange => e), :partial => 'conversions/conversion')}' " %>
+      <% end %>
+
     <% end -%>
     <% @jsgenerated = true %>
   <% end %>
@@ -61,12 +70,26 @@
         <% end %>
       </table>
 
-      <%= link_to 'Dodaj', "##{form_type.to_s}_transfer_item", :class => "add_nested_item", :rel => "#{form_id + form_type.to_s}_items", :id => "new_#{form_type}_transfer_item" %>
+      <%= link_to_add 'Dodaj', "##{form_type.to_s}_transfer_item", :rel => "#{form_id + form_type.to_s}_items", :id => "new_#{form_type}_transfer_item" %>
       <hr class="hr-line-100prc" />
     </div>
 
   <% end %>
+
+  <h3><%= I18n.translate(:exchanges) -%></h3>
+  <div id="<%= form_id -%>conversions">
+    <% form.fields_for :conversions do |con_form| %>
+      <%= render :partial => 'conversions/conversion', :locals => {:f => con_form} %>
+    <% end %>
+  </div>
+
+  <%= link_to_add 'Dodaj nowy kurs', "#conversion", :rel => form_id+"conversions", :id => "add_conversions" %> <br />
   
+  Użyj ostatni kurs:
+  <% @exchanges.each do |e| %>
+    <span><%= link_to_add_exchange(e, form_id) %></span>
+  <% end %>
+  <br/>
 
   <%= submit_tag 'Zapisz' %>
 

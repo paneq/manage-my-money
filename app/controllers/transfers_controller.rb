@@ -5,10 +5,11 @@ class TransfersController < ApplicationController
   
   layout 'main'
   before_filter :login_required
+  before_filter :find_currencies_for_user
+  before_filter :find_newest_exchanges, :only => [:index, :edit, :create, :update, :destroy]
   before_filter :check_perm_for_transfer , :only => [:show_details, :hide_details, :show , :edit_with_items, :destroy]
 
 
-  # TODO: Refactor
   def index
     create_empty_transfer
     @transfers = self.current_user.newest_transfers.map{|t| {:transfer => t} }
@@ -145,6 +146,7 @@ class TransfersController < ApplicationController
     @transfer.destroy
     respond_to do |format|
       format.html do
+        # Railscast: 043_ajax_with_rjs REFACTOR
         flash[:notice] = 'Transfer został usunięty'
         redirect_to transfers_path
       end
@@ -153,7 +155,7 @@ class TransfersController < ApplicationController
   end
 
   
-  private
+  protected
   
   def check_perm_for_transfer
     @transfer = Transfer.find(params[:id])
@@ -165,6 +167,10 @@ class TransfersController < ApplicationController
       #why doesn't it work ? There is no flash ?
     end
   end
+
+
+  private
+
 
   def show_transfer_errors
     respond_to do |format|

@@ -20,16 +20,14 @@ class ExchangesController < ApplicationController
     @c2 = Currency.for_user(self.current_user).find_by_id(params[:right_currency])
     @c1, @c2 = @c2, @c1 if @c2.id < @c1.id
     
-    @exchanges = Exchange.paginate :page => params[:page],
+    @exchanges = self.current_user.exchanges.daily.paginate :page => params[:page],
       :order => 'day DESC',
       :per_page => 20,
       :conditions => {
-      :currency_a => @c1.id,
-      :currency_b => @c2.id,
-      :user_id => self.current_user.id
+      :left_currency_id => @c1.id,
+      :right_currency_id => @c2.id
     }
     @exchange = flash[:exchange] || Exchange.new(:left_currency => @c1, :right_currency => @c2)
-    flash[:exchange]
   end
 
 
@@ -51,6 +49,7 @@ class ExchangesController < ApplicationController
   def create
     change_currencies_to_objects
     @exchange = Exchange.new(params[:exchange])
+    @exchange.day_required = true
     @exchange.user = self.current_user
     if @exchange.save
       flash[:notice] = 'Utworzono nowy kurs'

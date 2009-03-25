@@ -22,6 +22,16 @@ class ApplicationController < ActionController::Base
   
   protected
 
+  def find_currencies_for_user
+    @currencies = Currency.for_user(self.current_user)
+  end
+
+
+  def find_newest_exchanges
+    @exchanges = @currencies.combination(2).map{|a,b| @current_user.exchanges.newest.for_currencies(a,b).find(:first, :include => [:left_currency, :right_currency])}
+    @exchanges.compact!
+  end
+
   def extract_form_id
     params[:form_id]
   end

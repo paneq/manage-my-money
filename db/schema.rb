@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090320114536) do
+ActiveRecord::Schema.define(:version => 20090324094534) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -66,6 +66,16 @@ ActiveRecord::Schema.define(:version => 20090320114536) do
 
   add_index "category_report_options", ["category_id", "report_id"], :name => "index_category_report_options_on_report_id_and_category_id"
 
+  create_table "conversions", :force => true do |t|
+    t.integer  "exchange_id", :null => false
+    t.integer  "transfer_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "conversions", ["exchange_id", "transfer_id"], :name => "index_conversions_on_transfer_id_and_exchange_id"
+  add_index "conversions", ["id"], :name => "index_conversions_on_id"
+
   create_table "currencies", :force => true do |t|
     t.string  "symbol",      :null => false
     t.string  "long_symbol", :null => false
@@ -77,15 +87,15 @@ ActiveRecord::Schema.define(:version => 20090320114536) do
   add_index "currencies", ["id", "user_id"], :name => "index_currencies_on_id_and_user_id"
 
   create_table "exchanges", :force => true do |t|
-    t.integer "currency_a",                                  :null => false
-    t.integer "currency_b",                                  :null => false
-    t.decimal "left_to_right", :precision => 8, :scale => 4, :null => false
-    t.decimal "right_to_left", :precision => 8, :scale => 4, :null => false
-    t.date    "day",                                         :null => false
+    t.integer "left_currency_id",                                :null => false
+    t.integer "right_currency_id",                               :null => false
+    t.decimal "left_to_right",     :precision => 8, :scale => 4, :null => false
+    t.decimal "right_to_left",     :precision => 8, :scale => 4, :null => false
+    t.date    "day"
     t.integer "user_id"
   end
 
-  add_index "exchanges", ["currency_a", "currency_b", "day", "user_id"], :name => "index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da"
+  add_index "exchanges", ["day", "left_currency_id", "right_currency_id", "user_id"], :name => "index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da"
   add_index "exchanges", ["day"], :name => "index_exchanges_on_day"
 
   create_table "goals", :force => true do |t|

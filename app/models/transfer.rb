@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: transfers
 #
@@ -26,6 +26,9 @@ class Transfer < ActiveRecord::Base
   belongs_to :user
 
   has_many :currencies, :through => :transfer_items
+  has_many :conversions, :dependent => :destroy
+  has_many :exchanges, :through => :conversions
+
   default_scope :order => 'day ASC, id ASC'
 
 
@@ -49,6 +52,7 @@ class Transfer < ActiveRecord::Base
   }
 
   accepts_nested_attributes_for :transfer_items, :allow_destroy => true
+  accepts_nested_attributes_for :conversions, :allow_destroy => true
   
   validates_presence_of :day
   validates_presence_of :user
@@ -74,7 +78,12 @@ class Transfer < ActiveRecord::Base
 
   def validate
     errors.add_to_base("Transfer nie posiada wymaganych conajmniej dwóch elementów.") if transfer_items.size < 2
-    errors.add_to_base("Wartość elementów typu przychód i rozchód jest różna.") if different_income_outcome?
+    if different_income_outcome?
+      err = "Wartość elementów typu przychód i rozchód jest różna. "
+      err += @explanation if @explanation
+      errors.add_to_base(err) 
+      @explanation = nil
+    end
   end
 
 
@@ -83,18 +92,77 @@ class Transfer < ActiveRecord::Base
   def different_income_outcome?
     currencies_count = transfer_items.map {|ti| ti.currency_id}.uniq.size
     return different_income_outcome_one_currency? if currencies_count == 1 # Not working solution: --> if currencies.size == 1
-    return different_income_outcome_many_currencies? if currencies_count > 1
+    return different_income_outcome_many_currencies? if (currencies_count > 1) && contains_required_conversions?
     return false
   end
 
 
   def different_income_outcome_one_currency?
-    return transfer_items.map{ |ti| (ti.value.nil? || !ti.errors.empty?) ? 0 : ti.value }.sum != 0.0 # Not working solution: --> ti.sum(:value)
+    return valid_items.map{|ti| ti.value }.sum != 0.0 # Not working solution: --> ti.sum(:value)
   end
 
 
   def different_income_outcome_many_currencies?
-    #TODO
+    @explanation = ""
+    values = []
+    default = user.default_currency
+    valid_conv = valid_conversions
+    amount = 0
+
+    valid_items.each_with_index do |item, number|
+      
+      val = if item.currency.id == default.id
+        item.value
+      else
+        c = valid_conv.select{|conv|
+          ( conv.exchange.left_currency.id == item.currency.id && conv.exchange.right_currency.id == default.id) ||
+            ( conv.exchange.right_currency.id == item.currency.id && conv.exchange.left_currency.id == default.id)
+        }.first
+        c.exchange.exchange(item.value, default)
+      end
+      values << val
+      amount += val
+      
+    end
+    hash = {}
+    hash[:income], hash[:outcome] = values.partition {|v| v >= 0}
+    [:income, :outcome].each do |val_type|
+      items = hash[val_type]
+      @explanation += "#{I18n.t(val_type)}: "
+      @explanation += "#{items.map{|v| " (#{v} #{default.long_symbol}) "}.join('+')} = " if items.size > 1
+      @explanation += "#{items.sum()} #{default.long_symbol}. "
+    end
+    @explanation += "#{I18n.t(:difference)}: #{amount.abs} #{default.long_symbol}"
+    return amount != 0.0
+  end
+
+
+  def valid_items
+    transfer_items.reject{ |ti| ti.value.nil? || !ti.errors.empty? || ti.marked_for_destruction? }
+  end
+
+
+  def valid_conversions
+    conversions.reject{ |conv| !conv.errors.empty? || conv.marked_for_destruction? }
+  end
+
+
+  def contains_required_conversions?
+    default_id = user.default_currency.id
+    currencies = transfer_items.map {|ti| ti.currency_id}.uniq
+    currencies -= [default_id]
+
+    pairs = valid_conversions.map {|conv| [conv.exchange.left_currency_id, conv.exchange.right_currency_id]}
+    currencies.each do |currency_id|
+      unless pairs.include?([default_id, currency_id]) || pairs.include?([currency_id, default_id])
+        errors.add_to_base("Brak wymaganego kursu wymiany między użytą walutą a walutą domyślną")
+        return false
+      end
+    end
+
+    errors.add_to_base("Powtórzone kursy między walutami") if pairs.size != pairs.uniq.size
+
+    return true
   end
 
 end

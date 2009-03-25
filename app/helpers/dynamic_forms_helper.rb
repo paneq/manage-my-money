@@ -13,6 +13,13 @@ module DynamicFormsHelper
     out
   end
 
+  def show_link(fields)
+    out = ''
+    out << fields.hidden_field(:_delete)
+    out << link_to("Usuń", "##{fields.object.class.name.underscore}", :class => 'show')
+    out
+  end
+
   # This method demonstrates the use of the :child_index option to render a
   # form partial for, for instance, client side addition of new nested
   # records.
@@ -63,4 +70,21 @@ module DynamicFormsHelper
     escape_javascript html
   end
 
+
+  def link_to_add(*args, &block)
+    if block_given?
+      options      = args.first || {}
+      html_options = args.second
+      concat(link_to_add(capture(&block), options, html_options))
+    else
+      name         = args.first
+      options      = args.second || {}
+      html_options = args.third
+      
+      default_options = {:class => "add_nested_item"}
+      default_options.merge!(html_options) if html_options
+      link_to(name, options, default_options)
+    end
+  end
+  
 end

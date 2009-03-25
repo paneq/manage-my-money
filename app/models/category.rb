@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: categories
 #
@@ -574,8 +574,8 @@ class Category < ActiveRecord::Base
         :select => "
         CASE
         WHEN ti.currency_id = #{currency.id} THEN ti.value
-        WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
-        WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+        WHEN ex.left_currency_id = #{currency.id} THEN ti.value*ex.right_to_left
+        WHEN ex.left_currency_id != #{currency.id} THEN ti.value*ex.left_to_right
         END
         ",
 
@@ -594,12 +594,12 @@ class Category < ActiveRecord::Base
                   SELECT min( abs( #{SqlDialects.get_date('t.day')} - #{SqlDialects.get_date('e2.day')} ) ) FROM exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
-                    (e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id})
+                    (e2.left_currency_id = #{currency.id} AND e2.right_currency_id = ti.currency_id) OR (e2.left_currency_id = ti.currency_id AND e2.right_currency_id = #{currency.id})
                     )
                   )
                 AND
                   (
-                  (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+                  (e.left_currency_id = #{currency.id} AND e.right_currency_id = ti.currency_id) OR (e.left_currency_id = ti.currency_id AND e.right_currency_id = #{currency.id})
                   )
                 AND
                   (
@@ -618,8 +618,8 @@ class Category < ActiveRecord::Base
         :select => "
         CASE
         WHEN ti.currency_id = #{currency.id} THEN ti.value
-        WHEN ex.currency_a = #{currency.id} THEN ti.value*ex.right_to_left
-        WHEN ex.currency_a != #{currency.id} THEN ti.value*ex.left_to_right
+        WHEN ex.left_currency_id = #{currency.id} THEN ti.value*ex.right_to_left
+        WHEN ex.left_currency_id != #{currency.id} THEN ti.value*ex.left_to_right
         END
         ",
 
@@ -638,12 +638,12 @@ class Category < ActiveRecord::Base
                   SELECT min( abs( #{SqlDialects.get_today} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
                     (
                     (e2.user_id = #{self.user.id} ) AND
-                    ((e2.currency_a = #{currency.id} AND e2.currency_b = ti.currency_id) OR (e2.currency_a = ti.currency_id AND e2.currency_b = #{currency.id}))
+                    ((e2.left_currency_id = #{currency.id} AND e2.right_currency_id = ti.currency_id) OR (e2.left_currency_id = ti.currency_id AND e2.right_currency_id = #{currency.id}))
                     )
                   )
                 AND
                   (
-                  (e.currency_a = #{currency.id} AND e.currency_b = ti.currency_id) OR (e.currency_a = ti.currency_id AND e.currency_b = #{currency.id})
+                  (e.left_currency_id = #{currency.id} AND e.right_currency_id = ti.currency_id) OR (e.left_currency_id = ti.currency_id AND e.right_currency_id = #{currency.id})
                   )
                 AND
                   (

@@ -94,6 +94,68 @@ class TransferTest < ActiveSupport::TestCase
     assert !transfer.valid?
   end
 
+
+  def test_multicurrency_validation_without_errors
+    transfer = make_simple_transfer
+    transfer.transfer_items[0].value = -100
+    transfer.transfer_items[0].currency = @euro
+    transfer.transfer_items[1].value = 400
+    transfer.transfer_items[1].currency = @rupert.default_currency
+    transfer.conversions.build(:exchange => Exchange.new(
+        :left_currency => @euro,
+        :right_currency => @rupert.default_currency,
+        :left_to_right => 4,
+        :right_to_left => 1
+      ))
+    assert transfer.valid?
+  end
+
+
+  def test_multicurrency_validation_with_errors
+    transfer = make_simple_transfer
+    transfer.transfer_items[0].value = 100
+    transfer.transfer_items[0].currency = @euro
+    transfer.transfer_items[1].value = 400 #based on exchange it should be 200 -> error
+    transfer.transfer_items[1].currency = @rupert.default_currency
+    transfer.conversions.build(:exchange => Exchange.new(
+        :left_currency => @euro,
+        :right_currency => @rupert.default_currency,
+        :left_to_right => 2,
+        :right_to_left => 1
+      ))
+    assert !transfer.valid?
+  end
+
+
+  def test_destroying_with_dependencies
+    klasses = [Transfer, TransferItem, Conversion, Exchange]
+    counts = Hash.new
+    klasses.each do |klass|
+      counts[klass] = klass.count
+    end
+    transfer = make_simple_transfer
+    transfer.transfer_items[0].currency = @euro
+    transfer.transfer_items[1].currency = @rupert.default_currency
+    transfer.conversions.build(:exchange => Exchange.new(
+        :left_currency => @euro,
+        :right_currency => @rupert.default_currency,
+        :left_to_right => 1,
+        :right_to_left => 1
+      ))
+    assert transfer.save
+
+    klasses.each do |klass|
+      assert counts[klass] < klass.count
+    end
+
+    transfer.destroy
+
+    klasses.each do |klass|
+      assert_equal counts[klass], klass.count
+    end
+  end
+
+
   private
 
 

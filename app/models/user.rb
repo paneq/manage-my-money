@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: users
 #
@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
 
 
   has_many :transfer_items, :through => :transfers
+  has_many :conversions, :through => :transfers
   has_many :currencies, :dependent => :destroy
   has_many :goals
 

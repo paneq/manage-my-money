@@ -22,7 +22,7 @@ class ExchangeTest < ActiveSupport::TestCase
 
     e = Exchange.new()
     assert !e.valid?
-    [:left_to_right, :right_to_left, :left_currency, :right_currency, :day].each do |field|
+    [:left_to_right, :right_to_left, :left_currency, :right_currency].each do |field|
       assert_not_nil e.errors.on(field)
     end
 
@@ -42,6 +42,17 @@ class ExchangeTest < ActiveSupport::TestCase
     assert_nil e.errors.on(:left_currency)
     assert_not_nil e.errors.on(:right_currency)
 
+
+    e = Exchange.new(:day => nil)
+    e.valid?
+    assert_nil e.errors.on(:day)
+
+
+    e = Exchange.new(:day => nil)
+    e.day_required = true
+    assert !e.valid?
+    assert_not_nil e.errors.on(:day)
+    
     #TODO napisać tak aby nie psuło innych testów - przedefiniuj tylko dla obiektu e
     #    Exchange.send(:define_method, :before_validation) do
     #    end
@@ -52,6 +63,8 @@ class ExchangeTest < ActiveSupport::TestCase
     #
     #    assert !e.valid?
     #    assert_not_nil e.errors.on(:base)
+
+
     
   end
 

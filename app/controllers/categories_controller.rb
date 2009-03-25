@@ -2,6 +2,8 @@ class CategoriesController < ApplicationController
  
   layout 'main'
   before_filter :login_required
+  before_filter :find_currencies_for_user, :only => [:show]
+  before_filter :find_newest_exchanges, :only => [:show]
   before_filter :check_perm, :only => [:show , :remove, :search]
 
   cache_sweeper :category_sweeper

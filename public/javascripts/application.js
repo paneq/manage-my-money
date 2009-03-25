@@ -6,6 +6,12 @@ replace_ids = function(s){
 }
 
 var myrules = {
+    '.show': function(e){
+        el = Event.findElement(e);
+        target = el.href.replace(/.*#/, '.')
+        el.up(target).show();
+        if(hidden_input = el.previous("input[type=hidden]")) hidden_input.value = '0'
+    },
     '.remove': function(e){
         el = Event.findElement(e);
         target = el.href.replace(/.*#/, '.')

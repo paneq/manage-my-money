@@ -14,6 +14,8 @@ pl:
   update: Aktualizuj
   income: Przychód
   outcome: Rozchód
+  difference: Różnica
+  exchanges: Kursy
   number:
     format:
       separator: ","

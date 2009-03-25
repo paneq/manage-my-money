@@ -196,6 +196,38 @@ ALTER SEQUENCE category_report_options_id_seq OWNED BY category_report_options.i
 
 
 --
+-- Name: conversions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE conversions (
+    id integer NOT NULL,
+    exchange_id integer NOT NULL,
+    transfer_id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: conversions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE conversions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: conversions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE conversions_id_seq OWNED BY conversions.id;
+
+
+--
 -- Name: currencies; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -233,11 +265,11 @@ ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
 
 CREATE TABLE exchanges (
     id integer NOT NULL,
-    currency_a integer NOT NULL,
-    currency_b integer NOT NULL,
+    left_currency_id integer NOT NULL,
+    right_currency_id integer NOT NULL,
     left_to_right numeric(8,4) NOT NULL,
     right_to_left numeric(8,4) NOT NULL,
-    day date NOT NULL,
+    day date,
     user_id integer
 );
 
@@ -556,6 +588,13 @@ ALTER TABLE category_report_options ALTER COLUMN id SET DEFAULT nextval('categor
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE conversions ALTER COLUMN id SET DEFAULT nextval('conversions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE currencies ALTER COLUMN id SET DEFAULT nextval('currencies_id_seq'::regclass);
 
 
@@ -637,6 +676,14 @@ ALTER TABLE ONLY categories
 
 ALTER TABLE ONLY category_report_options
     ADD CONSTRAINT category_report_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: conversions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY conversions
+    ADD CONSTRAINT conversions_pkey PRIMARY KEY (id);
 
 
 --
@@ -740,6 +787,20 @@ CREATE INDEX index_category_report_options_on_report_id_and_category_id ON categ
 
 
 --
+-- Name: index_conversions_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_conversions_on_id ON conversions USING btree (id);
+
+
+--
+-- Name: index_conversions_on_transfer_id_and_exchange_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_conversions_on_transfer_id_and_exchange_id ON conversions USING btree (transfer_id, exchange_id);
+
+
+--
 -- Name: index_currencies_on_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -757,7 +818,7 @@ CREATE INDEX index_exchanges_on_day ON exchanges USING btree (day);
 -- Name: index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da ON exchanges USING btree (user_id, currency_a, currency_b, day);
+CREATE INDEX index_exchanges_on_user_id_and_currency_a_and_currency_b_and_da ON exchanges USING btree (user_id, left_currency_id, right_currency_id, day);
 
 
 --
@@ -953,4 +1014,12 @@ INSERT INTO schema_migrations (version) VALUES ('20090313212009');
 
 INSERT INTO schema_migrations (version) VALUES ('20090320113507');
 
+INSERT INTO schema_migrations (version) VALUES ('20090323092622');
+
 INSERT INTO schema_migrations (version) VALUES ('20090320114536');
+
+INSERT INTO schema_migrations (version) VALUES ('20090323095653');
+
+INSERT INTO schema_migrations (version) VALUES ('20090323111511');
+
+INSERT INTO schema_migrations (version) VALUES ('20090324094534');

@@ -143,6 +143,19 @@ class ExchangesControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_match(/niepomyślnie/, flash[:notice])
     assert_redirected_to back
+
+    back = @request.env["HTTP_REFERER"] = "exchanges/#{@euro.id}/#{@zloty.id}?page=1"
+    post :create, :exchange => {
+      :left_currency => @euro.id.to_s,
+      :right_currency => @zloty.id.to_s,
+      :left_to_right => 0.25.to_s,
+      :right_to_left => 4.to_s,
+      #no day set -> required in exchanges controller -> should cause error
+    }
+
+    assert_response :redirect
+    assert_match(/niepomyślnie/, flash[:notice])
+    assert_redirected_to back
   end
 
 

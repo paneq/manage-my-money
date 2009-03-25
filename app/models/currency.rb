@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090320114536
+# Schema version: 20090324094534
 #
 # Table name: currencies
 #
@@ -35,17 +35,17 @@ class Currency < ActiveRecord::Base
   named_scope :exchanged_by, lambda { |user|
     { :conditions => ['(currencies.user_id = ? OR currencies.user_id IS NULL AND exchanges.user_id = ?)', user.id, user.id],
       :select => 'DISTINCT currencies.*',
-      :joins => 'INNER JOIN exchanges ON (currencies.id = exchanges.currency_a OR currencies.id = exchanges.currency_b)'
+      :joins => 'INNER JOIN exchanges ON (currencies.id = exchanges.left_currency_id OR currencies.id = exchanges.right_currency_id)'
     }
   }
 
   has_many  :left_exchanges,
     :class_name => "Exchange",
-    :foreign_key => "currency_a"
+    :foreign_key => "left_currency_id"
             
   has_many  :right_exchanges,
     :class_name => "Exchange",
-    :foreign_key => "currency_b"
+    :foreign_key => "right_currency_id"
 
 
   belongs_to  :user

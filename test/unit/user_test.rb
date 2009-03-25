@@ -286,7 +286,7 @@ class UserTest < ActiveSupport::TestCase
         r.category_report_options.each { |cro| elements[:category_report_options] << cro.id }
       end
     end
-    #    elements[:goals] = @rupert.goals.map{|g| g.id} NOT IMLEMENTED YET
+    #    elements[:goals] = @rupert.goals.map{|g| g.id} NOT IMLEMENTED YET #TODO
     elements[:currencies] = @rupert.currencies.map{|cur| cur.id}
     elements[:exchanges] = @rupert.exchanges.map{|exc| exc.id}
 

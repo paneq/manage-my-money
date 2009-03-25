@@ -1,0 +1,27 @@
+<% mapped = @currencies.map{|c| [c.long_symbol, c.id] } %>
+<div class="conversion">
+  <% f.object.exchange ||= Exchange.new %>
+
+  <% # Very important line! -%>
+  <%= f.hidden_field :exchange_id %>
+
+  <% editable = f.object.exchange.new_record? %>
+
+  <% options = {} %>
+  <% options[:disabled] = true unless editable -%>
+  <% currencies_options = {} %>
+  <% currencies_options[:disabled] = @currencies.map(&:id) unless editable %>
+
+
+
+  <% f.fields_for :exchange do |exchange_form| %>
+    <%= exchange_form.hidden_field :user_id, :value => self.current_user.id %>
+    <%= exchange_form.select :left_currency_id, mapped, currencies_options %>
+    <%= exchange_form.select :right_currency_id, mapped, currencies_options %>
+    <%= exchange_form.text_field :left_to_right, options.merge(:size => 8) %>
+    <%= exchange_form.text_field :right_to_left, options.merge(:size => 8) %>
+    <%= exchange_form.date_select :day, options.merge(:include_blank => true) %>
+  <% end %>
+
+  <%= remove_link(f) -%>
+</div>
