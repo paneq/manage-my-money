@@ -79,7 +79,7 @@ class CategoriesController < ApplicationController
     @category = self.current_user.categories.find(params[:id])
     @parent = @category.parent
     @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
-    @system_categories = SystemCategory.all
+    @system_categories = SystemCategory.find_all_by_category_type(@category)
   end
 
    

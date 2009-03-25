@@ -7,6 +7,13 @@ class AutocompleteController < ApplicationController
     text = atr[atr.keys.first][:description]
     text << ' '
 
+
+    # to jest przyklad ktory dobrze tlumaczy
+    # co robi moj kod
+    # i jak dziala dzieki temu dobrze wyszukiwanie w sphinxie
+    # jak wpisujesz opis transfer itemu
+    # ze gwiazdkuje za kazdym skonczonym slowem
+    # Przykład:
     #    "adasd         asdasd asdasd asd asd ".gsub(/ +/, '* ')
     #=> "adasd* asdasd* asdasd* asd* asd* "
     text.gsub!(/ +/, '* ')

@@ -276,8 +276,8 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_template 'edit'
 
     assert_select 'select#system-category-select' do
-      assert_select "option", :count => (SystemCategory.count + 1) do
-        SystemCategory.all.map(&:id).each do |opt|
+      assert_select "option", :count => (SystemCategory.of_type(:EXPENSE).count + 1) do
+        SystemCategory.of_type(:EXPENSE).map(&:id).each do |opt|
           assert_select "option[value=#{opt}]"
         end
         assert_select "option[value=#{system_food.id}][selected=selected]", system_food.name_with_indentation

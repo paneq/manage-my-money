@@ -109,6 +109,39 @@ class SystemCategoryTest < ActiveSupport::TestCase
 
 
 
+  test "find_all_by_category_type" do
+    e = SystemCategory.create :name => 'Expenses', :category_type => :EXPENSE
+    s = SystemCategory.create :name => 'Food', :category_type => :EXPENSE
+    s.move_to_child_of e
+
+    m = SystemCategory.create :name => 'Money', :category_type => :ASSET
+
+    e.save!
+    s.save!
+    m.save!
+
+
+    parent1 = @jarek.expense
+    category = Category.new(
+      :name => 'test_exp',
+      :description => 'test',
+      :user => @jarek,
+      :parent => parent1
+    )
+
+    @jarek.categories << category
+    @jarek.save!
+
+    food = Category.find_by_name 'test_exp'
+
+    all_by_type = SystemCategory.find_all_by_category_type(food)
+
+    assert_equal [e,s].map(&:id).sort, all_by_type.map(&:id).sort
+
+
+
+  end
+
 
   private
   

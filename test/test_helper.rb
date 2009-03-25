@@ -368,14 +368,16 @@ class ActiveSupport::TestCase
 
     c = SystemCategory.create :name => 'Clothes', :category_type => :EXPENSE
 
+    ca = SystemCategory.create :name => 'Cash', :category_type => :ASSET
+
     f.move_to_child_of e
     jf.move_to_child_of f
     fr.move_to_child_of f
     c.move_to_child_of e
 
-    [e,f,jf,fr,c].each(&:save!)
+    [e,f,jf,fr,c,ca].each(&:save!)
 
-    assert_equal 5, SystemCategory.all.count
+    assert_equal 6, SystemCategory.all.count
 
   end
 

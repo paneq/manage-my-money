@@ -33,6 +33,12 @@ class SystemCategory < ActiveRecord::Base
     '..'*level + name
   end
 
+  named_scope :of_type, lambda { |type|
+    raise "Unknown system category type: #{type}" unless SystemCategory.CATEGORY_TYPES.include?(type)
+    { :conditions => {:category_type_int => SystemCategory.CATEGORY_TYPES[type] }}
+  }
+
+
 
   def self.create_or_update(options = {})
     id = options.delete(:id)
@@ -60,5 +66,11 @@ class SystemCategory < ActiveRecord::Base
 
     record
   end
+
+
+  def self.find_all_by_category_type(category)
+    all :conditions => {:category_type_int => category.category_type_int}
+  end
+
 
 end
