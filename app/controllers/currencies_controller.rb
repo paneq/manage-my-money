@@ -1,6 +1,5 @@
 class CurrenciesController < ApplicationController
   
-  layout 'main'
   before_filter :login_required
   before_filter :find_and_set_currency, :except =>[:index, :new, :create]
   before_filter :check_perm_read, :only => [:show]

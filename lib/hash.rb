@@ -1,4 +1,3 @@
-
 class Hash
   def +(item)
     if item.class == Hash

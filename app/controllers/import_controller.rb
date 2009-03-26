@@ -2,8 +2,6 @@ class ImportController < CooperationController
 
   include FileRecognizer
 
-  layout 'main'
-
 
   ACCEPTED_CONTENT_TYPES = %w(text/csv text/xml)
   INVALID_FILE_WARNING = 'Wysłano nieprawidłowy plik. Akceptowane są jedynie pliki XML dla Inteligo oraz CSV dla mBanku'

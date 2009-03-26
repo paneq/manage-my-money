@@ -1,6 +1,5 @@
 class GoalsController < ApplicationController
 
-  layout 'main'
   before_filter :login_required
 
 

@@ -2,7 +2,6 @@ class ReportsController < ApplicationController
 
   #FIXME this is what we call 'bad fat controller'
 
-  layout 'main'
   before_filter :login_required
 
   def index

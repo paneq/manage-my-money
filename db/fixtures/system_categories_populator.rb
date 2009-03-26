@@ -1,14 +1,12 @@
+#Info: 153 system categories total
 class SystemCategoriesPopulator < DataPopulator
   class << self
-
-    #155 system categories total (including 2 commented out)
 
     def load_data
       create_asset
       create_expense
       create_income
       create_loan
-      #      create_balance
     end
 
 
@@ -38,8 +36,6 @@ class SystemCategoriesPopulator < DataPopulator
         c1 << n(:id => 104, :name => 'Konta wirtualne') do |c2|
           c2 << n(:id => 10401, :name => 'Paypal')
         end
-
-        #c << n(:id => 116, :name => 'Nieruchomości')
 
         c1 << n(:id => 105, :name => 'Lokaty')
 
@@ -242,10 +238,6 @@ class SystemCategoriesPopulator < DataPopulator
         c1 << n(:id => 405, :name => 'Znajomi')
       end
     end
-
-    #  def create_balance
-    #    n(:id => 500, :name => 'Bilanse otwarcia', :category_type => :BALANCE)
-    #  end
 
   end
 

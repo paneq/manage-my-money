@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
 
-  layout 'main'
   before_filter :login_required, :only => [:edit, :destroy, :update]
   before_filter :check_perm, :only => [:edit, :destroy, :update]
   # render new.rhtml

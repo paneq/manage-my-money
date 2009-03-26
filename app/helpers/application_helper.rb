@@ -73,19 +73,19 @@ module ApplicationHelper
     computed_name = "#{name_id}-computed"
 
     result = ''
-    result += <<-HTML
+    result << <<-HTML
       <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:</label>
     HTML
 
-    result += select_tag select_name, options_from_collection_for_select(select_periods, :first, :second, selected)
+    result << select_tag(select_name, options_from_collection_for_select(select_periods, :first, :second, selected))
 
-    result += get_date_field_start(name, start_day)
-    result += get_date_field_end(name, end_day)
-    result += <<-HTML
+    result << get_date_field_start(name, start_day)
+    result << get_date_field_end(name, end_day)
+    result << <<-HTML
       </p>
     HTML
 
-    result += <<-HTML
+    result << <<-HTML
       <p id="#{computed_name}" style="display:none"></p>
     HTML
 
@@ -111,7 +111,7 @@ module ApplicationHelper
       function << "  text2 = text2 + '#{range.end}' ;\n"
       function << "break;\n"
     end
-    function += <<-JS
+    function << <<-JS
     }
     text1 = text1 + text2 + text3
     Element.update('#{computed_name}', text1);
@@ -120,9 +120,9 @@ module ApplicationHelper
     Element.show('#{computed_name}');
     JS
 
-    result += observe_field select_name,
+    result << observe_field(select_name,
       :on => 'click' ,
-      :function => function
+      :function => function)
   end
 
   def get_date_field_start(name, start_day = Date.today)

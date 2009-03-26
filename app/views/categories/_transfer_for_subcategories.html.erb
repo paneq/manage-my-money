@@ -1,8 +1,0 @@
-<% # %> Komentarz
-<div id="transfer-in-category-<%= transfer_for_subcategories.id %>">
-  <% # %> <span> #{transfer_for_subcategories.id} </span>
-  <%= link_to  "
-    <span> #{transfer_for_subcategories.day}</span>
-    <span> #{transfer_for_subcategories.description}</span> " , :action => :show , :controller => :transfer , :id => transfer_for_subcategories.id %>
-    <%= link_to_remote "Show details" , :url => { :action => 'show_details' , :controller => 'transfer' , :id => transfer_for_subcategories.id } %>
-</div>

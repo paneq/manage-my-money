@@ -1,6 +1,5 @@
 class ExchangesController < ApplicationController
   
-  layout 'main'
   before_filter :login_required
   before_filter :set_exchange, :only => [:show, :edit, :update, :destroy]
   before_filter :set_currencies, :only => [:show, :new, :edit, :update]

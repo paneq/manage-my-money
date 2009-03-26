@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserLoggingTest < ActionController::IntegrationTest
-  #fixtures :all
 
   def setup
     save_rupert

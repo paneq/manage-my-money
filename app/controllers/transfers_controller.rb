@@ -3,7 +3,6 @@ class TransfersController < ApplicationController
   require 'hash'
   include ActionView::Helpers::ActiveRecordHelper
   
-  layout 'main'
   before_filter :login_required
   before_filter :find_currencies_for_user
   before_filter :find_newest_exchanges, :only => [:index, :edit, :create, :update, :destroy]
