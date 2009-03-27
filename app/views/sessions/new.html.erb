@@ -1,15 +1,15 @@
 <h1>Logowanie</h1>
 
-<% form_tag session_path do -%>
-<p><%= label_tag 'login', 'Login' %><br />
+<% form_tag session_path, :class=>'style2'  do -%>
+<p><%= label_tag 'login', 'Login' %>
 <%= text_field_tag 'login', @login %></p>
 
-<p><%= label_tag 'password', 'Hasło' %><br/>
+<p><%= label_tag 'password', 'Hasło' %>
 <%= password_field_tag 'password', nil %></p>
 
 
-<p><%= label_tag 'remember_me', 'Zapamiętaj mnie nawet jeśli wyłączę przeglądarkę' %><br />
-<%= check_box_tag 'remember_me', '1', @remember_me %></p>
+<p><%= check_box_tag 'remember_me', '1', @remember_me %> <%= label_tag 'remember_me', 'Zapamiętaj mnie', :class => 'inline' %><br />
+</p>
 
 
 <p><%= submit_tag 'Zaloguj' %></p>

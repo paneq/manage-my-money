@@ -1,5 +1,5 @@
 <div id="flow_report_options" <%= 'style="display:none"' unless @report.flow_report? %> >
-<%  form_for report do |form|%>
+<%  form_for report, :html=>{:class => 'style2'} do |form|%>
 <%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'FlowReport', :report => report}  %>
 <%= form.hidden_field :report_view_type %>
 <br />

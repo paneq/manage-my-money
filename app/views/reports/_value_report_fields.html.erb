@@ -1,10 +1,10 @@
 <div id="value_report_options" <%= 'style="display:none"' unless @report.value_report? %>>
-<%  form_for report do |form|%>
+<%  form_for report, :html=>{:class => 'style2'} do |form|%>
 <%= render :partial => 'common_fields', :locals => {:form => form, :report_type => 'ValueReport', :report => report}  %>
 
 
-<%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %> <br/>
-<%= form.label :report_view_type, "Wyglad raportu: " %><%= form.enum_select :report_view_type, :values => [:bar, :linear] %> <br/>
+<p><%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %></p>
+<p><%= form.label :report_view_type, "Wyglad raportu: " %><%= form.enum_select :report_view_type, :values => [:bar, :linear] %></p>
 
 <br />
 <% if  (@value_report || @report).category_report_options.size > 10 %>

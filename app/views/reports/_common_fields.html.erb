@@ -1,7 +1,7 @@
 <%= hidden_field_tag("report_type", report_type) %>
-<%= form.label :relative_period, 'Ustaw czas zawsze względem aktualnej daty' %>
-<%= form.check_box :relative_period %>
-<%= date_period_fields("report_day_#{report_type}", report.period_start || Date.today, report.period_end || Date.today, report.period_type) %>
 <%= form.label :name, 'Nazwa' %><%= form.text_field :name  %>
+<%= date_period_fields("report_day_#{report_type}", report.period_start || Date.today, report.period_end || Date.today, report.period_type) %>
+<%= form.check_box :relative_period, :class => 'inline' %>
+<%= form.label :relative_period, 'Ustaw czas zawsze względem aktualnej daty',  :class => 'inline' %>
 <br/>
 

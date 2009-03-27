@@ -2,38 +2,30 @@
   <%= form.error_messages %>
 
 
-<!--nazwa [description]-->
-  <%= form.label :description, 'Nazwa: ' %><%= form.text_field :description  %><br/>
-  <!--kategoria combo [category_id]-->
-  <%= form.label :category, 'Dotyczy kategorii' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %><br/>
-
-  <!--dotyczy podkategorii (checkbox) [include_subcategories]-->
-  <p><%= form.label 'include_subcategories', 'Dotyczy podkategorii ' %>
-  <%= form.check_box :include_subcategories %></p>
-
-
-  <!--typ (combo: nie mniej, nie wiecej) [goal_completion_condition]-->
-  <p><%= form.label 'goal_completion_condition', 'Zadanie: ' %>
-  <%= form.enum_select :goal_completion_condition%>
-
-  <!--wartosc [value]-->
-  <%= form.text_field :value, :size => 5 %>
-
-  <!--'jednostka' (combo: %, waluty) [goal_type?]-->
-  <%#= form.enum_select :goal_type-%>
+  <p><%= form.label :description, 'Nazwa: ' %><%= form.text_field :description  %></p>
+  <p><%= form.label :category, 'Dotyczy kategorii' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %></p>
+  <p><%= form.check_box :include_subcategories %><%= form.label 'include_subcategories', 'Dotyczy podkategorii ', :class => 'inline' %></p>
+  <fieldset>
+  <legend>Mój cel to osiągnąć</legend>
+  <p>
+  <%= form.enum_select :goal_completion_condition, :html=>{:class => 'inline'} %>
+  <%= form.text_field :value, :size => 5, :html=>{:class => 'inline'}  %>
 
 <%= form.select :goal_type_and_currency, @values_for_goal_type_and_currency %>
 
 </p>
-
+</fieldset>
  
-
+<fieldset>
+  <legend>W okresie</legend>
 <%= date_period_fields("goal_day", @goal.period_start || Date.today, @goal.period_end || Date.today, @goal.period_type || 'selected', [:present, :future]) %>
+<br/>
+<p><%= form.check_box :is_cyclic %><%= form.label :is_cyclic, 'Powtarzaj plan w następnych okresach?', :class => 'inline' %>
+</p>
+</fieldset>
 
 
-
-  <p><%= form.label :is_cyclic, 'Powtarzaj plan w następnych okresach?' %>
-<%= form.check_box :is_cyclic %></p>
+  
 
 
   <p>

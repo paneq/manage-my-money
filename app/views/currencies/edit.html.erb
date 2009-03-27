@@ -1,35 +1,27 @@
 
 <h1>Edycja waluty: <%= h @currency.long_name -%></h1>
 
-<% form_for @currency do |f| %>
+<% form_for @currency, :html=>{:class => 'style2'} do |f| %>
 
   <%= error_messages_for :currency %>
 
   <p id="symbol">
-    <label for="currency_symbol">
-      Symbol np. '$'
-    </label>
+    <%= f.label :symbol, "Krótki symbol waluty np. '$'"%>
     <%= f.text_field :symbol, :size => 5  %>
   </p>
 
   <p id="long_symbol">
-    <label for="currency_long_symbol">
-      Długi symbol np. 'USD'
-    </label>
+    <%= f.label :long_symbol, "Długi symbol waluty np. 'USD'"%>
     <%= f.text_field :long_symbol, :size => 7  %>
   </p>
 
   <p id="name">
-    <label for="currency_name">
-      Nazwa np. 'Dollar'
-    </label>
+    <%= f.label :name, "Krótka nazwa np. 'Dolar'"%>
     <%= f.text_field :name, :size => 12  %>
   </p>
 
   <p id="long_name">
-    <label for="currency_long_name">
-      Długa nazwa np. 'American dollar'
-    </label>
+    <%= f.label :long_name, "Długa nazwa np. 'Dolar amerykański'"%>
     <%= f.text_field :long_name, :size => 20  %>
   </p>
 

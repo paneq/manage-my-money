@@ -30,7 +30,7 @@
           <fieldset style="margin-top: 1em">
           <legend>Dłużnik / Wierzyciel</legend>
           <p id="loan">
-            <li id="is_loan"><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?'%><%= form.check_box :type, {}, 'LoanCategory', 'Category' %></li>
+            <li id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%></li>
             <li id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %></li>
             <li id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></li>
           </p>
