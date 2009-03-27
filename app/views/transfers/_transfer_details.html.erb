@@ -22,7 +22,10 @@
   <tr class="line-income-outcome" >
     <td colspan="<%=columns_count-%>">
       <span class="what-to-do" >
-        <%= link_to_remote "Ukryj szczegóły", :url => hide_details_transfer_path({:id => transfer_details}.merge(options)) %>
+        <%= link_to_function('Ukryj szczegóły') do |page|
+          page["transfer-details-id-#{id}"].remove
+          page["show-details-button-#{id}"].show
+        end %>
       </span>
       |
       <span class="what-to-do" >

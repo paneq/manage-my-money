@@ -22,7 +22,6 @@
 #  user_id                       :integer       not null
 #
 
-#require 'hash_enums'
 class Goal < ActiveRecord::Base
   include Periodable
   extend HashEnums

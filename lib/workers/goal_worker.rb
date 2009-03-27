@@ -14,7 +14,7 @@ class GoalWorker < BackgrounDRb::MetaWorker
     goals.each do |g|
       begin
         new_g = g.create_next_goal_in_cycle
-        new_g.save
+        new_g.save!
       rescue
         logger.error $!, $!.backtrace
       end

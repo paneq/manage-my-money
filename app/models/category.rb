@@ -19,12 +19,6 @@
 #  bank_account_number :string(255)   
 #
 
-   
-
-require 'hash'
-require 'hash_enums'
-require 'sql_dialects'
-
 class Category < ActiveRecord::Base
   extend HashEnums
 

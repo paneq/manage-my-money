@@ -6,19 +6,22 @@ namespace :selenium do
 
   desc 'Runs selenium tests'
   Rake::TestTask.new(:test => :kill_firefox) do |t|
-      t.libs << "test"
-      t.pattern = 'test/selenium/**/*_test.rb'
-      t.verbose = true
+    t.libs << "test"
+    t.pattern = 'test/selenium/**/*_test.rb'
+    t.verbose = true
   end
 
   desc 'Kills firefox before runnig selenium'
   task :kill_firefox do
-      @killed_firefox = false
-      if find_pid_of_process('firefox') != 0
-        `skill firefox`
-        @killed_firefox = true
-      end
+    if find_pid_of_process('firefox') != 0
+      `skill firefox`
     end
+  end
+
+  #FIXME: This method is created for Object...
+  def find_pid_of_process(name)
+    `ps ux | awk '/#{name}/ && !/awk/ {print $2}'`.to_i
+  end
 
 end
 

@@ -10,6 +10,7 @@ namespace :stats do
     machine_name = Socket.gethostname
     case machine_name
     when 'arachno'
+      #FIXME: Make it an argument
       settings_file = '/home/jarek/NetBeansProjects/stats/file'
       dir = '/home/jarek/NetBeansProjects/stats/code'
     else

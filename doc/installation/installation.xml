@@ -74,19 +74,17 @@
 
     <chapter>
         <title>
-            Wymagania aplikacji
+            Globalna instalacja aplikacji
         </title>
 
         <section>
             <title>Wstęp</title>
-            Zakładając, że nie chcesz skorzystać z naszego domyślnego systemu instalacji, możesz spróbować szczęścia samemu
-            dzięki tej liście wymaganych komponenetów. Przedstawiony sposób instalacji będzie zakładał, że pracujemy na systemie
             Ubuntu 8.10 i chcemy zainstalować komponenty globalnie.
         </section>
 
         <section>
             <title>
-                Pakiety i gemy
+                Wymagane pakiety i gemy
             </title>
             Do działania aplikacji wymagane są następujące pakiety (lub czasem wystarczą odpowiadające im binarki przekompilowane samodzielnie):
             <itemizedlist>
@@ -123,22 +121,66 @@ cd ..</programlisting>
 
                 <listitem>
                     <para>
-                        apache - Wymagany w wersji 2.2.9 conajmniej. Instalacja:
-                            <programlisting>sudo apt-get install apache2 apache2-dev</programlisting>
+                        Dodatkowe wymagane gemy wraz z pakietami niezbędnymi do ich zbudowania:
+                            <programlisting>sudo gem install packet --no-rdoc --no-ri
+sudo gem install collections --no-rdoc --no-ri
+sudo gem sources -a http://gems.github.com
+sudo gem install mislav-will_paginate --no-rdoc --no-ri
+
+sudo apt-get install libxslt-dev libxslt-ruby
+
+sudo gem install flay
+sudo gem install flog
+sudo gem install railroad
+sudo gem install reek
+sudo gem install roodi
+sudo gem install rspec-rails
+
+sudo gem install jscruggs-metric_fu -s http://gems.github.com/
+sudo gem install mergulhao-rcov -s http://gems.github.com/
+
+#TODO: Selenium
+</programlisting>
+
                     </para>
                 </listitem>
 
                 <listitem>
                     <para>
-                        postgre - Wymagane w wersji 8.3. Instalacja:
+                        System bazy danych: postgre - Wymagane w wersji 8.3. Instalacja:
                             <programlisting>sudo apt-get install postgresql
 sudo apt-get install postgresql-client
 sudo apt-get install libpq-dev
-sudo apt-get install phppgadmin
 sudo gem install postgres</programlisting>
+
+
+Tworzenie wymaganych baz:
+sudo su postgres
+createdb money_development -E UTF8
+money_test
+money_selenium
+exit
+
+createuser test_3m -S -d -R -P
+
+
+
+Instalowanie narzędzia rake
+sudo apt-get install rake
+
+
+
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+
                     </para>
                 </listitem>
             </itemizedlist>
         </section>
     </chapter>
+
+
 </book>

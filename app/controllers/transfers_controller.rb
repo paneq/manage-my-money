@@ -1,6 +1,6 @@
+#FIXME: I'm still to fat, boy. Cure me!
 class TransfersController < HistoryController
 
-  require 'hash'
   include ActionView::Helpers::ActiveRecordHelper
   
   before_filter :login_required
@@ -57,42 +57,13 @@ class TransfersController < HistoryController
   end
 
 
-  #remote
-  def show_details
-    render :update do |page|
-      page.hide "show-details-button-#{@transfer.id}"
-      page.insert_html :bottom,
-        "transfer-in-category-#{@transfer.id}",
-        :partial => 'transfer_details',
-        :object => @transfer,
-        :locals => {:current_category_id => params[:current_category], :include_subcategories => params[:include_subcategories]}
-    end
+  def show
   end
 
   
-  #remote
-  #TODO: Make it JS only, no request to server required
-  def hide_details
-    render :update do |page|
-      page.remove "transfer-details-id-#{@transfer.id}"
-      page.show "show-details-button-#{@transfer.id}"
-    end
-  end
-
-
   def edit
     set_current_category
     @transfer = self.current_user.transfers.find_by_id(params[:id])
-    respond_to do |format|
-      format.html {}
-      format.js do
-        render :update do |page|
-          page.replace_html "transfer-in-category-#{@transfer.id}",
-            :partial => 'transfers/full_transfer',
-            :locals => { :current_category => @category , :transfer => @transfer, :include_subcategories => @include_subcategories }
-        end
-      end
-    end
   end
 
 
@@ -129,9 +100,9 @@ class TransfersController < HistoryController
       respond_to do |format|
         format.html {}
         format.js do
-          render_transfer_table do |page|
+          render_transfer_table do |page| #FIXME: It would be cool to write page.render_transfer_table. that way we could move it into js.rjs files...
             create_empty_transfer
-            page.replace_html 'show-transfer-full', :partial=>'transfers/full_transfer', :locals => {:current_category => @category, :transfer => @transfer}
+            page.replace_html 'show-transfer-full', :partial=>'transfers/form', :locals => {:current_category => @category, :transfer => @transfer}
           end
         end
       end
@@ -143,12 +114,10 @@ class TransfersController < HistoryController
 
   def destroy
     @transfer.destroy
+    flash[:notice] = 'Transfer został usunięty'
     respond_to do |format|
-      format.html do
-        # Railscast: 043_ajax_with_rjs REFACTOR
-        flash[:notice] = 'Transfer został usunięty'
-        redirect_to transfers_path
-      end
+      format.html
+      # Railscast: 043_ajax_with_rjs REFACTOR
       format.js { render_transfer_table }
     end
   end

@@ -12,13 +12,12 @@
 # your SCM below:
 #set :scm, :subversion
 
-#set :user, "rupert"
 set :use_sudo, false
 set :group_writable, false
 
-#role :app, "s.rootnode.pl"
-#role :web, "s.rootnode.pl"
-#role :db,  "s.rootnode.pl", :primary => true
+#role :app, "example.org"
+#role :web, "example.org"
+#role :db,  "example.org", :primary => true
 
 set :shared_children,   %w(system log pids backup sphinx config)
 

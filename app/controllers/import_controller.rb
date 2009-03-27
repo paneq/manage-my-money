@@ -37,7 +37,7 @@ class ImportController < CooperationController
       return
     end
     
-    #CSV Mbanku => 1250
+    #CSV Mbanku => WIN-1250
 
   end
 
@@ -48,21 +48,16 @@ class ImportController < CooperationController
     error_id = params[:error_id]
     if @transfer.save
       render :update do |page|
+        # FIXME: TODO: DOES NOT WORK CORRECTLY AND REQUIRES AUTOMATED TESTING, Broken after transfer view refactoring. Possible day when fixed: 29 march 2009
         page.replace_html "transfer-edit-#{error_id}", :text => 'Transfer został pomyślnie zapisany'
         # TODO, dodać jakieś mignięcie albo coś
       end
     else
       render :update do |page|
+        # FIXME: TODO: DOES NOT WORK CORRECTLY AND REQUIRES AUTOMATED TESTING
         page.replace_html "transfer-errors-#{error_id}", error_messages_for(:transfer, :message => nil)
-        @transfer.transfer_items.each do |ti|
-          if ti.valid?
-            page.replace_html "transfer-item-errors-#{ti.error_id}", ''
-          else
-            page.replace_html "transfer-item-errors-#{ti.error_id}", error_messages_for(:transfer_item, :object => ti, :message => nil, :header_message => nil, :id =>'small', :class => 'smallerror')
-          end
-        end
-      end # render
-    end # if else
+      end 
+    end
 
   end
 

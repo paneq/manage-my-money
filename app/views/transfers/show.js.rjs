@@ -1,0 +1,6 @@
+page.hide "show-details-button-#{@transfer.id}"
+page.insert_html :bottom,
+  "transfer-in-category-#{@transfer.id}",
+  :partial => 'transfer_details',
+  :object => @transfer,
+  :locals => {:current_category_id => params[:current_category], :include_subcategories => params[:include_subcategories]}

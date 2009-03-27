@@ -1,0 +1,7 @@
+page.replace_html "transfer-in-category-#{@transfer.id}",
+  :partial => 'transfers/form',
+  :locals => {
+    :current_category => @category ,
+    :transfer => @transfer,
+    :include_subcategories => @include_subcategories 
+    }

@@ -1,4 +1,4 @@
-require 'hash'
+require 'hash' #confirmed
 
 class Money
   # initialize() <br />

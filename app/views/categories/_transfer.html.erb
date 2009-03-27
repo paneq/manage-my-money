@@ -7,8 +7,6 @@
 <% current_category ||= nil %>
 <% include_subcategories ||= nil %>
 <% mode ||= nil %>
-<% size = '15x15' %>
-<% text = 'Pokaż sczegóły' %>
 
 <tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('', 'alt') %>" >
 
@@ -41,12 +39,12 @@
 
   <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer.id -%>">
     <span id="show-details-button-<%= transfer.id -%>">
-      <%= link_to_remote image_tag("/images/system-search.png", :size => size, :alt => text),
-        {:url => show_details_transfer_path(:id => transfer,
+      <%= link_to_remote show_img(),
+        {:url => transfer_path(:id => transfer,
           :current_category => current_category,
-          :include_subcategories => include_subcategories)
-        },
-        {:title => text} %>
+          :include_subcategories => include_subcategories),
+        :method => :get
+        } %>
     </span>
   </td>
 

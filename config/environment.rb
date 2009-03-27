@@ -75,10 +75,36 @@ Rails::Initializer.run do |config|
   config.i18n.default_locale = :pl
   config.cache_store = :mem_cache_store, "127.0.0.1:#{config.memcached_port}", { :namespace => "#{config.memcached_key}_manage_my_money_#{config.environment}" }
 
-  #  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate',
-  #    :source => 'http://gems.github.com'
+  #db connection
+  config.gem 'postgres'
 
+  # backgroundrb
+  config.gem 'packet'
+  config.gem 'chronic'
 
+  #parsing xml
+  config.gem 'collections', :lib => 'collections'
+  config.gem 'collections', :lib => 'collections/sequenced_hash'
+  config.gem 'nokogiri', :version => '1.2.3'
+
+  #pagination
+  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  
+  # Required only for project development
+  #  config.gem 'flay'
+  #  config.gem 'flog'
+  #  config.gem 'railroad', :version => '0.5'
+  #  config.gem 'reek'
+  #  config.gem 'roodi'
+  #  config.gem 'rspec-rails', :lib => 'spec'
+  #  config.gem 'rspec-rails', :lib => 'spec/rails'
+  #  config.gem 'jscruggs-metric_fu', :lib => 'metric_fu', :source => 'http://gems.github.com'
+  #  config.gem 'mergulhao-rcov', :lib => 'rcov', :source => 'http://gems.github.com'
+  #  config.gem 'mergulhao-rcov', :lib => 'rcov/rcovtask', :source => 'http://gems.github.com'
+  #  config.gem 'mocha'
+  #  
+  #  TODO: Selenium in proper version
+  
   config.after_initialize do
     class Date
       include DateExtensions
@@ -87,11 +113,4 @@ Rails::Initializer.run do |config|
 
 end
 
-require "will_paginate"
-
-ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com)
-
-
-
-
-Rails::Initializer
+ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com) if defined?(ExceptionNotifier)

@@ -21,7 +21,7 @@
     <% end %>
 
     <div id="show-transfer-full" <%= style_display_if { show.first == 'full'} %> >
-      <%= render :partial => 'transfers/full_transfer',
+      <%= render :partial => 'transfers/form',
         :locals => {
         :current_category => current_category ,
         :transfer => transfer,

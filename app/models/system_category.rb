@@ -14,8 +14,6 @@
 #  category_type_int :integer       
 #
 
-require 'hash_enums'
-
 class SystemCategory < ActiveRecord::Base
   extend HashEnums
 
@@ -25,6 +23,7 @@ class SystemCategory < ActiveRecord::Base
 
   validates_presence_of :name, :category_type
 
+  #FIXME: Use Category.CATEGORY_TYPES !
   define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
   default_scope :order => "category_type_int, lft"
@@ -34,6 +33,7 @@ class SystemCategory < ActiveRecord::Base
   end
 
   named_scope :of_type, lambda { |type|
+    #FIXME: Use Category.CATEGORY_TYPES !
     raise "Unknown system category type: #{type}" unless SystemCategory.CATEGORY_TYPES.include?(type)
     { :conditions => {:category_type_int => SystemCategory.CATEGORY_TYPES[type] }}
   }

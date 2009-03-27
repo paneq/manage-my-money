@@ -56,7 +56,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources     :transfers,
     {
     :member => {
-      :show_details => :post,
       :hide_details => :post
     },
     :collection => {

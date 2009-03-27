@@ -21,7 +21,7 @@
             </ul>
           </div>
         <% end %>
-        <%= render :partial => 'transfers/full_transfer', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
+        <%= render :partial => 'transfers/form', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
       </div>
     </div>
   <% end %>

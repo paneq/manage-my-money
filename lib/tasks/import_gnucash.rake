@@ -1,5 +1,3 @@
-require 'active_record'
-#require 'hpricot'
 require 'nokogiri'
 require 'collections/sequenced_hash'
 
@@ -36,18 +34,20 @@ namespace :import do
         'invoice' => 'http://www.gnucash.org/XML/invoice',
         'entry' => 'http://www.gnucash.org/XML/entry',
         'vendor' => 'http://www.gnucash.org/XML/vendor'
-     }
+      }
     end
 
-    class Nokogiri::XML::Element
-      def find(what)
-         xpath(what, gnucash_namespaces)
+    if defined?(Nokogiri)
+      class Nokogiri::XML::Element
+        def find(what)
+          xpath(what, gnucash_namespaces)
+        end
       end
-    end
 
-    class Nokogiri::XML::Document
-      def find(what)
-         xpath(what, gnucash_namespaces)
+      class Nokogiri::XML::Document
+        def find(what)
+          xpath(what, gnucash_namespaces)
+        end
       end
     end
 
@@ -72,7 +72,7 @@ namespace :import do
       end
 
       unless file_name
-#        file_name = '/home/jarek/Desktop/cash_test'
+        #        file_name = '/home/jarek/Desktop/cash_test'
         file_name = '/home/jarek/NetBeansProjects/other/rupert.xml'
         puts 'No file param given'
       end
@@ -112,7 +112,7 @@ namespace :import do
       top_categories = {}
       puts "\n==Parsing categories"
       doc.find('//gnc:account').each do |node|
-#       puts "Commodity: " + node.find('act:commodity/cmdty:id').inner_html
+        #       puts "Commodity: " + node.find('act:commodity/cmdty:id').inner_html
         c = Category.new
         c.import_guid = node.find('act:id').inner_html
         c.name = node.find('act:name').inner_html
@@ -137,8 +137,8 @@ namespace :import do
 
 
 
-        #kategorie poziomu głownego (parent_id == root) przeniesc do naszych odpowiednich kategorii
-        #chyba ze sa tylko po jednej - wtedy je utozsamiamy bez zmiany nazwy?
+      #kategorie poziomu głownego (parent_id == root) przeniesc do naszych odpowiednich kategorii
+      #chyba ze sa tylko po jednej - wtedy je utozsamiamy bez zmiany nazwy?
       puts "\n==Merging top categories"
       [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE ].each do |category_type|
         top = user.categories.top.of_type(category_type).find(:first)
@@ -148,10 +148,10 @@ namespace :import do
             item.parent_guid = nil
           end
         elsif top_categories[category_type].size == 1
-            top_gc_guid = top_categories[category_type][0].import_guid
-            top.import_guid = top_gc_guid
-            categories[top_gc_guid] = top
-            #mozna ewentualnie podmienic nazwe i opis
+          top_gc_guid = top_categories[category_type][0].import_guid
+          top.import_guid = top_gc_guid
+          categories[top_gc_guid] = top
+          #mozna ewentualnie podmienic nazwe i opis
         end
       end
 
@@ -248,7 +248,7 @@ namespace :import do
       user, file_name = parse_params
       
       transfers = user.transfers.find :all,
-            :conditions => ["import_guid IS NOT NULL", true]
+        :conditions => ["import_guid IS NOT NULL", true]
       deleted = 0
       puts "\n==Removing transfers"
       transfers.each do |tr|
@@ -267,9 +267,9 @@ namespace :import do
       user, file_name = parse_params
 
       categories = user.categories.find :all,
-            :conditions => ["import_guid IS NOT NULL AND imported = ?", true],
-            :order => 'categories.lft',
-            :select => 'id'
+        :conditions => ["import_guid IS NOT NULL AND imported = ?", true],
+        :order => 'categories.lft',
+        :select => 'id'
       puts "\n==Removing categories"
       deleted = 0
       categories.each do |id|
@@ -295,6 +295,6 @@ namespace :import do
     end
 
 
-end
+  end
 
 end

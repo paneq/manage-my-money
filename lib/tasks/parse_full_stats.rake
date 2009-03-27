@@ -7,6 +7,7 @@ namespace :stats do
       machine_name = Socket.gethostname
       case machine_name
       when 'arachno'
+        #FIXME: Make this a paramter to task
         settings_file = '/home/jarek/NetBeansProjects/stats/file'
         to_file = 'home/jarek/NetBeansProjects/stats/like_calc'
       else

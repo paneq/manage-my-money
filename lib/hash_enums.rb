@@ -1,5 +1,3 @@
-require 'collections/sequenced_hash'
-
 module HashEnums
   protected
   ## definiuje pole typu enum w klasie modelu (getter i setter w obiekcie, oraz stala na poziomie klasy z dostepnymi typami
