@@ -1,12 +1,12 @@
 == Welcome to Manage My Money
 
-ManageMyMoney (3M) is an open source (...) designed for (...).
-It is similar to (...) bla bla bla
+ManageMyMoney (also known as 3M) is a web based open source accounting system
+ which implements a double-entry bookkeeping system.
+
 
 ManageMyMoney features:
 
 * Double accounting
-* An elegant user interface
 * Built using Ruby on Rails
 * And much more...
 
@@ -31,7 +31,7 @@ See the INSTALL file for more details.
 
 The best place to get support is on the mailing list:
 
-(...)
+(TBA)
 
 There is also a Lighthouse dev site available here:
 
@@ -41,7 +41,10 @@ Please Note: Before filing a ticket on the dev site discuss your question or
 problem on the mailing list. This makes it much easier to manage legitimate
 tickets.
 
+
 Enjoy!
 
 --
 The ManageMyMoney Dev Team
+ robert.pankowecki(at)gmail.com
+ sejtenik(at)gmail.com
