@@ -448,7 +448,6 @@ class ActiveSupport::TestCase
 
     #setup
     @selenium.open	"/selenium/setup?clear_tables=#{TABLES.join(',')}"
-    Kernel.sleep 5
   end
 
 

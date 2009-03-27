@@ -1,4 +1,4 @@
-class TransfersController < ApplicationController
+class TransfersController < HistoryController
 
   require 'hash'
   include ActionView::Helpers::ActiveRecordHelper

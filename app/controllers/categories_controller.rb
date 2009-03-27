@@ -1,4 +1,4 @@
-class CategoriesController < ApplicationController
+class CategoriesController < HistoryController
  
   before_filter :login_required
   before_filter :find_currencies_for_user, :only => [:show]
