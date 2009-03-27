@@ -5,6 +5,8 @@ development:
     memcached_key: key_dev
     rest_auth_site_key: rest_key_dev_01234567890123456789
     rest_auth_digest_stretches: 1
+    app_domain: localhost:3000
+    app_name: Manage My Money
 
 test:
     session_key: 3m_session_test
@@ -13,6 +15,8 @@ test:
     memcached_key: key_test
     rest_auth_site_key: rest_key_test_01234567890123456789
     rest_auth_digest_stretches: 1
+    app_domain: example.org
+    app_name: Manage My Money
 
 selenium:
     session_key: 3m_session_selenium
@@ -21,6 +25,8 @@ selenium:
     memcached_key: key_selenium
     rest_auth_site_key: rest_key_selenium_01234567890123456789
     rest_auth_digest_stretches: 1
+    app_domain: localhost:7000
+    app_name: Manage My Money
 
 production:
     #read environment.rb
@@ -32,3 +38,5 @@ production:
     # Changing this value will make all passwords invalid in your production database. Be carefull to write proper migrations if doing so...
     rest_auth_site_key: MAKE_IT_LONG_AND_RANDOM
     rest_auth_digest_stretches: 10
+    app_domain: example.org
+    app_name: Manage My Money

@@ -5,7 +5,7 @@ class DebtorMailer < ActionMailer::Base
   # text => text of message for users
   # currencies => list of currencies used by user
   def remind(user, info, text, currencies)
-    sbj = "[co-do-grosza.pl] Przypomnienie o aktualnym stanie zadłużenia od użytkownika #{user.login}"
+    sbj = "[#{APP_NAME}] Przypomnienie o aktualnym stanie zadłużenia od użytkownika #{user.login}"
     recipients    "#{info[:loan].email}"
     from          "robert.pankowecki@gmail.com"
     subject       sbj

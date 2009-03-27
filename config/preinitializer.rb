@@ -1,5 +1,13 @@
 module FileSiteKeys
-  ATTRIBUTES = [:session_key, :session_secret, :memcached_port, :memcached_key, :rest_auth_site_key, :rest_auth_digest_stretches]
+  ATTRIBUTES = [:session_key,
+    :session_secret,
+    :memcached_port,
+    :memcached_key,
+    :rest_auth_site_key,
+    :rest_auth_digest_stretches,
+    :app_domain,
+    :app_name]
+  
   ATTRIBUTES.freeze
 
   ATTRIBUTES.each do |meth|
