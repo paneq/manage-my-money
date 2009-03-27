@@ -1,21 +1,18 @@
 <h1>Raporty</h1>
-<br />
-<br />
-<table class="flow-table">
+  <% light_shadow()do %>
+<table class ="nice-table long">
   <tr><th colspan="2">Raporty standardowe</th></tr>
 <%  @system_reports.each do |report| %>
   <tr ><td style="width:65%"><b><%= link_to report.name, report_url(report, :virtual=>true), obj_hash_id('show-report-virtual', report) %></b></td><td> <%= link_to "Kopiuj do moich raportow", url_for(:controller => 'reports', :action => 'copy_report', :id => report.id), obj_hash_id('copy-report', report) %></td></tr>
 <% end %>
-</table>
 
 
-<br/>
-<table class="flow-table">
   <tr><th colspan="2">Moje raporty</th></tr>
 <%  @user_reports.each do |report| %>
   <tr><td style="width:65%"><%= link_to report.name, report_url(report), obj_hash_id('show-report', report) %> </td> <td> <%= link_to "Edytuj", edit_report_url(report), obj_hash_id('edit-report', report) %> | <%= link_to "Usun", report_path(report), {:method => :delete}.merge(obj_hash_id('delete', report)) %></td></tr>
 <% end %>
 </table>
-<br/>
+<b><%= link_to "Nowy raport", new_report_url, :style=>'font-size:1.2em; margin: 2px', :id => 'new_report' %> </b>
 
-<b>  <%= link_to "Nowy raport", new_report_url, :style=>'font-size:2em', :id => 'new_report' %> </b>
+<% end %>
+

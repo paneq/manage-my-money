@@ -1,17 +1,16 @@
-<div id="category-option" class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>">
-
+<!--<div id="category-option" class="width category verticalCenter <%= cycle('line-even', 'line-odd') %>">-->
+<tr id="category-option" class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= category_option.category.name_with_path -%>" >
   <% new_or_existing = category_option.new_record? ? 'new' : 'existing' %>
   <% prefix = "#{report_type}[#{new_or_existing}_category_report_options][]" %>
   <% fields_for prefix, category_option do |option_form| -%>
 
-  <span id="category-link" class="floatLeft category verticalCenter" style="">
+  <td id="category-link">
     <a style="padding-left : <%= ( category_option.category.level  + 1 ) * 20 %>px;">
-      <%= image_tag "/images/bg/submenu1.gif", :style => 'align: left;' -%>
       <a><%= h category_option.category.name %></a>
       </a>
-  </span>
+  </td>
 
-  <span class="floatRight category verticalCenter" style="">
+  <td id="category-options">
     <%  if report_type == 'flow_report' %>
       <%= option_form.enum_select :inclusion_type, :class => :category_report_option, :values => {:none => 'Nie wybrana', :category_only => 'Wybrana'} %>
      <%  else %>
@@ -21,7 +20,7 @@
       <%= option_form.enum_select :inclusion_type, :class => :category_report_option, :values => values, :html_options => {:style => 'width: 20em'} %>
      <%end%>
      <%= option_form.hidden_field :category_id %>
-  </span>
+  </td>
   <% end -%>
 
-</div>
+</tr>

@@ -1,6 +1,6 @@
 <h1>Historia wykonania planu '<%= @goal.description %>' </h1>
-<div class="nice-table">
-  <table id="mytable" cellspacing="0" summary="Cele">
+<% light_shadow() do %>
+  <table id="mytable" class="nice-table">
     <tr>
       <th scope="col" class="nobg nice-table">Nazwa</th>
       <th scope="col" class="nice-table">Dla kategorii</th>
@@ -26,6 +26,8 @@
 
     
   </table>
+
+<% end %>
 
   <br />
 

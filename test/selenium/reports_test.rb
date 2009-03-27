@@ -80,10 +80,10 @@ begin
           assert @selenium.is_text_present("Przepływ gotówki")
       }
       selenium_assert {
-          assert @selenium.is_text_present("Pieniądze do zaznaczonych kategorii przyszły z:")
+          assert @selenium.is_text_present("Pieniądze do wybranych kategorii przyszły z:")
       }
       selenium_assert {
-          assert @selenium.is_text_present("Pieniądze z zaznaczonych kategorii wypłynęły do:")
+          assert @selenium.is_text_present("Pieniądze z wybranych kategorii wypłynęły do:")
       }
       selenium_assert {
           assert @selenium.is_text_present("W sumie:")

@@ -266,9 +266,9 @@ class ReportsControllerTest < ActionController::TestCase
 
   def assert_category_options(report_type, new_or_existing)
     assert_select 'div#categories-options' do
-      assert_select 'div#category-option', :count => @jarek.categories.size
+      assert_select 'tr#category-option', :count => @jarek.categories.size
       @jarek.categories.each do |cat|
-        assert_select "div#category-option", :text => /#{cat.name}.*/ do
+        assert_select "tr#category-option", :text => /#{cat.name}.*/ do
           assert_select "select[id^=#{report_type}_#{new_or_existing}_category_report_options_]" do
             case report_type
             when 'flow_report'

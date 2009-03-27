@@ -18,7 +18,9 @@
 <div id="categories-options">
   <fieldset style="margin-top: 1em" class="width73" >
   <legend>Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania</legend>
+  <table id="category-tree" class="nice-table width long">
   <%= render :partial => 'category_option', :collection => (@value_report || @report).category_report_options, :locals => {:report_type => 'value_report'} %>
+  </table>
   </fieldset>
 </div>
 

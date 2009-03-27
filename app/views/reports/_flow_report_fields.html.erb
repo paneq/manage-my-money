@@ -13,8 +13,11 @@
 <div id="categories-options">
   <fieldset style="margin-top: 1em" class="width73">
   <legend>Kategorie uwzględnione na raporcie</legend>
+  <table id="category-tree" class="nice-table width long">
   <%= render :partial => 'category_option', :collection => (@flow_report || @report).category_report_options, :locals => {:report_type => 'flow_report'} %>
+  </table>
   </fieldset>
+  
 </div>
 
 <%= form.submit 'Zapisz'%>

@@ -1,82 +1,57 @@
-
 <h1>Przepływ gotówki - <%=  @report.period_start %> do <%=  @report.period_end %> </h1>
-<br/>
-<h2>Kategorie wybrane do zestawienia:</h2>
-<p><ul>
-<% @report.category_report_options.each do |cat| %>
 
-<li><%= cat.category.name_with_path %> </li>
+<% light_shadow() do %>
+  <table class="nice-table long">
+    <tr><th colspan="2">Kategorie wybrane do zestawienia:</th></tr>
+    <% for cato in @report.category_report_options do %>
+        <tr><td><%= cato.category.name_with_path %></td></tr>
+    <% end %>
+  </table>
+  <% unless @cash_flow[:in].empty? %>
+    <table class="nice-table long">
+      <tr><th colspan="2">Pieniądze do wybranych kategorii przyszły z:</th></tr>
+      <% for cat in @cash_flow[:in] do %>
+         <%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+      <% end %>
+      <tr><td><b>W sumie: </b></td><td class="right"><b>
+                <%  for currency in @currencies do %>
+                    <%= "#{@in_sum.value(currency)} #{currency.symbol}, " -%>
+                  <% end %>
+                </b>
+            </td></tr>
 
-<% end %>
-</ul>
-<br/>
+    </table>
+  <% end %>
+  <% unless @cash_flow[:out].empty? %>
+     <table class="nice-table long">
+       <tr><th colspan="2">Pieniądze z wybranych kategorii wypłynęły do:</th></tr>
+       <% for cat in @cash_flow[:out] do %>
+          <%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+       <% end %>
+       <tr><td><b>W sumie: </b></td><td class="right"><b>
+                    <%  for currency in @currencies do %>
+                        <%= "#{@out_sum.value(currency)} #{currency.symbol}, " -%>
+                      <% end %>
+                    </b>
+       </td></tr>
 
+     </table>
+   <% end %>
 
-<% unless @cash_flow[:in].empty? %>
-<table class="flow-table">
-<tr><th colspan="2" class="flow-table-header">Pieniądze do zaznaczonych kategorii przyszły z:</th></tr>
+  <% if !@cash_flow[:in].empty? && !@cash_flow[:out].empty? %>
+    <table class="nice-table long">
+      <tr><td colspan="2"></td></tr>
+      <tr><td><b>Różnica:	</b></td><td class="right"><%  @currencies.each do |currency| %>
+        <%= "#{@delta.value(currency)} #{currency.symbol}, " -%>
+      <% end %></td></tr>
+    </table>
+  <% end %>
 
-<% @cash_flow[:in].each do |cat| %>
+  <% if @cash_flow[:in].empty? && @cash_flow[:out].empty? %>
+    <table class="nice-table long">
+      <tr><th>Dla podanych parametrów raportu nie znaleziono żadnych danych do pokazania</th></tr>
+    </table>
+  <% end %>
 
-<%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
-
-<% end %>
-<br/>
-<tr><td><b>W sumie: </b></td><td class="right"><b>
-<%  @currencies.each do |currency| %>
-		<%= "#{@in_sum.value(currency)} #{currency.symbol}, " -%>
-<% end %>
-</b>
-</td></tr>
-
-</table>
-
-<% end %>
-
-<% unless @cash_flow[:out].empty? %>
-<table class="flow-table">
-<tr><th colspan="2" class="flow-table-header">
-Pieniądze z zaznaczonych kategorii wypłynęły do:</th></tr>
-
-<% @cash_flow[:out].each do |cat| %>
-
-<%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
-
-<% end %>
-
-<br/><br/>
-<tr><td><b>W sumie: </b></td><td class="right"><b>
-<%  @currencies.each do |currency| %>
-		<%= "#{@out_sum.value(currency)} #{currency.symbol}, " -%>
-<% end %>
-</b>
-</td></tr>
-
-</table>
-<% end %>
-<br/>
-
-
-<% if !@cash_flow[:in].empty? && !@cash_flow[:out].empty? %>
-<div class="flow-summary">
-<b>Różnica:	</b><%  @currencies.each do |currency| %>
-		<%= "#{@delta.value(currency)} #{currency.symbol}, " -%>
-<% end %>
-</div>
-
-<% end %>
-
-
-<% if @cash_flow[:in].empty? && @cash_flow[:out].empty? %>
- <table class="flow-table">
-<tr><th class="flow-table-header">Dla podanych parametrów raportu nie znaleziono żadnych danych do pokazania</th></tr>
- </table>
-<% end %>
-
-
-<br/>
-
-
-<br/><br/>
-</p>
+<%end%>
 <%= render :partial => 'report_links' %>

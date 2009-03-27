@@ -739,6 +739,7 @@ ul.submenu3 a:hover {
 
 .right {
     text-align: right;
+    width: 10%;
 }
 
 .flow-summary {
@@ -777,4 +778,20 @@ div.auto_complete ul strong.highlight {
     margin:0;
     padding:0;
 }
+
+
+#right-menu ul{
+    margin-left:15px;
+    width:220px;
+}
+
+#right-menu li{
+    background-position:right center;
+    background-repeat:no-repeat;
+    border-bottom:1px dotted #2E2304;
+    list-style-type:none;
+    padding:4px 30px 4px 0;
+    text-align:left;
+}
+
 

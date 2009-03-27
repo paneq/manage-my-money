@@ -87,7 +87,8 @@ a {
 }
 
 a:hover {
-    color: #668FA3;
+    /*color: #668FA3;*/
+    color: black;
 }
 
 a img {

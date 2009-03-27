@@ -9,26 +9,27 @@
     <%= switch("graph_table_for_#{currency}","Pokaż/ukryj tabelkę danych") %> <br/>
     <div id="graph_table_for_<%=currency%>">
       <% if @report.share_report? %>
-
-        <table class="flow-table">
-          <tr class="flow-table-header"><th >Kategoria</th><th>Saldo <%= currency%></th><th>%</th></tr>
+       <% light_shadow() do %>
+        <table class="nice-table">
+          <tr><th >Kategoria</th><th>Saldo <%= currency%></th><th>%</th></tr>
           <%  @values[currency][:values].find_all{|el| el[:percent] > 0 }.each do |val| %>
             <%=render :partial => "show_share_category", :locals => {:val => val}%>
           <% end %>
           <tr><td><b>W sumie: </b></td><td class="right"><%= @values[currency][:sum] %></td><td class="right">100</td></tr>
           <%  zero_values = @values[currency][:values].find_all{|el| el[:percent] == 0 } %>
           <% if zero_values.size > 0 %>
-          <tr class="flow-table-header"><td colspan="3"><b>Wartości nie uwzględnione na wykresie:</b></td></tr>
+          <tr><td colspan="3"><b>Wartości nie uwzględnione na wykresie:</b></td></tr>
           <%  zero_values.each do |val| %>
             <%=render :partial => "show_share_category", :locals => {:val => val}%>
           <% end %>
           <% end %>
         </table>
+        <% end %>
 
       <% else %>
-
-        <table class="flow-table">
-          <tr class="flow-table-header"><th>Saldo <%= currency%></th>
+      <% light_shadow() do %>
+        <table class="nice-table">
+          <tr><th>Saldo <%= currency%></th>
           <% @values[currency][:date_labels].each do |label| %>
           <th><%= label %></th>
           <% end -%>
@@ -37,7 +38,7 @@
           <%=render :partial => "show_value_category", :locals => {:label => label, :values => values}%>
           <% end %>
         </table>
-
+      <% end %>
       <% end #end of if -%>
 
     </div>

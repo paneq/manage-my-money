@@ -47,3 +47,8 @@
 </fieldset>
 <p><%= f.submit 'Zapisz' %></p>
 <% end -%>
+
+<div>
+<%= link_to 'Usuń konto', user_path(@current_user), :method => :delete, :confirm => "Jesteś pewien?", :id => 'usun-konto-menu-link'  %>
+</div>
+
