@@ -1,1 +1,46 @@
-Manage my money README #TODO
+== Welcome to Manage My Money
+
+ManageMyMoney (3M) is an open source (...) designed for (...).
+It is similar to (...) bla bla bla
+
+ManageMyMoney features:
+
+* An elegant user interface
+* Built using Ruby on Rails
+* And much more...
+
+
+== License
+
+ManageMyMoney is released under the BSD license and is copyright (c) 2009
+Robert Pankowecki and Jaroslaw Plebanski. A copy of the BSD license can be found in the
+LICENSE file.
+
+
+== Installation and Setup
+
+ManageMyMoney is a traditional Ruby on Rails application, meaning that you can
+configure and run it the way you would a normal Rails application.
+
+See the INSTALL file for more details.
+
+
+
+== Support
+
+The best place to get support is on the mailing list:
+
+(...)
+
+There is also a Lighthouse dev site available here:
+
+http://3m.lighthouseapp.com/projects/28121-manage-my-money
+
+Please Note: Before filing a ticket on the dev site discuss your question or
+problem on the mailing list. This makes it much easier to manage legitimate
+tickets.
+
+Enjoy!
+
+--
+The ManageMyMoney Dev Team
