@@ -3,7 +3,8 @@
 <% form_tag '/debtors/remind' do -%>
 
   <div id="debtors_list">
-    <table style="width: 100%">
+    <%light_shadow do%>
+    <table class="nice-table long">
       <tr>
 
         <th>Dłużnik</th>
@@ -15,7 +16,7 @@
       </tr>
       <% @debtors.each do |info| %>
         <% loan = info[:loan] %>
-        <tr <%= obj_id('loan', loan) -%> >
+        <tr <%= obj_id('loan', loan) -%> class="<%=cycle('','alt')%>">
           
           <td id="name"><%= link_to loan.name, category_path(loan) %></td>
           <td id="email"><%= h loan.email %></td>
@@ -25,7 +26,7 @@
 
         </tr>
         <tr style="display: none;" <%= obj_id('transfer-items-list', loan) -%> >
-          <td colspan="5" style="margin: 0 auto;">
+          <td colspan="5" style="margin: 0 auto; padding: 10px;">
             <table style="width: 80%">
               <tr>
                 <th>Dzień</th>
@@ -64,6 +65,7 @@
         </tr>
       <% end %>
     </table>
+    <% end %>
   </div>
 
   <div>
