@@ -7,6 +7,8 @@ ManageMyMoney (also known as 3M) is a web based open source accounting system
 ManageMyMoney features:
 
 * Double accounting
+* Pretty graphs
+* Transactions' description automplete
 * Built using Ruby on Rails
 * And much more...
 
@@ -46,5 +48,5 @@ Enjoy!
 
 --
 The ManageMyMoney Dev Team
- robert.pankowecki(at)gmail.com
- sejtenik(at)gmail.com
+ robert.pankowecki@gmail.com
+ sejtenik@gmail.com
