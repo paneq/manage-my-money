@@ -32,6 +32,7 @@
 
         <section>
             <title>Wstęp</title>
+            #FIXME: English!
             Istnieje bardzo dużo możliwych kombinacji w jakich może zostać wdrożona nasza aplikacja.
             Im więcej posiadasz doświadczenia z Ruby on Rails tym bardziej ten proces jest dla Ciebie
             oczywisty i tym więcej możliwości możesz sobie wyobrazić i pewnie dokładnie wiesz co należy
@@ -108,39 +109,48 @@ cd rubygems-1.3.1
 sudo ruby setup.rb
 sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
 sudo gem update --system
-cd ..</programlisting>
+cd ..
+                        </programlisting>
                     </para>
                 </listitem>
 
                 <listitem>
                     <para>
                         rails - Wymagane w wersji 2.3.2 conajmniej. Instalacja:
-                            <programlisting>sudo gem install rails -v 2.3.2 --no-rdoc --no-ri</programlisting>
+                        <programlisting>sudo gem install rails -v 2.3.2 --no-rdoc --no-ri</programlisting>
                     </para>
                 </listitem>
 
                 <listitem>
                     <para>
                         Dodatkowe wymagane gemy wraz z pakietami niezbędnymi do ich zbudowania:
-                            <programlisting>sudo gem install packet --no-rdoc --no-ri
-sudo gem install collections --no-rdoc --no-ri
+                        <programlisting>
 sudo gem sources -a http://gems.github.com
+
+sudo gem install packet --no-rdoc --no-ri
+sudo gem install chronic --no-rdoc --no-ri
+
+sudo gem install collections --no-rdoc --no-ri
+
 sudo gem install mislav-will_paginate --no-rdoc --no-ri
 
 sudo apt-get install libxslt-dev libxslt-ruby
+sudo gem install nokogiri  --no-rdoc --no-ri
 
-sudo gem install flay
-sudo gem install flog
-sudo gem install railroad
-sudo gem install reek
-sudo gem install roodi
-sudo gem install rspec-rails
 
-sudo gem install jscruggs-metric_fu -s http://gems.github.com/
-sudo gem install mergulhao-rcov -s http://gems.github.com/
+# For stats only:
+sudo gem install flay  --no-rdoc --no-ri
+sudo gem install flog --no-rdoc --no-ri
+sudo gem install railroad --no-rdoc --no-ri
+sudo gem install reek --no-rdoc --no-ri
+sudo gem install roodi --no-rdoc --no-ri
+sudo gem install rspec-rails --no-rdoc --no-ri
+
+sudo gem install jscruggs-metric_fu --no-rdoc --no-ri
+sudo gem install mergulhao-rcov --no-rdoc --no-ri
 
 #TODO: Selenium
-</programlisting>
+                        </programlisting>
 
                     </para>
                 </listitem>
@@ -148,26 +158,24 @@ sudo gem install mergulhao-rcov -s http://gems.github.com/
                 <listitem>
                     <para>
                         System bazy danych: postgre - Wymagane w wersji 8.3. Instalacja:
-                            <programlisting>sudo apt-get install postgresql
+                        <programlisting>sudo apt-get install postgresql
 sudo apt-get install postgresql-client
 sudo apt-get install libpq-dev
-sudo gem install postgres</programlisting>
-
+sudo gem install postgres
+                        </programlisting>
 
 Tworzenie wymaganych baz:
+                        <programlisting>
 sudo su postgres
 createdb money_development -E UTF8
-money_test
-money_selenium
-exit
+
+Analogicznie dla: money_test
+Analogicznie dla: money_selenium
 
 createuser test_3m -S -d -R -P
 
-
-
-Instalowanie narzędzia rake
-sudo apt-get install rake
-
+exit
+                        </programlisting>
 
 
                     </para>
@@ -175,12 +183,47 @@ sudo apt-get install rake
 
                 <listitem>
                     <para>
-
+                        Sphinx: (For transaction and transaction items description autocomplete feature).
+                        More informations about installing sphinx : http://www.sphinxsearch.com/docs/current.html#installation .
+                        Be sure to compile it with pgsql support.
                     </para>
                 </listitem>
             </itemizedlist>
         </section>
     </chapter>
 
+    <chapter>
+        <title>
+            Configuration
+        </title>
+
+        <section>
+            <title>
+                Setting up files
+            </title>
+            Rename all *_example files in config/ directory and edit them to suit your needs.
+        </section>
+
+        <section>
+            <title>
+                Running migrations
+            </title>
+            Run rake db:migrate:all task to create proper databases.
+        </section>
+
+        <section>
+            <title>
+                Running tests
+            </title>
+            Run rake test task to check tests.
+        </section>
+
+        <section>
+            <title>
+                Running server
+            </title>
+            Run ./script/console
+        </section>
+    </chapter>
 
 </book>
