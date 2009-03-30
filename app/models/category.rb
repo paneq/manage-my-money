@@ -114,8 +114,10 @@ class Category < ActiveRecord::Base
   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
   #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
   def name_with_path
-    path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
-    path[0,path.size-1]
+    Rails.cache.fetch(name_with_path_cache_key) do
+      path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
+      path[0,path.size-1]
+    end
   end
 
   def name_with_indentation
@@ -571,12 +573,16 @@ class Category < ActiveRecord::Base
 
 
   def system_category
-    self.system_categories.max{|a,b| a.cached_level <=> b.cached_level}
+    self.system_categories.max_by(&:cached_level)
   end
 
 
   def level_cache_key
     "category(#{user_id},#{id}).level"
+  end
+
+  def name_with_path_cache_key
+    "category(#{user_id},#{id}).name_with_path"
   end
 
   def cached_level
