@@ -1,3 +1,10 @@
 log/*.log
 tmp/**/*
 nbproject
+config/backgroundrb.yml
+config/database.yml
+config/deploy.rb
+config/mongrel_cluster.yml
+config/selenium.yml
+config/site_keys.yml
+config/sphinx.yml
