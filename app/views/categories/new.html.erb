@@ -9,7 +9,7 @@
 
     <p id="parent">
       <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
-      <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name', (@parent.id if @parent)), :id => 'parent-select' %>
+      <%= select_tag 'category[parent]', options_from_collection_for_select(@categories, 'id', 'name_with_indentation', (@parent.id if @parent)), :id => 'parent-select' %>
     </p>
 
     <p id="balance">
@@ -21,28 +21,40 @@
     </p>
 
     <p id="system_category">
-      <%= form.label :system_category, 'Kategoria systemowa'%>
+      <%= form.label :system_category, 'Typ kategorii'%>
       <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
     </p>
 
 
 
-<fieldset style="margin-top: 1em">
-          <legend>Dłużnik / Wierzyciel</legend>
+    <fieldset style="margin-top: 1em">
+      <legend>Dłużnik / Wierzyciel</legend>
 
-    <p id="loan">
-      <p id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%> </p>
-      <p id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %> </p>
-      <p id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></p>
-    </p>
+      <p id="loan">
+        <p id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%> </p>
+        <p id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %> </p>
+        <p id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></p>
+      </p>
 
-</fieldset>
+    </fieldset>
 
-    <p id="create">
-      <%= form.submit "Utwórz nową kategorię" %>
-    </p>
-  <% end %>
-</div>
+    <fieldset style="margin-top: 1em;">
+      <legend>Podkategorie</legend>
+
+      <div class="scrollbar">
+           <% @subcategories.each do |s_category_id, value| %>
+               <% cat_id = "sub-category-#{s_category_id}"%>
+               <%= check_box_tag 'new_subcategories[]', s_category_id, value[:selected], :id => cat_id   %> <%= label_tag cat_id, value[:category].name, :class => 'inline', :style => "margin-left: #{10*value[:category].cached_level}px" %> <br/>
+             <% end %>
+        </div>
+      </fieldset>
+
+      <p id="create">
+        <%= form.submit "Utwórz nową kategorię" %>
+      </p>
+    <% end %>
+  </div>
 
 
-<%= link_to 'Powróć do listy kategorii', categories_url %>
+  <%= link_to '<< Powróć do listy kategorii', categories_url, :class => 'margin-left' %>
+  <br/>

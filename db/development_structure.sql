@@ -130,7 +130,9 @@ CREATE TABLE categories (
     type character varying(255),
     email character varying(255),
     bankinfo text,
-    bank_account_number character varying(255)
+    bank_account_number character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -429,7 +431,9 @@ CREATE TABLE system_categories (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     description character varying(255),
-    category_type_int integer
+    category_type_int integer,
+    cached_level integer,
+    name_with_path character varying(255)
 );
 
 
@@ -1017,3 +1021,7 @@ INSERT INTO schema_migrations (version) VALUES ('20090323095653');
 INSERT INTO schema_migrations (version) VALUES ('20090323111511');
 
 INSERT INTO schema_migrations (version) VALUES ('20090324094534');
+
+INSERT INTO schema_migrations (version) VALUES ('20090330153852');
+
+INSERT INTO schema_migrations (version) VALUES ('20090330164910');

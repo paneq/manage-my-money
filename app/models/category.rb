@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090324094534
+# Schema version: 20090330164910
 #
 # Table name: categories
 #
@@ -17,6 +17,8 @@
 #  email               :string(255)   
 #  bankinfo            :text          
 #  bank_account_number :string(255)   
+#  created_at          :datetime      
+#  updated_at          :datetime      
 #
 
 class Category < ActiveRecord::Base
@@ -26,7 +28,7 @@ class Category < ActiveRecord::Base
 
   acts_as_nested_set :scope=> [:user_id, :category_type_int], :dependent => :destroy
 
-  attr_accessor :opening_balance, :opening_balance_currency
+  attr_accessor :opening_balance, :opening_balance_currency, :new_subcategories
 
   attr_accessor :parent_guid #for importing, not saved in db
 
@@ -117,11 +119,11 @@ class Category < ActiveRecord::Base
   end
 
   def name_with_indentation
-    '.'*level + name
+    '.'*cached_level + name
   end
 
   def short_name_with_indentation
-    '&nbsp;'*level*2 + short_name
+    '&nbsp;'*cached_level*2 + short_name
   end
 
 
@@ -141,6 +143,33 @@ class Category < ActiveRecord::Base
       self.move_to_child_of(@parent_to_save)
       @parent_to_save = nil
     end
+  end
+
+
+  def save_with_subcategories!
+    transaction do
+      save!
+      save_new_subcategories!
+    end
+  end
+
+  def save_with_subcategories
+    begin
+      save_with_subcategories!
+    rescue
+      return false
+    else
+      return true
+    end
+  end
+
+  def save_new_subcategories!
+#    puts 'save_new_subcategories!'
+#    new_subcategories.each do |sys_cat_id|
+#      sys_cat = SystemCategory.find sys_cat_id.to_i
+#      puts sys_cat.to_s
+#    end
+#    throw 'BlaBla'
   end
 
 
@@ -522,9 +551,17 @@ class Category < ActiveRecord::Base
 
 
   def system_category
-    self.system_categories.max{|a,b| a.level <=> b.level}
+    self.system_categories.max{|a,b| a.cached_level <=> b.cached_level}
   end
 
+
+  def level_cache_key
+    "category(#{user_id},#{id}).level"
+  end
+
+  def cached_level
+    Rails.cache.fetch(level_cache_key) { level }
+  end
 
 
   #======================

@@ -56,18 +56,27 @@ class CategoriesController < HistoryController
     @categories = @current_user.categories
     @currencies = @current_user.visible_currencies
     @system_categories = SystemCategory.all
+    @subcategories = SequencedHash.new; @system_categories.each {|sc| @subcategories[sc.id] = {:selected => false, :category => sc}}
   end
 
 
   def create
     @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent].to_i )
+    params[:new_subcategories] ||= []
     format_openinig_balance
     @category = Category.new(params[:category].merge(:user => @current_user))
-    if @category.save
+    @category.new_subcategories = params[:new_subcategories]
+    if @category.save_with_subcategories
       flash[:notice] ||= 'Utworzono nową kategorię'
       redirect_to categories_url
     else
       @system_categories = SystemCategory.all
+      @subcategories = SequencedHash.new; @system_categories.each {|sc| @subcategories[sc.id] = {:selected => false, :category => sc}}
+
+      params[:new_subcategories].each do |new_sc|
+        @subcategories[new_sc.to_i][:selected] = true;
+      end
+      
       @categories = @current_user.categories
       @currencies = @current_user.visible_currencies
       flash[:notice] = 'Nie udało się utworzyć kategorii.'

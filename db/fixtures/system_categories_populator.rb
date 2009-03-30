@@ -7,6 +7,17 @@ class SystemCategoriesPopulator < DataPopulator
       create_expense
       create_income
       create_loan
+
+      cache_data
+
+    end
+
+    def cache_data
+      SystemCategory.all.each do |sc|
+        sc.cached_level = sc.level
+        sc.name_with_path = sc.get_name_with_path
+        sc.save!
+      end
     end
 
 
@@ -238,6 +249,9 @@ class SystemCategoriesPopulator < DataPopulator
         c1 << n(:id => 405, :name => 'Znajomi')
       end
     end
+
+
+   
 
   end
 
