@@ -188,6 +188,17 @@ exit
                         Be sure to compile it with pgsql support.
                     </para>
                 </listitem>
+
+                <listitem>
+                    <para>
+                        System cachowania danych: memcached
+                        <programlisting>
+sudo apt-get install memcached
+                        </programlisting>
+                    </para>
+                </listitem>
+
+
             </itemizedlist>
         </section>
     </chapter>
@@ -220,9 +231,17 @@ exit
 
         <section>
             <title>
-                Running server
+                Starting memcached
             </title>
-            Run ./script/console
+            <programlisting>$ memcached -p PORT_NUMBER</programlisting>
+        </section>
+
+        <section>
+            <title>
+                Running server
+            </title>Run
+            <programlisting>$ ./script/console</programlisting>
+            inside your application directory.
         </section>
     </chapter>
 
