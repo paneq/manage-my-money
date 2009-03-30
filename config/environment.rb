@@ -88,7 +88,7 @@ Rails::Initializer.run do |config|
   config.gem 'nokogiri', :version => '1.2.3'
 
   #pagination
-  config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'mislav-will_paginate', :version => '~> 2.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
   
   # Required only for project development
   #  config.gem 'flay'

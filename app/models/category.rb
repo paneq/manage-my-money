@@ -147,6 +147,7 @@ class Category < ActiveRecord::Base
 
 
   def save_with_subcategories!
+    @was_new_record_before_save = new_record?
     transaction do
       save!
       save_new_subcategories!
@@ -157,37 +158,29 @@ class Category < ActiveRecord::Base
     begin
       save_with_subcategories!
     rescue
-      instance_variable_set("@new_record", true) #HACK HACK HACK
+      instance_variable_set("@new_record", true) if @was_new_record_before_save #HACK HACK HACK
       return false
     else
       return true
     end
   end
 
-  #FIXME implementation od this method can use some refactorization, but is working well and is well tested too
   def save_new_subcategories!
-    
     #0 retrieve selected categories
     selected_categories = new_subcategories.map do |sys_cat_id|
       SystemCategory.find(sys_cat_id.to_i)
     end.compact
 
-    #1 fix system_categories parents
+    categories_pairs = {}
     selected_categories.each do |selected_category|
+      #1 fix system_categories parents
       if (selected_category.new_parent != nil) && (!selected_categories.include?(selected_category.new_parent))
         selected_category.new_parent = find_first_selected_parent(selected_categories, selected_category)
       end
-    end
 
-
-    #2 create new_categories in hash
-    categories_pairs = {}
-    selected_categories.each do |selected_category|
+      #2 create new_categories in hash
       categories_pairs[selected_category] = new_from_system_category(self, selected_category)
-
-
     end
-
 
     #3 set new categories parents
     categories_pairs.keys.sort_by(&:cached_level).each do |selected_category|

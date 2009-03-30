@@ -38,23 +38,14 @@
 
     </fieldset>
 
-    <fieldset style="margin-top: 1em;">
-      <legend>Podkategorie</legend>
+    <%= render :partial => 'new_subcategories' %>
 
-      <div class="scrollbar">
-           <% @subcategories.each do |s_category_id, value| %>
-               <% cat_id = "sub-category-#{s_category_id}"%>
-               <%= check_box_tag 'new_subcategories[]', s_category_id, value[:selected], :id => cat_id   %> <%= label_tag cat_id, value[:category].name, :class => 'inline', :style => "margin-left: #{10*value[:category].cached_level}px" %> <br/>
-             <% end %>
-        </div>
-      </fieldset>
-
-      <p id="create">
-        <%= form.submit "Utwórz nową kategorię" %>
-      </p>
-    <% end %>
-  </div>
+    <p id="create">
+      <%= form.submit "Utwórz nową kategorię" %>
+    </p>
+  <% end %>
+</div>
 
 
-  <%= link_to '<< Powróć do listy kategorii', categories_url, :class => 'margin-left' %>
-  <br/>
+<%= link_to '<< Powróć do listy kategorii', categories_url, :class => 'margin-left' %>
+<br/>
