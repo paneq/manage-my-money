@@ -86,6 +86,7 @@ class CategoriesController < HistoryController
     @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
     @system_categories = SystemCategory.find_all_by_category_type(@category)
     @subcategories = empty_subcategories(@system_categories)
+    @current_subcategories = @category.descendants
   end
 
    
