@@ -300,7 +300,7 @@ class CategoriesControllerTest < ActionController::TestCase
       :system_category_id => ''
     }
 
-    assert_redirected_to :action => :index
+    assert_redirected_to :action => :show
 
     #chaning name and description should pass
     loan_category = @rupert.categories.find(loan_category.id) #newset version of category
@@ -326,7 +326,7 @@ class CategoriesControllerTest < ActionController::TestCase
       :system_category_id => ''
     }
 
-    assert_redirected_to :action => :index
+    assert_redirected_to :action => :show
     assert_match(/Zapisano/, flash[:notice])
 
     #changing name, description and parent should pass
@@ -351,7 +351,7 @@ class CategoriesControllerTest < ActionController::TestCase
       :parent => parent_category.id,
       :system_category_id => system_food.id,
     }
-    assert_redirected_to :action => :index
+    assert_redirected_to :action => :show
 
     updated_category = @rupert.categories.find_by_name('test name')
     assert_equal system_food.id, updated_category.system_category.id
@@ -367,7 +367,7 @@ class CategoriesControllerTest < ActionController::TestCase
       :bankinfo => 'bank bank bank'
     }
 
-    assert_redirected_to :action => :index
+    assert_redirected_to :action => :show
     assert_match(/Zapisano/, flash[:notice])
 
     category = LoanCategory.find_by_id(category.id)

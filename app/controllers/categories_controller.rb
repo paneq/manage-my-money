@@ -99,7 +99,7 @@ class CategoriesController < HistoryController
     @category.new_subcategories = params[:new_subcategories]
     if @category.save_with_subcategories
       flash[:notice] = 'Zapisano zmiany.'
-      redirect_to categories_url
+      redirect_to category_url(@category)
     else
       @parent = @category.parent
       @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
