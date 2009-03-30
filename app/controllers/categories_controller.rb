@@ -72,7 +72,6 @@ class CategoriesController < HistoryController
     else
       @system_categories = SystemCategory.all
       @subcategories = SequencedHash.new; @system_categories.each {|sc| @subcategories[sc.id] = {:selected => false, :category => sc}}
-
       params[:new_subcategories].each do |new_sc|
         @subcategories[new_sc.to_i][:selected] = true;
       end

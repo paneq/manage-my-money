@@ -25,7 +25,6 @@ class SystemCategory < ActiveRecord::Base
 
   validates_presence_of :name, :category_type
 
-  #FIXME: Use Category.CATEGORY_TYPES !
   define_enum :category_type, Category.CATEGORY_TYPES
 
   default_scope :order => "category_type_int, lft"
@@ -34,12 +33,8 @@ class SystemCategory < ActiveRecord::Base
     '..'*cached_level + name
   end
 
-  def name_with_space_indentation
-    '&nbsp;'*cached_level*3 + name
-  end
 
   named_scope :of_type, lambda { |type|
-    #FIXME: Use Category.CATEGORY_TYPES !
     raise "Unknown system category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
     { :conditions => {:category_type_int => Category.CATEGORY_TYPES[type] }}
   }
@@ -88,5 +83,14 @@ class SystemCategory < ActiveRecord::Base
     path[0,path.size-1]
   end
 
+
+  #this will not be saved in db
+  def new_parent=(a_parent)
+    @new_parent = a_parent
+  end
+
+  def new_parent
+    @new_parent || self.parent
+  end
 
 end
