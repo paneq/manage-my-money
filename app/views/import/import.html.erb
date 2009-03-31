@@ -1,15 +1,39 @@
-<div>
+<h1>Import historii transakcji</h1>
 
-  <% form_tag('/import/parse', :multipart => true) do  %>
+<div >
 
-    Wybierz kategorię do której chcesz zaimportować transfery:
-    <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name_with_indentation, @category.id) %>
+  <% form_tag('/import/parse_bank', :multipart => true, :class => 'style2') do  %>
 
-    <br />
+    <fieldset >
+      <legend>Import z banków</legend>
 
-    Wybierz plik do wysłania: <%= file_field_tag "file"  %><br/>
+      <p>
+        <label for="category_id" style="width:100%"> Wybierz kategorię do której chcesz zaimportować transfery</label>
+        <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name_with_indentation, @category.id) %>
+      </p>
 
-    <%= submit_tag("Wyślij plik") %>
+      <p>
+        <label for="file">Wybierz plik do wysłania</label> <%= file_field_tag "file", :class => 'inline'  %><br/>
+      </p>
+      <p>
+        <%= submit_tag("Wyślij plik") %>
+      </p>
+    </fieldset>
+  <% end %>
+
+  <% form_tag('/import/parse_gnucash', :multipart => true, :class => 'style2') do  %>
+    <fieldset style="margin-top: 1em">
+      <legend>Import z GnuCash</legend>
+
+      <p>
+        <label for="file" style="width:100%">Wybierz plik XML do wysłania</label> <%= file_field_tag "file", :class => 'inline'  %><br/>
+      </p>
+      <p>
+        <%= submit_tag("Wyślij plik") %>
+      </p>
+    </fieldset>
+
+
 
   <% end %>
 
