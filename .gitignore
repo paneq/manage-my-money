@@ -8,3 +8,11 @@ config/mongrel_cluster.yml
 config/selenium.yml
 config/site_keys.yml
 config/sphinx.yml
+config/*.sphinx.conf
+db/sphinx/**/*.spa
+db/sphinx/**/*.spd
+db/sphinx/**/*.sph
+db/sphinx/**/*.spi
+db/sphinx/**/*.spm
+db/sphinx/**/*.spp
+db/sphinx/**/*.spl

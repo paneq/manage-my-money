@@ -731,6 +731,68 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
 
+  test "Category autocomplete" do
+    prepare_sample_system_category_tree
+    jarek_expense = @jarek.expense
+    jarek_food = Category.new(:name => 'Food', :parent => jarek_expense, :user => @jarek)
+    jarek_food.save!
+
+    jarek_yoghurt = Category.new(:name => 'Yoghurt', :parent => jarek_food, :user => @jarek)
+    jarek_yoghurt.save!
+
+    rupert_expense = @rupert.expense
+    rupert_alcohol = Category.new(:name => 'Alcohol', :parent => rupert_expense, :user => @rupert)
+    rupert_alcohol.save!
+
+    rupert_loan = @rupert.loan
+    rupert_girlfriend = Category.new(:name => 'Girlfriend', :parent => rupert_loan, :user => @rupert)
+    rupert_girlfriend.save!
+
+    save_simple_transfer(:user => @jarek, :description => 'shoes', :income => jarek_expense)
+    save_simple_transfer(:user => @rupert, :description => 'clothes', :income => rupert_expense)
+    save_simple_transfer(:user => @jarek, :description => 'danone', :income => jarek_yoghurt)
+    save_simple_transfer(:user => @rupert, :description => 'wine', :income => rupert_alcohol)
+    save_simple_transfer(:user => @rupert, :description => 'Lend for buying some wine', :income => rupert_girlfriend)
+
+
+    def TransferItem.search_for_ids(text)
+      TransferItem.find(:all).to_a.select{|ti| ti.description =~ Regexp.new(text)}.map(&:id)
+    end
+    
+    assert Category.autocomplete('clothes', @rupert).empty?
+    assert Category.autocomplete('clothes', @jarek).empty?
+
+    assert_not_nil SystemCategory.find_by_name('Expenses')
+    jarek_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+    assert_not_nil jarek_expense.system_category
+
+    assert Category.autocomplete('clothes', @rupert).empty?
+    assert Category.autocomplete('clothes', @jarek).empty?
+
+    jarek_expense.update_attributes! :system_category => nil
+    
+    rupert_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+
+    assert Category.autocomplete('clothes', @rupert).empty?
+    assert Category.autocomplete('clothes', @jarek).empty?
+
+    jarek_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+    rupert_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+
+    assert Category.autocomplete('wine', @rupert).empty?
+    assert Category.autocomplete('wine', @jarek).empty?
+
+    assert Category.autocomplete('danone', @rupert).empty?
+    assert Category.autocomplete('danone', @jarek).empty?
+
+    assert Category.autocomplete('clothes', @rupert).empty?
+    assert [jarek_expense], Category.autocomplete('clothes', @jarek).empty?
+
+    assert Category.autocomplete('shoes', @jarek).empty?
+    assert [jarek_expense], Category.autocomplete('shoes', @rupert).empty?
+    
+  end
+
   private
 
 

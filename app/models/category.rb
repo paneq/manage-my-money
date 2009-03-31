@@ -525,7 +525,34 @@ class Category < ActiveRecord::Base
     self.system_categories.max{|a,b| a.level <=> b.level}
   end
 
+  def self.autocomplete(text, user = nil)
 
+    with_exclusive_scope do
+      found = find(:all,
+        :select => 'categories.id, count(*) as number', #, system_categories.parent_id
+        :joins => '
+        JOIN categories_system_categories   AS my_csc             ON    categories.id                 =   my_csc.category_id
+        JOIN categories_system_categories   AS other_csc          ON    my_csc.system_category_id     =   other_csc.system_category_id
+        JOIN categories                     AS other_categories   ON    other_csc.category_id         =   other_categories.id
+        JOIN transfer_items                                       ON    other_categories.id           =   transfer_items.category_id',
+        :conditions => ['other_categories.user_id != ? AND
+          categories.user_id = ? AND
+          transfer_items.id IN (?) AND
+          my_csc.system_category_id =
+          (SELECT MAX(inner_csc.system_category_id)
+          FROM categories_system_categories as inner_csc
+          WHERE inner_csc.category_id = categories.id)',
+        user.id,
+        user.id,
+        TransferItem.search_for_ids(text)],
+        :group => 'categories.id',
+        :order => 'number DESC',
+        :limit => 5
+      )
+      Category.find(:all, :conditions => {:id => found.map(&:id)})
+    end
+
+  end
 
   #======================
   private

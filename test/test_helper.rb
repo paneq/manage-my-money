@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test" unless ENV["RAILS_ENV"] == 'selenium'
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require File.expand_path(File.dirname(__FILE__) + "/autocomplete_test_helper")
 require 'test_help'
 
 # stallman cannot run selenium test :-)
@@ -38,6 +39,7 @@ end
 
 class ActiveSupport::TestCase
   include AuthenticatedTestHelper
+  include ::AutocompleteTestHelper
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
   # test database remains unchanged so your fixtures don't have to be reloaded
@@ -360,7 +362,15 @@ class ActiveSupport::TestCase
   def prepare_sample_system_category_tree
     e = SystemCategory.create :name => 'Expenses', :category_type => :EXPENSE
 
-    f = SystemCategory.create :name => 'Jedzenie', :category_type => :EXPENSE
+    f = SystemCategory.create :name => 'Food', :category_type => :EXPENSE
+
+    al = SystemCategory.create :name => 'Alcohol', :category_type => :EXPENSE
+
+    dr = SystemCategory.create :name => 'Dairy Rroducts', :category_type => :EXPENSE
+
+    ch = SystemCategory.create :name => 'Cheese', :category_type => :EXPENSE
+
+    yo = SystemCategory.create :name => 'Yoghurt', :category_type => :EXPENSE
 
     jf = SystemCategory.create :name => 'Junk Food', :category_type => :EXPENSE
 
@@ -371,13 +381,15 @@ class ActiveSupport::TestCase
     ca = SystemCategory.create :name => 'Cash', :category_type => :ASSET
 
     f.move_to_child_of e
+    al.move_to_child_of f
+    dr.move_to_child_of f
+    yo.move_to_child_of dr
+    ch.move_to_child_of dr
     jf.move_to_child_of f
     fr.move_to_child_of f
     c.move_to_child_of e
 
-    [e,f,jf,fr,c,ca].each(&:save!)
-
-    assert_equal 6, SystemCategory.all.count
+    assert_equal 10, SystemCategory.count(:all)
 
   end
 

@@ -11,4 +11,14 @@
       <a class="autocomplete-currency" style="display:none"><%= ti.currency_id -%></a>
     </li>
   <% end %>
+
+  <% @categories.each do |c| %>
+    <li class="autocomplete_item">
+      <span class="complete"><%= h @text %></span>
+      <span>
+        <%= c.name -%>
+      </span>
+      <a class="autocomplete-category" style="display:none"><%= c.id -%></a>
+    </li>
+  <% end %>
 </ul>

@@ -4,7 +4,8 @@ class AutocompleteController < ApplicationController
 
   def complete_transfer_item
     atr = params[:transfer][:transfer_items_attributes]
-    text = atr[atr.keys.first][:description]
+    @text = atr[atr.keys.first][:description]
+    text = @text.clone
     text << ' '
 
 
@@ -24,6 +25,10 @@ class AutocompleteController < ApplicationController
       :limit => 5,
       :include => [:category, :currency]
     @transfer_items.compact!
+
+    @categories = Category.autocomplete(text, self.current_user)
+    @categories.compact!
+    
     render :layout => false
   rescue
     render :nothing => :true

@@ -2,10 +2,10 @@ ENV["RAILS_ENV"] = "selenium"
 
 require 'test_helper'
 
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-require 'tasks/rails'
+#require 'rake'
+#require 'rake/testtask'
+#require 'rake/rdoctask'
+#require 'tasks/rails'
 
 begin
 
@@ -266,18 +266,7 @@ begin
       )
       
     end
-
-
-    def execute_with_autocomplete(&proc)
-      begin
-        Rake::Task['ts:in'].invoke
-        Rake::Task['ts:start'].invoke
-        yield proc
-      ensure
-        Rake::Task['ts:stop'].invoke
-      end
-    end
-
+    
 
     def move_and_click(locator)
       @selenium.mouse_over locator

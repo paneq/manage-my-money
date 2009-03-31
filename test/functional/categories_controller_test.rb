@@ -146,7 +146,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
 
   def test_create_with_system_category
-    system_food = SystemCategory.find_by_name('Jedzenie')
+    system_food = SystemCategory.find_by_name('Food')
     parent_category = @rupert.expense
     post :create, :category => {
       :name => 'test name',
@@ -268,7 +268,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
   def test_edit_select_system_category
     create_rupert_expenses_account_structure
-    system_food = SystemCategory.find_by_name('Jedzenie')
+    system_food = SystemCategory.find_by_name('Food')
     @food.system_category = system_food
     @food.save!
     get :edit, :id => @food.id
@@ -343,7 +343,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
   def test_update_with_system_category
     create_rupert_expenses_account_structure
-    system_food = SystemCategory.find_by_name('Jedzenie')
+    system_food = SystemCategory.find_by_name('Food')
     parent_category = @rupert.expense
     put :update, :id => @healthy.id, :category => {
       :name => 'test name',

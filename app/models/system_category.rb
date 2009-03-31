@@ -38,7 +38,14 @@ class SystemCategory < ActiveRecord::Base
     { :conditions => {:category_type_int => SystemCategory.CATEGORY_TYPES[type] }}
   }
 
-
+  #  define_index do
+  #    #fields
+  #    indexes categories.transfer_items.description, :as => :transfer_items_description
+  #    indexes categories.transfers.description, :as => :transfers_description
+  #
+  #    #set_property :delta => true #maybe in the future
+  #    set_property :sql_range_step => 100_000_000
+  #  end
 
   def self.create_or_update(options = {})
     id = options.delete(:id)
@@ -72,5 +79,24 @@ class SystemCategory < ActiveRecord::Base
     all :conditions => {:category_type_int => category.category_type_int}
   end
 
+
+  def self.autocomplete(text, user = nil)
+
+    with_exclusive_scope do
+      found = find(:all,
+        :select => 'system_categories.id, system_categories.parent_id, count(*) as number',
+        :joins => '
+        JOIN categories_system_categories AS csc ON system_categories.id = csc.system_category_id
+        JOIN categories ON categories.id = csc.category_id
+        JOIN transfer_items on transfer_items.category_id = categories.id',
+        :conditions => ['transfer_items.id IN (?)', TransferItem.search_for_ids(text)],
+        :group => 'system_categories.id, system_categories.parent_id',
+        :order => 'number DESC, system_categories.id DESC'
+        #TODO: Do not include user items in search
+      )
+      found
+    end
+
+  end
 
 end
