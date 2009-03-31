@@ -1,10 +1,15 @@
-class ImportController < CooperationController
-
+class ImportController < HistoryController
+    
   include FileRecognizer
+  before_filter :login_required
+  before_filter :find_currencies_for_user, :only => [:parse_bank]
+  before_filter :find_newest_exchanges, :only => [:parse_bank]
 
 
   ACCEPTED_CONTENT_TYPES = %w(text/csv text/xml)
   INVALID_FILE_WARNING = 'Wysłano nieprawidłowy plik. Akceptowane są jedynie pliki XML dla Inteligo oraz CSV dla mBanku'
+  INVALID_GNUCASH_FILE_WARNING = 'Nieprawidłowy plik Gnucash lub brak pliku'
+
 
   def import
     @category = self.current_user.categories.find_by_id(params[:category_id]) if params[:category_id]
@@ -13,9 +18,10 @@ class ImportController < CooperationController
   end
 
 
-  def parse
+  def parse_bank
     @category = self.current_user.categories.find(params[:category_id].to_i)
-    unless ACCEPTED_CONTENT_TYPES.include? params[:file].content_type.chomp
+
+    if (params[:file].blank?) || (!ACCEPTED_CONTENT_TYPES.include? params[:file].content_type.chomp)
       render_invalid_file_info
       return
     end
@@ -36,10 +42,34 @@ class ImportController < CooperationController
       render_invalid_file_info
       return
     end
-    
+
+
+    render 'parse'
     #CSV Mbanku => WIN-1250
 
   end
+
+  def parse_gnucash
+
+    if (params[:file].blank?) || (params[:file].content_type.chomp != 'text/xml')
+      render_invalid_file_info INVALID_GNUCASH_FILE_WARNING
+      return
+    end
+
+    content = params[:file].read
+    file_name = params[:file].original_filename
+
+    if !file_name.ends_with? 'xml'
+      render_invalid_file_info INVALID_GNUCASH_FILE_WARNING + ': ' + file_name
+      return
+    end
+
+    @result = GnucashParser.parse(content, self.current_user)
+
+    render 'import_status'
+  end
+
+
 
 
   def create
@@ -65,8 +95,8 @@ class ImportController < CooperationController
   private
 
 
-  def render_invalid_file_info
-    flash[:notice] = INVALID_FILE_WARNING
+  def render_invalid_file_info(info = INVALID_FILE_WARNING)
+    flash[:notice] = info
     @categories = self.current_user.categories
     @category ||= @categories.first
     render :action => :import

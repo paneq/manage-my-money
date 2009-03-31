@@ -1,3 +1,3 @@
-class ExportController < CooperationController
+class ExportController < HistoryController
   #TODO
 end
