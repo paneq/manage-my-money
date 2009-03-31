@@ -89,7 +89,10 @@ Rails::Initializer.run do |config|
 
   #pagination
   config.gem 'mislav-will_paginate', :version => '~> 2.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
-  
+
+  #parsinv csv files from mbank
+  config.gem 'fastercsv', :version => '~> 1.4.0'
+
   # Required only for project development
   #  config.gem 'flay'
   #  config.gem 'flog'
