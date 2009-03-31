@@ -53,7 +53,7 @@ class InteligoParser
         warnings << warning_class.new("Aby umożliwić zaimportowanie tego transferu została stworzona nowa waluta o symbolu: #{currency_long_symbol}", currency)
       end
 
-      amount = amount.inner_html.to_f
+      amount = amount.inner_text.to_f
       item_type, other_item_type = amount > 0 ? types : types.reverse
 
       other_side = operation.xpath('other-side')
@@ -81,6 +81,6 @@ class InteligoParser
       result << {:transfer => t, :warnings => warnings}
     end
 
-    return result
+    return result # array o hashes  [{:transfer => Transfer, :warnings => Array}, ...]
   end
 end
