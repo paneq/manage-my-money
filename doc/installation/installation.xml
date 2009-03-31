@@ -137,6 +137,7 @@ sudo gem install mislav-will_paginate --no-rdoc --no-ri
 sudo apt-get install libxslt-dev libxslt-ruby
 sudo gem install nokogiri  --no-rdoc --no-ri
 
+sudo gem install fastercsv  --no-rdoc --no-ri
 
 # For stats only:
 sudo gem install flay  --no-rdoc --no-ri
