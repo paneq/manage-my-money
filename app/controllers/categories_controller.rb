@@ -106,6 +106,7 @@ class CategoriesController < HistoryController
       @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
       @system_categories = SystemCategory.all
       @subcategories = subcategories_from_params(@system_categories, params[:new_subcategories])
+      @current_subcategories = @category.descendants
       flash[:notice] = 'Nie udało się zaktualizować kategorii.'
       render :action => 'edit'
     end

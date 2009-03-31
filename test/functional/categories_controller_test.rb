@@ -96,19 +96,27 @@ class CategoriesControllerTest < ActionController::TestCase
       assert_select "select#currency-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.visible_currencies[nr].long_name}")
     end
 
-    #test all system categories can be choosen
+    #test all user categories can be choosen
     @rupert.categories.count.times do |nr|
       assert_select "select#parent-select option:nth-child(#{nr+1})", Regexp.new("#{@rupert.categories[nr].name}")
     end
 
+
+    sys_categories = SystemCategory.all
+
+    assert sys_categories.size > 0
+
     assert_select 'select#system-category-select' do
       assert_select "option", :count => (SystemCategory.count + 1) do
-        SystemCategory.all.map(&:id).each do |opt|
-          assert_select "option[value=#{opt}]"
+        sys_categories.each do |opt|
+          assert_select "option[value=#{opt.id}]"
         end
         assert_select 'option', 'Brak'
       end
     end
+
+    assert_new_subcategories(sys_categories)
+
   end
 
   # test if proper parent_category is selected when user came to the site
@@ -220,6 +228,51 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
 
+  def test_create_with_subcategories
+    parent_category = @rupert.expense
+    system_food = SystemCategory.find_by_name('Food')
+    assert_difference("@rupert.categories.count", +2) do
+      post :create, :category => {
+        :name => 'test name',
+        :parent => parent_category.id,
+        :system_category_id => ''
+      }, :new_subcategories => [system_food.id]
+    
+    end
+
+    assert_redirected_to :action => :index
+
+    created_category = @rupert.categories.find_by_name('test name')
+    assert_not_nil created_category
+    assert_equal parent_category, created_category.parent
+
+    created_subcategory = @rupert.categories.find_by_name('Food')
+    assert_not_nil created_subcategory
+    assert_equal created_category, created_subcategory.parent
+
+  end
+
+
+  def test_create_with_subcategories_with_validation
+    parent_category = @rupert.income
+    system_food = SystemCategory.find_by_name('Food')
+    assert_no_difference("@rupert.categories.count") do
+      post :create, :category => {
+        :name => 'test name',
+        :parent => parent_category.id,
+        :system_category_id => ''
+      }, :new_subcategories => [system_food.id]
+
+    end
+
+    assert_response :success
+    assert_template 'new'
+    assert_match(/Nie udało.*/, flash[:notice])
+  end
+
+
+
+
   def test_edit_top_category
     get :edit, :id => @rupert.income
     assert_response :success
@@ -275,15 +328,46 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'edit'
 
+
+    sys_categories = SystemCategory.of_type(:EXPENSE)
+
+    assert sys_categories.size > 0
+
     assert_select 'select#system-category-select' do
       assert_select "option", :count => (SystemCategory.of_type(:EXPENSE).count + 1) do
-        SystemCategory.of_type(:EXPENSE).map(&:id).each do |opt|
-          assert_select "option[value=#{opt}]"
+        sys_categories.each do |opt|
+          assert_select "option[value=#{opt.id}]"
         end
         assert_select "option[value=#{system_food.id}][selected=selected]", system_food.name_with_indentation
       end
     end
 
+    assert_new_subcategories(sys_categories)
+
+    subcategories = @food.descendants
+    assert_select 'div#current-subcategories' do
+      assert_select "label", :count => subcategories.size do
+        subcategories.each do |sc|
+          assert_select "label#cur-subcategory-#{sc.id}", sc.name
+        end
+      end
+    end
+  end
+
+
+   def test_edit_with_no_subcategories
+    create_rupert_expenses_account_structure
+    get :edit, :id => @rupert.income.id
+    assert_response :success
+    assert_template 'edit'
+
+    subcategories = @rupert.income.descendants
+    assert_equal 0, subcategories.size
+
+    assert_select 'div#current-subcategories' do
+      assert_select "label", :count => 0
+      assert_select "p", 'Brak'
+    end
   end
 
 
@@ -356,6 +440,46 @@ class CategoriesControllerTest < ActionController::TestCase
     updated_category = @rupert.categories.find_by_name('test name')
     assert_equal system_food.id, updated_category.system_category.id
   end
+
+  def test_update_with_subcategories
+    create_rupert_expenses_account_structure
+    system_food = SystemCategory.find_by_name('Food')
+    parent_category = @rupert.expense
+    assert_difference("@rupert.categories.count", +1) do
+      put :update, :id => @healthy.id, :category => {
+        :name => 'test name',
+        :parent => parent_category.id
+      }, :new_subcategories => [system_food.id]
+
+    end
+    assert_redirected_to :action => :show
+
+    updated_category = @rupert.categories.find_by_name('test name')
+    assert_not_nil updated_category
+
+
+    created_category = @rupert.categories.find_by_name('Food')
+    assert_not_nil created_category
+    assert_equal updated_category, created_category.parent
+
+  end
+
+  def test_update_with_subcategories_and_validation
+    create_rupert_expenses_account_structure
+    system_food = SystemCategory.find_by_name('Food')
+    assert_no_difference("@rupert.categories.count") do
+      put :update, :id => @rupert.income.id, :category => {
+        :name => 'test name',
+      }, :new_subcategories => [system_food.id]
+    end
+
+    assert_response :success
+    assert_template 'edit'
+    assert_match(/Nie udało.*/, flash[:notice])
+  end
+
+
+
 
   def test_update_to_loan
     category = Category.new(:name => 'sejtenik', :parent => rupert.loan, :user => @rupert)
@@ -434,5 +558,18 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_tab ['quick', 'full', 'search'], :transfer
     assert_transfer_pages('/categories/search')
   end
+
+
+  private
+  def assert_new_subcategories(sys_categories)
+    assert_select 'div#new-subcategories' do
+      assert_select "input[type='checkbox']", :count => sys_categories.size
+      sys_categories.each do |opt|
+        assert_select "input#sub-category-#{opt.id}[value='#{opt.id}']"
+        assert_select "label[for='sub-category-#{opt.id}']", opt.name
+      end
+    end
+  end
+
   
 end

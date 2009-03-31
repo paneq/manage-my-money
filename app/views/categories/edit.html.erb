@@ -43,9 +43,9 @@
         <div style="float:left;width:50%">
           <fieldset style="margin-top: 1em">
             <legend>Aktualne podkategorie</legend>
-            <div class="scrollbar">
+            <div id="current-subcategories" class="scrollbar">
               <% for subcategory in  @current_subcategories do %>
-                  <label style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
+                  <label id="cur-subcategory-<%=subcategory.id%>" style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
                 <% end %>
 
                 <% if @current_subcategories.empty? %>

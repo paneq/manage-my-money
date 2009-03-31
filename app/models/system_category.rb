@@ -99,4 +99,11 @@ class SystemCategory < ActiveRecord::Base
     @new_parent || self.parent
   end
 
+
+  def self.all_from_cache
+    Rails.cache.fetch('SystemCategory.all') {all}
+  end
+
+
+
 end
