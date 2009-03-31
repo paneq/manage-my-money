@@ -70,4 +70,17 @@ class HistoryController < ApplicationController
     end
   end
 
+
+  def show_transfer_errors
+    respond_to do |format|
+      format.html {}
+      format.js do
+        where = extract_form_errors_id() # Cannot be moved into next lines...
+        render :update do |page|
+          page.replace_html where, error_messages_for(:transfer, :message => nil)
+        end
+      end #format.js
+    end
+  end
+
 end

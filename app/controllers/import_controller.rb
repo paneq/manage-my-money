@@ -75,18 +75,14 @@ class ImportController < HistoryController
   def create
     @transfer = Transfer.new(params[:transfer])
     @transfer.user = self.current_user
-    error_id = params[:error_id]
     if @transfer.save
+      where = extract_form_errors_id()
       render :update do |page|
-        # FIXME: TODO: DOES NOT WORK CORRECTLY AND REQUIRES AUTOMATED TESTING, Broken after transfer view refactoring. Possible day when fixed: 29 march 2009
-        page.replace_html "transfer-edit-#{error_id}", :text => 'Transfer został pomyślnie zapisany'
-        # TODO, dodać jakieś mignięcie albo coś
+        page.replace_html where, :text => '<b>Transfer został pomyślnie zapisany</b>'
+        page.visual_effect :highlight, where
       end
     else
-      render :update do |page|
-        # FIXME: TODO: DOES NOT WORK CORRECTLY AND REQUIRES AUTOMATED TESTING
-        page.replace_html "transfer-errors-#{error_id}", error_messages_for(:transfer, :message => nil)
-      end 
+      show_transfer_errors()
     end
 
   end
