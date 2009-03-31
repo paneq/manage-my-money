@@ -366,7 +366,7 @@ class ActiveSupport::TestCase
 
     al = SystemCategory.create :name => 'Alcohol', :category_type => :EXPENSE
 
-    dr = SystemCategory.create :name => 'Dairy Rroducts', :category_type => :EXPENSE
+    dr = SystemCategory.create :name => 'Dairy Products', :category_type => :EXPENSE
 
     ch = SystemCategory.create :name => 'Cheese', :category_type => :EXPENSE
 
@@ -379,6 +379,8 @@ class ActiveSupport::TestCase
     c = SystemCategory.create :name => 'Clothes', :category_type => :EXPENSE
 
     ca = SystemCategory.create :name => 'Cash', :category_type => :ASSET
+    
+    loan = SystemCategory.create :name => 'Loan', :category_type => :LOAN
 
     f.move_to_child_of e
     al.move_to_child_of f
@@ -389,7 +391,7 @@ class ActiveSupport::TestCase
     fr.move_to_child_of f
     c.move_to_child_of e
 
-    assert_equal 10, SystemCategory.count(:all)
+    assert_equal 11, SystemCategory.count(:all)
 
   end
 

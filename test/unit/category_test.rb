@@ -732,6 +732,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "Category autocomplete" do
     prepare_sample_system_category_tree
+    jarek_loan = @jarek.loan
     jarek_expense = @jarek.expense
     jarek_food = Category.new(:name => 'Food', :parent => jarek_expense, :user => @jarek)
     jarek_food.save!
@@ -743,9 +744,13 @@ class CategoryTest < ActiveSupport::TestCase
     rupert_alcohol = Category.new(:name => 'Alcohol', :parent => rupert_expense, :user => @rupert)
     rupert_alcohol.save!
 
+    rupert_dairy = Category.new(:name => 'Dairy Products', :parent => rupert_expense, :user => @rupert)
+    rupert_dairy.save!
+
     rupert_loan = @rupert.loan
     rupert_girlfriend = Category.new(:name => 'Girlfriend', :parent => rupert_loan, :user => @rupert)
     rupert_girlfriend.save!
+
 
     save_simple_transfer(:user => @jarek, :description => 'shoes', :income => jarek_expense)
     save_simple_transfer(:user => @rupert, :description => 'clothes', :income => rupert_expense)
@@ -753,6 +758,12 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:user => @rupert, :description => 'wine', :income => rupert_alcohol)
     save_simple_transfer(:user => @rupert, :description => 'Lend for buying some wine', :income => rupert_girlfriend)
 
+    Category.class_eval do
+      def sys_cat(text_or_nil)
+        self.system_category = text_or_nil.is_a?(String) ? SystemCategory.find_by_name!(text_or_nil) : nil
+        save!
+      end
+    end
 
     def TransferItem.search_for_ids(text)
       TransferItem.find(:all).to_a.select{|ti| ti.description =~ Regexp.new(text)}.map(&:id)
@@ -761,22 +772,19 @@ class CategoryTest < ActiveSupport::TestCase
     assert Category.autocomplete('clothes', @rupert).empty?
     assert Category.autocomplete('clothes', @jarek).empty?
 
-    assert_not_nil SystemCategory.find_by_name('Expenses')
-    jarek_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+    jarek_expense.sys_cat('Expenses')
     assert_not_nil jarek_expense.system_category
 
     assert Category.autocomplete('clothes', @rupert).empty?
     assert Category.autocomplete('clothes', @jarek).empty?
 
-    jarek_expense.update_attributes! :system_category => nil
-    
-    rupert_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
-
+    jarek_expense.sys_cat(nil)
+    rupert_expense.sys_cat('Expenses')
     assert Category.autocomplete('clothes', @rupert).empty?
     assert Category.autocomplete('clothes', @jarek).empty?
 
-    jarek_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
-    rupert_expense.update_attributes! :system_category => SystemCategory.find_by_name('Expenses')
+    jarek_expense.sys_cat('Expenses')
+    rupert_expense.sys_cat('Expenses')
 
     assert Category.autocomplete('wine', @rupert).empty?
     assert Category.autocomplete('wine', @jarek).empty?
@@ -785,11 +793,34 @@ class CategoryTest < ActiveSupport::TestCase
     assert Category.autocomplete('danone', @jarek).empty?
 
     assert Category.autocomplete('clothes', @rupert).empty?
-    assert [jarek_expense], Category.autocomplete('clothes', @jarek).empty?
+    assert_equal [jarek_expense], Category.autocomplete('clothes', @jarek)
 
     assert Category.autocomplete('shoes', @jarek).empty?
-    assert [jarek_expense], Category.autocomplete('shoes', @rupert).empty?
-    
+    assert_equal [jarek_expense], Category.autocomplete('shoes', @rupert)
+
+    jarek_yoghurt.sys_cat('Yoghurt')
+    assert_equal [rupert_expense], Category.autocomplete('danone', @rupert)
+    assert Category.autocomplete('danone', @jarek).empty?
+
+    rupert_dairy.sys_cat('Dairy Products')
+    assert_equal [rupert_expense, rupert_dairy].to_set, Category.autocomplete('danone', @rupert).to_set
+    assert Category.autocomplete('danone', @jarek).empty?
+
+    rupert_alcohol.sys_cat('Alcohol')
+    assert_equal [jarek_expense], Category.autocomplete('wine', @jarek)
+    assert Category.autocomplete('wine', @rupert).empty?
+
+    jarek_food.sys_cat('Food')
+    assert_equal [jarek_expense, jarek_food].to_set, Category.autocomplete('wine', @jarek).to_set
+    assert Category.autocomplete('wine', @rupert).empty?
+
+    rupert_girlfriend.sys_cat('Loan')
+    assert_equal [jarek_expense, jarek_food].to_set, Category.autocomplete('wine', @jarek).to_set
+    assert Category.autocomplete('wine', @rupert).empty?
+
+    jarek_loan.sys_cat('Loan')
+    assert_equal [jarek_expense, jarek_food, jarek_loan].to_set, Category.autocomplete('wine', @jarek).to_set
+    assert Category.autocomplete('wine', @rupert).empty?
   end
 
 
