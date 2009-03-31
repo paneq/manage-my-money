@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090324094534
+# Schema version: 20090330164910
 #
 # Table name: categories
 #
@@ -17,6 +17,8 @@
 #  email               :string(255)   
 #  bankinfo            :text          
 #  bank_account_number :string(255)   
+#  created_at          :datetime      
+#  updated_at          :datetime      
 #
 
 class Category < ActiveRecord::Base
@@ -26,7 +28,7 @@ class Category < ActiveRecord::Base
 
   acts_as_nested_set :scope=> [:user_id, :category_type_int], :dependent => :destroy
 
-  attr_accessor :opening_balance, :opening_balance_currency
+  attr_accessor :opening_balance, :opening_balance_currency, :new_subcategories
 
   attr_accessor :parent_guid #for importing, not saved in db
 
@@ -112,16 +114,18 @@ class Category < ActiveRecord::Base
   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
   #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
   def name_with_path
-    path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
-    path[0,path.size-1]
+    Rails.cache.fetch(name_with_path_cache_key) do
+      path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
+      path[0,path.size-1]
+    end
   end
 
   def name_with_indentation
-    '.'*level + name
+    '.'*cached_level + name
   end
 
   def short_name_with_indentation
-    '&nbsp;'*level*2 + short_name
+    '&nbsp;'*cached_level*2 + short_name
   end
 
 
@@ -143,6 +147,53 @@ class Category < ActiveRecord::Base
     end
   end
 
+
+  def save_with_subcategories!
+    @was_new_record_before_save = new_record?
+    transaction do
+      save!
+      save_new_subcategories!
+    end
+  end
+
+  def save_with_subcategories
+    begin
+      save_with_subcategories!
+    rescue
+      instance_variable_set("@new_record", true) if @was_new_record_before_save #HACK HACK HACK
+      return false
+    else
+      return true
+    end
+  end
+
+  def save_new_subcategories!
+    #0 retrieve selected categories
+    selected_categories = new_subcategories.map do |sys_cat_id|
+      SystemCategory.find(sys_cat_id.to_i)
+    end.compact
+
+    categories_pairs = {}
+    selected_categories.each do |selected_category|
+      #1 fix system_categories parents
+      if (selected_category.new_parent != nil) && (!selected_categories.include?(selected_category.new_parent))
+        selected_category.new_parent = find_first_selected_parent(selected_categories, selected_category)
+      end
+
+      #2 create new_categories in hash
+      categories_pairs[selected_category] = new_from_system_category(self, selected_category)
+    end
+
+    #3 set new categories parents
+    categories_pairs.keys.sort_by(&:cached_level).each do |selected_category|
+      new_subcategory = categories_pairs[selected_category]
+      new_subcategory.parent = categories_pairs[selected_category.new_parent] || self
+      unless new_subcategory.valid?
+        errors.add(:base,"Błąd przy tworzeniu podkategorii: #{new_subcategory.name} - #{new_subcategory.errors.full_messages}")
+      end
+      new_subcategory.save!
+    end
+  end
 
   #Required for rails validation of fields that are not in database
   def opening_balance_before_type_cast
@@ -522,7 +573,7 @@ class Category < ActiveRecord::Base
 
 
   def system_category
-    self.system_categories.max{|a,b| a.level <=> b.level}
+    self.system_categories.max_by(&:cached_level)
   end
 
   def self.autocomplete(text, user = nil)
@@ -552,6 +603,18 @@ class Category < ActiveRecord::Base
       Category.find(:all, :conditions => {:id => found.map(&:id)})
     end
 
+  end
+
+  def level_cache_key
+    "category(#{user_id},#{id}).level"
+  end
+
+  def name_with_path_cache_key
+    "category(#{user_id},#{id}).name_with_path"
+  end
+
+  def cached_level
+    Rails.cache.fetch(level_cache_key) { level }
   end
 
   #======================
@@ -723,6 +786,28 @@ class Category < ActiveRecord::Base
       end
     end
     result
+  end
+
+
+  def find_first_selected_parent(selected_categories, selected_category)
+    selected_ancestors = selected_category.ancestors.find_all{ |ancestor| selected_categories.include?(ancestor) }
+
+    if selected_ancestors.empty?
+      nil
+    else
+      selected_ancestors.max_by{ |selected_ancestor| selected_ancestor.cached_level}
+    end
+  end
+
+
+  def new_from_system_category(parent, system_category)
+    new_category = Category.new
+    new_category.name = system_category.name
+    new_category.description = system_category.description
+    new_category.category_type_int = system_category.category_type_int
+    new_category.system_category = system_category
+    new_category.user_id = parent.user_id
+    new_category
   end
 
 

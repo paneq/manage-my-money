@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
-  #fixtures :categories
 
   def setup
     prepare_currencies
@@ -793,8 +792,125 @@ class CategoryTest < ActiveSupport::TestCase
     
   end
 
-  private
 
+  test "save_new_subcategories with one subcategory" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    system_category = SystemCategory.find_by_name 'Fruits'
+    test_category.new_subcategories = [system_category.id]
+    assert_difference("@jarek.categories.count", +1) do
+      test_category.save_new_subcategories!
+    end
+    new_category = Category.find_by_name 'Fruits'
+    assert_not_nil new_category
+    assert_equal(new_category.parent, test_category)
+    assert_equal(new_category.system_category, system_category)
+  end
+
+
+
+  test "save_new_subcategories with one category with parent" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    system_category1 = SystemCategory.find_by_name 'Fruits'
+    system_category2 = system_category1.parent
+    test_category.new_subcategories = [system_category1.id, system_category2.id]
+
+    assert_difference("@jarek.categories.count", +2) do
+      test_category.save_new_subcategories!
+    end
+
+    new_category2 = Category.find_by_name system_category2.name
+    assert_not_nil new_category2
+    assert_equal(new_category2.parent, test_category)
+    assert_equal(new_category2.system_category, system_category2)
+
+
+    new_category = Category.find_by_name 'Fruits'
+    assert_not_nil new_category
+    assert_equal(new_category.parent, new_category2)
+    assert_equal(new_category.system_category, system_category1)
+
+  end
+
+
+  test "save_new_subcategories with one top category" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    system_category1 = SystemCategory.find_by_name 'Expenses'
+    test_category.new_subcategories = [system_category1.id]
+
+
+    assert_difference("@jarek.categories.count", +1) do
+      test_category.save_new_subcategories!
+    end
+
+    new_category = Category.find_by_name system_category1.name
+    assert_not_nil new_category
+    assert_equal(new_category.parent, test_category)
+    assert_equal(new_category.system_category, system_category1)
+
+  end
+
+
+  test "save_new_subcategories with many categories" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    system_category1 = SystemCategory.find_by_name 'Fruits'
+    system_category2 = system_category1.parent.parent
+    system_category3 = SystemCategory.find_by_name 'Clothes'
+    test_category.new_subcategories = [system_category1.id, system_category2.id, system_category3.id]
+
+    assert_difference("@jarek.categories.count", +3) do
+      test_category.save_new_subcategories!
+    end
+
+    new_category2 = Category.find_by_name system_category2.name
+    assert_not_nil new_category2
+    assert_equal(new_category2.parent, test_category)
+    assert_equal(new_category2.system_category, system_category2)
+
+    new_category3 = Category.find_by_name system_category3.name
+    assert_not_nil new_category3
+    assert_equal(new_category3.parent, new_category2)
+    assert_equal(new_category3.system_category, system_category3)
+
+    new_category = Category.find_by_name system_category1.name
+    assert_not_nil new_category
+    assert_equal(new_category.parent, new_category2)
+    assert_equal(new_category.system_category, system_category1)
+
+  end
+
+
+
+  test "save_new_subcategories with one category havin wrong type" do
+    prepare_sample_catagory_tree_for_jarek
+    prepare_sample_system_category_tree
+    save_expense_category_jarek
+    test_category = @jarek.categories.find_by_name 'test_expense'
+    system_category1 = SystemCategory.find_by_name 'Cash'
+    test_category.new_subcategories = [system_category1.id]
+
+
+    assert_no_difference("@jarek.categories.count") do
+      assert_raise ActiveRecord::RecordInvalid do
+        test_category.save_new_subcategories!
+      end
+    end
+
+  end
+
+
+  private
 
 
   def make_category(options = {})

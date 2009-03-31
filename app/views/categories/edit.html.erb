@@ -28,23 +28,49 @@
       <li>
         <% if @category.can_become_loan_category? %>
           <fieldset style="margin-top: 1em">
-          <legend>Dłużnik / Wierzyciel</legend>
-          <p id="loan">
-            <li id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%></li>
-            <li id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %></li>
-            <li id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></li>
-          </p>
+            <legend>Dłużnik / Wierzyciel</legend>
+            <p id="loan">
+              <li id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%></li>
+              <li id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %></li>
+              <li id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></li>
+            </p>
           </fieldset>
         <% end %>
       </li>
-      <li id="update">
+
+
+      <div>
+        <div style="float:left;width:50%">
+          <fieldset style="margin-top: 1em">
+            <legend>Aktualne podkategorie</legend>
+            <div class="scrollbar">
+              <% for subcategory in  @current_subcategories do %>
+                  <label style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
+                <% end %>
+
+                <% if @current_subcategories.empty? %>
+                  <p>Brak</p>
+                <% end %>
+              </div>
+            </fieldset>
+          </div>
+          <div style="float:right;width:50%">
+
+            <%= render :partial => 'new_subcategories' %>
+          </div>
+        </div>
+
+
+
+
+        <li id="update" style="padding-top: 20px">
           <%= form.submit "Zapisz zmiany" %>
-      </li>
-    </ul>
+        </li>
+      </ul>
 
-  <% end %>
-</div>
+    <% end %>
+  </div>
 
-<div style="margin: 5px 5px 5px 15px;">
-<%= link_to 'Powróć do listy kategorii', categories_url %>
-</div>
+  <div style="margin: 5px 5px 5px 15px;">
+    <%= link_to '<< Powróć do listy kategorii', categories_url %>
+  </div>

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090324094534
+# Schema version: 20090330164910
 #
 # Table name: categories
 #
@@ -17,6 +17,8 @@
 #  email               :string(255)   
 #  bankinfo            :text          
 #  bank_account_number :string(255)   
+#  created_at          :datetime      
+#  updated_at          :datetime      
 #
 
 class LoanCategory < Category

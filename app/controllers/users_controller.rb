@@ -42,13 +42,19 @@ class UsersController < ApplicationController
 
   def edit
     prepare_arrays_for_view
+    session[:return_to] = request.env['HTTP_REFERER']
   end
 
 
   def update
+    if params[:commit] == 'Anuluj'
+      redirect_back
+      return
+    end
+
     if self.current_user.update_attributes(params[:user])
-      flash[:notice] = 'User was successfully updated.'
-      redirect_to :controller => 'sessions', :action => 'default'
+      flash[:notice] = 'Ustawienia zostały zaktualizowane.'
+      redirect_back
     else
       prepare_arrays_for_view
       render :action => 'edit'
@@ -80,10 +86,21 @@ class UsersController < ApplicationController
   end
 
   def prepare_arrays_for_view
-#    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
+    #    @transaction_amount_limit_types = User.TRANSACTION_AMOUNT_LIMIT_TYPES.keys
     @multi_currency_balance_calculating_algorithms = User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys
     @currencies_for_select = @current_user.visible_currencies
   end
+
+  def redirect_back
+    unless session[:return_to].blank?
+      ret_to = session[:return_to]
+      session[:return_to] = nil
+      redirect_to ret_to
+    else
+      redirect_to :controller => 'sessions', :action => 'default'
+    end
+  end
+
 
 
 end

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090324094534) do
+ActiveRecord::Schema.define(:version => 20090330164910) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -32,19 +32,21 @@ ActiveRecord::Schema.define(:version => 20090324094534) do
   end
 
   create_table "categories", :force => true do |t|
-    t.string  "name",                                   :null => false
-    t.string  "description"
-    t.integer "category_type_int"
-    t.integer "user_id"
-    t.integer "parent_id"
-    t.integer "lft"
-    t.integer "rgt"
-    t.string  "import_guid"
-    t.boolean "imported",            :default => false
-    t.string  "type"
-    t.string  "email"
-    t.text    "bankinfo"
-    t.string  "bank_account_number"
+    t.string   "name",                                   :null => false
+    t.string   "description"
+    t.integer  "category_type_int"
+    t.integer  "user_id"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.string   "import_guid"
+    t.boolean  "imported",            :default => false
+    t.string   "type"
+    t.string   "email"
+    t.text     "bankinfo"
+    t.string   "bank_account_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "categories", ["category_type_int", "id", "user_id"], :name => "index_categories_on_id_and_user_id_and_category_type_int"
@@ -161,6 +163,8 @@ ActiveRecord::Schema.define(:version => 20090324094534) do
     t.datetime "updated_at"
     t.string   "description"
     t.integer  "category_type_int"
+    t.integer  "cached_level"
+    t.string   "name_with_path"
   end
 
   create_table "transfer_items", :force => true do |t|

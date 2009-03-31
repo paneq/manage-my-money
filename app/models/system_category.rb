@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090324094534
+# Schema version: 20090330164910
 #
 # Table name: system_categories
 #
@@ -12,6 +12,8 @@
 #  updated_at        :datetime      
 #  description       :string(255)   
 #  category_type_int :integer       
+#  cached_level      :integer       
+#  name_with_path    :string(255)   
 #
 
 class SystemCategory < ActiveRecord::Base
@@ -23,19 +25,18 @@ class SystemCategory < ActiveRecord::Base
 
   validates_presence_of :name, :category_type
 
-  #FIXME: Use Category.CATEGORY_TYPES !
-  define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
+  define_enum :category_type, Category.CATEGORY_TYPES
 
   default_scope :order => "category_type_int, lft"
 
   def name_with_indentation
-    '..'*level + name
+    '..'*cached_level + name
   end
 
+
   named_scope :of_type, lambda { |type|
-    #FIXME: Use Category.CATEGORY_TYPES !
-    raise "Unknown system category type: #{type}" unless SystemCategory.CATEGORY_TYPES.include?(type)
-    { :conditions => {:category_type_int => SystemCategory.CATEGORY_TYPES[type] }}
+    raise "Unknown system category type: #{type}" unless Category.CATEGORY_TYPES.include?(type)
+    { :conditions => {:category_type_int => Category.CATEGORY_TYPES[type] }}
   }
 
   #  define_index do
@@ -79,24 +80,23 @@ class SystemCategory < ActiveRecord::Base
     all :conditions => {:category_type_int => category.category_type_int}
   end
 
+  def cached_level
+    read_attribute('cached_level') || level
+  end
 
-  def self.autocomplete(text, user = nil)
+  def get_name_with_path
+    path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
+    path[0,path.size-1]
+  end
 
-    with_exclusive_scope do
-      found = find(:all,
-        :select => 'system_categories.id, system_categories.parent_id, count(*) as number',
-        :joins => '
-        JOIN categories_system_categories AS csc ON system_categories.id = csc.system_category_id
-        JOIN categories ON categories.id = csc.category_id
-        JOIN transfer_items on transfer_items.category_id = categories.id',
-        :conditions => ['transfer_items.id IN (?)', TransferItem.search_for_ids(text)],
-        :group => 'system_categories.id, system_categories.parent_id',
-        :order => 'number DESC, system_categories.id DESC'
-        #TODO: Do not include user items in search
-      )
-      found
-    end
 
+  #this will not be saved in db
+  def new_parent=(a_parent)
+    @new_parent = a_parent
+  end
+
+  def new_parent
+    @new_parent || self.parent
   end
 
 end

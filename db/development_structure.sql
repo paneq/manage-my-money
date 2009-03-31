@@ -130,7 +130,9 @@ CREATE TABLE categories (
     type character varying(255),
     email character varying(255),
     bankinfo text,
-    bank_account_number character varying(255)
+    bank_account_number character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -181,6 +183,7 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -363,6 +366,7 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -429,7 +433,9 @@ CREATE TABLE system_categories (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     description character varying(255),
-    category_type_int integer
+    category_type_int integer,
+    cached_level integer,
+    name_with_path character varying(255)
 );
 
 
@@ -438,6 +444,7 @@ CREATE TABLE system_categories (
 --
 
 CREATE SEQUENCE system_categories_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -458,7 +465,7 @@ ALTER SEQUENCE system_categories_id_seq OWNED BY system_categories.id;
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(12,2) NOT NULL,
+    value numeric(8,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,
@@ -1010,6 +1017,8 @@ INSERT INTO schema_migrations (version) VALUES ('20090313212009');
 
 INSERT INTO schema_migrations (version) VALUES ('20090320113507');
 
+INSERT INTO schema_migrations (version) VALUES ('20090323092622');
+
 INSERT INTO schema_migrations (version) VALUES ('20090320114536');
 
 INSERT INTO schema_migrations (version) VALUES ('20090323095653');
@@ -1017,3 +1026,7 @@ INSERT INTO schema_migrations (version) VALUES ('20090323095653');
 INSERT INTO schema_migrations (version) VALUES ('20090323111511');
 
 INSERT INTO schema_migrations (version) VALUES ('20090324094534');
+
+INSERT INTO schema_migrations (version) VALUES ('20090330153852');
+
+INSERT INTO schema_migrations (version) VALUES ('20090330164910');

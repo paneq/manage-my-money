@@ -794,4 +794,12 @@ div.auto_complete ul strong.highlight {
     text-align:left;
 }
 
+.margin-left {
+    margin-left: 20px;
+}
+
+#container{
+    padding-bottom: 10px;
+}
+
 

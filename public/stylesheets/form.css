@@ -40,3 +40,10 @@ form.style2 li {
 form.style2 .inline {
    display:inline;
 }
+
+
+form.style2 div.scrollbar {
+   height:250px;
+   overflow:auto;
+}
+

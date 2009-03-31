@@ -3,7 +3,7 @@
 <tr <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= category.name_with_path -%>" >
 
   <td id="category-link">
-    <a style="padding-left : <%= ( category.level  + 1 ) * 20 %>px;">
+    <a style="padding-left : <%= ( category.cached_level  + 1 ) * 20 %>px;">
       <%= link_to h(category.name), category_path(category), {:id => "show-category-stats-#{category.id}" } %>
     </a>
   </td>

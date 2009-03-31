@@ -5,7 +5,7 @@
   <% fields_for prefix, category_option do |option_form| -%>
 
   <td id="category-link">
-    <a style="padding-left : <%= ( category_option.category.level  + 1 ) * 20 %>px;">
+    <a style="padding-left : <%= ( category_option.category.cached_level  + 1 ) * 20 %>px;">
       <a><%= h category_option.category.name %></a>
       </a>
   </td>
