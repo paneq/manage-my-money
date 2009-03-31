@@ -4,21 +4,21 @@ require 'open-uri'
 
 class Nokogiri::XML::Element
   def find(what)
-    xpath(what).inner_html
+    xpath(what).inner_text
   end
 end
 
 
 class Nokogiri::XML::Document
   def find(what)
-    xpath(what).inner_html
+    xpath(what).inner_text
   end
 end
 
 
 class Nokogiri::XML::NodeSet
   def find(what)
-    xpath(what).inner_html
+    xpath(what).inner_text
   end
 end
 
@@ -28,7 +28,6 @@ class InteligoParser
     warning_class = Struct.new(:description, :data)
 
     doc = Nokogiri::XML(content)
-
     operations = doc.xpath('//operation')
 
     bank_account_number_in_file = doc.find('//search/account')
