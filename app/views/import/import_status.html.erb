@@ -1,3 +1,18 @@
 <h1>Wyniki importu z programu Gnucash</h1>
 
-<%= @result %>
+<% if @error %>
+  <div id="parsing-error" style="margin:20px; font-size: 120%">
+    <p>Wystąpił błąd podczas analizowania podanego pliku: <b><%= @file_name %></b> </p>
+    <p>Treść błędu: <b><%= @error %></b></p>
+    <p>Sprawdź czy plik jest prawidłowy i spróbuj jeszcze raz. <br />
+    Jeśli problem będzie się powtarzał, napisz do nas.</p>
+    <p>
+    <%= link_to '<< Import', :controller => :import, :action => :import %> </p>
+
+  </div>
+<% else %>
+  <div id="parsing-good" style="margin:20px; font-size: 120%">
+    <%= @result %>
+    <p>Udało się :-) </p>
+  </div>
+<% end %>
