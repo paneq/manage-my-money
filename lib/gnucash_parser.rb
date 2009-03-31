@@ -90,7 +90,7 @@ class GnucashParser
             top_categories[c.category_type] << c
           end
         end
-        print '.'; STDOUT.flush
+#        print '.'; STDOUT.flush
       end
 
 
@@ -119,7 +119,7 @@ class GnucashParser
       logger.debug "\n==Parenting categories"
       categories.each_value do |cat|
         unless cat.parent_guid.nil?
-          print '.'; STDOUT.flush
+#          print '.'; STDOUT.flush
           cat.parent = categories[cat.parent_guid]
         end
       end
@@ -131,10 +131,10 @@ class GnucashParser
       categories.each_value do |cat|
         existing_cat = user.categories.find_by_import_guid(cat.import_guid)
         unless existing_cat
-          print '.'; STDOUT.flush
+#          print '.'; STDOUT.flush
           new_record = cat.new_record?
           if cat.save
-            print '.'; STDOUT.flush
+#            print '.'; STDOUT.flush
             if new_record
               saved += 1
             else
@@ -142,7 +142,7 @@ class GnucashParser
             end
 
           else
-            print 'x'; STDOUT.flush
+#            print 'x'; STDOUT.flush
           end
         end
       end
@@ -191,16 +191,16 @@ class GnucashParser
 
 
         if t.save
-          print '.'
+#          print '.'
           saved += 1
         else
-          print 'x'
+#          print 'x'
           logger.debug t.errors.full_messages
           t.transfer_items.each do |ti|
             logger.debug ti.errors.full_messages
           end
         end
-        STDOUT.flush
+#        STDOUT.flush
 
       end
       logger.debug "\nSaved #{saved} transfers from #{transaction_count}"
