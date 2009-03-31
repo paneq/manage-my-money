@@ -153,14 +153,10 @@ module ApplicationHelper
   end
 
 
+  #obsolete! Use js toggle instead
   def switch(div_id, name)
-    result = ''
-    result += link_to_function name, :id => "switch_for_#{div_id}", :onclick =>  <<-JS
-      if(Element.visible('#{div_id}')) {
-            Element.hide('#{div_id}')
-        } else {
-            Element.show('#{div_id}')
-        }
+    link_to_function name, :id => "switch_for_#{div_id}", :onclick =>  <<-JS
+      Element.toggle('#{div_id}')
     JS
   end
 

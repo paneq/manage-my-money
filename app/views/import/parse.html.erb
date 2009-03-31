@@ -1,28 +1,49 @@
-<div>
-  <% @result.each_with_index do |result, index| %>
+<% light_shadow do %>
+  <table class="nice-table long">
+    <tr>
+      <th>Dzień</th>
+      <th>Opis</th>
+      <th>Akcja</th>
+    </tr>
+    <% @result.each_with_index do |result, index| %>
+      <% style_class = cycle('', 'alt') %>
+      <% transfer = result[:transfer] %>
+      <% warnings = result[:warnings] %>
+      <% div_id = 'transfer-edit-' + index.to_s %>
 
-    <% transfer = result[:transfer] %>
-    <% warnings = result[:warnings] %>
-    <% div_id = 'transfer-edit-' + index.to_s %>
+      <tr class="<%=style_class-%>">
+        <td>
+          <%= h transfer.day  %>
+        </td>
 
-    <div>
-      <%= switch(div_id, 'Pokaż / Ukryj') %> |
-      <%= h transfer.day  %> |
-      <%= h transfer.description  %>
-      <div id="<%= div_id -%>" style="display: none;">
-        <% unless warnings.empty? %>
-          <div class="import_warnings">
-            <ul>
+        <td>
+          <%= h transfer.description  %>
+        </td>
+
+        <td>
+          <%= link_to_function 'Pokaż / Ukryj', "Element.toggle('#{div_id}'); Element.toggle('warnings-#{div_id}');" %>
+        </td>
+      </tr>
+
+      <tr id="warnings-<%= div_id %>" class="<%=style_class-%>" style="display: none;">
+        <td colspan="3">
+          <ul>
             <% warnings.each do |warning| %>
-              <li>
+              <li style="font-weight: bold;">
                 <%= warning.description %>
               </li>
             <% end %>
-            </ul>
-          </div>
-        <% end %>
-        <%= render :partial => 'transfers/form', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
-      </div>
-    </div>
-  <% end %>
-</div>
+          </ul>
+
+        </td>
+      </tr>
+
+      <tr id="<%= div_id -%>" class="<%=style_class-%>" style="display: none;">
+        <td colspan="3">
+          <%= render :partial => 'transfers/form', :locals => result.merge(:hide_after_saved => true, :controller => :import) %>
+        </td>
+      </tr>
+    
+    <% end %>
+  </table>
+<% end %>

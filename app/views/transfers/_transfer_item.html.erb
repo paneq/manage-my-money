@@ -3,7 +3,7 @@
   <%=  f.hidden_field :transfer_item_type %>
 
   <td>
-    <%= f.text_field :description, :size=>40, :autocomplete => :off, :id => unique_id + 'description' %>
+    <%= f.text_field :description, :size=>30, :autocomplete => :off, :id => unique_id + 'description' %>
     <div class="auto_complete" id="<%=unique_id%>description_complete" >
     </div>
     <%= auto_complete_field "#{unique_id}description",

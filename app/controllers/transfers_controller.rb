@@ -124,6 +124,7 @@ class TransfersController < HistoryController
 
   
   protected
+
   
   def check_perm_for_transfer
     @transfer = Transfer.find(params[:id])
@@ -137,19 +138,4 @@ class TransfersController < HistoryController
   end
 
 
-  private
-
-
-  def show_transfer_errors
-    respond_to do |format|
-      format.html {}
-      format.js do
-        where = extract_form_errors_id
-        render :update do |page|
-          page.replace_html where, error_messages_for(:transfer, :message => nil)
-        end
-      end #format.js
-    end
-  end
-  
 end
