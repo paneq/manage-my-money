@@ -123,16 +123,18 @@
   <trn:splits>
     <trn:split>
       <split:id type="guid">d433118488a82812d6d970ae1ff32335</split:id>
+      <split:memo>food expense description</split:memo>
       <split:reconciled-state>n</split:reconciled-state>
-      <split:value>1000/100</split:value>
-      <split:quantity>1000/100</split:quantity>
+      <split:value>1012/100</split:value>
+      <split:quantity>1012/100</split:quantity>
       <split:account type="guid">b2f234f1a43963f348860e8cda4e07f6</split:account>
     </trn:split>
     <trn:split>
       <split:id type="guid">3dddca58a7233bb922af35c3ba9fdcb7</split:id>
+      <split:memo>asset expense description</split:memo>
       <split:reconciled-state>n</split:reconciled-state>
-      <split:value>-1000/100</split:value>
-      <split:quantity>-1000/100</split:quantity>
+      <split:value>-1012/100</split:value>
+      <split:quantity>-1012/100</split:quantity>
       <split:account type="guid">3b174d481178f04b84933df9983a0f7a</split:account>
     </trn:split>
   </trn:splits>
@@ -149,7 +151,7 @@
   <trn:date-entered>
     <ts:date>2009-03-31 20:15:49 +0200</ts:date>
   </trn:date-entered>
-  <trn:description>praca</trn:description>
+  <trn:description>Work</trn:description>
   <trn:splits>
     <trn:split>
       <split:id type="guid">459a99b92ee9eeccc1852fd5e41db244</split:id>
