@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gnc-v2
+     xmlns:gnc="http://www.gnucash.org/XML/gnc"
+     xmlns:act="http://www.gnucash.org/XML/act"
+     xmlns:book="http://www.gnucash.org/XML/book"
+     xmlns:cd="http://www.gnucash.org/XML/cd"
+     xmlns:cmdty="http://www.gnucash.org/XML/cmdty"
+     xmlns:price="http://www.gnucash.org/XML/price"
+     xmlns:slot="http://www.gnucash.org/XML/slot"
+     xmlns:split="http://www.gnucash.org/XML/split"
+     xmlns:sx="http://www.gnucash.org/XML/sx"
+     xmlns:trn="http://www.gnucash.org/XML/trn"
+     xmlns:ts="http://www.gnucash.org/XML/ts"
+     xmlns:fs="http://www.gnucash.org/XML/fs"
+     xmlns:bgt="http://www.gnucash.org/XML/bgt"
+     xmlns:recurrence="http://www.gnucash.org/XML/recurrence"
+     xmlns:lot="http://www.gnucash.org/XML/lot"
+     xmlns:cust="http://www.gnucash.org/XML/cust"
+     xmlns:job="http://www.gnucash.org/XML/job"
+     xmlns:addr="http://www.gnucash.org/XML/addr"
+     xmlns:owner="http://www.gnucash.org/XML/owner"
+     xmlns:taxtable="http://www.gnucash.org/XML/taxtable"
+     xmlns:tte="http://www.gnucash.org/XML/tte"
+     xmlns:employee="http://www.gnucash.org/XML/employee"
+     xmlns:order="http://www.gnucash.org/XML/order"
+     xmlns:billterm="http://www.gnucash.org/XML/billterm"
+     xmlns:bt-days="http://www.gnucash.org/XML/bt-days"
+     xmlns:bt-prox="http://www.gnucash.org/XML/bt-prox"
+     xmlns:invoice="http://www.gnucash.org/XML/invoice"
+     xmlns:entry="http://www.gnucash.org/XML/entry"
+     xmlns:vendor="http://www.gnucash.org/XML/vendor">
+<gnc:count-data cd:type="book">1</gnc:count-data>
+<gnc:book version="2.0.0">
+<book:id type="guid">70a267b98c1cd67d4489c3f4c51de856</book:id>
+<gnc:count-data cd:type="account">18</gnc:count-data>
+<gnc:count-data cd:type="transaction">10</gnc:count-data>
+<gnc:commodity version="2.0.0">
+  <cmdty:space>ISO4217</cmdty:space>
+  <cmdty:id>PLN</cmdty:id>
+  <cmdty:get_quotes/>
+  <cmdty:quote_source>currency</cmdty:quote_source>
+  <cmdty:quote_tz/>
+</gnc:commodity>
+<gnc:account version="2.0.0">
+  <act:name>Root Account</act:name>
+  <act:id type="guid">396d9552d1e47944cb918bfb86aff2fa</act:id>
+  <act:type>ROOT</act:type>
+  <act:commodity-scu>0</act:commodity-scu>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Assets</act:name>
+  <act:id type="guid">3b174d481178f04b84933df9983a0f7a</act:id>
+  <act:type>ASSET</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:description>Assets</act:description>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Cash</act:name>
+  <act:id type="guid">2692e7384a06ca79c4bc2c34318deeed</act:id>
+  <act:type>ASSET</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">3b174d481178f04b84933df9983a0f7a</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Bank</act:name>
+  <act:id type="guid">63c66627eacfac9b465879bbf1ce4487</act:id>
+  <act:type>ASSET</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">3b174d481178f04b84933df9983a0f7a</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Income</act:name>
+  <act:id type="guid">9e4f067fdd36e1114b228aa619fbc3e8</act:id>
+  <act:type>INCOME</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:description>Income</act:description>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Work</act:name>
+  <act:id type="guid">2a45567fbfe5a4cce274d8acc7709223</act:id>
+  <act:type>INCOME</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">9e4f067fdd36e1114b228aa619fbc3e8</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Google</act:name>
+  <act:id type="guid">05d5998c70ef05c747988ee53feb6ab2</act:id>
+  <act:type>INCOME</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">2a45567fbfe5a4cce274d8acc7709223</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Microsoft</act:name>
+  <act:id type="guid">bebeee18c60ef8c4ec35d29ff72e1bd4</act:id>
+  <act:type>INCOME</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">2a45567fbfe5a4cce274d8acc7709223</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Expenses</act:name>
+  <act:id type="guid">b2f234f1a43963f348860e8cda4e07f6</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:description>Expenses</act:description>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Food</act:name>
+  <act:id type="guid">b71a126166186e326ef5f733105db6f1</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">b2f234f1a43963f348860e8cda4e07f6</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Water</act:name>
+  <act:id type="guid">9c0c259b63c7c3ccf6364d5ae248f3ff</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">b71a126166186e326ef5f733105db6f1</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Fruits</act:name>
+  <act:id type="guid">8ae98052f8caae2e2aedefc5253e64b6</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">b71a126166186e326ef5f733105db6f1</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Grocery</act:name>
+  <act:id type="guid">42cce89777ae5a4cd59a7d247b7195f2</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">b71a126166186e326ef5f733105db6f1</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Clothes</act:name>
+  <act:id type="guid">347be2663a1d34c31c545c5924928126</act:id>
+  <act:type>EXPENSE</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">b2f234f1a43963f348860e8cda4e07f6</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Equity</act:name>
+  <act:id type="guid">85485a00d6f50e55af7f618ad46024b9</act:id>
+  <act:type>EQUITY</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:description>Equity</act:description>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Liability</act:name>
+  <act:id type="guid">c3042b18c15a3191605cbb9e2c89c980</act:id>
+  <act:type>LIABILITY</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:description>Liability</act:description>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Bilansy otwarcia</act:name>
+  <act:id type="guid">5624da77c20aa3b1209f8a87f4eed644</act:id>
+  <act:type>EQUITY</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>Niezrównoważenie-PLN</act:name>
+  <act:id type="guid">f97afcc2c27919ac7d72c506c978aed6</act:id>
+  <act:type>BANK</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">396d9552d1e47944cb918bfb86aff2fa</act:parent>
+</gnc:account>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">3902b0ca6fa292bb20e008b78756a125</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-30 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:09:51 +0200</ts:date>
+    <ts:ns>829380000</ts:ns>
+  </trn:date-entered>
+  <trn:description>Bilans otwarcia</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">c54c7172c45ac840f7aa3eaa0b934caf</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>10023/100</split:value>
+      <split:quantity>10023/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">b0240643a3837803cefc9c67de57e677</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-10023/100</split:value>
+      <split:quantity>-10023/100</split:quantity>
+      <split:account type="guid">5624da77c20aa3b1209f8a87f4eed644</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">702168285d6ebd0466ab082c061fb91b</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:12:08 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>one apple </trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">91791aa499b5aeb243b34b19e973c619</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>200/100</split:value>
+      <split:quantity>200/100</split:quantity>
+      <split:account type="guid">8ae98052f8caae2e2aedefc5253e64b6</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">f04b6e19e89231ec207a3c6e7d3d035b</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-200/100</split:value>
+      <split:quantity>-200/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">ab3385b0691f52c9fbebb979b0a5a519</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:12:43 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>borrowed</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">475b1e54a7ac844ed4aabd09ef91d0fe</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>1500/100</split:value>
+      <split:quantity>1500/100</split:quantity>
+      <split:account type="guid">c3042b18c15a3191605cbb9e2c89c980</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">a1795ba4320969bca41a34923805f21b</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-1500/100</split:value>
+      <split:quantity>-1500/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">e87c72751803b881e63e75d478ce74a0</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:12:57 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>tesco</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">5f4b5b1a5ce8f07884023c287b36fa1f</split:id>
+      <split:memo>socks</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>2000/100</split:value>
+      <split:quantity>2000/100</split:quantity>
+      <split:account type="guid">347be2663a1d34c31c545c5924928126</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">20f3714487f8dfeb37faf0aef7e93c6f</split:id>
+      <split:memo>potatoes</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>2000/100</split:value>
+      <split:quantity>2000/100</split:quantity>
+      <split:account type="guid">42cce89777ae5a4cd59a7d247b7195f2</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">fd390fa1fe0ff619e6d58fb284aa1b07</split:id>
+      <split:memo>water 6l</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>1000/100</split:value>
+      <split:quantity>1000/100</split:quantity>
+      <split:account type="guid">9c0c259b63c7c3ccf6364d5ae248f3ff</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">922917e6f731ef1327a05e3a1b9d1030</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-5000/100</split:value>
+      <split:quantity>-5000/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">2dfef8ef6d251772113cff2a5ba2a5b8</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:14:09 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>tesco 2</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">3dd34fae3a149761a82853949f323891</split:id>
+      <split:memo>some expense</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>500/100</split:value>
+      <split:quantity>500/100</split:quantity>
+      <split:account type="guid">b2f234f1a43963f348860e8cda4e07f6</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">aa909348dea7b988177b8408707690a2</split:id>
+      <split:memo>some food</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>500/100</split:value>
+      <split:quantity>500/100</split:quantity>
+      <split:account type="guid">b71a126166186e326ef5f733105db6f1</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">3bd7e75c845a3f68e74e7bfb60acc6da</split:id>
+      <split:memo>from wallet</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-600/100</split:value>
+      <split:quantity>-600/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">a2a3917a346283bd533ec5f39be64915</split:id>
+      <split:memo>money from friend</split:memo>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-400/100</split:value>
+      <split:quantity>-400/100</split:quantity>
+      <split:account type="guid">c3042b18c15a3191605cbb9e2c89c980</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">f062854f95a4a06c7612b9e9fef95fa8</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:15:40 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>empty</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">fda6aae47c92030437cb5bfd5744d505</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>0/100</split:value>
+      <split:quantity>0/100</split:quantity>
+      <split:account type="guid">2692e7384a06ca79c4bc2c34318deeed</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">4a88d6eccf6ce2555a75518fe66e736c</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-30 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:10:06 +0200</ts:date>
+    <ts:ns>750744000</ts:ns>
+  </trn:date-entered>
+  <trn:description>Bilans otwarcia</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">d9e9a3f1e1d5e257b479a769ea0b1015</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>100000/100</split:value>
+      <split:quantity>100000/100</split:quantity>
+      <split:account type="guid">63c66627eacfac9b465879bbf1ce4487</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">b989331e24e57df1215f9433e121409d</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-100000/100</split:value>
+      <split:quantity>-100000/100</split:quantity>
+      <split:account type="guid">5624da77c20aa3b1209f8a87f4eed644</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">aaf60016a3ac3a3c05e2375e37135ba7</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 21:16:12 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>first salary</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">19471894353c56aec56e84dddde73c5e</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>300000/100</split:value>
+      <split:quantity>300000/100</split:quantity>
+      <split:account type="guid">63c66627eacfac9b465879bbf1ce4487</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">326f6f8e49af86575bd92d93875c94b0</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-300000/100</split:value>
+      <split:quantity>-300000/100</split:quantity>
+      <split:account type="guid">05d5998c70ef05c747988ee53feb6ab2</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">dbc8904d293bc111cbedfe24d87ed365</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 20:15:21 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>Some food</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">d433118488a82812d6d970ae1ff32335</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>1000/100</split:value>
+      <split:quantity>1000/100</split:quantity>
+      <split:account type="guid">b2f234f1a43963f348860e8cda4e07f6</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">3dddca58a7233bb922af35c3ba9fdcb7</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-1000/100</split:value>
+      <split:quantity>-1000/100</split:quantity>
+      <split:account type="guid">3b174d481178f04b84933df9983a0f7a</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+<gnc:transaction version="2.0.0">
+  <trn:id type="guid">87b039cfaf3caf06c1ee710faf1330e2</trn:id>
+  <trn:currency>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>PLN</cmdty:id>
+  </trn:currency>
+  <trn:date-posted>
+    <ts:date>2009-03-31 00:00:00 +0200</ts:date>
+  </trn:date-posted>
+  <trn:date-entered>
+    <ts:date>2009-03-31 20:15:49 +0200</ts:date>
+  </trn:date-entered>
+  <trn:description>praca</trn:description>
+  <trn:splits>
+    <trn:split>
+      <split:id type="guid">459a99b92ee9eeccc1852fd5e41db244</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>100000/100</split:value>
+      <split:quantity>100000/100</split:quantity>
+      <split:account type="guid">3b174d481178f04b84933df9983a0f7a</split:account>
+    </trn:split>
+    <trn:split>
+      <split:id type="guid">03a9f812eb94518c2c0e0feba0a44e4d</split:id>
+      <split:reconciled-state>n</split:reconciled-state>
+      <split:value>-100000/100</split:value>
+      <split:quantity>-100000/100</split:quantity>
+      <split:account type="guid">9e4f067fdd36e1114b228aa619fbc3e8</split:account>
+    </trn:split>
+  </trn:splits>
+</gnc:transaction>
+</gnc:book>
+</gnc-v2>
+
+<!-- Local variables: -->
+<!-- mode: xml        -->
+<!-- End:             -->

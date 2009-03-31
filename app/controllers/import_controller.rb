@@ -50,22 +50,16 @@ class ImportController < HistoryController
   end
 
   def parse_gnucash
-
-    if (params[:file].blank?) || (params[:file].content_type.chomp != 'text/xml')
-      render_invalid_file_info INVALID_GNUCASH_FILE_WARNING
-      return
-    end
-
+    raise FileError.new if (params[:file].blank?) || (params[:file].content_type.chomp != 'text/xml')
     content = params[:file].read
-    file_name = params[:file].original_filename
-
-    if !file_name.ends_with? 'xml'
-      render_invalid_file_info INVALID_GNUCASH_FILE_WARNING + ': ' + file_name
-      return
-    end
-
+    @file_name = params[:file].original_filename
+    raise FileError.new if !@file_name.ends_with? 'xml'
     @result = GnucashParser.parse(content, self.current_user)
-
+    render 'import_status'
+  rescue FileError => e
+    render_invalid_file_info INVALID_GNUCASH_FILE_WARNING
+  rescue GnuCashParseError => e
+    @error = e
     render 'import_status'
   end
 
@@ -102,4 +96,10 @@ class ImportController < HistoryController
     render :action => :import
   end
 
+ 
+
 end
+
+class FileError < StandardError
+end
+
