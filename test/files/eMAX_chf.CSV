@@ -1,0 +1,43 @@
+mBank Bankowoœæ Detaliczna BRE Banku SA;
+Skrytka Pocztowa 2108;
+90-959 £ódŸ;
+www.mBank.pl;
+mLinia: 0801 300 800;
++48 42 6 300 800;
+
+#Klient;
+JAN KOWALSKI;
+
+Elektroniczne zestawienie operacji;
+
+#Za okres:;
+01.01.2007;25.02.2009;
+#Rodzaj rachunku;
+EMAX PLUS;
+#Waluta;
+CHF;
+#Numer rachunku;
+45 6318 0575 1250 6030 5662 5825;
+#Data nastêpnej kapitalizacji;
+2009-02-28;
+#Oprocentowanie rachunku;
+4,25%;
+#Limit kredytu;
+0,00 PLN;
+#Oprocentowanie kredytu;
+0,00%;
+
+#Podsumowanie obrotów na rachunku;#Liczba operacji;#Wartoœæ operacji
+Uznania;11;1 613,83 PLN;
+Obci¹¿enia;4;1 614,14 PLN;
+£¹cznie;15;-0,31 PLN;
+
+#Saldo pocz¹tkowe;0,37 PLN;
+
+#Data operacji;#Data ksiêgowania;#Opis operacji;#Kwota;#Saldo po operacji;
+2008-11-01;2008-10-31;"KAPITALIZACJA ODSETEK      ";0,06;0,06;
+2008-10-02;2008-10-02;"PRZELEW WEWNÊTRZNY WYCHODZ¥CY PRZELEW OSZCZEDNOSCI NA EKONTO  JAN KOWALSKI KONICZYNKI 66                       65-333 S£ONKOWO 61707457942738161074662795 ";-407,15;0,00;
+
+;;;#Saldo koñcowe;0,06 PLN;
+
+Niniejszy dokument sporz¹dzono na podstawie art. 7 Ustawy Prawo Bankowe (Dz. U. Nr 140 z 1997 roku, poz.939 z póŸniejszymi zmianami).

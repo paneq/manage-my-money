@@ -61,12 +61,11 @@ class MbankParser < BankParser
      
       amount = Kernel.Float current.fourth.gsub(/ +/,'').gsub(',','.')
       item_type, other_item_type = amount > 0 ? types : types.reverse
-      amount = amount.abs
       
       account_number = description.match(/\d{26}$/)
       account = nil
 
-      guid = Digest::SHA1.hexdigest([description, amount.to_s, date.to_s].join)
+      guid = Digest::SHA1.hexdigest([description, amount.to_s, date.to_s].join('-'))
       instance.warn_similar_transfer(guid, date, amount, instance.currency, warnings)
 
       if account_number
@@ -76,8 +75,8 @@ class MbankParser < BankParser
       end
       
       transfer = Transfer.new(:day => date, :description => description, :import_guid => guid)
-      transfer.transfer_items.build(:transfer_item_type => item_type, :value => amount, :currency => instance.currency, :category => instance.category)
-      transfer.transfer_items.build(:transfer_item_type => other_item_type, :value => amount, :currency => instance.currency, :category => account)
+      transfer.transfer_items.build(:transfer_item_type => item_type, :value => amount.abs, :currency => instance.currency, :category => instance.category)
+      transfer.transfer_items.build(:transfer_item_type => other_item_type, :value => amount.abs, :currency => instance.currency, :category => account)
       instance.result <<  {:transfer => transfer, :warnings => warnings}
     end,
 

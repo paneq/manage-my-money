@@ -16,3 +16,4 @@ db/sphinx/**/*.spi
 db/sphinx/**/*.spm
 db/sphinx/**/*.spp
 db/sphinx/**/*.spl
+*~
