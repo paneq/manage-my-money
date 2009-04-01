@@ -18,8 +18,8 @@ class InteligoParserTest < ActiveSupport::TestCase
 
 
   def test_parse
-    # this one already in db, previously imported based on its id.
-    # it does not matter that day or description is different
+    # This one already in db, previously imported based on its id.
+    # It does not matter that day or description is different
     t1 = save_simple_transfer(
       :day => '2222-11-27'.to_date,
       :description => 'food',
@@ -29,8 +29,8 @@ class InteligoParserTest < ActiveSupport::TestCase
       :value => 68.85,
       :currency => @zloty)
 
-    # previously imported from file from different account that is also registered in our system
-    # day and values must match to be found
+    # Previously imported from file from different account that is also registered in our system.
+    # Day and values must match to be found
     t2 = save_simple_transfer(
       :day => '2008-11-29'.to_date,
       :description => 'income',
@@ -42,16 +42,18 @@ class InteligoParserTest < ActiveSupport::TestCase
       
     result = InteligoParser.new(open(RAILS_ROOT + '/test/files/inteligo.xml'), @rupert, @inteligo).parse()
 
-    warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 68.85}[:warnings]
-    assert !warnings.empty? #because of t1
+    tested_result = result.find{|r| r[:transfer].transfer_items.first.value.abs == 68.85}
+    assert !tested_result[:warnings].empty? #because of t1
+    assert_equal [@inteligo, nil].to_set, tested_result[:transfer].transfer_items.map(&:category).to_set
 
-    warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 1032.28}[:warnings]
-    assert !warnings.empty? #because of t2 
+    tested_result = result.find{|r| r[:transfer].transfer_items.first.value.abs == 1032.28}
+    assert !tested_result[:warnings].empty? #because of t2
+    assert_equal [@inteligo, @inteligo2].to_set, tested_result[:transfer].transfer_items.map(&:category).to_set #First category becuase this the one that we import transfers into. Second one becuase this bank_account_number is in db.
  
     #new currency -> CHF
-    warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 0.04}[:warnings]
-    assert !warnings.empty? #because of new currency
-    new_currency = warnings.first.data
+    tested_result = result.find{|r| r[:transfer].transfer_items.first.value.abs == 0.04}
+    assert !tested_result[:warnings].empty? #because of new currency
+    new_currency = tested_result[:warnings].first.data
     assert new_currency.is_a? Currency
     assert_equal 'CHF', new_currency.long_symbol
     

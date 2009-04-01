@@ -44,6 +44,7 @@ Data przygotowania: 2008-11-29
                     <line>ULICA</line>
                     <line>12-345 MIASTO</line>
                 </owner>
+                <!-- THIS CATEGORY IS REGISTER IN OUR SYSTEM -->
                 <account>50102055581111100000000000</account>
             </other-side>
         </operation>
