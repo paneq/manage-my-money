@@ -39,12 +39,11 @@ class GnucashParser
 
   class << self
 
+    ##
     # result format:
     # { :categories => {:in_file => X, :added => X, :merged => X, :errors => ['Asd', 'dfg']}
     #   :transfers => {:in_file => X, :added => X, :errors => ['Asd', 'dfg']}
     # }
-    #
-    #
     def parse(content, user)
       doc = Nokogiri::XML(content)
       result = {}
@@ -58,20 +57,15 @@ class GnucashParser
       raise GnuCashParseError.new('Nieznany błąd')
     end
 
-    def logger
-      RAILS_DEFAULT_LOGGER
-    end
-
 
     def import_categories(user, doc)
-      
       result = {}
       accounts_count = doc.find('//gnc:count-data[@cd:type="account"]').inner_text.to_i
 
       root_category = nil
       categories = SequencedHash.new
       top_categories = {}
-      logger.debug "\n==Parsing categories"
+      progress "\n==Parsing categories"
       doc.find('//gnc:account').each do |node|
         #       logger.debug "Commodity: " + node.find('act:commodity/cmdty:id').inner_text
         c = Category.new
@@ -93,15 +87,14 @@ class GnucashParser
             top_categories[c.category_type] << c
           end
         end
-        #        print '.'; STDOUT.flush
+        progress
       end
 
 
 
       #kategorie poziomu głownego (parent_id == root) przeniesc do naszych odpowiednich kategorii
       #chyba ze sa tylko po jednej - wtedy je utozsamiamy bez zmiany nazwy?
-
-      logger.debug "\n==Merging top categories"
+      progress "\n==Merging top categories"
       [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE ].each do |category_type|
         top = user.categories.top.of_type(category_type).find(:first)
         unless top_categories[category_type].blank?
@@ -119,10 +112,10 @@ class GnucashParser
         end
       end
 
-      logger.debug "\n==Parenting categories"
+      progress "\n==Parenting categories"
       categories.each_value do |cat|
         unless cat.parent_guid.nil?
-          #          print '.'; STDOUT.flush
+          progress
           cat.parent = categories[cat.parent_guid]
         end
       end
@@ -130,31 +123,30 @@ class GnucashParser
       saved = 0
       merged = 0
       result[:errors] = []
-      logger.debug "\n==Saving categories"
+      progress "\n==Saving categories"
       categories.each_value do |cat|
         existing_cat = user.categories.find_by_import_guid(cat.import_guid)
         unless existing_cat
-          #          print '.'; STDOUT.flush
           new_record = cat.new_record?
           if cat.save
-            #            print '.'; STDOUT.flush
+            progress
             if new_record
               saved += 1
             else
+              progress 'm'
               merged += 1
             end
-
           else
+            progress 'x'
             result[:errors] << ["Kategoria: '#{cat.name}' - ", cat.errors.full_messages.to_sentence]
           end
         end
       end
-      logger.debug "\nSaved #{saved} categories from #{accounts_count}"
 
       result[:in_file] = accounts_count - 1 #because of ROOT category
       result[:added] = saved
       result[:merged] = merged
-
+      progress "\n" + result.inspect + "\n"
       return result
     end
 
@@ -163,7 +155,7 @@ class GnucashParser
       result = {}
       transaction_count = doc.find('//gnc:count-data[@cd:type="transaction"]').inner_text.to_i
       saved = 0
-      logger.debug "\n==Parsing and saving transfers"
+      progress "\n==Parsing and saving transfers"
       result[:errors] = []
       doc.find('//gnc:transaction').each do |node|
         multi_currency_transfer = false
@@ -173,9 +165,7 @@ class GnucashParser
         date = node.find('trn:date-posted/ts:date').inner_text
         t.day = Date.parse date
         t.description = node.find('trn:description').inner_text
-
         currency_name = node.find('trn:currency/cmdty:id').inner_text
-        #        currency = Currency.find(:first, :conditions => ['long_symbol = ? AND (user_id IS NULL OR user_id = ?)', currency_name, user.id])
         currency = find_or_create_currency(currency_name, user)
 
         node.find('trn:splits/trn:split').each do |split|
@@ -207,36 +197,33 @@ class GnucashParser
         end
         
         if t.save
-          #          print '.'
+          progress
           saved += 1
         else
-          #          print 'x'
-          #          logger.debug t.errors.full_messages
-
+          progress 'x'
+          progress t.errors.full_messages
           result[:errors] << ["#{t.day} #{t.description}: ", t.errors.full_messages.to_sentence]
-
           t.transfer_items.each do |ti|
-            #            logger.debug ti.errors.full_messages
+            progress ti.errors.full_messages
             result[:errors] << ["#{t.day} #{t.description}, element: #{ti.description} ",ti.errors.full_messages.to_sentence] unless ti.errors.blank?
-
           end
-
-
-
         end
-        #        STDOUT.flush
-
+        progress
       end
-      logger.debug "\nSaved #{saved} transfers from #{transaction_count}"
+       
       result[:in_file] = transaction_count
       result[:added] = saved
-
+      progress "\n" + result.inspect + "\n"
       return result
     end
 
 
 
     protected
+
+    def logger
+      RAILS_DEFAULT_LOGGER
+    end
 
     if defined?(Nokogiri)
       class Nokogiri::XML::Element
@@ -264,7 +251,6 @@ class GnucashParser
     end
 
     def find_or_create_currency(long_symbol, user)
-      #      long_symbol = long_symbol[0..2]
       new_currency = ( Currency.for_user(user).find_by_long_symbol(long_symbol) || Currency.new(:all => long_symbol.upcase, :user => user) )
 
       if new_currency.new_record?
@@ -272,7 +258,6 @@ class GnucashParser
       end
 
       new_currency
-
     end
 
     def parse_value(value_str)
@@ -280,10 +265,18 @@ class GnucashParser
       if value_str =~ /(-?\d*)\/(\d*)/
         value = $1.to_f / $2.to_f
       else
-        logger.debug "Problems parsing #{value_str} value"
+        progress "Problems parsing #{value_str} value"
       end
       return value
     end
+
+    def progress(str = '.')
+      if RAILS_ENV == 'development'
+        print str;
+        STDOUT.flush
+      end
+    end
+
 
   end
 end
