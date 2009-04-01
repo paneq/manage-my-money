@@ -24,4 +24,18 @@ class BankParser
 
   end
 
+
+  def warn_similar_transfer(guid, date, amount, currency, warnings)
+    previous_transfer = @user.transfers.find_by_import_guid(guid)
+    unless previous_transfer
+      previous_transfer = @user.
+        transfers.
+        find(:first,
+        :joins => 'INNER JOIN transfer_items ON transfers.id = transfer_items.transfer_id',
+        :conditions => ['day = ? AND transfer_items.value = ? AND transfer_items.currency_id = ?', date, amount, currency.id]) if currency
+    end
+    warnings << @warning_class.new('Ten transfer został już najprawdopodobniej zaimportowany', previous_transfer) if previous_transfer
+  end
+
+
 end

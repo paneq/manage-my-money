@@ -1,3 +1,4 @@
+
 class MbankParser < BankParser
 
   DO_NOTHING = Proc.new{|*args|}.freeze
@@ -5,6 +6,7 @@ class MbankParser < BankParser
   DO_FALSE = Proc.new{|*args| false}.freeze
 
 
+  # If evaluated to true parser state is changed, which changes actions
   CONDITIONS = [
     Proc.new do |prev, current|
       prev && prev.first =~ /Waluta/
@@ -35,7 +37,7 @@ class MbankParser < BankParser
   ]
 
 
-
+  # What to do with taken line
   ACTIONS = [
     DO_NOTHING,
 
@@ -52,6 +54,7 @@ class MbankParser < BankParser
     DO_NOTHING,
 
     Proc.new do |prev, current, instance|
+      warnings = []
       types = [:income, :outcome]
       date = current.first.to_date
       description = current.third.strip
@@ -63,16 +66,19 @@ class MbankParser < BankParser
       account_number = description.match(/\d{26}$/)
       account = nil
 
+      guid = Digest::SHA1.hexdigest([description, amount.to_s, date.to_s].join)
+      instance.warn_similar_transfer(guid, date, amount, instance.currency, warnings)
+
       if account_number
         account_number = account_number.to_s
         account = instance.user.categories.find_by_bank_account_number(account_number)
         description.gsub!(account_number, '') if account
       end
-
-      transfer = Transfer.new(:day => date, :description => description)
+      
+      transfer = Transfer.new(:day => date, :description => description, :import_guid => guid)
       transfer.transfer_items.build(:transfer_item_type => item_type, :value => amount, :currency => instance.currency, :category => instance.category)
       transfer.transfer_items.build(:transfer_item_type => other_item_type, :value => amount, :currency => instance.currency, :category => account)
-      instance.result <<  {:transfer => transfer, :warnings => []}
+      instance.result <<  {:transfer => transfer, :warnings => warnings}
     end,
 
     DO_NOTHING

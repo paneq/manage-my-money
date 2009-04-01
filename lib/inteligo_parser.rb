@@ -34,7 +34,6 @@ class InteligoParser < BankParser
     operations = doc.xpath('//operation')
 
     bank_account_number_in_file = doc.find('//search/account')
-    currencies = {}
 
     types = [:income, :outcome]
     operations.each do |operation|
@@ -45,15 +44,7 @@ class InteligoParser < BankParser
       order_date = operation.find('order-date').to_date
       amount = operation.xpath('amount').first
 
-      currency_long_symbol = amount['curr']
-      currencies[currency_long_symbol] ||= Currency.for_user(@user).find_by_long_symbol(currency_long_symbol)
-      currency = currencies[currency_long_symbol]
-      if currency.nil?
-        currency = Currency.new(:all => currency_long_symbol[0..2].upcase, :user => @user)
-        currency.save!
-        currencies[currency_long_symbol] = currency
-        warnings << @warning_class.new("Aby umożliwić zaimportowanie tego transferu została stworzona nowa waluta o symbolu: #{currency_long_symbol}", currency)
-      end
+      currency = find_or_create_currency(amount['curr'], warnings)
 
       amount = amount.inner_text.to_f
       item_type, other_item_type = amount > 0 ? types : types.reverse
@@ -66,16 +57,8 @@ class InteligoParser < BankParser
       end
 
       import_guid = [bank_account_number_in_file, id].join('-')
-
-      previous_transfer = @user.transfers.find_by_import_guid(import_guid)
-      unless previous_transfer
-        previous_transfer = @user.
-          transfers.
-          find(:first,
-          :joins => 'INNER JOIN transfer_items ON transfers.id = transfer_items.transfer_id',
-          :conditions => ['day = ? AND transfer_items.value = ? AND transfer_items.currency_id = ?', order_date, amount, currency.id]) if currency
-      end
-      warnings << @warning_class.new('Ten transfer został już najprawdopodobniej zaimportowany', previous_transfer) if previous_transfer
+      warn_similar_transfer(import_guid, order_date, amount, currency, warnings)
+      
 
       t = Transfer.new(:day => order_date, :description => description, :import_guid => import_guid)
       t.transfer_items << TransferItem.new(:currency => currency, :value => amount.abs, :category => @category, :transfer_item_type => item_type)
