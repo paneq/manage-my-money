@@ -101,16 +101,16 @@ module DateExtensions
 
   def shift(period_category)
     case period_category
-    when :DAY then self.advance(:days => 1)
-    when :WEEK then self.advance(:weeks => 1)
-    when :MONTH then self.advance(:months => 1)
-    when :QUARTER then self.advance(:quarters => 1)
-    when :YEAR then self.advance(:years => 1)
-    when :A_7_DAYS then self.advance(:days => 7)
-    when :A_4_WEEKS then self.advance(:weeks => 4)
-    when :A_3_MONTHS then self.advance(:months => 3)
-    when :A_90_DAYS then self.advance(:days => 90)
-    when :A_12_MONTHS then self.advance(:months => 12)
+    when :DAY then self.advance(:days => 1)-1
+    when :WEEK then self.advance(:weeks => 1)-1
+    when :MONTH then self.advance(:months => 1)-1
+    when :QUARTER then self.advance(:quarters => 1)-1
+    when :YEAR then self.advance(:years => 1)-1
+    when :A_7_DAYS then self.advance(:days => 7)-1
+    when :A_4_WEEKS then self.advance(:weeks => 4)-1
+    when :A_3_MONTHS then self.advance(:months => 3)-1
+    when :A_90_DAYS then self.advance(:days => 90)-1
+    when :A_12_MONTHS then self.advance(:months => 12)-1
     else
       raise "Unrecognized period symbol: #{period_category}"
     end

@@ -36,10 +36,29 @@ class GoalTest < ActiveSupport::TestCase
     assert_raise RuntimeError, NameError do
       g.create_next_goal_in_cycle
     end
+  end
 
+  def test_next_goal_in_cycle_has_proper_date
+    g = create_goal
+    g.period_type = :NEXT_MONTH
+    g.period_start = '01.01.2008'.to_date
+    g.period_end = '31.01.2008'.to_date
+    g.is_cyclic = true
+    g.save!
+    new_g = g.create_next_goal_in_cycle
+    assert_not_nil new_g
+    new_g.save!
+    assert_equal '01.02.2008'.to_date, new_g.period_start
+    assert_equal '29.02.2008'.to_date, new_g.period_end
 
+    new_g = new_g.create_next_goal_in_cycle
+    assert_not_nil new_g
+    new_g.save!
+    assert_equal '01.03.2008'.to_date, new_g.period_start
+    assert_equal '31.03.2008'.to_date, new_g.period_end
 
   end
+
 
 
   def test_set_cycle_group_on_save
