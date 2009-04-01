@@ -36,7 +36,11 @@ class ImportController < HistoryController
     end
 
     begin
-      @result = (recognized.to_s + '_parser').camelcase.constantize.parse(content, self.current_user, @category) # :inteligo => @result = InteligoParser.parse
+      @result = (recognized.to_s + '_parser').
+        camelcase.
+        constantize.
+        new(content, self.current_user, @category).
+        parse() # :inteligo => @result = InteligoParser.new(...).parse()
     rescue Exception => e
       raise e if ENV['RAILS_ENV'] == 'development'
       render_invalid_file_info

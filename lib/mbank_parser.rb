@@ -1,4 +1,4 @@
-class MbankParser
+class MbankParser < BankParser
 
   DO_NOTHING = Proc.new{|*args|}.freeze
   DO_TRUE = Proc.new{|*args| true}.freeze
@@ -6,19 +6,19 @@ class MbankParser
 
 
   CONDITIONS = [
-    Proc.new do |prev, current, variables|
+    Proc.new do |prev, current|
       prev && prev.first =~ /Waluta/
     end,
 
     DO_TRUE,
 
-    Proc.new do |prev, current, variables|
+    Proc.new do |prev, current|
       prev && prev.first =~ /Numer rachunku/
     end,
 
     DO_TRUE,
 
-    Proc.new do |prev, current, variables|
+    Proc.new do |prev, current|
       prev &&
         prev.first =~ /Data operacji/ &&
         prev.second =~ /Data księgowania/ &&
@@ -27,7 +27,7 @@ class MbankParser
         prev.fifth =~ /Saldo po operacji/
     end,
 
-    Proc.new do |prev, current, variables|
+    Proc.new do |prev, current|
       current.to_s =~ /Saldo/
     end,
 
@@ -39,19 +39,19 @@ class MbankParser
   ACTIONS = [
     DO_NOTHING,
 
-    Proc.new do |prev, current, variables|
-      variables[:currency] = Currency.for_user(variables[:user]).find_by_long_symbol(current.first)
+    Proc.new do |prev, current, instance|
+      instance.currency = instance.find_or_create_currency(current.first, [])
     end,
 
     DO_NOTHING,
 
-    Proc.new do |prev, current, variables|
-      variables[:account] = current.first
+    Proc.new do |prev, current, instance|
+      instance.account = current.first
     end,
 
     DO_NOTHING,
 
-    Proc.new do |prev, current, variables|
+    Proc.new do |prev, current, instance|
       types = [:income, :outcome]
       date = current.first.to_date
       description = current.third.strip
@@ -65,14 +65,14 @@ class MbankParser
 
       if account_number
         account_number = account_number.to_s
-        account = variables[:user].categories.find_by_bank_account_number(account_number)
+        account = instance.user.categories.find_by_bank_account_number(account_number)
         description.gsub!(account_number, '') if account
       end
 
       transfer = Transfer.new(:day => date, :description => description)
-      transfer.transfer_items.build(:transfer_item_type => item_type, :value => amount, :currency => variables[:currency], :category => variables[:category])
-      transfer.transfer_items.build(:transfer_item_type => other_item_type, :value => amount, :currency => variables[:currency], :category => account)
-      variables[:result] <<  {:transfer => transfer, :warnings => []}
+      transfer.transfer_items.build(:transfer_item_type => item_type, :value => amount, :currency => instance.currency, :category => instance.category)
+      transfer.transfer_items.build(:transfer_item_type => other_item_type, :value => amount, :currency => instance.currency, :category => account)
+      instance.result <<  {:transfer => transfer, :warnings => []}
     end,
 
     DO_NOTHING
@@ -89,24 +89,29 @@ class MbankParser
     :WAITING_FOR_FILE_END
   ]
 
+  attr_accessor :currency, :account
 
-  def self.parse(content, user, category)
-    content = Iconv.conv('UTF-8', 'WINDOWS-1250', content)
+  def initialize(content, user, category)
+    super(content, user, category)
+  end
+
+
+  def parse
+    @content = Iconv.conv('UTF-8', 'WINDOWS-1250', @content)
     previous = nil
 
     conditions, actions, states = CONDITIONS.clone, ACTIONS.clone, STATES.clone
     condition, action, state = conditions.shift, actions.shift, states.shift
-    variables = {:result => [], :user => user, :category => category}
 
-    FasterCSV.parse(content, :col_sep => ';', :skip_blanks => true) do |row|
-      if condition.call(previous, row, variables)
+    FasterCSV.parse(@content, :col_sep => ';', :skip_blanks => true) do |row|
+      if condition.call(previous, row)
         condition, action, state = conditions.shift, actions.shift, states.shift
       end
-      action.call(previous, row, variables)
+      action.call(previous, row, self)
       previous = row
     end
 
-    return variables[:result] # array o hashes  [{:transfer => Transfer, :warnings => Array}, ...]
+    return @result # array o hashes  [{:transfer => Transfer, :warnings => Array}, ...]
   end
 
 
