@@ -18,16 +18,29 @@ class InteligoParserTest < ActiveSupport::TestCase
 
 
   def test_parse
-
     # this one already in db, previously imported based on its id.
     # it does not matter that day or description is different
-    t1 = save_simple_transfer(:day => '2222-11-27'.to_date, :description => 'food', :income => @rupert.expense, :outcome => @inteligo, :import_guid => '50102055581111100000000007-23', :value => 68.85, :currency => @zloty)
+    t1 = save_simple_transfer(
+      :day => '2222-11-27'.to_date,
+      :description => 'food',
+      :income => @rupert.expense,
+      :outcome => @inteligo,
+      :import_guid => Digest::SHA1.hexdigest('50102055581111100000000007-23'),
+      :value => 68.85,
+      :currency => @zloty)
 
     # previously imported from file from different account that is also registered in our system
     # day and values must match to be found
-    t2 = save_simple_transfer(:day => '2008-11-29'.to_date, :description => 'income', :income => @inteligo, :outcome => @inteligo2, :import_guid => '50102055581111100000000000-300000', :value => 1032.28, :currency => @zloty)
+    t2 = save_simple_transfer(
+      :day => '2008-11-29'.to_date,
+      :description => 'income',
+      :income => @inteligo,
+      :outcome => @inteligo2,
+      :import_guid => Digest::SHA1.hexdigest('50102055581111100000000000-300000'),
+      :value => 1032.28,
+      :currency => @zloty)
       
-    result = InteligoParser.parse(open(RAILS_ROOT + '/test/files/inteligo.xml'), @rupert, @inteligo)
+    result = InteligoParser.new(open(RAILS_ROOT + '/test/files/inteligo.xml'), @rupert, @inteligo).parse()
 
     warnings = result.find{|r| r[:transfer].transfer_items.first.value.abs == 68.85}[:warnings]
     assert !warnings.empty? #because of t1
