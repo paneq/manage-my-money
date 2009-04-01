@@ -15,13 +15,14 @@ class BankParser
   
   def find_or_create_currency(long_symbol, warnings)
     long_symbol = long_symbol[0..2]
-    @currencies[long_symbol] ||= ( Currency.for_user(@user).find_by_long_symbol(long_symbol) || Currency.new(:all => long_symbol.upcase, :user => @user) )
+    currency = @currencies[long_symbol] ||= ( Currency.for_user(@user).find_by_long_symbol(long_symbol) || Currency.new(:all => long_symbol.upcase, :user => @user) )
 
-    if @currencies[long_symbol].new_record?
-      @currencies[long_symbol].save!
-      warnings << @warning_class.new("Aby umożliwić zaimportowanie tego transferu została stworzona nowa waluta o symbolu: #{currency_long_symbol}", currency)
+    if currency.new_record?
+      currency.save!
+      warnings << @warning_class.new("Aby umożliwić zaimportowanie tego transferu została stworzona nowa waluta o symbolu: #{long_symbol}", currency)
     end
 
+    currency
   end
 
 
