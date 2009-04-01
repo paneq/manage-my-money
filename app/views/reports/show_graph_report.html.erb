@@ -7,7 +7,7 @@
     <br/>
 
     <%= switch("graph_table_for_#{currency}","Pokaż/ukryj tabelkę danych") %> <br/>
-    <div id="graph_table_for_<%=currency%>">
+    <div id="graph_table_for_<%=currency%>" class="scrollbar long">
       <% if @report.share_report? %>
        <% light_shadow() do %>
         <table class="nice-table">

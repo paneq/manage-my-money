@@ -38,7 +38,8 @@ namespace :import do
     task :categories => :environment do
       user, file_name = parse_params
       open(file_name) do |file|
-        GnucashParser.import_categories(user, file)
+        doc = Nokogiri::XML(file)
+        GnucashParser.import_categories(user, doc)
       end
     end
 
@@ -46,7 +47,8 @@ namespace :import do
     task :transfers => :environment do
       user, file_name = parse_params
       open(file_name) do |file|
-        GnucashParser.import_transfers(user, file)
+        doc = Nokogiri::XML(file)
+        GnucashParser.import_transfers(user, doc)
       end
     end
 

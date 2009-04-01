@@ -116,22 +116,49 @@ class GnucashParserTest < ActiveSupport::TestCase
 
     assert_equal 10, result[:transfers][:in_file]
     assert_equal 9, result[:transfers][:added]
-    assert_equal 0, result[:transfers][:errors].size
+    assert_equal 1, result[:transfers][:errors].size
 
 
   end
 
-  test "Parse full file with multi-currencies" do
-    #TODO
+
+
+  test "Parse file with multi currencies" do
+    result = nil
+    load_file 'gnucash_with_currencies' do |content|
+      assert_difference("@jarek.categories.count", +1) do
+        assert_difference("@jarek.transfers.count", +2) do
+          assert_difference("@jarek.transfer_items.count", +4) do
+            result = GnucashParser.parse(content, @jarek)
+          end
+        end
+      end
+    end
+
+    assert_equal 6, result[:categories][:in_file]
+    assert_equal 1, result[:categories][:added]
+    assert_equal 5, result[:categories][:merged]
+    assert_equal 0, result[:categories][:errors].size
+
+    assert_equal 3, result[:transfers][:in_file]
+    assert_equal 2, result[:transfers][:added]
+    assert_equal 1, result[:transfers][:errors].size
+
+    assert_match(/transakcje wielowalutowe nie są obsługiwane/, result[:transfers][:errors].first.first)
+
+
+
   end
 
-  #  test "Parse file with errors" do
-  #    load_file 'gnucash_bad' do |content|
-  #      assert_no_difference(["@jarek.categories.count", "@jarek.transfers.count", "@jarek.transfer_items.count"]) do
-  #        GnucashParser.parse(content, @jarek)
-  #      end
-  #    end
-  #  end
+  test "Parse file with errors" do
+    load_file 'gnucash_bad' do |content|
+      assert_no_difference(["@jarek.categories.count", "@jarek.transfers.count", "@jarek.transfer_items.count"]) do
+        assert_raise GnuCashParseError do
+          GnucashParser.parse(content, @jarek)
+        end
+      end
+    end
+  end
 
 
   protected

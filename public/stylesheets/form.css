@@ -42,7 +42,7 @@ form.style2 .inline {
 }
 
 
-form.style2 div.scrollbar {
+div.scrollbar {
    height:250px;
    overflow:auto;
 }
