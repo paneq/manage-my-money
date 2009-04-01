@@ -51,8 +51,11 @@ class GnucashParser
       result[:categories] = import_categories(user, doc)
       result[:transfers] = import_transfers(user, doc)
       result
+    rescue GnuCashParseError
+      raise
     rescue Exception => e
-      raise GnuCashParseError.new(e)
+      logger.error(e)
+      raise GnuCashParseError.new('Nieznany błąd')
     end
 
     def logger
@@ -90,7 +93,7 @@ class GnucashParser
             top_categories[c.category_type] << c
           end
         end
-#        print '.'; STDOUT.flush
+        #        print '.'; STDOUT.flush
       end
 
 
@@ -119,7 +122,7 @@ class GnucashParser
       logger.debug "\n==Parenting categories"
       categories.each_value do |cat|
         unless cat.parent_guid.nil?
-#          print '.'; STDOUT.flush
+          #          print '.'; STDOUT.flush
           cat.parent = categories[cat.parent_guid]
         end
       end
@@ -131,10 +134,10 @@ class GnucashParser
       categories.each_value do |cat|
         existing_cat = user.categories.find_by_import_guid(cat.import_guid)
         unless existing_cat
-#          print '.'; STDOUT.flush
+          #          print '.'; STDOUT.flush
           new_record = cat.new_record?
           if cat.save
-#            print '.'; STDOUT.flush
+            #            print '.'; STDOUT.flush
             if new_record
               saved += 1
             else
@@ -142,7 +145,7 @@ class GnucashParser
             end
 
           else
-#            print 'x'; STDOUT.flush
+            result[:errors] << ["Kategoria: '#{cat.name}' - ", cat.errors.full_messages.to_sentence]
           end
         end
       end
@@ -163,6 +166,7 @@ class GnucashParser
       logger.debug "\n==Parsing and saving transfers"
       result[:errors] = []
       doc.find('//gnc:transaction').each do |node|
+        multi_currency_transfer = false
         t = Transfer.new
         t.user = user
         t.import_guid = node.find('trn:id').inner_text
@@ -171,7 +175,8 @@ class GnucashParser
         t.description = node.find('trn:description').inner_text
 
         currency_name = node.find('trn:currency/cmdty:id').inner_text
-        currency = Currency.find(:first, :conditions => ['long_symbol = ? AND (user_id IS NULL OR user_id = ?)', currency_name, user.id])
+        #        currency = Currency.find(:first, :conditions => ['long_symbol = ? AND (user_id IS NULL OR user_id = ?)', currency_name, user.id])
+        currency = find_or_create_currency(currency_name, user)
 
         node.find('trn:splits/trn:split').each do |split|
           ti = TransferItem.new
@@ -180,27 +185,46 @@ class GnucashParser
           ti.category = user.categories.find_by_import_guid(category_guid)
           ti.description = split.find('split:memo').inner_text
           value_str = split.find('split:value').inner_text
-          if value_str =~ /(-?\d*)\/(\d*)/
-            ti.value = $1.to_f / $2.to_f
+          value = parse_value(value_str)
+
+          value_str = split.find('split:quantity').inner_text
+          quantity = parse_value(value_str)
+
+          if (value == quantity)
+            ti.value = value
           else
-            logger.debug "Problems parsing #{value_str} value"
+            multi_currency_transfer = true
+            break
           end
+
           ti.currency = currency
           t.transfer_items << ti
         end
 
-
+        if multi_currency_transfer
+          result[:errors] << ["#{t.day} #{t.description}: transakcje wielowalutowe nie są obsługiwane"]
+          next
+        end
+        
         if t.save
-#          print '.'
+          #          print '.'
           saved += 1
         else
-#          print 'x'
-          logger.debug t.errors.full_messages
+          #          print 'x'
+          #          logger.debug t.errors.full_messages
+
+          result[:errors] << ["#{t.day} #{t.description}: ", t.errors.full_messages.to_sentence]
+
           t.transfer_items.each do |ti|
-            logger.debug ti.errors.full_messages
+            #            logger.debug ti.errors.full_messages
+            result[:errors] << ["#{t.day} #{t.description}, element: #{ti.description} ",ti.errors.full_messages.to_sentence] unless ti.errors.blank?
+
           end
+
+
+
         end
-#        STDOUT.flush
+        #        STDOUT.flush
 
       end
       logger.debug "\nSaved #{saved} transfers from #{transaction_count}"
@@ -239,6 +263,27 @@ class GnucashParser
       end
     end
 
+    def find_or_create_currency(long_symbol, user)
+      #      long_symbol = long_symbol[0..2]
+      new_currency = ( Currency.for_user(user).find_by_long_symbol(long_symbol) || Currency.new(:all => long_symbol.upcase, :user => user) )
+
+      if new_currency.new_record?
+        new_currency.save!
+      end
+
+      new_currency
+
+    end
+
+    def parse_value(value_str)
+      value = nil
+      if value_str =~ /(-?\d*)\/(\d*)/
+        value = $1.to_f / $2.to_f
+      else
+        logger.debug "Problems parsing #{value_str} value"
+      end
+      return value
+    end
 
   end
 end

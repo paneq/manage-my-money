@@ -12,7 +12,42 @@
   </div>
 <% else %>
   <div id="parsing-good" style="margin:20px; font-size: 120%">
-    <%= @result %>
-    <p>Udało się :-) </p>
+    <p><b>Import danych powiódł się</b>, krótkie podsumowanie:</p>
+
+<p>
+    Znaleziono <%= @result[:categories][:in_file] %> kategorii w podanym pliku,
+    z czego utworzono <%= @result[:categories][:added] %> nowych
+oraz połączono <%= @result[:categories][:merged] %> kategorii.</p>
+
+    <% if @result[:categories][:errors].size > 0  %>
+      <p>Podczas importowania kategorii wystąpiły następujące problemy:</p>
+      <ul id="category-error">
+      <% @result[:categories][:errors].each do |err| %>
+        <li>
+        <%= err %>
+        </li>
+      <% end %>
+      </ul>
+    <% end %>
+
+
+    <p>
+    Znaleziono <%= @result[:transfers][:in_file] %> transferów w podanym pliku,
+    z czego utworzono <%= @result[:transfers][:added] %> nowych transferów. </p>
+
+    <% if @result[:transfers][:errors].size > 0  %>
+    <p>
+    Podczas importowania transferów wystąpiły następujące problemy: </p>
+      <ul id="transfer-error">
+      <% @result[:transfers][:errors].each do |err| %>
+        <li>
+        <%= err %>
+        </li>
+      <% end %>
+      </ul>
+    <% end %>
+
+    <p>
+    <%= link_to '<< Import', :controller => :import, :action => :import %> </p>
   </div>
 <% end %>
