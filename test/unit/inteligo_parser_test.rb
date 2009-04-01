@@ -13,7 +13,6 @@ class InteligoParserTest < ActiveSupport::TestCase
     @rupert.save!
     @inteligo = @rupert.categories(true).find_by_name 'Inteligo'
     @inteligo2 = @rupert.categories.find_by_name 'Second Inteligo'
-    assert_not_nil @inteligo
   end
 
 
@@ -39,8 +38,11 @@ class InteligoParserTest < ActiveSupport::TestCase
       :import_guid => Digest::SHA1.hexdigest('50102055581111100000000000-300000'),
       :value => 1032.28,
       :currency => @zloty)
-      
-    result = InteligoParser.new(open(RAILS_ROOT + '/test/files/inteligo.xml'), @rupert, @inteligo).parse()
+
+    result = nil
+    open(RAILS_ROOT + '/test/files/inteligo.xml') do |f|
+      result = InteligoParser.new(f.read, @rupert, @inteligo).parse()
+    end
 
     tested_result = result.find{|r| r[:transfer].transfer_items.first.value.abs == 68.85}
     assert !tested_result[:warnings].empty? #because of t1
@@ -59,4 +61,21 @@ class InteligoParserTest < ActiveSupport::TestCase
     
   end
 
+
+  def test_new_currency
+
+    assert_difference("@rupert.currencies.count", 1) do
+      open(RAILS_ROOT + '/test/files/inteligo.xml') do |f|
+        InteligoParser.new(f.read, @rupert, @inteligo).parse()
+      end
+    end
+
+    assert_no_difference("@rupert.currencies.count") do
+      open(RAILS_ROOT + '/test/files/inteligo.xml') do |f|
+        InteligoParser.new(f.read, @rupert, @inteligo).parse()
+      end
+    end
+
+  end
+  
 end

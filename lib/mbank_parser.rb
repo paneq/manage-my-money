@@ -65,7 +65,7 @@ class MbankParser < BankParser
       account_number = description.match(/\d{26}$/)
       account = nil
 
-      guid = Digest::SHA1.hexdigest([description, amount.to_s, date.to_s].join)
+      guid = Digest::SHA1.hexdigest([description, amount.to_s, date.to_s].join('-'))
       instance.warn_similar_transfer(guid, date, amount, instance.currency, warnings)
 
       if account_number
