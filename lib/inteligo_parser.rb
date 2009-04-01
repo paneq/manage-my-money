@@ -56,7 +56,7 @@ class InteligoParser < BankParser
         other_category = @user.categories.find_by_bank_account_number(number)
       end
 
-      import_guid = [bank_account_number_in_file, id].join('-')
+      import_guid = Digest::SHA1.hexdigest( [bank_account_number_in_file, id].join('-') )
       warn_similar_transfer(import_guid, order_date, amount, currency, warnings)
       
 
