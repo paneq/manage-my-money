@@ -1,0 +1,3 @@
+xsltproc ../../../documents/mgr/apps/docbook-xsl-1.74.3/fo/test.xsl help.xml > help.fo
+../../../documents/mgr/apps/fop-0.95/fop -c ../../../documents/mgr/apps/fop-0.95/conf/fop.xconf help.fo help.pdf
+rm help.fo

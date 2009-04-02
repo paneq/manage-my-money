@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:m="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+    <info>
+        <title>Pomoc do systemu Manage My Money</title>
+        <subtitle></subtitle>
+        <author>
+            <personname>
+                <firstname>Robert</firstname>
+                <surname>Pankowecki</surname>
+            </personname>
+        </author>
+
+        <author>
+            <personname>
+                <firstname>Jarosław</firstname>
+                <surname>Plebański</surname>
+            </personname>
+        </author>
+
+        <pubdate>2 kwiecień 2009</pubdate>
+    </info>
+
+    <chapter>
+        <title>FAQ
+        </title>
+
+        <section>
+            <title>FAQ FAQ</title>
+
+        </section>
+
+        <section>
+
+        </section>
+
+
+    </chapter>
+
+</book>
