@@ -7,9 +7,6 @@ class SystemCategoriesPopulator < DataPopulator
       create_expense
       create_income
       create_loan
-
-      cache_data
-
     end
 
     def cache_data
