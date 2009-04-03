@@ -20,7 +20,8 @@
   <legend>Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania</legend>
   <div class="scrollbar">
   <table id="category-tree" class="nice-table width long">
-  <%= render :partial => 'category_option', :collection => (@value_report || @report).category_report_options, :locals => {:report_type => 'value_report'} %>
+    <% collection = sort_category_report_options((@value_report || @report).category_report_options)#.sort{|a,b| a.category.cached_level <=> b.category.cached_level} %>
+  <%= render :partial => 'category_option', :collection => collection, :locals => {:report_type => 'value_report'} %>
   </table>
   </div>
   </fieldset>

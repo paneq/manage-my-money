@@ -41,6 +41,21 @@ class Category < ActiveRecord::Base
   }
 
 
+  named_scope :with_level, :select => 'categories.*, (
+    SELECT
+      count(*)
+    FROM
+      categories as c2
+    where
+      c2.id != categories.id AND
+      c2.lft <= categories.lft AND
+      c2.rgt >= categories.rgt AND
+      c2.user_id = categories.user_id AND
+      c2.category_type_int = categories.category_type_int
+  ) as cached_level'
+
+
+
   has_many :transfer_items do
     def older_than(day)
       find :all,
@@ -114,11 +129,46 @@ class Category < ActiveRecord::Base
   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
   #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
   def name_with_path
+#    @double_cached_name_with_path ||= Rails.cache.fetch(name_with_path_cache_key) do
+#      path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
+#      path[0,path.size-1]
+#    end
+#    @double_cached_name_with_path
+
+    #TODO code above is more optimized, but will not work if you change category name and save, name with path will be the same
+    # why? category sweeper chould clear @double_cached_name_with_path but awesome nested set returns new objects in self_and_ancestors
+    # therefore it cannot acces @double_cached_name_with_path with requested object
+
     Rails.cache.fetch(name_with_path_cache_key) do
       path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
       path[0,path.size-1]
     end
   end
+
+  def cached_level
+    ca_level = read_attribute('cached_level')
+    unless ca_level.blank?
+      Integer(ca_level)
+    else
+      Rails.cache.fetch(level_cache_key) { level }
+    end
+  end
+
+  def level_cache_key
+    "category(#{user_id},#{id}).level"
+  end
+
+  def name_with_path_cache_key
+    "category(#{user_id},#{id}).name_with_path"
+  end
+
+  def clear_cache
+    @double_cached_name_with_path = nil
+    Rails.cache.delete(level_cache_key)
+    Rails.cache.delete(name_with_path_cache_key)
+  end
+
+
 
   def name_with_indentation
     '.'*cached_level + name
@@ -593,9 +643,9 @@ class Category < ActiveRecord::Base
           (SELECT MAX(inner_csc.system_category_id)
           FROM categories_system_categories as inner_csc
           WHERE inner_csc.category_id = categories.id)',
-        user.id,
-        user.id,
-        TransferItem.search_for_ids(text)],
+          user.id,
+          user.id,
+          TransferItem.search_for_ids(text)],
         :group => 'categories.id',
         :order => 'number DESC',
         :limit => 5
@@ -603,18 +653,6 @@ class Category < ActiveRecord::Base
       Category.find(:all, :conditions => {:id => found.map(&:id)})
     end
 
-  end
-
-  def level_cache_key
-    "category(#{user_id},#{id}).level"
-  end
-
-  def name_with_path_cache_key
-    "category(#{user_id},#{id}).name_with_path"
-  end
-
-  def cached_level
-    Rails.cache.fetch(level_cache_key) { level }
   end
 
   #======================

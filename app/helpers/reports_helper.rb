@@ -68,5 +68,12 @@ module ReportsHelper
     end
   end
 
+  def sort_category_report_options(cat_rep_opts)
+    cat_rep_opts.sort do |a,b|
+      a_cat = a.category
+      b_cat = b.category
+      (a_cat.category_type_int <=> b_cat.category_type_int).nonzero? || (a_cat.lft <=> b_cat.lft)
+    end
+  end
 
 end

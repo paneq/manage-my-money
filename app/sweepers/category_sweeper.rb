@@ -16,8 +16,7 @@ class CategorySweeper < ActionController::Caching::Sweeper
 
   def clear_cache(category)
     category.self_and_descendants.each do |c|
-      Rails.cache.delete(c.level_cache_key)
-      Rails.cache.delete(c.name_with_path_cache_key)
+      c.clear_cache
     end
 
   end

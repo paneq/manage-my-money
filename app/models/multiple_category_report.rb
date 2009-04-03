@@ -31,9 +31,9 @@ class MultipleCategoryReport < Report
   validates_associated :category_report_options
 
   def has_at_least_one_category?
-     unless category_report_options != nil && category_report_options.size > 0
-       errors.add_to_base(:should_have_at_least_one_category)
-     end
+    unless category_report_options != nil && category_report_options.size > 0
+      errors.add_to_base(:should_have_at_least_one_category)
+    end
   end
 
   def new_category_report_options=(category_report_options_attr)
@@ -72,11 +72,12 @@ class MultipleCategoryReport < Report
   #tworzy category_report_option i ustawia mu inclusion_type na :none
   #
   def prepare_category_report_options(given_categories)
+    actual_categories = categories.to_a
     given_categories.each do |cat|
-      unless categories.include? cat
-        category_report_options << CategoryReportOption.new({:category => cat, :inclusion_type => :none})
+      unless actual_categories.include? cat
+        category_report_options.build({:category => cat, :inclusion_type => :none})
       end
-   end
+    end
   end
 
 
