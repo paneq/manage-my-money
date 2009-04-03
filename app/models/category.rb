@@ -129,20 +129,11 @@ class Category < ActiveRecord::Base
   #Zwraca nazwę kategorii wraz ze ścieżka utworzoną ze wszystkich jej nadkategorii
   #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
   def name_with_path
-#    @double_cached_name_with_path ||= Rails.cache.fetch(name_with_path_cache_key) do
-#      path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
-#      path[0,path.size-1]
-#    end
-#    @double_cached_name_with_path
-
-    #TODO code above is more optimized, but will not work if you change category name and save, name with path will be the same
-    # why? category sweeper chould clear @double_cached_name_with_path but awesome nested set returns new objects in self_and_ancestors
-    # therefore it cannot acces @double_cached_name_with_path with requested object
-
-    Rails.cache.fetch(name_with_path_cache_key) do
+    @double_cached_name_with_path ||= Rails.cache.fetch(name_with_path_cache_key) do
       path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
       path[0,path.size-1]
     end
+    @double_cached_name_with_path
   end
 
   def cached_level

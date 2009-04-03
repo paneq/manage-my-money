@@ -588,9 +588,11 @@ class CategoryTest < ActiveSupport::TestCase
 
     category1.name = 'Nazwa'
     category1.save!
+    category1 = Category.find category1.id
     assert_equal 'Nazwa', category1.name_with_path
     category2.name = 'NowaNazwa'
     category2.save!
+    category2 = Category.find category2.id
     assert_equal 'Zasoby:test:NowaNazwa', category2.name_with_path
 
   end

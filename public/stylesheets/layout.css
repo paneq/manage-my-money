@@ -803,4 +803,8 @@ div.auto_complete ul strong.highlight {
     padding-bottom: 10px;
 }
 
-
+.help {
+    display:inline;
+    vertical-align: top;
+    text-decoration:none;
+}

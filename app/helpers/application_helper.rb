@@ -170,7 +170,20 @@ module ApplicationHelper
     alias_method_chain :will_paginate, :i18n
   end
 
-  
+
+  def help_tag(a_id, title = 'Pomoc')
+    result =  <<-HTML
+<span class="help" title="#{title}">
+  <a href="help/help.html##{a_id}" target="_blank">
+    <img alt="Pomoc" src="/images/icon_help.png" style="vertical-align: top;"/>
+  </a>
+</span>
+    HTML
+    result
+  end
+
+
+
   protected
 
   def block_to_partial(partial_name, options = {}, &block)

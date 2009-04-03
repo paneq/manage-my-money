@@ -169,7 +169,7 @@ class Goal < ActiveRecord::Base
     throw "Period type mismatch: #{period_type}" if period_type == :SELECTED
     throw 'Goal is not cyclic' unless is_cyclic
     new_goal = self.clone
-    new_goal.period_start = self.period_end + 1 #self.period_start.shift(Date::period_category(period_type))
+    new_goal.period_start = self.period_end + 1
     new_goal.period_end = new_goal.period_start.shift(Date::period_category(period_type))
     same_goal = Goal.first :conditions => ['period_start = ? AND period_end = ? AND cycle_group = ?', new_goal.period_start, new_goal.period_end, cycle_group]
     throw 'There is already goal in database' unless same_goal.nil?
