@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
                "docbook/dtd/xml/5.0/docbookx.dtd">
-
-
-
-<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+<article version="5.0" xmlns="http://docbook.org/ns/docbook"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:xi="http://www.w3.org/2001/XInclude"
       xmlns:svg="http://www.w3.org/2000/svg"
@@ -13,38 +10,47 @@
       xmlns:db="http://docbook.org/ns/docbook">
     <info>
         <title>Pomoc do systemu Manage My Money</title>
-        <subtitle></subtitle>
-        <author>
-            <personname>
-                <firstname>Robert</firstname>
-                <surname>Pankowecki</surname>
-            </personname>
-        </author>
-
-        <author>
-            <personname>
-                <firstname>Jarosław</firstname>
-                <surname>Plebański</surname>
-            </personname>
-        </author>
-
-        <pubdate>2 kwiecień 2009</pubdate>
     </info>
-
-    <chapter>
-        <title>FAQ
-        </title>
-
-        <section>
-            <title>FAQ FAQ</title>
-
+    <section id="system_elements">
+        <title >Elementy systemu</title>
+        <section id="system_elements.login">
+            <title >Logowanie</title>
+            <section id="system_elements.login.remember_me">
+                <title>Pole wyboru: "Zapamiętaj mnie" </title>
+                <para >
+    Zaznaczenie opcji "Zapamiętaj mnie" sprawi, że system będzie Cię pamiętał nawet jak zamkniesz przeglądarkę
+                </para>
+            </section>
         </section>
+    </section>
+    <section id="faq">
+        <title>Faq</title>
 
-        <section>
+        <qandaset>
+            <qandaentry>
+                <question>
+                    <para>Zarządzanie budżetem osobistym - po co to komu?</para>
+                </question>
+                <answer>
+                    <para>Sam nie wiem;)</para>
+                </answer>
+            </qandaentry>
 
-        </section>
+            <qandaentry>
+                <question>
+                    <para>Inne pytanie</para>
+                </question>
+                <answer>
+                    <para>Inna odpowiedź</para>
+                </answer>
+            </qandaentry>
+
+        </qandaset>
 
 
-    </chapter>
+    </section>
 
-</book>
+
+</article>
+
+       <!--     <anchor id="example.anchor.1"/> -->
