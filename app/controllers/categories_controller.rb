@@ -28,7 +28,8 @@ class CategoriesController < HistoryController
 
   
   def index
-  
+    @saldos = Category.compute(:default, self.current_user, @current_user.categories, false, Date.today)
+    Category.compute(:default, self.current_user, @current_user.categories, true, Date.today)
   end
 
 
@@ -39,6 +40,7 @@ class CategoriesController < HistoryController
       @category.destroy
       @destroyed = true
     end
+    @saldos = Category.compute(:default, self.current_user, @current_user.categories, false, Date.today)
     respond_to do |format|
       format.html do
         flash[:notice] = @destroyed ? "Usunięto kategorię" : "Nie można usunąć kategorii"

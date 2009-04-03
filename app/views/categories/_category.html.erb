@@ -9,7 +9,7 @@
   </td>
 
   <td id="category-saldo-<%= category.id -%>">
-    <% category.current_saldo.each do |currency, value| %>
+    <% @saldos[category].each do |currency, value| %>
       <%= "#{value} #{currency.symbol}, " -%>
     <% end %>
   </td>

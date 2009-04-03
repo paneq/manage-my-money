@@ -941,6 +941,77 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
 
+  test "Building sql group clause for compute method" do
+    sql="CASE
+WHEN transfers.day <= '2008-01-31' THEN 0
+WHEN transfers.day <= '2008-02-29' THEN 1
+WHEN transfers.day <= '2008-03-31' THEN 2
+WHEN transfers.day <= '2008-04-30' THEN 3
+WHEN transfers.day <= '2008-05-31' THEN 4
+END as my_group,
+"
+
+    assert_equal sql, Category.send(:build_my_group, Date.split_period(:month, '2008-01-01'.to_date, '2008-05-31'.to_date))
+    
+    sql="CASE
+WHEN transfers.day <= '2008-01-31' THEN 0
+WHEN transfers.day <= '2008-02-29' THEN 1
+END as my_group,
+"
+    assert_equal sql, Category.send(:build_my_group, [Range.new('2008-01-01'.to_date, '2008-01-31'.to_date), Range.new('2008-02-01'.to_date, '2008-02-29'.to_date)])
+
+    sql = "0 as my_group,\n"
+
+    assert_equal sql, Category.send(:build_my_group, Range.new('2008-01-01'.to_date, '2008-01-31'.to_date))
+    assert_equal sql, Category.send(:build_my_group, '2008-01-31'.to_date)
+    assert_equal sql, Category.send(:build_my_group, nil)
+  end
+
+
+  test "Building sql where clause for compute method" do
+    category = @rupert.asset
+    sql="
+    WHERE categories.user_id = #{@rupert.id} AND
+    categories.id IN ( #{category.id} ) AND
+    transfers.day >= '2008-01-01' AND transfers.day <= '2008-05-31'
+    "
+
+    String.class_eval do
+      def unified_sql
+        self.gsub("\n","").gsub(/\s+/, ' ').strip
+      end
+    end
+
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, [category], Date.split_period(:month, '2008-01-01'.to_date, '2008-05-31'.to_date)).unified_sql
+
+    sql="
+    WHERE categories.user_id = #{@rupert.id} AND
+    categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} ) AND
+    transfers.day >= '2008-02-01' AND transfers.day <= '2008-06-30'
+    "
+
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, Range.new('2008-02-01'.to_date, '2008-06-30'.to_date)).unified_sql
+
+    sql="
+    WHERE categories.user_id = #{@rupert.id} AND
+    categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} ) AND
+    transfers.day <= '2008-12-31'
+    "
+
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, '2008-12-31'.to_date).unified_sql
+
+    sql="
+    WHERE categories.user_id = #{@rupert.id} AND
+    categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} )"
+
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, nil).unified_sql
+  end
+
+
+  test "cool stuff" do
+    
+  end
+
   private
 
 

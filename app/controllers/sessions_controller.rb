@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
 
   def destroy
     logout_killing_session!
-    flash[:notice] = "You have been logged out."
+    flash[:notice] = "Wylgowano z serwisu."
     redirect_back_or_default('/')
   end
 

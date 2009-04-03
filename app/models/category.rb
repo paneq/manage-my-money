@@ -593,9 +593,9 @@ class Category < ActiveRecord::Base
           (SELECT MAX(inner_csc.system_category_id)
           FROM categories_system_categories as inner_csc
           WHERE inner_csc.category_id = categories.id)',
-        user.id,
-        user.id,
-        TransferItem.search_for_ids(text)],
+          user.id,
+          user.id,
+          TransferItem.search_for_ids(text)],
         :group => 'categories.id',
         :order => 'number DESC',
         :limit => 5
@@ -605,21 +605,233 @@ class Category < ActiveRecord::Base
 
   end
 
+  
   def level_cache_key
     "category(#{user_id},#{id}).level"
   end
+
 
   def name_with_path_cache_key
     "category(#{user_id},#{id}).name_with_path"
   end
 
+
   def cached_level
     Rails.cache.fetch(level_cache_key) { level }
+  end
+
+
+  def self.compute(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
+    sql = compute_sql(algorithm, user, categories, include, array_or_range_or_date_or_nil)
+
+    sql_result = connection.execute(sql)
+    ret_result = SequencedHash.new
+    
+    quick_cat = {}
+    quick_time = {}
+    quick_curr = {}
+    
+    Currency.for_user(user).each do |cur|
+      quick_curr[cur.id.to_s] = cur
+    end
+
+    is_array = array_or_range_or_date_or_nil.is_a?(Array)
+
+    if is_array
+      array_or_range_or_date_or_nil.each_with_index do |time, index|
+        quick_time[index.to_s] = time
+      end
+    end
+
+    if is_array
+      categories.each do |cat|
+        quick_cat[cat.id.to_s] = cat
+        ret_result[cat] = SequencedHash.new
+        array_or_range_or_date_or_nil.each do |time|
+          ret_result[cat][time]  = Money.new()
+        end
+      end
+    else
+      categories.each do |cat|
+        quick_cat[cat.id.to_s] = cat
+        ret_result[cat] = Money.new()
+      end
+    end
+
+    if is_array
+      sql_result.each do |row|
+        ret_result[quick_cat[row[0]]][quick_time[row[1]]].add!(Kernel.BigDecimal(row[3]), quick_curr[row[2]])
+      end
+    else
+      sql_result.each do |row|
+        ret_result[quick_cat[row[0]]].add!(Kernel.BigDecimal(row[3]), quick_curr[row[2]]) # skip my_group sql column which is always the same when not splitted into period
+      end
+    end
+
+    ret_result
+  end
+
+
+  def self.compute_sql(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
+    raise 'Invalid algorithm given' unless User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.include?(algorithm) || algorithm == :default
+    algorithm = user.multi_currency_balance_calculating_algorithm if algorithm == :default
+    categories = [categories] if categories.is_a?(Category)
+    sql =<<-SQL
+      SELECT
+      categories.id,
+    SQL
+    sql << build_my_group(array_or_range_or_date_or_nil)
+    sql << build_computed_currency(algorithm, user)
+    sql << build_computed_value(algorithm, user)
+    sql << "FROM categories"
+    sql << build_subcategories_join if include
+    sql << build_transfer_items_join(include)
+    sql << build_transfers_join
+    sql << build_where(user, categories, array_or_range_or_date_or_nil)
+    sql << build_group_and_order
+    sql
+    #Category.find_by_sql(sql)
   end
 
   #======================
   private
 
+  def self.build_my_group(param)
+    return case param
+    when Array then
+
+      sql_case="CASE\n"
+      param.each_with_index do |range_or_array, index|
+        case range_or_array
+        when Array then
+          sql_case << "WHEN transfers.day <= '#{range_or_array[1].to_s}' THEN #{index}\n"
+        when Range then
+          sql_case << "WHEN transfers.day <= '#{range_or_array.end.to_s}' THEN #{index}\n"
+        end
+      end
+      sql_case << "END as my_group,\n"
+      sql_case
+
+    when Range, Date, NilClass then
+      "0 as my_group,\n"
+    end
+  end
+
+
+  def self.build_computed_currency(algorithm, user)
+    if algorithm == :show_all_currencies
+      "transfer_items.currency_id as computed_currency,\n"
+    else
+      "#{user.default_currency.id} as computed_currency,\n"
+    end
+  end
+
+
+  def self.build_computed_value(algorithm, user)
+    if algorithm == :show_all_currencies
+      if user.invert_saldo_for_income
+        "sum(CASE
+WHEN categories.category_type_int = #{Category.CATEGORY_TYPES[:INCOME]} THEN transfer_items.value * -1
+ELSE transfer_items.value
+END)"
+      else
+        "sum(transfer_items.value) as computed_value\n"
+      end
+    else
+      raise 'unimplemented yet'
+    end
+  end
+
+
+  def self.build_subcategories_join
+    "
+INNER JOIN categories as c2
+  ON (
+    c2.user_id = categories.user_id AND
+    c2.category_type_int = categories.category_type_int AND
+    c2.lft >= categories.lft AND
+    c2.rgt <= categories.rgt
+  )
+    "
+  end
+
+
+  def self.build_transfer_items_join(include)
+    if include
+      "
+INNER JOIN transfer_items
+  ON (
+    c2.id = transfer_items.category_id
+  )
+      "
+    else
+      "
+INNER JOIN transfer_items
+  ON (
+    categories.id = transfer_items.category_id
+  )
+      "
+    end
+  end
+
+
+  def self.build_transfers_join
+    "
+INNER JOIN transfers
+  ON (
+    transfer_items.transfer_id = transfers.id
+  )
+    "
+  end
+
+
+  def self.build_where(user, categories, array_or_range_or_date_or_nil)
+    sql = "WHERE categories.user_id = #{user.id} AND \n"
+    sql << "categories.id IN ( #{ categories.map(&:id).join(', ') } )"
+    sql << " AND \n" unless array_or_range_or_date_or_nil.nil?
+    case array_or_range_or_date_or_nil
+    when Array then
+
+      first_obj = array_or_range_or_date_or_nil.first
+      case first_obj
+      when Array
+        sql << "transfers.day >= '#{first_obj[0].to_date.to_s}' "
+      when Range
+        sql << "transfers.day >= '#{first_obj.begin.to_date.to_s}' "
+      end
+
+      sql << "AND "
+
+      last_obj = array_or_range_or_date_or_nil.last
+      case last_obj
+      when Array
+        sql << "transfers.day <= '#{last_obj[1].to_date.to_s}' \n"
+      when Range
+        sql << "transfers.day <= '#{last_obj.end.to_date.to_s}' \n"
+      end
+
+    when Range then
+      sql << "transfers.day >= '#{array_or_range_or_date_or_nil.begin.to_date.to_s}' AND "
+      sql << "transfers.day <= '#{array_or_range_or_date_or_nil.end.to_date.to_s}' \n"
+
+    when Date then
+      sql << "transfers.day <= '#{array_or_range_or_date_or_nil.to_s}' "
+    end
+
+    sql
+  end
+
+
+  def self.build_group_and_order
+    "
+GROUP BY
+  categories.id,
+  my_group,
+  computed_currency
+ORDER BY
+  categories.id;
+    "
+  end
 
   def universal_saldo(algorithm = :default, with_subcategories = false, additional_condition="", *params)
     algorithm = algorithm(algorithm, with_subcategories)

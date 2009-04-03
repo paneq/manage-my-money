@@ -88,7 +88,7 @@ Rails::Initializer.run do |config|
   config.gem 'nokogiri', :version => '1.2.3'
 
   #pagination
-  config.gem 'mislav-will_paginate', :version => '~> 2.2', :lib => 'will_paginate', :source => 'http://gems.github.com'
+  config.gem 'mislav-will_paginate', :version => '~> 2.3', :lib => 'will_paginate', :source => 'http://gems.github.com'
 
   #parsinv csv files from mbank
   config.gem 'fastercsv', :version => '~> 1.4.0'
