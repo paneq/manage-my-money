@@ -28,8 +28,14 @@ class CategoriesController < HistoryController
 
   
   def index
-    @saldos = Category.compute(:default, self.current_user, @current_user.categories, false, Date.today)
-    Category.compute(:default, self.current_user, @current_user.categories, true, Date.today)
+    #Optimization: 
+    #preloading 'name_with_path' from cache
+    @categories = self.current_user.categories.with_level
+    @categories.each do |c|
+      c.name_with_path
+    end
+    @saldos = Category.compute(:default, self.current_user, @categories, false, Date.today)
+    Category.compute(:default, self.current_user, @categories, true, Date.today)
   end
 
 

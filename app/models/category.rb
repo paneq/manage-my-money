@@ -52,10 +52,9 @@ class Category < ActiveRecord::Base
       c2.rgt >= categories.rgt AND
       c2.user_id = categories.user_id AND
       c2.category_type_int = categories.category_type_int
-  ) as cached_level'
+  ) as cached_category_level'
 
-
-
+  
   has_many :transfer_items do
     def older_than(day)
       find :all,
@@ -130,14 +129,13 @@ class Category < ActiveRecord::Base
   #np dla kategorii Owoce -> Wydatki:Jedzenie:Owoce
   def name_with_path
     @double_cached_name_with_path ||= Rails.cache.fetch(name_with_path_cache_key) do
-      path = self_and_ancestors.inject('') { |sum, cat| sum += cat.name + ':'}
-      path[0,path.size-1]
+      self_and_ancestors.map(&:name).join(':')
     end
     @double_cached_name_with_path
   end
 
   def cached_level
-    ca_level = read_attribute('cached_level')
+    ca_level = read_attribute('cached_category_level')
     unless ca_level.blank?
       Integer(ca_level)
     else
@@ -644,20 +642,6 @@ class Category < ActiveRecord::Base
       Category.find(:all, :conditions => {:id => found.map(&:id)})
     end
 
-  end
-  
-  def level_cache_key
-    "category(#{user_id},#{id}).level"
-  end
-
-
-  def name_with_path_cache_key
-    "category(#{user_id},#{id}).name_with_path"
-  end
-
-
-  def cached_level
-    Rails.cache.fetch(level_cache_key) { level }
   end
 
 
