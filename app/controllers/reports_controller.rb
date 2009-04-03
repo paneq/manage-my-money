@@ -174,8 +174,8 @@ class ReportsController < ApplicationController
     @value_report = ValueReport.new if !@value_report
     @share_report = ShareReport.new if !@share_report
     @flow_report = FlowReport.new if !@flow_report
-    @value_report.prepare_category_report_options @current_user.categories
-    @flow_report.prepare_category_report_options @current_user.categories
+    @value_report.prepare_category_report_options @current_user.categories.with_level
+    @flow_report.prepare_category_report_options @current_user.categories.with_level
     @flow_report.report_view_type = :text
     @flow_report.period_start = @value_report.period_start = @share_report.period_start = 1.year.ago.at_beginning_of_year.to_date
     @flow_report.period_end = @value_report.period_end = @share_report.period_end = Date.today

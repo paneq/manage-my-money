@@ -1,1 +1,1 @@
-xsltproc ../../../documents/mgr/apps/docbook-xsl-1.74.3/html/docbook.xsl help.xml > ../../public/help/help.html
+xsltproc ../../../documents/mgr/apps/docbook-xsl-1.74.3/html/help_3m.xsl help.xml > ../../public/help/help.html

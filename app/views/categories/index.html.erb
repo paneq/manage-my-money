@@ -7,7 +7,7 @@
   </div>
 
   <table id="category-tree" class="nice-table width">
-    <%=render :partial => 'category' , :collection => @current_user.categories %>
+    <%=render :partial => 'category' , :collection => @current_user.categories.with_level %>
   </table>
 
 </div>

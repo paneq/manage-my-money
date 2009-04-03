@@ -940,6 +940,23 @@ class CategoryTest < ActiveSupport::TestCase
 
   end
 
+  test "With_level scope or without" do
+    prepare_sample_catagory_tree_for_jarek
+
+    [@jarek.categories.with_level.find_by_name('test'),
+      @jarek.categories.find_by_name('test')].each do |cat|
+      assert_equal cat.level, cat.cached_level
+      assert_equal 1, cat.cached_level
+    end
+
+    [@jarek.categories.with_level.find_by_name(@jarek.asset.name),
+      @jarek.categories.find_by_name(@jarek.asset.name)].each do |cat|
+      assert_equal cat.level, cat.cached_level
+      assert_equal 0, cat.cached_level
+    end
+
+  end
+
 
   test "Building sql group clause for compute method" do
     sql="CASE
