@@ -63,16 +63,15 @@ class CategoriesController < HistoryController
 
   def create
     @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent].to_i )
-    params[:new_subcategories] ||= []
+    params[:category][:new_subcategories] ||= []
     format_openinig_balance
     @category = Category.new(params[:category].merge(:user => @current_user))
-    @category.new_subcategories = params[:new_subcategories]
     if @category.save_with_subcategories
       flash[:notice] ||= 'Utworzono nową kategorię'
       redirect_to categories_url
     else
       @system_categories = SystemCategory.all
-      @subcategories = subcategories_from_params(@system_categories, params[:new_subcategories])
+      @subcategories = subcategories_from_params(@system_categories, params[:category][:new_subcategories])
       @categories = @current_user.categories
       @currencies = @current_user.visible_currencies
       flash[:notice] = 'Nie udało się utworzyć kategorii.'
@@ -93,11 +92,10 @@ class CategoriesController < HistoryController
    
   def update
     @category = self.current_user.categories.find(params[:id])
+    params[:category][:new_subcategories] ||= []
     attr = params[:category]
-    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id, :bank_account_number, :loan_category) #TODO: More! or different!
+    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id, :new_subcategories, :bank_account_number, :loan_category)
     @category.parent = self.current_user.categories.find(attr[:parent].to_i) if !@category.is_top? and attr[:parent]
-    params[:new_subcategories] ||= []
-    @category.new_subcategories = params[:new_subcategories]
     if @category.save_with_subcategories
       flash[:notice] = 'Zapisano zmiany.'
       redirect_to category_url(@category)
@@ -105,7 +103,7 @@ class CategoriesController < HistoryController
       @parent = @category.parent
       @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
       @system_categories = SystemCategory.all
-      @subcategories = subcategories_from_params(@system_categories, params[:new_subcategories])
+      @subcategories = subcategories_from_params(@system_categories, params[:category][:new_subcategories])
       @current_subcategories = @category.descendants
       flash[:notice] = 'Nie udało się zaktualizować kategorii.'
       render :action => 'edit'

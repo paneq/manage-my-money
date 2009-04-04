@@ -3,7 +3,7 @@
   <div id="new-subcategories" class="scrollbar">
     <% @subcategories.each do |s_category_id, value| %>
       <% cat_id = "sub-category-#{s_category_id}"%>
-      <%= check_box_tag 'new_subcategories[]', s_category_id, value[:selected], :id => cat_id   %> <%= label_tag cat_id, value[:category].name, :class => 'inline', :style => "margin-left: #{10*value[:category].cached_level}px" %> <br/>
+      <%= check_box_tag 'category[new_subcategories][]', s_category_id, value[:selected], :id => cat_id   %> <%= label_tag cat_id, value[:category].name, :class => 'inline', :style => "margin-left: #{10*value[:category].cached_level}px" %> <br/>
     <% end %>
   </div>
 </fieldset>
