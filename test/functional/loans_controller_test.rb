@@ -15,7 +15,7 @@ class LoansControllerTest < ActionController::TestCase
       rupert.categories.create!(:name => name, :parent => rupert.loan)
     end
     rupert.loan.children[0..2].each do |category|
-      category.type = LoanCategory.to_s
+      category.loan_category = true
       category.save!
     end
 

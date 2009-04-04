@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090330164910
+# Schema version: 20090404090543
 #
 # Table name: users
 #
@@ -40,11 +40,7 @@ class User < ActiveRecord::Base
     :calculate_with_exchanges_closest_to_transaction_but
   ]
 
-  has_many :categories, :order => 'category_type_int, lft', :dependent => :delete_all do
-    def people_loans
-      find(:all, :conditions => [" type = 'LoanCategory' "])
-    end
-  end
+  has_many :categories, :order => 'category_type_int, lft', :dependent => :delete_all
 
 
   Category.CATEGORY_TYPES.keys.each do |category_type|

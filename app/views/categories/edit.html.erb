@@ -3,72 +3,86 @@
   <% form_for :category, @category, :url => category_path(@category), :html => {:method => :put, :class=>'style2'} do |form| %>
 
     <%= error_messages_for :category, :message => nil %>
+    
+    <p id="name">
+      <%= form.label :name, 'Nazwa'%>
+      <%= form.text_field :name %>
+    </p>
 
-    <ul>
-      <li id="name">
-        <%= form.label :name, 'Nazwa'%><%= form.text_field :name %>
-      </li>
+    <p id="description">
+      <%= form.label :description, 'Opis'%>
+      <%= form.text_field :description %>
+    </p>
 
-      <li id="description">
-        <%= form.label :description, 'Opis'%><%= form.text_field :description %>
-      </li>
+    <% if !@category.is_top? %>
+      <p id="parent">
+        <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
+        <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+      </p>
+    <% end %>
 
-      <% if !@category.is_top? %>
-        <li id="parent">
-          <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
-          <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
-        </li>
-      <% end %>
+    <p id="system_category">
+      <%= form.label :system_category, 'Kategoria systemowa'%>
+      <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
+    </p>
 
-      <li id="system_category">
-        <%= form.label :system_category, 'Kategoria systemowa'%>
-        <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
-      </li>
+    <% if @category.can_become_loan_category? %>
+      <fieldset style="margin-top: 1em">
+        <legend>Dłużnik / Wierzyciel</legend>
+        <p id="loan">
 
-      <li>
-        <% if @category.can_become_loan_category? %>
-          <fieldset style="margin-top: 1em">
-            <legend>Dłużnik / Wierzyciel</legend>
-            <p id="loan">
-              <ul>
-              <li id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%></li>
-              <li id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %></li>
-              <li id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></li>
-              </ul>
-            </p>
+          <p id="is_loan">
+            <%= form.check_box :loan_category %>
+            <%= form.label :loan_category, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%>
+          </p>
+
+          <p id="email">
+            <%= form.label :email, 'E-mail'%>
+            <%= form.text_field :email %>
+          </p>
+
+          <p id="bank_account_number">
+            <%= form.label :bank_account_number, 'Numer konta bankowego'%>
+            <%= form.text_field :bank_account_number %>
+          </p>
+
+          <p id="bankinfo">
+            <%= form.label :bankinfo, 'Informacje do przelewu'%>
+            <%= form.text_area :bankinfo , :rows => '6' %>
+          </p>
+
+        </p>
+      </fieldset>
+    <% end %>
+
+
+    <div>
+      <div style="float:left;width:50%">
+        <fieldset style="margin-top: 1em">
+          <legend>Aktualne podkategorie</legend>
+          <div id="current-subcategories" class="scrollbar">
+            <% for subcategory in  @current_subcategories do %>
+                <label id="cur-subcategory-<%=subcategory.id%>" style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
+              <% end %>
+
+              <% if @current_subcategories.empty? %>
+                <p>Brak</p>
+              <% end %>
+            </div>
           </fieldset>
-        <% end %>
-      </li>
-
-
-      <div>
-        <div style="float:left;width:50%">
-          <fieldset style="margin-top: 1em">
-            <legend>Aktualne podkategorie</legend>
-            <div id="current-subcategories" class="scrollbar">
-              <% for subcategory in  @current_subcategories do %>
-                  <label id="cur-subcategory-<%=subcategory.id%>" style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
-                <% end %>
-
-                <% if @current_subcategories.empty? %>
-                  <p>Brak</p>
-                <% end %>
-              </div>
-            </fieldset>
-          </div>
-          <div style="float:right;width:50%">
-
-            <%= render :partial => 'new_subcategories' %>
-          </div>
         </div>
+        <div style="float:right;width:50%">
+
+          <%= render :partial => 'new_subcategories' %>
+        </div>
+      </div>
 
 
 
 
-        <li id="update" style="padding-top: 20px">
-          <%= form.submit "Zapisz zmiany" %>
-        </li>
-      </ul>
+      <p id="update" style="padding-top: 20px">
+        <%= form.submit "Zapisz zmiany" %>
+      </p>
 
     <% end %>
   </div>

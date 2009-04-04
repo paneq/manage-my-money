@@ -4,8 +4,15 @@
 
     <%= error_messages_for :category, :message => nil %>
 
-    <p id="name"> <%= form.label :name, 'Nazwa'  %><%= form.text_field :name %> </p>
-    <p id="description"><%= form.label :description, 'Opis' %><%= form.text_field :description %></p>
+    <p id="name">
+      <%= form.label :name, 'Nazwa'  %>
+      <%= form.text_field :name %>
+    </p>
+
+    <p id="description">
+      <%= form.label :description, 'Opis' %>
+      <%= form.text_field :description %>
+    </p>
 
     <p id="parent">
       <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
@@ -24,18 +31,32 @@
       <%= form.label :system_category, 'Typ kategorii'%>
       <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
     </p>
-
-
-
+  
     <fieldset style="margin-top: 1em">
       <legend>Dłużnik / Wierzyciel</legend>
-
       <p id="loan">
-        <p id="is_loan"><%= form.check_box :type, {}, 'LoanCategory', 'Category' %><%= form.label :is_loan, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%> </p>
-        <p id="email"><%= form.label :email, 'E-mail'%><%= form.text_field :email %> </p>
-        <p id="bankinfo"><%= form.label :bankinfo, 'Informacje do przelewu'%><%= form.text_field :bankinfo %></p>
-      </p>
 
+        <p id="is_loan">
+          <%= form.check_box :loan_category %>
+          <%= form.label :loan_category, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%>
+        </p>
+
+        <p id="email">
+          <%= form.label :email, 'E-mail'%>
+          <%= form.text_field :email %>
+        </p>
+
+        <p id="bank_account_number">
+          <%= form.label :bank_account_number, 'Numer konta bankowego'%>
+          <%= form.text_field :bank_account_number %>
+        </p>
+
+        <p id="bankinfo">
+          <%= form.label :bankinfo, 'Informacje do przelewu'%>
+          <%= form.text_area :bankinfo , :rows => '6' %>
+        </p>
+
+      </p>
     </fieldset>
 
     <%= render :partial => 'new_subcategories' %>

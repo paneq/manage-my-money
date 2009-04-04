@@ -63,6 +63,17 @@ CREATE AGGREGATE array_accum(anyelement) (
 );
 
 
+--
+-- Name: sum(text); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE sum(text) (
+    SFUNC = textcat,
+    STYPE = text,
+    INITCOND = ''
+);
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -127,12 +138,12 @@ CREATE TABLE categories (
     rgt integer,
     import_guid character varying(255),
     imported boolean DEFAULT false,
-    type character varying(255),
     email character varying(255),
     bankinfo text,
     bank_account_number character varying(255),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    loan_category boolean
 );
 
 
@@ -183,7 +194,6 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -366,7 +376,6 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -1030,3 +1039,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090324094534');
 INSERT INTO schema_migrations (version) VALUES ('20090330153852');
 
 INSERT INTO schema_migrations (version) VALUES ('20090330164910');
+
+INSERT INTO schema_migrations (version) VALUES ('20090404090543');

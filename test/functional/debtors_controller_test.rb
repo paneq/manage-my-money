@@ -18,7 +18,7 @@ class DebtorsControllerTest < ActionController::TestCase
   end
 
 
-  def test_index_subcategory_is_not_LoanCategory
+  def test_index_subcategory_is_not_loan_category
     lc = Category.new(:name => 'Person', :user => @rupert, :parent => @rupert.loan)
     lc.save!
     get :index
@@ -35,7 +35,7 @@ class DebtorsControllerTest < ActionController::TestCase
   
 
   def test_index_no_debtors
-    lc = LoanCategory.new(:name => 'Person', :user => @rupert, :parent => @rupert.loan)
+    lc = Category.new(:name => 'Person', :user => @rupert, :parent => @rupert.loan, :loan_category => true)
     lc.save!
     get :index
     assert_response :success
@@ -45,14 +45,14 @@ class DebtorsControllerTest < ActionController::TestCase
 
 
   def test_index
-    person = LoanCategory.new(:name => 'Person', :user => @rupert, :parent => @rupert.loan, :email => 'mail@example.org')
+    person = Category.new(:name => 'Person', :user => @rupert, :parent => @rupert.loan, :email => 'mail@example.org', :loan_category => true)
     person.save!
     items = []
     items << save_simple_transfer(:outcome => @rupert.asset, :income => person, :currency => @zloty)
     items << save_simple_transfer(:outcome => @rupert.asset, :income => person, :currency => @euro)
     items.map!{|t| t.transfer_items.find(:first, :conditions => 'value >0')}
 
-    bank = LoanCategory.new(:name => 'Bank', :user => @rupert, :parent => @rupert.loan)
+    bank = Category.new(:name => 'Bank', :user => @rupert, :parent => @rupert.loan, :loan_category => true)
     bank.save!
 
     get :index

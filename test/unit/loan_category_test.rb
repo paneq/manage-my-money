@@ -17,57 +17,50 @@ class LoanCategoryTest < ActiveSupport::TestCase
   end
 
 
-  def test_Creating_Loan_Categories
-    l = LoanCategory.new(:name => 'test', :user => @rupert, :parent => @rupert.loan)
+  def test_creating_loan_categories
+    l = Category.new(:name => 'test', :user => @rupert, :parent => @rupert.loan, :loan_category => true)
     assert_equal :LOAN, l.category_type
-    assert_equal 'LoanCategory', l.type.to_s
 
     assert l.save
 
     assert_equal :LOAN, l.category_type
-    assert_not_nil LoanCategory.find_by_id(l.id)
-    assert_not_nil Category.find_by_id(l.id)
-    assert_equal 'LoanCategory', l.type.to_s
+    assert @rupert.categories(true).people_loans.include?(l)
   end
 
 
-  def test_Failing_to_create_loan_subcategories
+  def test_failing_to_create_loan_subcategories
     (rupert.categories.top - [rupert.loan] ).each do |top_category|
-      l = LoanCategory.new(:name => 'test', :user => @rupert, :parent => top_category)
-      assert_not_saved_becuase_cannot_become_loan_category l
-
-      l = Category.new(:name => 'test', :user => @rupert, :parent => top_category)
-      l[:type] = 'LoanCategory'
+      l = Category.new(:name => 'test', :user => @rupert, :parent => top_category, :loan_category => true)
       assert_not_saved_becuase_cannot_become_loan_category l
     end
   end
 
 
-  def test_Changing_to_Loan_Category
+  def test_changing_to_loan_category
     c = Category.new(:name => 'test', :user => @rupert, :parent => @rupert.loan)
     assert c.save
     assert_equal :LOAN, c.category_type
-    assert_nil LoanCategory.find_by_id(c.id)
+    assert_nil @rupert.categories(true).people_loans.find_by_id(c.id)
 
-    c[:type] = LoanCategory.to_s
+    c[:loan_category] = true
     assert c.save
 
     c = Category.find(c.id)
     assert_equal :LOAN, c.category_type
-    assert_not_nil LoanCategory.find_by_id(c.id)
+    assert_not_nil @rupert.categories(true).people_loans.find_by_id(c.id)
   end
 
 
-  def test_Failing_to_change_to_loan_categories
+  def test_failing_to_change_to_loan_categories
 
     rupert.categories.top.each do |top_category|
-      top_category[:type] = 'LoanCategory'
+      top_category.update_attribute(:loan_category, true)
       assert_not_saved_becuase_cannot_become_loan_category top_category
     end
 
     (rupert.categories.top - [rupert.loan] ).each do |top_category|
       category = Category.new(:name => 'test', :user => @rupert, :parent => top_category)
-      category[:type] = 'LoanCategory'
+      category.update_attribute(:loan_category, true)
       assert_not_saved_becuase_cannot_become_loan_category category
     end
     
@@ -75,7 +68,7 @@ class LoanCategoryTest < ActiveSupport::TestCase
 
 
   def test_recent_unbalanced
-    loan = LoanCategory.new(:name => 'test', :user => @rupert, :parent => @rupert.loan)
+    loan = Category.new(:name => 'test', :user => @rupert, :parent => @rupert.loan, :loan_category => true)
     loan.save!
     counter = Counter.new
     value = 30

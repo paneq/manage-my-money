@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090330164910
+# Schema version: 20090404090543
 #
 # Table name: categories
 #
@@ -13,12 +13,12 @@
 #  rgt                 :integer       
 #  import_guid         :string(255)   
 #  imported            :boolean       
-#  type                :string(255)   
 #  email               :string(255)   
 #  bankinfo            :text          
 #  bank_account_number :string(255)   
 #  created_at          :datetime      
 #  updated_at          :datetime      
+#  loan_category       :boolean       
 #
 
 class Category < ActiveRecord::Base
@@ -40,6 +40,7 @@ class Category < ActiveRecord::Base
     { :conditions => {:category_type_int => Category.CATEGORY_TYPES[type] }}
   }
 
+  named_scope :people_loans, :conditions => {:loan_category => true}
 
   named_scope :with_level, :select => 'categories.*, (
     SELECT
@@ -117,7 +118,7 @@ class Category < ActiveRecord::Base
   validates_numericality_of :opening_balance, :allow_nil => true
   validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
   validate :type_validation
-  validates_format_of :email, :allow_nil => true, :allow_blank => true, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i #should be in LoanCategory but cannot be
+  validates_format_of :email, :allow_nil => true, :allow_blank => true, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => proc {|category| category.loan_category}
   validate :system_category_type_validation
 
   def <=>(category)
@@ -309,11 +310,12 @@ class Category < ActiveRecord::Base
 
 
   def type_validation
-    if self.type == LoanCategory.to_s && !can_become_loan_category?
+    if self.loan_category && !can_become_loan_category?
       errors.add(:base, "Tylko nienajwyższa kategoria typu 'Zobowiązania' może reprezentować Dłużnika lub Wierzyciela")
     end
   end
 
+  
   def system_category_type_validation
     if !self.system_category.nil? && self.category_type != self.system_category.category_type
       errors.add(:base, 'Kategoria systemowa powinna być tego samego typu nadrzędnego co dana kategoria')
@@ -339,6 +341,29 @@ class Category < ActiveRecord::Base
     return !(new_or_old_parent.nil? || self.category_type != :LOAN)
   end
 
+
+  def recent_unbalanced
+    saldo = self.current_saldo(:default)
+    twenty = self.transfers.find(:all, :limit => 20, :order => 'transfers.day DESC, transfers.id DESC', :include => :transfer_items)
+    transfers = []
+    number = 0
+    size = twenty.size
+    currencies = {}
+
+    while(!saldo.empty? && number < size)
+      transfer = twenty[number]
+      transfers << {:transfer => transfer, :saldo => saldo.clone}
+      items = transfer.transfer_items.select{|ti| ti.category_id == self.id }
+      items.each do |item|
+        currencies[item.currency_id] ||= Currency.find(item.currency_id)
+        saldo.sub!(item.value, currencies[item.currency_id])
+      end
+      number += 1
+    end
+
+    transfers.reverse!
+    return transfers
+  end
 
   def saldo_new(algorithm=:default, with_subcategories = false)
     universal_saldo(algorithm, with_subcategories)
