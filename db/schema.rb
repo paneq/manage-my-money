@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090330164910) do
+ActiveRecord::Schema.define(:version => 20090404090543) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -41,12 +41,12 @@ ActiveRecord::Schema.define(:version => 20090330164910) do
     t.integer  "rgt"
     t.string   "import_guid"
     t.boolean  "imported",            :default => false
-    t.string   "type"
     t.string   "email"
     t.text     "bankinfo"
     t.string   "bank_account_number"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "loan_category"
   end
 
   add_index "categories", ["category_type_int", "id", "user_id"], :name => "index_categories_on_id_and_user_id_and_category_type_int"

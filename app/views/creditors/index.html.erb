@@ -1,7 +1,7 @@
 <h1>Lista wierzycieli</h1>
 
-<div>
-  <table style="width: 100%">
+<% light_shadow do %>
+  <table style="width: 100%" class="nice-table long">
     <tr>
       <th>Wierzyciel</th>
       <th>Informacje bankowe</th>
@@ -11,7 +11,8 @@
     </tr>
     <% @creditors.each do |info| %>
       <% loan = info[:loan] %>
-      <tr>
+      <% style = cycle('', 'alt') %>
+      <tr class="<%=style-%>">
         <td><%= h loan.name %></td>
         <td><%= h loan.bankinfo %></td>
         <td><%= print_saldo(info[:money]) %></td>
@@ -64,5 +65,4 @@
       </tr>
     <% end %>
   </table>
-</div>
-
+<% end %>

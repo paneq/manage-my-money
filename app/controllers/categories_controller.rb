@@ -6,6 +6,7 @@ class CategoriesController < HistoryController
   before_filter :check_perm, :only => [:show , :remove, :search]
 
   cache_sweeper :category_sweeper
+  include RedirectHelper
 
   #FIXME @NOTE: this line should be somewhere else
   LENGTH = (1..31).to_a
@@ -18,7 +19,7 @@ class CategoriesController < HistoryController
 
   def search
     @category = self.current_user.categories.find(params[:id])
-    @range = get_period('transfer_day', true)
+    @range = get_period_range('transfer_day')
     @include_subcategories = !!params[:include_subcategories]
     respond_to do |format|
       format.html {}
@@ -35,26 +36,18 @@ class CategoriesController < HistoryController
       c.name_with_path
     end
     @saldos = Category.compute(:default, self.current_user, @categories, false, Date.today)
-    Category.compute(:default, self.current_user, @categories, true, Date.today)
+    @subsaldos = Category.compute(:default, self.current_user, @categories, true, Date.today)
   end
 
 
   def destroy
     @category = self.current_user.categories.find(params[:id])
-    @destroyed = false
     catch(:indestructible) do
       @category.destroy
-      @destroyed = true
+      flash[:notice] = "Usunięto kategorię"
     end
-    @saldos = Category.compute(:default, self.current_user, @current_user.categories, false, Date.today)
-    respond_to do |format|
-      format.html do
-        flash[:notice] = @destroyed ? "Usunięto kategorię" : "Nie można usunąć kategorii"
-        redirect_to categories_path
-      end
-      format.js # destroy.js.rjs
-    end
-
+    flash[:notice] ||= "Nie można usunąć kategorii"
+    redirect_back_or_root
   end
 
 
@@ -101,8 +94,7 @@ class CategoriesController < HistoryController
     @category = self.current_user.categories.find(params[:id])
     params[:category][:new_subcategories] ||= []
     attr = params[:category]
-    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id, :new_subcategories)
-    @category[:type] = attr[:type] if attr[:type] && [Category, LoanCategory].map{|klass| klass.to_s}.include?(attr[:type])
+    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id, :new_subcategories, :bank_account_number, :loan_category)
     @category.parent = self.current_user.categories.find(attr[:parent].to_i) if !@category.is_top? and attr[:parent]
     if @category.save_with_subcategories
       flash[:notice] = 'Zapisano zmiany.'

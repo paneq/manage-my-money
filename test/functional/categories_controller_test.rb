@@ -29,7 +29,7 @@ class CategoriesControllerTest < ActionController::TestCase
         category = @rupert.categories[nr]
 
         #test categories in valid order
-        assert_select "table#category-tree tr:nth-child(#{nr+1})" do
+        assert_select "table#category-tree tr:nth-child(#{nr+1+1})" do
           assert_select "td#category-link" do
             assert_select "a > a", Regexp.new("#{category.name}")
           end
@@ -55,13 +55,13 @@ class CategoriesControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_template 'index'
-    assert_select 'a[id^=dele-subc]', rupert.categories.count - 5
+    assert_select 'a[id^=dest-cat]', rupert.categories.count - 5
     @rupert.categories.count.times do |nr|
       category = @rupert.categories[nr]
-      assert_select "table#category-tree tr:nth-child(#{nr+1})" do
+      assert_select "table#category-tree tr:nth-child(#{nr+1+1})" do
         occures = category.is_top? ? 0 : 1
         assert_select "td#category-options" do
-          assert_select "a#dele-subc-#{category.id}", occures
+          assert_select "a#dest-cat-#{category.id}", occures
         end
       end
     end
@@ -280,11 +280,11 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'edit'
     assert_select 'div#category-edit' do
-      assert_select 'li#name', 1
-      assert_select 'li#description', 1
-      assert_select 'li#parent', 0
-      assert_select 'li#loan', 0
-      assert_select 'li#update', 1
+      assert_select 'p#name', 1
+      assert_select 'p#description', 1
+      assert_select 'p#parent', 0
+      assert_select 'p#loan', 0
+      assert_select 'p#update', 1
     end
     assert_select "input#category_name[value='#{@rupert.income.name}']"
     assert_select "input#category_description[value='#{@rupert.income.description}']"
@@ -314,9 +314,10 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_template 'edit'
     assert_select 'div#category-edit' do
       assert_select 'p#loan' do
-        assert_select 'li#is_loan', 1
-        assert_select 'li#email', 1
-        assert_select 'li#bankinfo', 1
+        assert_select 'p#is_loan', 1
+        assert_select 'p#email', 1
+        assert_select 'p#bankinfo', 1
+        assert_select 'p#bank_account_number', 1
       end
     end
   end
@@ -490,7 +491,7 @@ class CategoriesControllerTest < ActionController::TestCase
     category.save!
 
     put :update, :id => category.id, :category => {
-      :type => 'LoanCategory',
+      :loan_category => '1',
       :email => 'sejtenik@gmail.com',
       :bankinfo => 'bank bank bank'
     }
@@ -498,16 +499,16 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_redirected_to :action => :show
     assert_match(/Zapisano/, flash[:notice])
 
-    category = LoanCategory.find_by_id(category.id)
+    category = rupert.categories(true).people_loans.find_by_id(category.id)
     assert_not_nil category
     assert !category.email.blank?
     assert !category.bankinfo.blank?
 
     put :update, :id => category.id, :category => {
-      :type => 'Category',
+      :loan_category => '0'
     }
     
-    category = LoanCategory.find_by_id(category.id)
+    category = rupert.categories.people_loans.find_by_id(category.id)
     assert_nil category
   end
 
@@ -522,33 +523,10 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
 
-  def test_remote_destroy_non_top_category
-    create_rupert_expenses_account_structure
-    xhr :delete, :destroy, :id => @food
-    assert_response :success
-    assert_select_rjs :replace_html, 'category-tree' do
-      assert_select 'tr[id^=category-line]', @rupert.categories.count
-    end
-    assert_select_rjs :replace_html, 'flash_notice' do
-      assert_select "a", /Usunięto/
-    end
-  end
-
-
   def test_destroy_top_category
     delete :destroy, :id => @rupert.expense
     assert_redirected_to :action => :index, :controller => :categories
     assert_match("Nie można", flash[:notice])
-  end
-
-
-  def test_remote_destroy_top_category
-    xhr :delete, :destroy, :id => @rupert.expense
-    assert_response :success
-    assert_select_rjs :replace_html, 'flash_notice' do
-      assert_select "a", /Nie można/
-    end
-
   end
 
 

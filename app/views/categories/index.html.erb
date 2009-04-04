@@ -7,6 +7,12 @@
   </div>
 
   <table id="category-tree" class="nice-table width">
+    <tr>
+      <th>Nazwa</th>
+      <th>Saldo</th>
+      <th>Saldo z podk.</th>
+      <th>Akcje</th>
+    </tr>
     <%=render :partial => 'category' , :collection => @categories %>
   </table>
 
