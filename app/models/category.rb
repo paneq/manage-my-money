@@ -187,23 +187,18 @@ class Category < ActiveRecord::Base
   end
 
 
-  def save_with_subcategories!
-    @was_new_record_before_save = new_record?
+  ##Try to save category and given subcategories (from new_subcategories attribute) in transaction
+  #rollback all in case od failure
+  def save_with_subcategories
+    @was_new_record_before_save = new_record? #saving new_record? value, for eventually use in case of rollback
     transaction do
       save!
       save_new_subcategories!
     end
-  end
-
-  def save_with_subcategories
-    begin
-      save_with_subcategories!
-    rescue
-      instance_variable_set("@new_record", true) if @was_new_record_before_save #HACK HACK HACK
-      return false
-    else
-      return true
-    end
+    return true
+  rescue
+    instance_variable_set("@new_record", true) if @was_new_record_before_save #revert previous ne_record? value
+    return false
   end
 
   def save_new_subcategories!
@@ -515,7 +510,7 @@ class Category < ActiveRecord::Base
                        ti2.currency_id,
                        sum(abs(ti2.value)) as sum_value',
       :from => 'transfers as t',
-      :joins =>       
+      :joins =>
         'INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id
                        INNER JOIN categories on ti2.category_id = categories.id',
                        

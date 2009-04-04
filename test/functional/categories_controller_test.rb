@@ -235,8 +235,9 @@ class CategoriesControllerTest < ActionController::TestCase
       post :create, :category => {
         :name => 'test name',
         :parent => parent_category.id,
-        :system_category_id => ''
-      }, :new_subcategories => [system_food.id]
+        :system_category_id => '',
+        :new_subcategories => [system_food.id]
+      }
     
     end
 
@@ -260,8 +261,9 @@ class CategoriesControllerTest < ActionController::TestCase
       post :create, :category => {
         :name => 'test name',
         :parent => parent_category.id,
-        :system_category_id => ''
-      }, :new_subcategories => [system_food.id]
+        :system_category_id => '',
+        :new_subcategories => [system_food.id]
+      }
 
     end
 
@@ -448,8 +450,9 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_difference("@rupert.categories.count", +1) do
       put :update, :id => @healthy.id, :category => {
         :name => 'test name',
-        :parent => parent_category.id
-      }, :new_subcategories => [system_food.id]
+        :parent => parent_category.id,
+        :new_subcategories => [system_food.id]
+      }
 
     end
     assert_redirected_to :action => :show
@@ -470,7 +473,8 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_no_difference("@rupert.categories.count") do
       put :update, :id => @rupert.income.id, :category => {
         :name => 'test name',
-      }, :new_subcategories => [system_food.id]
+        :new_subcategories => [system_food.id]
+      }
     end
 
     assert_response :success
