@@ -360,33 +360,25 @@ class Category < ActiveRecord::Base
     return transfers
   end
 
+  
   def saldo_new(algorithm=:default, with_subcategories = false)
-    #universal_saldo(algorithm, with_subcategories)
     Category.compute(algorithm, self.user, self, with_subcategories, nil)[self]
   end
 
   
   def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
-    #universal_saldo(algorithm, with_subcategories, 't.day <= ?', day)
     Category.compute(algorithm, self.user, self, with_subcategories, day)[self]
   end
 
 
   def saldo_for_period_new(start_day, end_day, algorithm=:default, with_subcategories = false)
-    #universal_saldo(algorithm, with_subcategories, 't.day >= ? AND t.day <= ?', start_day, end_day)
     Category.compute(algorithm, self.user, self, with_subcategories, Range.new(start_day, end_day))[self]
   end
 
+  
   def saldo_for_period_with_subcategories(start_day, end_day, algorithm=:default)
-    #saldo_for_period_new(start_day, end_day, algorithm, true)
     Category.compute(algorithm, self.user, self, true, Range.new(start_day, end_day))[self]
   end
-
-
-
-#  def saldo_after_day_new(day, algorithm=:default, with_subcategories = false)
-#    universal_saldo(algorithm, with_subcategories, 't.day > ?', day)
-#  end
 
 
   def current_saldo(algorithm=:default)

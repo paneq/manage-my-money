@@ -132,25 +132,6 @@ class CategoryTest < ActiveSupport::TestCase
 
   end
 
-#  def test_saldo_after_day
-#    income_category = @rupert.categories[2]
-#    outcome_category = @rupert.categories[3]
-#    value = 100;
-#
-#    4.downto(0) do |number|
-#      save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
-#    end
-#
-#    5.downto(1) do |number|
-#      day = number.days.ago.to_date;
-#
-#      assert_equal value*(number), income_category.saldo_after_day_new(day).value(@zloty)
-#      assert_equal 1, income_category.saldo_after_day_new(day).currencies.size
-#    end
-#
-#    assert income_category.saldo_after_day_new(Date.today).is_empty?
-#  end
-
 
   def test_saldo_calculate_with_exchanges_closest_to_transaction
     @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction
