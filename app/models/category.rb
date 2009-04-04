@@ -366,28 +366,32 @@ class Category < ActiveRecord::Base
   end
 
   def saldo_new(algorithm=:default, with_subcategories = false)
-    universal_saldo(algorithm, with_subcategories)
+    #universal_saldo(algorithm, with_subcategories)
+    Category.compute(algorithm, self.user, self, with_subcategories, nil)[self]
   end
 
   
   def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
-    universal_saldo(algorithm, with_subcategories, 't.day <= ?', day)
+    #universal_saldo(algorithm, with_subcategories, 't.day <= ?', day)
+    Category.compute(algorithm, self.user, self, with_subcategories, day)[self]
   end
 
 
   def saldo_for_period_new(start_day, end_day, algorithm=:default, with_subcategories = false)
-    universal_saldo(algorithm, with_subcategories, 't.day >= ? AND t.day <= ?', start_day, end_day)
+    #universal_saldo(algorithm, with_subcategories, 't.day >= ? AND t.day <= ?', start_day, end_day)
+    Category.compute(algorithm, self.user, self, with_subcategories, Range.new(start_day, end_day))[self]
   end
 
   def saldo_for_period_with_subcategories(start_day, end_day, algorithm=:default)
-    saldo_for_period_new(start_day, end_day, algorithm, true)
+    #saldo_for_period_new(start_day, end_day, algorithm, true)
+    Category.compute(algorithm, self.user, self, true, Range.new(start_day, end_day))[self]
   end
 
 
 
-  def saldo_after_day_new(day, algorithm=:default, with_subcategories = false)
-    universal_saldo(algorithm, with_subcategories, 't.day > ?', day)
-  end
+#  def saldo_after_day_new(day, algorithm=:default, with_subcategories = false)
+#    universal_saldo(algorithm, with_subcategories, 't.day > ?', day)
+#  end
 
 
   def current_saldo(algorithm=:default)
@@ -576,7 +580,7 @@ class Category < ActiveRecord::Base
       {
         :category => cat,
         :currency => cur,
-        :value => Money.new(cur, cat.read_attribute('sum_value').to_f.round(2))
+        :value => Money.new(cur, Kernel.BigDecimal(cat.read_attribute('sum_value')).round(2))
       }
     end
 
@@ -671,6 +675,7 @@ class Category < ActiveRecord::Base
 
 
   def self.compute(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
+    categories = [categories] if categories.is_a?(Category)
     sql = compute_sql(algorithm, user, categories, include, array_or_range_or_date_or_nil)
 
     sql_result = connection.execute(sql)
@@ -736,6 +741,7 @@ class Category < ActiveRecord::Base
     sql << build_subcategories_join if include
     sql << build_transfer_items_join(include)
     sql << build_transfers_join
+    sql << build_exchanges_join(algorithm, user)
     sql << build_where(user, categories, array_or_range_or_date_or_nil)
     sql << build_group_and_order
     sql
@@ -760,7 +766,7 @@ class Category < ActiveRecord::Base
       sql_case << "END as my_group,\n"
       sql_case
 
-    when Range, Date, NilClass then
+    when Range, Date, NilClass, Time then
       "0 as my_group,\n"
     end
   end
@@ -776,18 +782,39 @@ class Category < ActiveRecord::Base
 
 
   def self.build_computed_value(algorithm, user)
-    if algorithm == :show_all_currencies
+    case_text = case algorithm
+    when :show_all_currencies then
       if user.invert_saldo_for_income
-        "sum(CASE
-WHEN categories.category_type_int = #{Category.CATEGORY_TYPES[:INCOME]} THEN transfer_items.value * -1
-ELSE transfer_items.value
-END)"
+        "CASE
+WHEN categories.category_type_int != #{Category.CATEGORY_TYPES[:INCOME]} THEN transfer_items.value
+ELSE transfer_items.value * (-1)
+END"
       else
-        "sum(transfer_items.value) as computed_value\n"
+        "transfer_items.value"
       end
+    when :calculate_with_newest_exchanges, :calculate_with_exchanges_closest_to_transaction
+      value = user.invert_saldo_for_income ? "transfer_items.value * (-1) " : "transfer_items.value"
+      currency_id = user.default_currency_id
+      "CASE 
+          WHEN categories.category_type_int != #{Category.CATEGORY_TYPES[:INCOME]} THEN
+            transfer_items.value
+          ELSE
+            #{value}
+         END *
+       CASE
+         WHEN transfer_items.currency_id = #{currency_id} THEN
+           1
+         WHEN ex.left_currency_id = #{currency_id} THEN
+           ex.right_to_left
+         WHEN ex.left_currency_id != #{currency_id} THEN
+           ex.left_to_right
+         END
+      "
     else
       raise 'unimplemented yet'
     end
+    return "sum(#{case_text}) as computed_value\n"
+    #TODO: write test to check out that all alghoritms are implemented here...
   end
 
 
@@ -833,6 +860,47 @@ INNER JOIN transfers
   end
 
 
+  def self.build_exchanges_join(algorithm, user)
+    return '' if algorithm == :show_all_currencies
+    currency_id = user.default_currency_id
+
+    today_or_transfer_day = case algorithm
+    when :calculate_with_newest_exchanges then SqlDialects.get_today
+    when :calculate_with_exchanges_closest_to_transaction then SqlDialects.get_date('transfers.day')
+    else
+      raise 'Unexpected algorithm :-)'
+    end
+    "
+    LEFT JOIN exchanges as ex ON
+  (
+  transfer_items.currency_id != #{currency_id} AND ex.Id IN
+    (
+      SELECT Id FROM exchanges as e WHERE
+        (
+        abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e.day')} ) =
+          (
+          SELECT min( abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
+            (
+            (e2.user_id = #{user.id} ) AND
+            ((e2.left_currency_id = #{currency_id} AND e2.right_currency_id = transfer_items.currency_id) OR (e2.left_currency_id = transfer_items.currency_id AND e2.right_currency_id = #{currency_id}))
+            )
+          )
+        AND
+          (
+          (e.left_currency_id = #{currency_id} AND e.right_currency_id = transfer_items.currency_id) OR (e.left_currency_id = transfer_items.currency_id AND e.right_currency_id = #{currency_id})
+          )
+        AND
+          (
+          e.user_id = #{user.id}
+          )
+        )
+      ORDER BY e.day ASC LIMIT 1
+    )
+  )
+    "
+  end
+
+
   def self.build_where(user, categories, array_or_range_or_date_or_nil)
     sql = "WHERE categories.user_id = #{user.id} AND \n"
     sql << "categories.id IN ( #{ categories.map(&:id).join(', ') } )"
@@ -864,6 +932,9 @@ INNER JOIN transfers
 
     when Date then
       sql << "transfers.day <= '#{array_or_range_or_date_or_nil.to_s}' "
+
+    when Time then
+      sql << "transfers.day <= '#{array_or_range_or_date_or_nil.to_date.to_s}' "
     end
 
     sql
@@ -880,145 +951,7 @@ ORDER BY
   categories.id;
     "
   end
-
-  def universal_saldo(algorithm = :default, with_subcategories = false, additional_condition="", *params)
-    algorithm = algorithm(algorithm, with_subcategories)
-    unless additional_condition.blank?
-      algorithm[:conditions].first << " AND #{additional_condition}"
-      algorithm[:conditions] += params
-    end
-
-    money = Money.new()
-    currencies = {}
-
-    TransferItem.sum(:value, algorithm).each do |set|
-      if set.class == Array
-        # group by currency
-        currency, value = set
-        currencies[currency] ||= Currency.find_by_id(currency)
-        currency = currencies[currency]
-        money.add!(value.round(2), currency)
-      else
-        # calculated to one value in default currency
-        money.add!(set.to_f.round(2), self.user.default_currency)
-      end
-    end
-
-    if self.user.invert_saldo_for_income && self.category_type == :INCOME
-      money = Money.new - money
-    end
-
-    return money
-
-  end
-
-
-  def algorithm(algorithm, with_subcategories = false)
-    return algorithm(self.user.multi_currency_balance_calculating_algorithm, with_subcategories) if algorithm == :default
-
-
-    categories_to_sum = get_categories_id(with_subcategories)
-
-    return case algorithm
-    when :calculate_with_exchanges_closest_to_transaction
-      currency = self.user.default_currency
-      {
-        :select => "
-        CASE
-        WHEN ti.currency_id = #{currency.id} THEN ti.value
-        WHEN ex.left_currency_id = #{currency.id} THEN ti.value*ex.right_to_left
-        WHEN ex.left_currency_id != #{currency.id} THEN ti.value*ex.left_to_right
-        END
-        ",
-
-        :from => 'transfer_items as ti',
-
-        :joins =>"
-        JOIN transfers AS t ON (ti.transfer_id = t.id)
-        LEFT JOIN exchanges as ex ON
-          (
-          ti.currency_id != #{currency.id} AND ex.Id IN
-            (
-              SELECT Id FROM exchanges as e WHERE
-                (
-                abs( #{SqlDialects.get_date('t.day')} - #{SqlDialects.get_date('e.day')} ) =
-                  (
-                  SELECT min( abs( #{SqlDialects.get_date('t.day')} - #{SqlDialects.get_date('e2.day')} ) ) FROM exchanges as e2 WHERE
-                    (
-                    (e2.user_id = #{self.user.id} ) AND
-                    (e2.left_currency_id = #{currency.id} AND e2.right_currency_id = ti.currency_id) OR (e2.left_currency_id = ti.currency_id AND e2.right_currency_id = #{currency.id})
-                    )
-                  )
-                AND
-                  (
-                  (e.left_currency_id = #{currency.id} AND e.right_currency_id = ti.currency_id) OR (e.left_currency_id = ti.currency_id AND e.right_currency_id = #{currency.id})
-                  )
-                AND
-                  (
-                  e.user_id = #{self.user.id}
-                  )
-                )
-              ORDER BY e.day ASC LIMIT 1
-            )
-          )
-        ",
-        :conditions => ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-      }
-    when :calculate_with_newest_exchanges
-      currency = self.user.default_currency
-      {
-        :select => "
-        CASE
-        WHEN ti.currency_id = #{currency.id} THEN ti.value
-        WHEN ex.left_currency_id = #{currency.id} THEN ti.value*ex.right_to_left
-        WHEN ex.left_currency_id != #{currency.id} THEN ti.value*ex.left_to_right
-        END
-        ",
-
-        :from => 'transfer_items as ti',
-
-        :joins =>"
-        JOIN transfers AS t ON (ti.transfer_id = t.id)
-        LEFT JOIN exchanges as ex ON
-          (
-          ti.currency_id != #{currency.id} AND ex.Id IN
-            (
-              SELECT Id FROM Exchanges as e WHERE
-                (
-                abs( #{SqlDialects.get_today} - #{SqlDialects.get_date('e.day')} ) =
-                  (
-                  SELECT min( abs( #{SqlDialects.get_today} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
-                    (
-                    (e2.user_id = #{self.user.id} ) AND
-                    ((e2.left_currency_id = #{currency.id} AND e2.right_currency_id = ti.currency_id) OR (e2.left_currency_id = ti.currency_id AND e2.right_currency_id = #{currency.id}))
-                    )
-                  )
-                AND
-                  (
-                  (e.left_currency_id = #{currency.id} AND e.right_currency_id = ti.currency_id) OR (e.left_currency_id = ti.currency_id AND e.right_currency_id = #{currency.id})
-                  )
-                AND
-                  (
-                  e.user_id = #{self.user.id}
-                  )
-                )
-              ORDER BY e.day ASC LIMIT 1
-            )
-          )
-        ",
-
-        :conditions => ['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-      }
-    else
-      {
-        :select => 'ti.value',
-        :from => 'transfer_items as ti',
-        :joins => 'INNER JOIN transfers AS t ON ti.transfer_id = t.id',
-        :group => 'ti.currency_id',
-        :conditions =>['t.user_id = ? AND ti.category_id IN (?)', self.user.id, categories_to_sum]
-      }
-    end
-  end
+  
 
   def get_categories_id(with_subcategories)
     categories_to_sum = [self]

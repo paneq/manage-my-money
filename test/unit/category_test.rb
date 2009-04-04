@@ -132,24 +132,24 @@ class CategoryTest < ActiveSupport::TestCase
 
   end
 
-  def test_saldo_after_day
-    income_category = @rupert.categories[2]
-    outcome_category = @rupert.categories[3]
-    value = 100;
-
-    4.downto(0) do |number|
-      save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
-    end
-
-    5.downto(1) do |number|
-      day = number.days.ago.to_date;
-
-      assert_equal value*(number), income_category.saldo_after_day_new(day).value(@zloty)
-      assert_equal 1, income_category.saldo_after_day_new(day).currencies.size
-    end
-    
-    assert income_category.saldo_after_day_new(Date.today).is_empty?
-  end
+#  def test_saldo_after_day
+#    income_category = @rupert.categories[2]
+#    outcome_category = @rupert.categories[3]
+#    value = 100;
+#
+#    4.downto(0) do |number|
+#      save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => number.days.ago.to_date, :currency => @zloty, :value => value)
+#    end
+#
+#    5.downto(1) do |number|
+#      day = number.days.ago.to_date;
+#
+#      assert_equal value*(number), income_category.saldo_after_day_new(day).value(@zloty)
+#      assert_equal 1, income_category.saldo_after_day_new(day).currencies.size
+#    end
+#
+#    assert income_category.saldo_after_day_new(Date.today).is_empty?
+#  end
 
 
   def test_saldo_calculate_with_exchanges_closest_to_transaction
@@ -275,8 +275,8 @@ class CategoryTest < ActiveSupport::TestCase
       end
     end
 
-    assert income.transfers_with_saldo_for_period_new(6.days.ago, 6.days.ago).empty?
-    assert income.transfers_with_saldo_for_period_new(1.day.from_now, 1.day.from_now).empty?
+    assert income.transfers_with_saldo_for_period_new(6.days.ago.to_date, 6.days.ago.to_date).empty?
+    assert income.transfers_with_saldo_for_period_new(1.day.from_now.to_date, 1.day.from_now.to_date).empty?
 
   end
 
@@ -1017,7 +1017,8 @@ END as my_group,
     transfers.day <= '2008-12-31'
     "
 
-    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, '2008-12-31'.to_date).unified_sql
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, '2008-12-31'.to_date).unified_sql    
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, '2008-12-31'.to_date.to_time + 23.hours).unified_sql
 
     sql="
     WHERE categories.user_id = #{@rupert.id} AND
