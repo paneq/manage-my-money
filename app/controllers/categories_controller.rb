@@ -36,7 +36,7 @@ class CategoriesController < HistoryController
       c.name_with_path
     end
     @saldos = Category.compute(:default, self.current_user, @categories, false, Date.today)
-    Category.compute(:default, self.current_user, @categories, true, Date.today)
+    @subsaldos = Category.compute(:default, self.current_user, @categories, true, Date.today)
   end
 
 

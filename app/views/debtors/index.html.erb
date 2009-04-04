@@ -20,7 +20,7 @@
 
             <td id="name"><%= link_to loan.name, category_path(loan) %></td>
             <td id="email"><%= h loan.email %></td>
-            <td id="saldo"><%= print_saldo(info[:money]) %></td>
+            <td id="saldo"><%= print_saldo(info[:money], @current_user) %></td>
             <td id="send"><%= check_box_tag "send-#{loan.id}", true, !loan.email.blank? %></td>
             <td id="include"><%= check_box_tag "include-transfers-#{loan.id}", true, true %> <%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj listę') -%></td>
 
@@ -55,7 +55,7 @@
                         <%= @currencies.find{|c| c.id == transfer_item.currency_id}.long_symbol %>
                       </td>
                       <td>
-                        <%=  print_saldo(saldo) if transfer_item == transfer_items.last %>
+                        <%=  print_saldo(saldo, @current_user) if transfer_item == transfer_items.last %>
                       </td>
                     </tr>
                   <% end %>

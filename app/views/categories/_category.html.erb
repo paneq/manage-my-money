@@ -3,22 +3,25 @@
 <tr <%= obj_id('category-line', category) -%> class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= category.name_with_path -%>" >
 
   <td id="category-link">
-    <a style="padding-left : <%= ( category.cached_level  + 1 ) * 20 %>px;">
+    <a style="padding-left: <%= ( category.cached_level  + 1 ) * 20 %>px;">
       <%= link_to h(category.name), category_path(category), {:id => "show-category-stats-#{category.id}" } %>
     </a>
   </td>
 
-  <td id="category-saldo-<%= category.id -%>">
-    <% @saldos[category].each do |currency, value| %>
-      <%= "#{value} #{currency.symbol}, " -%>
-    <% end %>
+  <td id="category-saldo-<%= category.id -%>" class="number">
+    <%= print_saldo(@saldos[category], @current_user) %>
   </td>
-  
+
+  <td id="category-sub-saldo-<%= category.id -%>" class="number">
+    <%= print_saldo(@subsaldos[category], @current_user) %>
+  </td>
+
   <td id="category-options">
-      <%= link_to new_img(), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
-      <% unless category.is_top? %>
-        <%= link_to_destroy(category) %>
-      <% end %>
+    <%= link_to new_img(), {:action => :new, :controller => :categories, :parent_category_id => category.id}, {:title => 'Dodaj podkategorię', :id => "add-subc-#{category.id}"} %>
+    <%= link_to_edit(category) %>
+    <% unless category.is_top? %>
+      <%= link_to_destroy(category) %>
+    <% end %>
   </td>
 
 </tr>

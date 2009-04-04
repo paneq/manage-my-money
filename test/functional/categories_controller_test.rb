@@ -29,7 +29,7 @@ class CategoriesControllerTest < ActionController::TestCase
         category = @rupert.categories[nr]
 
         #test categories in valid order
-        assert_select "table#category-tree tr:nth-child(#{nr+1})" do
+        assert_select "table#category-tree tr:nth-child(#{nr+1+1})" do
           assert_select "td#category-link" do
             assert_select "a > a", Regexp.new("#{category.name}")
           end
@@ -58,7 +58,7 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_select 'a[id^=dest-cat]', rupert.categories.count - 5
     @rupert.categories.count.times do |nr|
       category = @rupert.categories[nr]
-      assert_select "table#category-tree tr:nth-child(#{nr+1})" do
+      assert_select "table#category-tree tr:nth-child(#{nr+1+1})" do
         occures = category.is_top? ? 0 : 1
         assert_select "td#category-options" do
           assert_select "a#dest-cat-#{category.id}", occures
