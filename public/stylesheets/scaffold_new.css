@@ -48,7 +48,13 @@ div.errorExplanation {
 #errorExplanation ul li {
     font-size: 12px;
     list-style: square;
+    padding: 0px 0px 0px 5px;
 }
+
+#errorExplanation ul li:first-child{
+    margin-top: 15px;
+}
+
 
 div.uploadStatus {
     margin: 5px;

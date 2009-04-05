@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
 
   def destroy
     logout_killing_session!
-    flash[:notice] = "Wylgowano z serwisu."
+    flash[:notice] = "Wylogowano z serwisu."
     redirect_back_or_default('/')
   end
 
@@ -45,7 +45,7 @@ class SessionsController < ApplicationController
   protected
   # Track failed login attempts
   def note_failed_signin
-    flash[:error] = "Couldn't log you in as '#{params[:login]}'"
+    flash[:error] = "Nie można zalogować: '#{params[:login]}'"
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
   end
 end
