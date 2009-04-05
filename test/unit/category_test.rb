@@ -191,10 +191,10 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
 
     #this exchange should not be used by algorithm becuase it is about other currencies
-    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 1.days.ago.to_date)
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 2.days.ago.to_date)
 
     #this exchange ratio should not be used by algorithm becuase it belongs to another person
-    @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 1.days.ago.to_date)
+    @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 2.days.ago.to_date)
 
     #this one should be used be the algorithm, right currencies, the newest one and belongs to the right user
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
@@ -206,6 +206,63 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal value + 2*first_exchange_rate*value, saldo.value(@zloty)
   end
 
+
+  def test_saldo_calculate_with_newest_exchanges_but
+    @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_newest_exchanges_but
+    @rupert.save!
+    @rupert = User.find(@rupert.id) #Otherwise category.user.multi_currency_balance_calculating_algorithm = :show_all_currencies, WHY?
+    income_category = @rupert.categories[0]
+    outcome_category = @rupert.categories[1]
+
+    value = 100
+    first_exchange_rate = 4
+    second_exchange_rate = 8
+    bad_exchange_rate = 100
+
+    #this exchange should not be used by algorithm becuase it is not the newest one
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 20.days.ago.to_date)
+
+    #no exchange to use becuase it is in default currency already
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 6.days.ago.to_date, :currency => @zloty, :value => value)
+
+    #this exchange ratio should not be used by the algorithm becuase it is not the newest one
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 5.days.ago.to_date)
+
+    #no conversions
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+
+    #with conversions. Should use exchange connected to conversion insted of other one.
+    t2 = save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 4.days.ago.to_date, :currency => @euro, :value => value)
+    t2.conversions.create!(:exchange => Exchange.new(:user => @rupert, :left_currency => @zloty, :right_currency => @euro, :left_to_right => 1.0 / second_exchange_rate, :right_to_left => second_exchange_rate))
+    t2.save!
+  
+    #this exchange should not be used by algorithm becuase it is about other currencies
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 2.days.ago.to_date)
+
+    #this exchange ratio should not be used by algorithm becuase it belongs to another person
+    @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 2.days.ago.to_date)
+
+    #this one should be used be the algorithm, right currencies, the newest one and belongs to the right user
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
+
+    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
+
+    assert_equal 1, saldo.currencies.size
+    assert_equal value + 2*first_exchange_rate*value + second_exchange_rate*value, saldo.value(@zloty)
+  end
+
+
+  def test_saldo_calculate_with_exchanges_closest_to_transaction_but
+    @rupert.multi_currency_balance_calculating_algorithm = :calculate_with_exchanges_closest_to_transaction_but
+    @rupert.save!
+    @rupert = User.find(@rupert.id) #Otherwise category.user.multi_currency_balance_calculating_algorithm = :show_all_currencies, WHY?
+    income_category = @rupert.categories[0]
+    outcome_category = @rupert.categories[1]
+    
+    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
+    #TODO: Write it
+  end
 
   def test_transfers_with_saldo_for_period
     income = @rupert.categories[1]
@@ -949,16 +1006,16 @@ WHEN transfers.day <= '2008-03-31' THEN 2
 WHEN transfers.day <= '2008-04-30' THEN 3
 WHEN transfers.day <= '2008-05-31' THEN 4
 END as my_group,
-"
+    "
 
-    assert_equal sql, Category.send(:build_my_group, Date.split_period(:month, '2008-01-01'.to_date, '2008-05-31'.to_date))
+    assert_equal sql.strip, Category.send(:build_my_group, Date.split_period(:month, '2008-01-01'.to_date, '2008-05-31'.to_date)).strip
     
     sql="CASE
 WHEN transfers.day <= '2008-01-31' THEN 0
 WHEN transfers.day <= '2008-02-29' THEN 1
 END as my_group,
-"
-    assert_equal sql, Category.send(:build_my_group, [Range.new('2008-01-01'.to_date, '2008-01-31'.to_date), Range.new('2008-02-01'.to_date, '2008-02-29'.to_date)])
+    "
+    assert_equal sql.strip, Category.send(:build_my_group, [Range.new('2008-01-01'.to_date, '2008-01-31'.to_date), Range.new('2008-02-01'.to_date, '2008-02-29'.to_date)]).strip
 
     sql = "0 as my_group,\n"
 

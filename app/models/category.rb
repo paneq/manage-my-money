@@ -729,6 +729,7 @@ class Category < ActiveRecord::Base
     sql << build_transfer_items_join(include)
     sql << build_transfers_join
     sql << build_exchanges_join(algorithm, user)
+    sql << build_conversion_join(algorithm, user)
     sql << build_where(user, categories, array_or_range_or_date_or_nil)
     sql << build_group_and_order
     sql
@@ -787,7 +788,7 @@ END"
             transfer_items.value
           ELSE
             #{value}
-         END *
+       END *
        CASE
          WHEN transfer_items.currency_id = #{currency_id} THEN
            1
@@ -795,7 +796,29 @@ END"
            ex.right_to_left
          WHEN ex.left_currency_id != #{currency_id} THEN
            ex.left_to_right
-         END
+       END
+      "
+    when :calculate_with_newest_exchanges_but, :calculate_with_exchanges_closest_to_transaction_but
+      value = user.invert_saldo_for_income ? "transfer_items.value * (-1) " : "transfer_items.value"
+      currency_id = user.default_currency_id
+      "CASE
+          WHEN categories.category_type_int != #{Category.CATEGORY_TYPES[:INCOME]} THEN
+            transfer_items.value
+          ELSE
+            #{value}
+       END *
+       CASE
+         WHEN transfer_items.currency_id = #{currency_id} THEN
+           1
+         WHEN ex2.left_currency_id = #{currency_id} THEN
+           ex2.right_to_left
+         WHEN ex2.left_currency_id != #{currency_id} THEN
+           ex2.left_to_right
+         WHEN ex.left_currency_id = #{currency_id} THEN
+           ex.right_to_left
+         WHEN ex.left_currency_id != #{currency_id} THEN
+           ex.left_to_right
+       END
       "
     else
       raise 'unimplemented yet'
@@ -852,39 +875,60 @@ INNER JOIN transfers
     currency_id = user.default_currency_id
 
     today_or_transfer_day = case algorithm
-    when :calculate_with_newest_exchanges then SqlDialects.get_today
-    when :calculate_with_exchanges_closest_to_transaction then SqlDialects.get_date('transfers.day')
+    when :calculate_with_newest_exchanges, :calculate_with_newest_exchanges_but then SqlDialects.get_today
+    when :calculate_with_exchanges_closest_to_transaction, :calculate_with_exchanges_closest_to_transaction_but then SqlDialects.get_date('transfers.day')
     else
       raise 'Unexpected algorithm :-)'
     end
     "
-    LEFT JOIN exchanges as ex ON
+LEFT JOIN exchanges as ex ON
+(
+transfer_items.currency_id != #{currency_id} AND ex.Id IN
   (
-  transfer_items.currency_id != #{currency_id} AND ex.Id IN
-    (
-      SELECT Id FROM exchanges as e WHERE
+    SELECT Id FROM exchanges as e WHERE
+      (
+      abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e.day')} ) =
         (
-        abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e.day')} ) =
+        SELECT min( abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
           (
-          SELECT min( abs( #{today_or_transfer_day} - #{SqlDialects.get_date('e2.day')} ) ) FROM Exchanges as e2 WHERE
-            (
-            (e2.user_id = #{user.id} ) AND
-            ((e2.left_currency_id = #{currency_id} AND e2.right_currency_id = transfer_items.currency_id) OR (e2.left_currency_id = transfer_items.currency_id AND e2.right_currency_id = #{currency_id}))
-            )
-          )
-        AND
-          (
-          (e.left_currency_id = #{currency_id} AND e.right_currency_id = transfer_items.currency_id) OR (e.left_currency_id = transfer_items.currency_id AND e.right_currency_id = #{currency_id})
-          )
-        AND
-          (
-          e.user_id = #{user.id}
+          (e2.user_id = #{user.id} ) AND
+          ((e2.left_currency_id = #{currency_id} AND e2.right_currency_id = transfer_items.currency_id) OR (e2.left_currency_id = transfer_items.currency_id AND e2.right_currency_id = #{currency_id}))
           )
         )
-      ORDER BY e.day ASC LIMIT 1
-    )
+      AND
+        (
+        e.user_id = #{user.id}
+        )
+      AND
+        (
+        (e.left_currency_id = #{currency_id} AND e.right_currency_id = transfer_items.currency_id) OR (e.left_currency_id = transfer_items.currency_id AND e.right_currency_id = #{currency_id})
+        )
+      )
+    ORDER BY e.day ASC LIMIT 1
   )
+)
     "
+  end
+
+
+  def self.build_conversion_join(algorithm, user)
+    return '' if [:show_all_currencies, :calculate_with_newest_exchanges, :calculate_with_exchanges_closest_to_transaction].include?(algorithm)
+    currency_id = user.default_currency_id
+    "
+LEFT JOIN conversions ON
+(
+  (transfers.id = conversions.transfer_id) AND
+  (transfer_items.currency_id != #{currency_id})
+)
+LEFT JOIN exchanges as ex2 ON
+(
+  (conversions.exchange_id = ex2.id) AND
+  (ex2.user_id = #{user.id}) AND
+  (
+    (ex2.left_currency_id = #{currency_id} AND ex2.right_currency_id = transfer_items.currency_id)
+    OR (ex2.left_currency_id = transfer_items.currency_id AND ex2.right_currency_id = #{currency_id})
+  )
+)"
   end
 
 
@@ -929,14 +973,12 @@ INNER JOIN transfers
 
 
   def self.build_group_and_order
-    "
-GROUP BY
+    "GROUP BY
   categories.id,
   my_group,
   computed_currency
 ORDER BY
-  categories.id;
-    "
+  categories.id;"
   end
   
 
