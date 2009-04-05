@@ -24,6 +24,8 @@
 class Category < ActiveRecord::Base
   extend HashEnums
 
+  attr_protected :user_id, :category_type_int
+
   define_enum :category_type, [:ASSET, :INCOME, :EXPENSE, :LOAN, :BALANCE]
 
   acts_as_nested_set :scope=> [:user_id, :category_type_int], :dependent => :destroy
@@ -115,11 +117,13 @@ class Category < ActiveRecord::Base
   attr_reader :opening_balance, :opening_balance_currency
 
   validates_presence_of :name
+  validates_presence_of :user
   validates_numericality_of :opening_balance, :allow_nil => true
   validates_presence_of :opening_balance_currency , :unless => proc { |category| category.opening_balance.nil? }
   validate :type_validation
   validates_format_of :email, :allow_nil => true, :allow_blank => true, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => proc {|category| category.loan_category}
   validate :system_category_type_validation
+  #validates_uniqueness_of :name, :scope => [:user_id, :category_type_int, :parent_id] It does not work becuase the element is moved to proper parent in after_create action...
 
   def <=>(category)
     name <=> category.name
@@ -175,13 +179,15 @@ class Category < ActiveRecord::Base
 
 
   def parent=(element)
-    @parent_to_save = element
-    self.category_type_int = element.category_type_int
+    if element.is_a?(Category)
+      @parent_to_save = element
+      self.category_type_int = element.category_type_int
+    end
   end
 
 
   def after_save
-    if @parent_to_save && @parent_to_save != self.parent
+    if @parent_to_save && @parent_to_save != self.parent && move_possible?(@parent_to_save) #Cannot check it because it is always top until moved... && !self.is_top?
       self.move_to_child_of(@parent_to_save)
       @parent_to_save = nil
     end
@@ -266,7 +272,8 @@ class Category < ActiveRecord::Base
   def after_create
     if @opening_balance && @opening_balance_currency
       currency = @opening_balance_currency
-      value = @opening_balance
+      value = Kernel.BigDecimal(@opening_balance.to_s)
+      value *= -1 if self.user.invert_saldo_for_income && self.category_type == :INCOME
       transfer = Transfer.new(:day =>Date.today, :user => self.user, :description => "Bilans otwarcia")
 
       transfer.transfer_items.build(:description => transfer.description, :value => value, :category => self, :currency => currency)

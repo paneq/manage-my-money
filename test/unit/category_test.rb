@@ -402,14 +402,30 @@ class CategoryTest < ActiveSupport::TestCase
       :user => nil,
       :parent => @parent
     )
-    assert_raise ActiveRecord::ActiveRecordError do
-      category.save
-    end
+    assert !category.save
+    assert_not_nil category.errors.on(:user)
   end
 
 
   def test_save_with_balance
     category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty)
+    saldo = category.saldo_new(:default, false)
+    assert_equal 123.4, saldo.value
+    assert_equal @zloty, saldo.currency
+
+
+    #Test opening balance for income categories
+    @rupert.invert_saldo_for_income = false
+    @rupert.save!
+    category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty, :parent => @rupert.income)
+    saldo = category.saldo_new(:default, false)
+    assert_equal 123.4, saldo.value
+    assert_equal @zloty, saldo.currency
+
+
+    @rupert.invert_saldo_for_income = true
+    @rupert.save!
+    category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty, :parent => @rupert.income)
     saldo = category.saldo_new(:default, false)
     assert_equal 123.4, saldo.value
     assert_equal @zloty, saldo.currency
@@ -1123,10 +1139,13 @@ END as my_group,
   end
 
 
-  test "cool stuff" do
-    
+  #security
+  test "Protected attributes" do
+    @rupert.asset.update_attributes!(:user_id => @jarek.id)
+    assert_not_nil @rupert.asset
   end
 
+  
   private
 
 

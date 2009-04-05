@@ -9,6 +9,7 @@ class CategoriesControllerTest < ActionController::TestCase
 
     prepare_currencies
     save_rupert
+    save_jarek
     prepare_sample_system_category_tree
     log_rupert
   end
@@ -358,7 +359,7 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
 
-   def test_edit_with_no_subcategories
+  def test_edit_with_no_subcategories
     create_rupert_expenses_account_structure
     get :edit, :id => @rupert.income.id
     assert_response :success
@@ -375,13 +376,12 @@ class CategoriesControllerTest < ActionController::TestCase
 
 
   def test_update_top_category
-    income_category = @rupert.expense
+    income_category = @rupert.income
     loan_category = @rupert.loan
 
     put :update, :id => loan_category.id, :category => {
       :name => 'new_loan_name',
       :description => 'new_loan_description',
-      :category_type => income_category.category_type,
       :category_type_int => income_category.category_type_int,
       :parent => income_category.id,
       :system_category_id => ''
@@ -408,7 +408,6 @@ class CategoriesControllerTest < ActionController::TestCase
       :name => 'new_healthy_name',
       :description => 'new_healthy_description',
       :parent => @expense_category.id,
-      :category_type => @loan_category.category_type,
       :category_type_int => @loan_category.category_type_int,
       :system_category_id => ''
     }
@@ -542,7 +541,40 @@ class CategoriesControllerTest < ActionController::TestCase
   end
 
 
+  # security tests
+  def test_invisible_to_others
+    [[:show,:get], [:search, :post], [:destroy, :delete], [:edit, :get], [:update, :put]].each do |action, method|
+      send(method, action, :id => @jarek.asset.id)
+      assert_redirected_to :action => :index, :controller => :categories
+      assert_match("Brak uprawnień", flash[:notice])
+    end
+
+    assert_no_difference("@jarek.categories.count") do
+      try_create(
+        :name => 'bad category',
+        :user_id => @jarek.id,
+        :parent => @rupert.asset.id)
+      assert_no_difference("@rupert.categories.count") do
+        try_create(
+          :name => 'bad category',
+          :user_id => @jarek.id,
+          :parent => @jarek.asset.id)
+        try_create(
+          :name => 'bad category',
+          :user_id => @jarek.id,
+          :category_type_int => @jarek.asset.category_type_int)
+        try_create(
+          :name => 'bad category',
+          :user_id => @jarek.id)
+      end
+    end
+    
+  end
+
+
   private
+
+
   def assert_new_subcategories(sys_categories)
     assert_select 'div#new-subcategories' do
       assert_select "input[type='checkbox']", :count => sys_categories.size
@@ -553,5 +585,11 @@ class CategoriesControllerTest < ActionController::TestCase
     end
   end
 
-  
+
+  def try_create(hash)
+    begin
+      post :create, :category => hash
+    rescue
+    end
+  end
 end
