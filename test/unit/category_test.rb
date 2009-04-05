@@ -311,6 +311,16 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal( (1 + first_exchange_rate + 2*second_exchange_rate + third_exchange_rate)*value , saldo.value(@zloty) )
   end
 
+  
+  def test_can_compute_all_algorithms
+    assert_nothing_raised do
+      User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.keys.each do |algorithm|
+        Category.compute(algorithm, @rupert, @rupert.categories, true, Date.today)
+      end
+    end
+  end
+
+
   def test_transfers_with_saldo_for_period
     income = @rupert.categories[1]
     outcome = @rupert.categories[2]

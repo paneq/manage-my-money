@@ -714,7 +714,7 @@ class Category < ActiveRecord::Base
 
 
   def self.compute_sql(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
-    raise 'Invalid algorithm given' unless User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.include?(algorithm) || algorithm == :default
+    raise "Invalid algorithm given: #{algorithm}" unless User.MULTI_CURRENCY_BALANCE_CALCULATING_ALGORITHMS.include?(algorithm) || algorithm == :default
     algorithm = user.multi_currency_balance_calculating_algorithm if algorithm == :default
     categories = [categories] if categories.is_a?(Category)
     sql =<<-SQL
