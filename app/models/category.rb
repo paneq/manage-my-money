@@ -189,7 +189,7 @@ class Category < ActiveRecord::Base
 
 
   ##Try to save category and given subcategories (from new_subcategories attribute) in transaction
-  #rollback all in case od failure
+  #rollback all in case of failure
   def save_with_subcategories
     @was_new_record_before_save = new_record? #saving new_record? value, for eventually use in case of rollback
     transaction do
@@ -198,7 +198,7 @@ class Category < ActiveRecord::Base
     end
     return true
   rescue
-    instance_variable_set("@new_record", true) if @was_new_record_before_save #revert previous ne_record? value
+    instance_variable_set("@new_record", true) if @was_new_record_before_save #revert previous new_record? value
     return false
   end
 

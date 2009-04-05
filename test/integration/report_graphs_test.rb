@@ -21,4 +21,24 @@ class ReportGraphsTest < ActionController::IntegrationTest
     assert_match(/elements/, response.body)
   end
 
+  test "should get json data for share report" do
+    get_via_redirect '/'
+    post_via_redirect '/session', { :login => @rupert.login, :password => @rupert.login }
+
+    report = create_share_report(@rupert)
+    report.period_start = 5.month.ago
+    report.period_end = Date.today.to_date
+    report.save!
+
+    save_simple_transfer({})
+    get "/reports/#{report.id}"
+    assert_response :success
+    get "/reports/get_graph_data/#{report.id}.json?graph=PLN"
+    assert_response :success
+    assert_match(/elements/, response.body)
+  end
+
+
+
+
 end

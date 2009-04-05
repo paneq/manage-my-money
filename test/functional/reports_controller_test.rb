@@ -97,47 +97,100 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
 
-  #TODO
   test "should create value report" do
-
+    assert_difference('Report.count') do
+      post :create,
+        :value_report => value_report_hash.merge(new_category_report_option_hash),
+        :report_type => 'ValueReport',
+        :report_day_ValueReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_value_report(created)
   end
 
-  #TODO
   test "should not create value report with errors" do
-
+    assert_no_difference('Report.count') do
+      post :create,
+        :value_report => value_report_hash.merge(:name => nil),
+        :report_type => 'ValueReport',
+        :report_day_ValueReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_select "h2", /nie został zachowany/
   end
 
-  #TODO
   test "should create flow report" do
-
+    assert_difference('Report.count') do
+      post :create,
+        :flow_report => flow_report_hash.merge(new_category_report_option_hash),
+        :report_type => 'FlowReport',
+        :report_day_FlowReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_flow_report(created)
   end
 
-  #TODO
   test "should not create flow report with errors" do
-
+    assert_no_difference('Report.count') do
+      post :create,
+        :flow_report => flow_report_hash.merge(:name => nil),
+        :report_type => 'FlowReport',
+        :report_day_FlowReport_period => :LAST_DAY,
+        :commit => 'Zapisz'
+    end
+    assert_select "h2", /nie został zachowany/
   end
 
 
-
-  #TODO
   test "should update value report" do
-
+    @report = create_value_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :value_report => value_report_hash,#TODO.merge(existing_category_report_option_hash(@report)),
+    :report_day_ValueReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_value_report(created)
   end
   
-  #TODO
+
   test "should not update value report with errors" do
-
+    @report = create_value_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :value_report => value_report_hash.merge(:name=>nil),
+      :report_day_ValueReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_select "h2", /nie został zachowany/
   end
 
 
-  #TODO
   test "should update flow report" do
-
+    @report = create_flow_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :flow_report => flow_report_hash, #TODO.merge(existing_category_report_option_hash(@report)),
+    :report_day_FlowReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_redirected_to reports_path
+    created = Report.find_by_name 'Test report'
+    assert_changed_flow_report(created)
   end
 
-  #TODO
-  test "should not update flow report with errors" do
 
+  test "should not update flow report with errors" do
+    @report = create_flow_report(@jarek)
+    put :update,
+      :id => @report.id,
+      :flow_report => flow_report_hash.merge(:name=>nil),
+      :report_day_FlowReport_period => :LAST_DAY,
+      :commit => 'Zapisz'
+    assert_select "h2", /nie został zachowany/
   end
 
 
@@ -315,5 +368,87 @@ class ReportsControllerTest < ActionController::TestCase
     assert_equal 3, updated.max_categories_values_count
     assert_equal @jarek.expense.id, updated.category.id
   end
+
+  def value_report_hash
+    {
+      :name => 'Test report',
+      :report_view_type => "bar",
+      :period_division =>"none",
+      :relative_period => "0",
+    }
+  end
+
+  def new_category_report_option_hash
+    {:new_category_report_options => create_category_report_options(@jarek.categories, [@jarek.expense])}
+  end
+
+
+  def existing_category_report_option_hash(report)
+    {:existing_category_report_options => create_category_report_options_for_update([@jarek.expense], report)}
+  end
+
+
+
+
+  def assert_changed_value_report(updated)
+    assert_not_nil updated
+    assert_equal ValueReport, updated.class
+    assert_equal :bar, updated.report_view_type
+    assert_equal :none, updated.period_division
+    assert_equal false, updated.relative_period
+    #TODO:
+    #    assert_equal 1, updated.category_report_options.count
+    #    assert_equal @jarek.expense.id, updated.category_report_options.first.category_id
+
+  end
+
+
+  def flow_report_hash
+    {
+      :name => 'Test report',
+      :report_view_type => "text",
+    }
+  end
+
+  def assert_changed_flow_report(updated)
+    assert_not_nil updated
+    assert_equal FlowReport, updated.class
+    assert_equal :text, updated.report_view_type
+    assert_equal false, updated.relative_period
+    #TODO:
+    #    assert_equal 1, updated.category_report_options.count
+    #    assert_equal @jarek.expense.id, updated.category_report_options.first.category_id
+  end
+
+
+  def create_category_report_options(categories, selected_categories)
+    category_report_options = []
+    selected_categories.each do |cat|
+      category_report_options << {:inclusion_type => "category_only", :category_id => cat.id}
+    end
+    (categories - selected_categories).each do |cat|
+      category_report_options <<{:inclusion_type => "none", :category_id => cat.id}
+    end
+    category_report_options
+  end
+
+
+  def create_category_report_options_for_update(selected_categories, report)
+    existing_category_options = {}
+    selected_category_ids = selected_categories.map(&:id)
+    report.category_report_options.to_a.each do |opt|
+      existing_category_options[opt.id] = if selected_category_ids.include?(opt.category_id)
+        {:inclusion_type => "category_only", :category_id => opt.category_id}
+      else
+        {:inclusion_type => "none", :category_id => opt.category_id}
+      end
+    end
+    existing_category_options
+  end
+
+
+
+
+
 
 end
