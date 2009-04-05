@@ -1,11 +1,10 @@
 <div>
-  <h1><%= @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', edit_category_path(@category), obj_hash_id('edit-cat', @category)%></a></h1>
+  <h1><%= h @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', edit_category_path(@category), obj_hash_id('edit-cat', @category)%></a></h1>
   
   <% unless @category.description.blank? %>
-    <p><b>Opis:</b> <%= @category.description %>
+    <p class="margin-left"><b>Opis:</b> <%= h @category.description %>
     </p>
   <% end %>
-  <br />
   <div id="transfer-table-div">
 	  <% unless @transfers.empty? %>
 	    <%= render :partial => 'transfer_table', :locals => { :current_category => @category} %>

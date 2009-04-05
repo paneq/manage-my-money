@@ -1,9 +1,9 @@
 class CategoriesController < HistoryController
  
   before_filter :login_required
-  before_filter :find_currencies_for_user, :only => [:show]
+  before_filter :find_currencies_for_user, :only => [:show, :new, :create]
   before_filter :find_newest_exchanges, :only => [:show]
-  before_filter :check_perm, :only => [:show , :remove, :search]
+  before_filter :check_perm, :only => [:show, :search, :destroy, :edit, :update]
 
   cache_sweeper :category_sweeper
   include RedirectHelper
@@ -18,7 +18,6 @@ class CategoriesController < HistoryController
 
 
   def search
-    @category = self.current_user.categories.find(params[:id])
     @range = get_period_range('transfer_day')
     @include_subcategories = !!params[:include_subcategories]
     respond_to do |format|
@@ -35,13 +34,12 @@ class CategoriesController < HistoryController
     @categories.each do |c|
       c.name_with_path
     end
-    @saldos = Category.compute(:default, self.current_user, @categories, false, Date.today)
-    @subsaldos = Category.compute(:default, self.current_user, @categories, true, Date.today)
+    @saldos = Category.compute(:default, @current_user, @categories, false, Date.today)
+    @subsaldos = Category.compute(:default, @current_user, @categories, true, Date.today)
   end
 
 
   def destroy
-    @category = self.current_user.categories.find(params[:id])
     catch(:indestructible) do
       @category.destroy
       flash[:notice] = "Usunięto kategorię"
@@ -55,17 +53,17 @@ class CategoriesController < HistoryController
     @parent = @current_user.categories.find(params[:parent_category_id].to_i) if params[:parent_category_id]
     @category = Category.new()
     @categories = @current_user.categories
-    @currencies = @current_user.visible_currencies
     @system_categories = SystemCategory.all
     @subcategories = empty_subcategories(@system_categories)
   end
 
 
   def create
-    @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent].to_i )
+    @parent = params[:category][:parent] = @current_user.categories.find( params[:category][:parent])
     params[:category][:new_subcategories] ||= []
     format_openinig_balance
-    @category = Category.new(params[:category].merge(:user => @current_user))
+    @category = Category.new(params[:category])
+    @category.user = @current_user
     if @category.save_with_subcategories
       flash[:notice] ||= 'Utworzono nową kategorię'
       redirect_to categories_url
@@ -73,7 +71,6 @@ class CategoriesController < HistoryController
       @system_categories = SystemCategory.all
       @subcategories = subcategories_from_params(@system_categories, params[:category][:new_subcategories])
       @categories = @current_user.categories
-      @currencies = @current_user.visible_currencies
       flash[:notice] = 'Nie udało się utworzyć kategorii.'
       render :action => 'new'
     end
@@ -81,7 +78,6 @@ class CategoriesController < HistoryController
 
 
   def edit
-    @category = self.current_user.categories.find(params[:id])
     @parent = @category.parent
     @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
     @system_categories = SystemCategory.find_all_by_category_type(@category)
@@ -91,14 +87,16 @@ class CategoriesController < HistoryController
 
    
   def update
-    @category = self.current_user.categories.find(params[:id])
     params[:category][:new_subcategories] ||= []
-    attr = params[:category]
-    @category.update_attributes attr.pass(:name, :description, :email, :bankinfo, :system_category_id, :new_subcategories, :bank_account_number, :loan_category)
-    @category.parent = self.current_user.categories.find(attr[:parent].to_i) if !@category.is_top? and attr[:parent]
+    @parent = params[:category][:parent] = if !@category.is_top? and params[:category][:parent]
+      @current_user.categories.find(params[:category][:parent])
+    else
+      nil
+    end
+    @category.update_attributes(params[:category])
     if @category.save_with_subcategories
       flash[:notice] = 'Zapisano zmiany.'
-      redirect_to category_url(@category)
+      redirect_to category_path(@category)
     else
       @parent = @category.parent
       @top = self.current_user.categories.top.of_type(@category.category_type).find(:first)
@@ -115,13 +113,11 @@ class CategoriesController < HistoryController
 
   def check_perm
     @category = self.current_user.categories.find(params[:id])
-    unless @category
-      flash[:notice] = 'You do not have permission to view this category'
-      @category = nil
-      redirect_to :action => :show_categories , :controller => :category
-      #FIXME why doesn't it work ? There is no flash ?
-    end
+  rescue
+    flash[:notice] = 'Brak uprawnień do oglądania tej kategorii.'
+    redirect_to :action => :index , :controller => :categories
   end
+
 
   def format_openinig_balance
     if params[:category][:opening_balance]
@@ -130,12 +126,14 @@ class CategoriesController < HistoryController
     end
   end
 
+
   def empty_subcategories(system_categories)
     subcategories = SequencedHash.new;
     system_categories.each {|sc| subcategories[sc.id] = {:selected => false, :category => sc}}
     subcategories
   end
 
+  
   def subcategories_from_params(system_categories, params_categories)
     subcategories = empty_subcategories(system_categories)
     params_categories.each do |new_sc|

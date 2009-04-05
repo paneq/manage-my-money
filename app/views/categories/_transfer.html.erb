@@ -11,7 +11,7 @@
 <tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('', 'alt') %>" >
 
   <td class="transfer-table-border"> <%= transfer.day -%> </td>
-  <td class="transfer-table-border"> <%= transfer.description -%> </td>
+  <td class="transfer-table-border"> <%= h transfer.description -%> </td>
 
   <% unless mode == :transfers %>
 
