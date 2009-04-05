@@ -260,8 +260,55 @@ class CategoryTest < ActiveSupport::TestCase
     income_category = @rupert.categories[0]
     outcome_category = @rupert.categories[1]
     
-    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
-    #TODO: Write it
+    value = 100
+    first_exchange_rate = 8
+    second_exchange_rate = first_exchange_rate / 2
+    third_exchange_rate = second_exchange_rate / 2
+    bad_exchange_rate = 100
+
+    #this exchange should not be used by algorithm becuase it is too far from any transfer day
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 20.days.ago.to_date)
+
+    #no exchange to use becuase it is in default currency already
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 19.days.ago.to_date, :currency => @zloty, :value => value)
+
+
+    #this exchange ratio should not be used by algorithm becuase it belongs to another person
+    @jarek.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 17.days.ago.to_date)
+
+    #this exchange should not be used by algorithm becuase it is about other currencies
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@dolar, :left_to_right => bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 17.days.ago.to_date)
+
+    #this exchange should be used by next transfer
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate, :right_to_left => first_exchange_rate, :day => 18.days.ago.to_date)
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 16.days.ago.to_date, :currency => @euro, :value => value)
+
+    #with conversions. Should use exchange connected to conversion insted of other one.
+    t2 = save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 16.days.ago.to_date, :currency => @euro, :value => value)
+    t2.conversions.create!(:exchange => Exchange.new(:user => @rupert, :left_currency => @zloty, :right_currency => @euro, :left_to_right => 1.0 / second_exchange_rate, :right_to_left => second_exchange_rate))
+    t2.save!
+
+    #this exchange should not be used by algorithm becuase it is too far from any transfer day
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / bad_exchange_rate, :right_to_left => bad_exchange_rate, :day => 10.days.ago.to_date)
+
+    #with conversions. Should use exchange connected to conversion insted of other one.
+    t2 = save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
+    t2.conversions.create!(:exchange => Exchange.new(:user => @rupert, :left_currency => @zloty, :right_currency => @euro, :left_to_right => 1.0 / second_exchange_rate, :right_to_left => second_exchange_rate))
+    t2.save!
+
+    #thix exchange should be used by given transfer
+    @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / third_exchange_rate , :right_to_left => third_exchange_rate , :day => 3.days.ago.to_date)
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
+
+    #should not be counted becuase its outside the period
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => Date.today, :currency => @euro, :value => value)
+    save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => Date.today, :currency => @zloty, :value => value)
+
+    @rupert.exchanges(true)
+    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, Date.yesterday)
+
+    assert_equal 1, saldo.currencies.size
+    assert_equal( (1 + first_exchange_rate + 2*second_exchange_rate + third_exchange_rate)*value , saldo.value(@zloty) )
   end
 
   def test_transfers_with_saldo_for_period
