@@ -62,7 +62,7 @@
           <legend>Aktualne podkategorie</legend>
           <div id="current-subcategories" class="scrollbar">
             <% @current_subcategories.each do |subcategory| %>
-              <label id="cur-subcategory-<%=subcategory.id%>" style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%=subcategory.name%></label>
+              <label id="cur-subcategory-<%=subcategory.id%>" style="width: 100%; padding-left: <%= (subcategory.cached_level-1)*10 %>px"><%= h(subcategory.name) %></label>
             <% end %>
 
             <% if @current_subcategories.empty? %>
