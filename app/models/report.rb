@@ -30,15 +30,15 @@ class Report < ActiveRecord::Base
 
   belongs_to :user
 
-  validates_presence_of :period_start, :period_end, :if => :period_type_custom?
+  validates_presence_of :period_start, :period_end, :if => :validate_period?
   validates_inclusion_of :period_type, :in => Report.PERIOD_TYPES.keys
   validates_presence_of :name
 
   attr_accessor :virtual
 
   #used for conditional validation
-  def period_type_custom?
-    period_type == :SELECTED
+  def validate_period?
+    !relative_period
   end
 
   def share_report?

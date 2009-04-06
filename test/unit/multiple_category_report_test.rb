@@ -10,7 +10,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     assert r.save!
     assert_equal @jarek.categories.size, r.categories.size
@@ -29,14 +29,16 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     add_category_options @jarek, r
     assert !r.save
     assert r.errors.on(:period_type)
-    assert_equal 1, r.errors.count
+    assert r.errors.on(:period_start)
+    assert r.errors.on(:period_end)
+    assert_equal 3, r.errors.count
   end
 
   test "Should not save MultipleCategoryReport without categories" do
     r = MultipleCategoryReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     assert !r.save
     assert r.errors.on(:base)
     r.category_report_options = []

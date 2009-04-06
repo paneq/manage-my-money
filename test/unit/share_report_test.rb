@@ -10,7 +10,7 @@ class ShareReportTest < ActiveSupport::TestCase
     r = ShareReport.new
     r.category = @jarek.categories.first
     r.report_view_type = :pie
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.max_categories_values_count = 1
     r.name = "Testowy raport"
     assert r.save!
@@ -26,8 +26,10 @@ class ShareReportTest < ActiveSupport::TestCase
     assert r.errors.on(:category)
     assert r.errors.on(:report_view_type)
     assert r.errors.on(:period_type)
+    assert r.errors.on(:period_start)
+    assert r.errors.on(:period_end)
     assert r.errors.on(:max_categories_values_count)
-    assert_equal 4, r.errors.count
+    assert_equal 6, r.errors.count
   end
 
 end 

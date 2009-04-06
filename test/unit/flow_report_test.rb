@@ -2,24 +2,24 @@ require 'test_helper'
 
 class FlowReportTest < ActiveSupport::TestCase
 
- def setup
+  def setup
     save_jarek
- end
+  end
 
- test "Should create FlowReport" do
+  test "Should create FlowReport" do
     r = FlowReport.new
     add_category_options @jarek, r
     r.report_view_type = :text
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     assert r.save!
- end
+  end
 
- test "Should have only text view type" do
+  test "Should have only text view type" do
     r = FlowReport.new
     add_category_options @jarek, r
     r.report_view_type = :linear
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     assert !r.save
     assert r.errors.on(:report_view_type)

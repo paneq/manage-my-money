@@ -4,7 +4,7 @@ class ReportTest < ActiveSupport::TestCase
   test "Should create and save Report" do
     r = nil
     r = Report.new
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.report_view_type = :pie
     assert r.save
@@ -12,7 +12,7 @@ class ReportTest < ActiveSupport::TestCase
 
   test "Should create and save Report with period" do
     r = Report.new
-    r.period_type = :LAST_WEEK
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.report_view_type = :pie
     r.name = "Testowy raport"
     assert r.save
@@ -71,29 +71,29 @@ class ReportTest < ActiveSupport::TestCase
     assert_equal Date.today, r.period_end
 
 
-#TODO find way to change Date.today value and test it!
-#    class Date
-#      def self.today
-#        '06.01.2008'.to_date
-#      end
-#    end
-#
-#    r.period_type = :THIS_MONTH
-#    r.relative_period = true
-#
-#    r.save!
-#
-#
-#    assert_equal '01.01.2008'.to_date, r.period_start
-#    assert_equal '31.01.2008'.to_date, r.period_end
+    #TODO find way to change Date.today value and test it!
+    #    class Date
+    #      def self.today
+    #        '06.01.2008'.to_date
+    #      end
+    #    end
+    #
+    #    r.period_type = :THIS_MONTH
+    #    r.relative_period = true
+    #
+    #    r.save!
+    #
+    #
+    #    assert_equal '01.01.2008'.to_date, r.period_start
+    #    assert_equal '31.01.2008'.to_date, r.period_end
 
 
 
 
 
-#    r.relative_period = false
-#
-#    r.period_type = :SELECTED
+    #    r.relative_period = false
+    #
+    #    r.period_type = :SELECTED
 
 
 

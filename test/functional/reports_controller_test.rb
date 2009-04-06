@@ -218,11 +218,6 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
 
-  test "should see index form" do
-    get :index
-    assert_response :success
-  end
-
   test "should see edit form for share report" do
     get :edit, :id => create_share_report(@jarek).id
     assert_response :success
@@ -294,10 +289,28 @@ class ReportsControllerTest < ActionController::TestCase
     end
   end
 
-  
+  #TODO
+  test "should see index form" do
+    get :index
+    assert_response :success
+  end
+
+
   #TODO
   test "should see flow report" do
     get :show, :id => create_flow_report(@jarek).id
+    assert_response :success
+  end
+
+  #TODO
+  test "should see share report" do
+    get :show, :id => create_share_report(@jarek).id
+    assert_response :success
+  end
+
+  #TODO
+  test "should see value report" do
+    get :show, :id => create_value_report(@jarek).id
     assert_response :success
   end
 
