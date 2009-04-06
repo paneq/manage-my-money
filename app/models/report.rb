@@ -76,7 +76,9 @@ class Report < ActiveRecord::Base
   end
 
   def has_a_category?
-    !(@report.is_a?(MultipleCategoryReport) && @report.category_report_options.empty?) || (@report.share_report? && @report.category == nil)
+    return false if self.is_a?(MultipleCategoryReport) && self.category_report_options.empty?
+    return false if (self.share_report? && self.category == nil)
+    return true
   end
 
   def self.sum_flow_values(values)

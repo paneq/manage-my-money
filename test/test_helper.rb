@@ -275,7 +275,7 @@ class ActiveSupport::TestCase
   end
 
   
-  def create_share_report(user)
+  def create_share_report(user, save = true)
     r = ShareReport.new
     r.user = user
     r.category = user.categories.first
@@ -284,7 +284,7 @@ class ActiveSupport::TestCase
     r.depth = 5
     r.max_categories_values_count = 6
     r.name = "Testowy raport"
-    r.save!
+    r.save! if save
     r
   end
 
@@ -301,17 +301,17 @@ class ActiveSupport::TestCase
   end
 
 
-  def create_value_report(user)
+  def create_value_report(user, save = true, category_options = true)
     r = ValueReport.new
     r.user = user
-    add_category_options user, r
+    add_category_options(user, r) if category_options
     r.report_view_type = :bar
     r.period_type = :SELECTED
     r.period_start = 5.month.ago
     r.period_end = Date.today.to_date
     r.period_division = :week
     r.name = "Testowy raport"
-    r.save!
+    r.save! if save
     r
   end
 

@@ -302,6 +302,34 @@ class ReportsControllerTest < ActionController::TestCase
   end
 
 
+  test "Should send warning when viewing report with no categories" do
+    prepare_sample_catagory_tree_for_jarek
+    test_category = @jarek.categories.find_by_name 'child2'
+
+    report1 = create_share_report(@jarek, false)
+    report1.category = test_category
+
+
+    report2 = create_value_report(@jarek, false, false)
+    report2.category_report_options << CategoryReportOption.new({:category => test_category, :inclusion_type => :both})
+
+
+    test_category.save!
+    report1.save!
+    report2.save!
+
+    test_category.destroy
+
+    assert_nil Category.find_by_id test_category.id
+
+    [report1, report2].each do |report|
+      get :show, :id => report.id
+      assert_template :edit
+      assert_match(/musisz wybrać kategorię.*/, flash[:notice])
+    end
+  end
+
+
   private
 
   def assert_date_fields(type)

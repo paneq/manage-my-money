@@ -106,7 +106,7 @@ class Category < ActiveRecord::Base
 
   has_many :currencies, :through => :transfer_items, :uniq => :true
 
-  has_many :goals
+  has_many :goals, :dependent => :destroy
 
   has_many :category_report_options, :foreign_key => :category_id, :dependent => :destroy
   has_many :multiple_category_reports, :through => :category_report_options
@@ -300,6 +300,7 @@ class Category < ActiveRecord::Base
       c.save!
     end
 
+    Report.update_all("category_id = NULL", {:type => "ShareReport", :category_id => self.id})
     TransferItem.update_all("category_id = #{self.parent.id}", "category_id = #{self.id}")
 
     # Moving children makes SQL queries that updates current object lft and rgt fields.
