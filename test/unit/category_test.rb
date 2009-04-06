@@ -1145,6 +1145,31 @@ END as my_group,
     assert_not_nil @rupert.asset
   end
 
+
+  test "Delete associated goals on destroy" do
+    prepare_sample_catagory_tree_for_jarek
+    test_category = @jarek.categories.find_by_name 'child2'
+    goal = create_goal(false)
+    goal.category=(test_category)
+
+
+    test_category.save!
+    goal.save!
+
+    [test_category, goal].each(&:reload)
+
+    assert_difference("@jarek.categories.count", -1) do
+      assert_difference("@jarek.goals.count", -1) do
+        test_category.destroy
+      end
+    end
+
+    assert_nil Goal.find_by_id goal.id
+    assert_nil Category.find_by_id test_category.id
+  end
+
+
+
   
   private
 
