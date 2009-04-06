@@ -300,6 +300,7 @@ class Category < ActiveRecord::Base
       c.save!
     end
 
+    Report.update_all("category_id = NULL", {:type => "ShareReport", :category_id => self.id})
     TransferItem.update_all("category_id = #{self.parent.id}", "category_id = #{self.id}")
 
     # Moving children makes SQL queries that updates current object lft and rgt fields.

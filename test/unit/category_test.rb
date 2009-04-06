@@ -1150,7 +1150,7 @@ END as my_group,
     prepare_sample_catagory_tree_for_jarek
     test_category = @jarek.categories.find_by_name 'child2'
     goal = create_goal(false)
-    goal.category=(test_category)
+    goal.category= test_category
 
 
     test_category.save!
@@ -1169,6 +1169,29 @@ END as my_group,
   end
 
 
+  test "Detach ShareReports on destroy" do
+    prepare_sample_catagory_tree_for_jarek
+    test_category = @jarek.categories.find_by_name 'child2'
+
+    report = create_share_report(@jarek, false)
+    report.category = test_category
+
+    test_category.save!
+    report.save!
+
+    [test_category, report].each(&:reload)
+
+    assert_difference("@jarek.categories.count", -1) do
+      assert_no_difference("@jarek.reports.count") do
+        test_category.destroy
+      end
+    end
+
+    assert_nil Report.find_by_id(report.id).category_id
+    assert_nil Category.find_by_id test_category.id
+    
+
+  end
 
   
   private
