@@ -15,7 +15,7 @@
       <tr class="<%=style-%>">
         <td><%= h loan.name %></td>
         <td><%= h loan.bankinfo %></td>
-        <td><%= print_saldo(info[:money]) %></td>
+        <td><%= print_saldo(info[:money], @current_user) %></td>
         <td><%= switch("transfer-items-list-#{loan.id}", 'Pokaż / Ukryj') -%></td>
         <td>
           <% form_tag '/creditors/pay' do %>
@@ -55,7 +55,7 @@
                     <%= @currencies.find{|c| c.id == transfer_item.currency_id}.long_symbol %>
                   </td>
                   <td>
-                    <%=  print_saldo(saldo) if transfer_item == transfer_items.last %>
+                    <%=  print_saldo(saldo, @current_user) if transfer_item == transfer_items.last %>
                   </td>
                 </tr>
               <% end %>

@@ -3,15 +3,29 @@
   <div class="width">
     <h1>
       Twoje kategorie <%= link_to '[Dodaj]', new_category_path %>
+      <%= help_tag('system_elements.categories.index') -%>
     </h1>
   </div>
 
   <table id="category-tree" class="nice-table width">
     <tr>
-      <th>Nazwa</th>
-      <th>Saldo</th>
-      <th>Saldo z podk.</th>
-      <th>Akcje</th>
+      <th>
+        Nazwa
+      </th>
+      
+      <th>
+        Saldo <%= help_tag('system_elements.categories.index.saldo') -%>
+      </th>
+
+      <th>
+        Saldo z podk.
+        <%= help_tag('system_elements.categories.index.subsaldo') -%>
+      </th>
+
+      <th>
+        Akcje
+        <%= help_tag('system_elements.categories.index.actions') -%>
+      </th>
     </tr>
     <%=render :partial => 'category' , :collection => @categories %>
   </table>
