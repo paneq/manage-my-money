@@ -10,7 +10,7 @@
     <div id="graph_table_for_<%=currency%>" class="scrollbar long">
       <% if @report.share_report? %>
        <% light_shadow() do %>
-        <table class="nice-table">
+        <table class="nice-table" id="share_report_data">
           <tr><th >Kategoria</th><th>Saldo <%= currency%></th><th>%</th></tr>
           <%  @values[currency][:values].find_all{|el| el[:percent] > 0 }.each do |val| %>
             <%=render :partial => "show_share_category", :locals => {:val => val}%>
@@ -28,7 +28,7 @@
 
       <% else %>
       <% light_shadow() do %>
-        <table class="nice-table">
+        <table class="nice-table" id="value_report_data">
           <tr><th>Saldo <%= currency%></th>
           <% @values[currency][:date_labels].each do |label| %>
           <th><%= label %></th>
@@ -49,7 +49,7 @@
   <% end #end of each -%>
 
 <% if @graphs.size == 0 %>
-  <h1>Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
+  <h1 id="no_data_found">Dla podanych parametrów nie znaleziono transferów z których można by obliczyć raport</h1>
 <% end %>
 
 <br/>

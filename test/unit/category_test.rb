@@ -1138,14 +1138,6 @@ END as my_group,
     assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, nil).unified_sql
   end
 
-
-  #security
-  test "Protected attributes" do
-    @rupert.asset.update_attributes!(:user_id => @jarek.id)
-    assert_not_nil @rupert.asset
-  end
-
-
   test "Delete associated goals on destroy" do
     prepare_sample_catagory_tree_for_jarek
     test_category = @jarek.categories.find_by_name 'child2'
@@ -1192,6 +1184,17 @@ END as my_group,
     
 
   end
+
+
+  #===security===
+  
+  test "Protected attributes" do
+    @rupert.asset.update_attributes!(:user_id => @jarek.id)
+    assert_not_nil @rupert.asset
+  end
+
+
+ 
 
   
   private

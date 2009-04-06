@@ -289,10 +289,18 @@ class ReportsControllerTest < ActionController::TestCase
     end
   end
 
-  #TODO
   test "should see index form" do
+    user_report = create_flow_report(@jarek)
     get :index
     assert_response :success
+    assert_select 'table#report_index' do
+      assert_select 'tr th#std_reports_header'
+      (0..2).each do |num|
+        assert_select "tr#standard_report_#{num}"
+      end
+      assert_select 'tr th#user_reports_header'
+      assert_select "tr#user_report_#{user_report.id}"
+    end
   end
 
 
@@ -302,16 +310,50 @@ class ReportsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  #TODO
-  test "should see share report" do
+
+  test "should see share report when no data available for report" do
     get :show, :id => create_share_report(@jarek).id
     assert_response :success
+    assert_select 'h1#no_data_found'
   end
 
-  #TODO
+  
+  test "should see share report" do
+    save_simple_transfer(:user => @jarek, :income => @jarek.income, :outcome => @jarek.expense, :day => 1.day.ago, :currency => @zloty, :value => 100)
+    report = create_share_report(@jarek, false)
+    report.category = @jarek.income
+    report.set_period([7.days.ago, Date.today, :LAST_WEEK])
+    report.save!
+    get :show, :id => report.id
+    assert_response :success
+    assert_select 'table#share_report_data' do
+      assert_select 'td', @jarek.income.name
+      assert_select 'td', '100.0', :count => 2
+    end
+  end
+
+
+
   test "should see value report" do
+    save_simple_transfer(:user => @jarek, :income => @jarek.income, :outcome => @jarek.expense, :day => 1.day.ago, :currency => @zloty, :value => 100)
+    report = create_value_report(@jarek, false, false)
+    report.set_period([7.days.ago, Date.today, :LAST_WEEK])
+    report.category_report_options << CategoryReportOption.new({:category => @jarek.income, :inclusion_type => :category_only})
+    report.save!
+    get :show, :id => report.id
+    assert_response :success
+    assert_select 'table#value_report_data' do
+      assert_select 'td', @jarek.income.name
+      assert_select 'td', '100.0', :count => 2
+    end
+
+
+  end
+
+  test "should see value report when no data available for report" do
     get :show, :id => create_value_report(@jarek).id
     assert_response :success
+    assert_select 'h1#no_data_found'
   end
 
 
@@ -486,10 +528,5 @@ class ReportsControllerTest < ActionController::TestCase
     end
     existing_category_options
   end
-
-
-
-
-
 
 end

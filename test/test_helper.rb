@@ -153,7 +153,7 @@ class ActiveSupport::TestCase
 
   def make_simple_transfer(options = {})
     save_rupert if options[:user].nil? and @rupert.nil?
-    hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.expense, :outcome => @rupert.asset }
+    hash = {:day => 1.day.ago.to_date, :description =>'empty', :user => @rupert, :currency => @zloty, :value => 100, :income => @rupert.try(:expense), :outcome => @rupert.try(:asset) }
     hash.merge! options
 
     transfer = Transfer.new(:user => hash[:user])
