@@ -1,1 +1,1 @@
-<tr><td><%=cat[:category].name_with_path%></td><td class="right"><%=cat[:value].value(cat[:currency]).to_s + ' ' + (cat[:currency].symbol) %></td></tr>
+<tr><td><%= h cat[:category].name_with_path%></td><td class="right"><%= h(cat[:value].value(cat[:currency]).to_s + ' ' + (cat[:currency].symbol)) %></td></tr>

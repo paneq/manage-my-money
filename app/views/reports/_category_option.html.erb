@@ -1,4 +1,4 @@
-<tr id="category-option" class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= category_option.category.name_with_path -%>" >
+<tr id="category-option" class="width category verticalCenter <%= cycle('', 'alt') %>" title="<%= h category_option.category.name_with_path -%>" >
   <% new_or_existing = category_option.new_record? ? 'new' : 'existing' %>
   <% prefix = "#{report_type}[#{new_or_existing}_category_report_options][]" %>
   <% fields_for prefix, category_option do |option_form| -%>

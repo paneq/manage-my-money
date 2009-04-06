@@ -1,21 +1,21 @@
-<h1>Przepływ gotówki - <%=  @report.period_start %> do <%=  @report.period_end %> </h1>
+<h1>Przepływ gotówki - <%= h @report.period_start %> do <%= h @report.period_end %> </h1>
 
 <% light_shadow() do %>
   <table class="nice-table long">
     <tr><th colspan="2">Kategorie wybrane do zestawienia:</th></tr>
     <% for cato in @report.category_report_options do %>
-        <tr><td><%= cato.category.name_with_path %></td></tr>
+        <tr><td><%= h cato.category.name_with_path %></td></tr>
     <% end %>
   </table>
   <% unless @cash_flow[:in].empty? %>
     <table class="nice-table long">
       <tr><th colspan="2">Pieniądze do wybranych kategorii przyszły z:</th></tr>
       <% for cat in @cash_flow[:in] do %>
-         <%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+         <%= render :partial => "show_flow_category", :locals => {:cat => cat}%>
       <% end %>
       <tr><td><b>W sumie: </b></td><td class="right"><b>
                 <%  for currency in @currencies do %>
-                    <%= "#{@in_sum.value(currency)} #{currency.symbol}, " -%>
+                    <%= h "#{@in_sum.value(currency)} #{currency.symbol}, " -%>
                   <% end %>
                 </b>
             </td></tr>
@@ -26,11 +26,11 @@
      <table class="nice-table long">
        <tr><th colspan="2">Pieniądze z wybranych kategorii wypłynęły do:</th></tr>
        <% for cat in @cash_flow[:out] do %>
-          <%=render :partial => "show_flow_category", :locals => {:cat => cat}%>
+          <%=  render :partial => "show_flow_category", :locals => {:cat => cat}%>
        <% end %>
        <tr><td><b>W sumie: </b></td><td class="right"><b>
                     <%  for currency in @currencies do %>
-                        <%= "#{@out_sum.value(currency)} #{currency.symbol}, " -%>
+                        <%= h "#{@out_sum.value(currency)} #{currency.symbol}, " -%>
                       <% end %>
                     </b>
        </td></tr>
@@ -42,7 +42,7 @@
     <table class="nice-table long">
       <tr><td colspan="2"></td></tr>
       <tr><td><b>Różnica:	</b></td><td class="right"><%  @currencies.each do |currency| %>
-        <%= "#{@delta.value(currency)} #{currency.symbol}, " -%>
+        <%= h "#{@delta.value(currency)} #{currency.symbol}, " -%>
       <% end %></td></tr>
     </table>
   <% end %>

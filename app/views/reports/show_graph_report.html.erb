@@ -2,16 +2,16 @@
 
 <div align="center">
   <%  @graphs.each do |currency, graph| %>
-    <h1><%=@values[currency][:title]%></h1>
+    <h1><%= h @values[currency][:title]%></h1>
     <%= graph %><br/>
     <br/>
 
-    <%= switch("graph_table_for_#{currency}","Pokaż/ukryj tabelkę danych") %> <br/>
-    <div id="graph_table_for_<%=currency%>" class="scrollbar long">
+    <%= switch("graph_table_for_#{h currency}","Pokaż/ukryj tabelkę danych") %> <br/>
+    <div id="graph_table_for_<%= h currency%>" class="scrollbar long">
       <% if @report.share_report? %>
        <% light_shadow() do %>
         <table class="nice-table" id="share_report_data">
-          <tr><th >Kategoria</th><th>Saldo <%= currency%></th><th>%</th></tr>
+          <tr><th >Kategoria</th><th>Saldo <%= h currency%></th><th>%</th></tr>
           <%  @values[currency][:values].find_all{|el| el[:percent] > 0 }.each do |val| %>
             <%=render :partial => "show_share_category", :locals => {:val => val}%>
           <% end %>
@@ -29,13 +29,13 @@
       <% else %>
       <% light_shadow() do %>
         <table class="nice-table" id="value_report_data">
-          <tr><th>Saldo <%= currency%></th>
+          <tr><th>Saldo <%= h currency%></th>
           <% @values[currency][:date_labels].each do |label| %>
-          <th><%= label %></th>
+          <th><%= h label %></th>
           <% end -%>
           </tr>
           <% @values[currency][:values].each do |label, values| %>
-          <%=render :partial => "show_value_category", :locals => {:label => label, :values => values}%>
+          <%= render :partial => "show_value_category", :locals => {:label => label, :values => values}%>
           <% end %>
         </table>
       <% end %>
