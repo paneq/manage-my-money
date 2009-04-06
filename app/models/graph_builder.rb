@@ -61,20 +61,19 @@ class GraphBuilder
     else
       currencies = [user.default_currency]
     end
-    report.category_report_options.each do |option|
-      values = option.category.calculate_values(option.inclusion_type, report.period_division, report.period_start, report.period_end)
-      values.each do |value| #pair [type,money]
-        money = value[1]
-        cat_label = option.category.name
-        if value[0] == :category_and_subcategories
-          cat_label += ' (+podkategorie)'
-        end
 
+    report.calculate_values.each do |result|
+      cat_label = result[:category].name
 
+      if result[:with_subcategories]
+        cat_label += ' (+podkategorie)'
+      end
+
+      result[:dates].each do |date_range|
         currencies.each do |cur|
           chart_values[cur] ||= {}
           chart_values[cur][cat_label] ||= []
-          chart_values[cur][cat_label] << money.value(cur)
+          chart_values[cur][cat_label] << result[:values][date_range].value(cur)
         end
       end
     end

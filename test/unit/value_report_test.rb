@@ -39,4 +39,48 @@ class ValueReportTest < ActiveSupport::TestCase
     assert_equal @jarek.categories.size, r.category_report_options.size
   end
 
+  #TODO
+  #  def test_calculate_values
+  #    prepare_sample_catagory_tree_for_jarek
+  #    category1 = @jarek.asset
+  #    category2 = @jarek.loan
+  #    test_category = @jarek.categories.find_by_name 'test'
+  #
+  #    result = category1.calculate_values(:category_and_subcategories, :none, 1.year.ago.to_date, 1.year.from_now.to_date)
+  #
+  #
+  #    assert_equal 1, result.size
+  #    assert_equal 2, result.first.size
+  #    assert_equal :category_and_subcategories, result.first.first
+  #    assert_equal Money.new, result.first.second
+  #
+  #
+  #    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+  #
+  #    assert_equal 2, result.size
+  #    assert_equal 2, result.first.size
+  #    assert_equal :category_and_subcategories, result.first.first
+  #    assert_equal Money.new, result.first.second
+  #    assert_equal 2, result.second.size
+  #    assert_equal :category_and_subcategories, result.second.first
+  #    assert_equal Money.new, result.second.second
+  #
+  #    save_simple_transfer(:income => category1, :outcome => category2, :day => '26.02.2008'.to_date, :currency => @zloty, :value => 123, :user => @jarek)
+  #
+  #    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+  #
+  #    assert_equal 2, result.size
+  #    assert_equal 2, result.first.size
+  #    assert_equal :category_and_subcategories, result.first.first
+  #    assert_equal 123, result.first.second.value(@zloty)
+  #    assert_equal 2, result.second.size
+  #    assert_equal :category_and_subcategories, result.second.first
+  #    assert_equal Money.new, result.second.second
+  #
+  #
+  #  end
+
+
+
+
 end

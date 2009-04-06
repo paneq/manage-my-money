@@ -30,4 +30,30 @@ class ValueReport < MultipleCategoryReport
     true
   end
 
+  #return [{:category => a, :dates => [[date1, date2], ..], :values => [1,2,4], ::with_subcategories => true}, ...]
+  def calculate_values
+
+
+    dates = Date.split_period(self.period_division, self.period_start, self.period_end)
+
+    categories_to_compute_only = self.category_report_options.find_all{|option| option.inclusion_type == :category_only || option.inclusion_type == :both}.map(&:category)
+    categories_to_compute_with_sucategories = self.category_report_options.find_all{|option| option.inclusion_type == :category_and_subcategories || option.inclusion_type == :both}.map(&:category)
+
+    result = []
+    
+    unless categories_to_compute_only.blank?
+      Category.compute(:default, self.user, categories_to_compute_only, false, dates).each do |category, values|
+        result << {:category => category, :values => values, :dates => dates, :with_subcategories => false}
+      end
+    end
+
+    unless categories_to_compute_with_sucategories.blank?
+      Category.compute(:default, self.user, categories_to_compute_with_sucategories, true, dates).each do |category, values|
+        result << {:category => category, :values => values, :dates => dates, :with_subcategories => true}
+      end
+    end
+
+    return result
+  end
+
 end

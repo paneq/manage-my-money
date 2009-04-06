@@ -485,33 +485,6 @@ class Category < ActiveRecord::Base
   end
 
 
-  # Podaje saldo/salda kategorii w podanym czasie
-  #
-  # Parametry:
-  #  inclusion_type to jedno z [:category_only, :category_and_subcategories, :both]
-  #  period_division to jedno z [:day, :week, :none...] podzial podanego zakresu czasu na podokresy
-  #  period_start, period_end zakres czasowy
-  #
-  # Wyjscie:
-  #  hash z maksymalnie dwoma tablicami wartosci postaci:
-  #  {:category_only => [money,money,money],
-  #  :category_and_subcategories => [money,money,money]}
-  #  w szczegolnym przypadku tablica moze byc jednoelementowa, np gdy period_division == :none
-  #  sortowanie od najstarszej wartosci
-  #
-  def calculate_values(inclusion_type, period_division, period_start, period_end)
-    result = []
-    dates = Date.split_period(period_division, period_start, period_end)
-    
-    dates.each do |date_range|
-      result << [:category_only, saldo_for_period_new(date_range[0], date_range[1])] if inclusion_type == :category_only || inclusion_type == :both
-      result << [:category_and_subcategories, saldo_for_period_with_subcategories(date_range[0], date_range[1])] if inclusion_type == :category_and_subcategories || inclusion_type == :both
-    end
-
-    result
-  end
-
-
   #
   #
   # Wyjście:
@@ -668,6 +641,26 @@ class Category < ActiveRecord::Base
 
   end
 
+  ## 
+  # if array_or_range_or_date_or_nil is an array ex.: [[date1, date2], [date3, date4], ..] or [date1..date2, date3..date4 ...]
+  #  result looks like this:
+  #  {
+  #  category_obj_1 => {
+  #       date_table_or_range_1 => money_obj,
+  #       date_table_or_range_2 => money_obj
+  #       },
+  #  category_obj_2 => {
+  #       date_table_or_range_1 => money_obj, 
+  #       date_table_or_range_2 => money_obj
+  #       }
+  #  }
+  #
+  # else
+  # result looks like this:
+  # {
+  #  category_obj_1 => money_obj,
+  #  category_obj_2 => money_obj
+  # }
 
   def self.compute(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
     categories = [categories] if categories.is_a?(Category)
