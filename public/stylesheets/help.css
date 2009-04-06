@@ -1,25 +1,25 @@
-BODY
+body
 {
-    font-family: verdana;
-    margin-left:auto;
-    margin-right:auto;
+    font-family: Verdana, Helvetica, "Bitstream Vera Sans", sans-serif;
+    margin-left: auto;
+    margin-right: auto;
     width:1000px;
     background-image: url(/images/bg/bg2.png);
 }
 
 .article {
     background-color: white;
-    BORDER: solid 1px #9BB3C2;
+    border: solid 1px #9bb3c2;
     padding: 10px;
 }
 
-DIV.ABSTRACT
+div.abstract
 {
     border: solid 2px;
     padding-left: 10pt;
     padding-right: 10pt;
 }
-PRE.SCREEN
+pre.screen
 {
     font-family:monospace;
     white-space: pre;
@@ -36,11 +36,10 @@ PRE.SCREEN
     padding-left: 15pt;
 }
 
-PRE.PROGRAMLISTING
+pre.programlisting
 {
     font-family:monospace;
     white-space: pre;
-    width: 100%;
     background-color: #ffffcc;
     border:solid;
     color: #000000;
@@ -49,60 +48,88 @@ PRE.PROGRAMLISTING
     border-right: solid #009999 2px;
     border-top: solid #009999 2px;
     border-bottom: solid #009999 2px;
+    font-size: 85%;
 
     padding-left: 15pt;
 }
 
-H1
-{
-    color: #ffffff;
-    border: solid 3px #a0a0d0;
-    background-color: #606090;
-    font-variant: small-caps;
-    width: 100%;
-}
-
-H1.TITLE
-{
-    color: #ffffff;
-    border: solid 3px #a0a0d0;
-    background-color: #606090;
-    font-variant: small-caps;
-    width: 100%;
-}
-
-.TITLE a {
+.title a {
     color: #ffffff;
     text-decoration: none;
 }
 
-.TITLE a:active {
+.title a:active {
     color: #ffffff;
     text-decoration: none;
 }
 
-.TITLE a:visited {
+.title a:visited {
     color: #ffffff;
     text-decoration: none;
 }
 
-H2
+
+h2
 {
-    COLOR: #ffffff ;
-    font-style: italic;
-    BACKGROUND-color: #7A99AE;
-    BORDER: solid 1px black;
-    PADDING: 1px
+    background-color: #7a99ae;
+    border: solid 1px black;
+    padding: 7px;
+    font-size: 200%;
 }
 
-TABLE.IMPORTANT
+h3
+{
+    background-color: #7a99ae;
+    border: solid 1px black;
+    padding: 6px;
+    font-size: 160%;
+}
+
+h4
+{
+    background-color: #7a99ae;
+    border: solid 1px black;
+    padding: 5px;
+    font-size: 130%;
+}
+
+h5
+{
+    background-color: #7a99ae;
+    border: solid 1px black;
+    padding: 4px;
+    font-size: 100%;
+}
+
+div.section {
+    margin-left: 10px;
+}
+
+div.section div.section {
+    margin-left: 20px;
+}
+
+div.section div.section div.section {
+    margin-left: 30px;
+}
+
+
+div.section div.section div.section div.section {
+    margin-left: 40px;
+}
+
+div.section div.section div.section div.section div.section {
+    margin-left: 50px;
+}
+
+table.important
 {
     font-style:italic;
     border: solid 2px #ff0000;
     width: 70%;
     margin-left: 15%;
 }
-TABLE.CAUTION
+table.caution
 {
     font-style:italic;
     border: ridge 2px #ffff00;
@@ -110,14 +137,14 @@ TABLE.CAUTION
     margin-left: 15%;
 }
 
-TABLE.NOTE
+table.note
 {
     font-style:italic;
     border: solid 1px #000000;
     width: 70%;
     margin-left: 15%;
 }
-TABLE.TIP
+table.tip
 {
     font-style:italic;
     border: solid 1px #000000;
@@ -125,7 +152,7 @@ TABLE.TIP
     margin-left: 15%;
 }
 
-TABLE.WARNING
+table.warning
 {
     font-style:italic;
     font-weight: bold;
@@ -135,95 +162,82 @@ TABLE.WARNING
     margin-left: 15%;
 }
 
-DIV.VARIABLELIST {
+div.variablelist {
     font-family: sans-serif;
     font-style: normal;
     font-weight: normal;
     padding-left: 20px;
 }
 
-.VARLISTENTRY {
+.varlistentry {
     font-weight: bold;
     margin-top: 10px;
-    COLOR: #ffffff ;
-    BACKGROUND-color: #a0a0d0;
-    BORDER: solid 1px #606090;
-    PADDING: 1px
+    color: #ffffff ;
+    background-color: #a0a0d0;
+    border: solid 1px #606090;
+    padding: 1px
 }
 
 
-P {
-    font-size: 12px;
-}
-
-/*/*/A{}
-BODY P {
-    font-size: x-small;
-    voice-family: "\"}\"";
-    voice-family: inherit;
-    font-size: small;
-}
-
-HTML>BODY P {
-    font-size: small;
+p {
+    font-size: 15px;
 }
 
 
-
-P.C2 {
-    COLOR: #ffffff ;
-    BACKGROUND-color: #a0a0d0;
-    BORDER: solid 1px #606090;
-    PADDING: 1px
+p.c2 {
+    color: #ffffff ;
+    background-color: #a0a0d0;
+    border: solid 1px #606090;
+    padding: 1px
 }
 
 
-DIV.NAVFOOTER {
+div.navfooter {
     color: #000000;
-    background-color: #EFEFF8;
+    background-color: #efeff8;
     padding: 5px;
     margin-top: 10px;
     width: 100%;
     border: thin solid #a0a0d0;
 }
 
-DIV.NUKEFOOTER {
+div.nukefooter {
     color: #000000;
-    background-color: #B0E0E6;
+    background-color: #b0e0e6;
     padding: 5px;
     margin-top: 10px;
     width: 100%;
     border: thin solid #a0a0d0;
 }
 
-DIV.NAVHEADER {
+div.navheader {
     color: #000000;
-    background-color: #EFEFF8;
+    background-color: #efeff8;
     padding: 5px;
     margin-bottom: 10px;
     width: 100%;
     border: thin solid #a0a0d0;
 }
 
-DIV.SECT1,DIV.SECT2,DIV.SECT3 {
+div.sect1,div.sect2,div.sect3 {
     margin-left: 20px;
 }
 
-DIV.EXAMPLE,DIV.TOC {
-    border: thin dotted #70AAE5;
+div.example,div.toc {
+    border: thin dotted #70aae5;
     padding-left: 10px;
     padding-right: 10px;
     color: #000000;
-    background-color: #EFF8F8;
+    background-color: #eff8f8;
 }
 
-DIV.TOC {
+div.toc {
     margin-left: 20px;
     margin-right: 20px;
     width: 95%;
 }
 
-UL  {
+ul  {
     list-style: url("images/tux-bullet.png") disc;
 }
 

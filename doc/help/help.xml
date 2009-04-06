@@ -13,48 +13,84 @@
     </info>
     <section id="system_elements">
         <title >Elementy systemu</title>
-        <section id="system_elements.user.new">
-            <title >Tworzenie nowego konta</title>
-            <para >
+
+        <section id="system_elements.user">
+            <title>
+                Konto użytkownika
+            </title>
+
+            <section id="system_elements.user.new">
+                <title >Tworzenie nowego konta</title>
+                <para >
                     Używanie serwisu wymaga posiadania konta, ekran ten pozwala na jego utworzenie poprzez podanie minimalnej liczby informacji: login, email i hasło.
-            </para>
-            <section id="system_elements.user.new.login">
-                <title>Pole tekstowe: "Login" </title>
-                <para >
-                    W tym polu wpisz login pod jakim będziesz identyfikowany w systemie,
-                    powinien składać się z minimalnie 3 znaków będących liczbami, literami lub znakami .-_@
                 </para>
-            </section>
-            <section id="system_elements.user.new.email">
-                <title>Pole tekstowe: "email" </title>
-                <para >
-                    Na podany adres email zostanie wysłany link weryfikujący.
-                </para>
+                <section id="system_elements.user.new.login">
+                    <title>Pole tekstowe: "Login" </title>
+                    <para >
+                        W tym polu wpisz login pod jakim będziesz identyfikowany w systemie,
+                        powinien składać się z minimalnie 3 znaków będących liczbami, literami lub znakami .-_@
+                    </para>
+                </section>
+                <section id="system_elements.user.new.email">
+                    <title>Pole tekstowe: "email" </title>
+                    <para >
+                        Na podany adres email zostanie wysłany link weryfikujący.
+                    </para>
+                </section>
+
+                <section id="system_elements.user.new.password">
+                    <title>Pole tekstowe: "hasło" </title>
+                    <para >
+                        Hasło musi się składać z minimum 6 znaków.
+                    </para>
+                </section>
+
+                <section id="system_elements.user.new.password_confirmation">
+                    <title>Pole tekstowe: "Potwierdź hasło" </title>
+                    <para >
+                        Potwierdzenie hasła jest wyagane, by ograniczyć pomyłki.
+                    </para>
+                </section>
             </section>
 
-            <section id="system_elements.user.new.password">
-                <title>Pole tekstowe: "hasło" </title>
-                <para >
-                    Hasło musi się składać z minimum 6 znaków.
-                </para>
-            </section>
-
-            <section id="system_elements.user.new.password_confirmation">
-                <title>Pole tekstowe: "Potwierdź hasło" </title>
-                <para >
-                    Potwierdzenie hasła jest wyagane, by ograniczyć pomyłki.
-                </para>
-            </section>
         </section>
-        
-        <section id="system_elements.login">
-            <title >Logowanie</title>
-            <section id="system_elements.login.remember_me">
-                <title>Pole wyboru: "Zapamiętaj mnie" </title>
-                <para >
-                Zaznaczenie opcji "Zapamiętaj mnie" sprawi, że system będzie Cię pamiętał nawet jak zamkniesz przeglądarkę
-                </para>
+
+        <section id="system_elements.session">
+            <title >
+                Dostęp do serwisu
+            </title>
+
+            <section id="system_elements.session.login">
+
+                <title >Logowanie</title>
+
+                <section id="system_elements.session.login.login">
+                    <title>Pole: "Login" </title>
+                    <para >
+                        Aby się zalogować podaj login, jakiego użyłeś przy tworzeniu
+                        konta użytkownika. Użyty login oraz hasło, zostało do Ciebie
+                        wysłane na adres e-mail, który podałeś przy rejestracji.
+                    </para>
+                </section>
+
+                <section id="system_elements.session.login.password">
+                    <title>Pole: "Hasło" </title>
+                    <para >
+                        Aby się zalogować podaj hasło, jakie wprowadziłeś przy tworzeniu
+                        konta użytkownika. Użyty login oraz hasło, zostało do Ciebie
+                        wysłane na adres e-mail, który podałeś przy rejestracji.
+                    </para>
+                </section>
+
+                <section id="system_elements.session.login.remember_me">
+                    <title>Pole wyboru: "Zapamiętaj mnie" </title>
+                    <para >
+                        Zaznaczenie opcji "Zapamiętaj mnie" sprawi, że system będzie Cię pamiętał nawet jak zamkniesz przeglądarkę
+                    </para>
+                </section>
+
             </section>
+
         </section>
 
         <section id="system_elements.categories">
@@ -534,14 +570,14 @@
                     </title>
                     <para>
                         Możesz wykonać różne akcje na kategoriach:
-                            <itemizedlist>
-                                <listitem>
+                        <itemizedlist>
+                            <listitem>
                                     Dodać podkategorię
-                                </listitem>
-                                <listitem>
+                            </listitem>
+                            <listitem>
                                     Przejść do edycji kategorii.
-                                </listitem>
-                                <listitem>
+                            </listitem>
+                            <listitem>
                                     Usunąć kategorię. - Usunięcie kategorii powoduje
                                     w pierwszej kolejności przeniesienie wszystkich elementów
                                     transakcji, które należały do tej kategorii do kategorii
@@ -550,8 +586,8 @@
                                     usuwana jest wybrana kategoria. Uwaga: ten proces może być
                                     długotrwały jeśli usuwana kategoria posiada wiele elementów
                                     transakcji lub wiele podkategorii.
-                                </listitem>
-                            </itemizedlist>
+                            </listitem>
+                        </itemizedlist>
                     </para>
 
                 </section>
