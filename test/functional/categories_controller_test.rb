@@ -284,6 +284,7 @@ class CategoriesControllerTest < ActionController::TestCase
       assert_select 'p#name', 1
       assert_select 'p#description', 1
       assert_select 'p#parent', 0
+      assert_select 'p#bank_account_number', 0
       assert_select 'p#loan', 0
       assert_select 'p#update', 1
     end
@@ -300,6 +301,7 @@ class CategoriesControllerTest < ActionController::TestCase
     assert_template 'edit'
     assert_select 'div#category-edit' do
       assert_select 'label#parent', 1
+      assert_select 'p#bank_account_number', 1
       assert_select 'p#loan', 0
       assert_select 'option[selected=selected]', @expense_category.name
     end
@@ -318,7 +320,6 @@ class CategoriesControllerTest < ActionController::TestCase
         assert_select 'p#is_loan', 1
         assert_select 'p#email', 1
         assert_select 'p#bankinfo', 1
-        assert_select 'p#bank_account_number', 1
       end
     end
   end

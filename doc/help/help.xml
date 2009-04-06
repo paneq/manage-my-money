@@ -13,55 +13,589 @@
     </info>
     <section id="system_elements">
         <title >Elementy systemu</title>
-        <section id="system_elements.user.new">
-            <title >Tworzenie nowego konta</title>
-            <para >
+
+        <section id="system_elements.user">
+            <title>
+                Konto użytkownika
+            </title>
+
+            <section id="system_elements.user.new">
+                <title >Tworzenie nowego konta</title>
+                <para >
                     Używanie serwisu wymaga posiadania konta, ekran ten pozwala na jego utworzenie poprzez podanie minimalnej liczby informacji: login, email i hasło.
-            </para>
-            <section id="system_elements.user.new.login">
-                <title>Pole tekstowe: "Login" </title>
-                <para >
-                    W tym polu wpisz login pod jakim będziesz identyfikowany w systemie,
-                    powinien składać się z minimalnie 3 znaków będących liczbami, literami lub znakami .-_@
                 </para>
+                <section id="system_elements.user.new.login">
+                    <title>Pole tekstowe: "Login" </title>
+                    <para >
+                        W tym polu wpisz login pod jakim będziesz identyfikowany w systemie,
+                        powinien składać się z minimalnie 3 znaków będących liczbami, literami lub znakami .-_@
+                    </para>
+                </section>
+                <section id="system_elements.user.new.email">
+                    <title>Pole tekstowe: "email" </title>
+                    <para >
+                        Na podany adres email zostanie wysłany link weryfikujący.
+                    </para>
+                </section>
+
+                <section id="system_elements.user.new.password">
+                    <title>Pole tekstowe: "hasło" </title>
+                    <para >
+                        Hasło musi się składać z minimum 6 znaków.
+                    </para>
+                </section>
+
+                <section id="system_elements.user.new.password_confirmation">
+                    <title>Pole tekstowe: "Potwierdź hasło" </title>
+                    <para >
+                        Potwierdzenie hasła jest wyagane, by ograniczyć pomyłki.
+                    </para>
+                </section>
             </section>
-            <section id="system_elements.user.new.email">
-                <title>Pole tekstowe: "email" </title>
-                <para >
-                    Na podany adres email zostanie wysłany link weryfikujący.
-                </para>
-            </section>
-
-            <section id="system_elements.user.new.password">
-                <title>Pole tekstowe: "hasło" </title>
-                <para >
-                    Hasło musi się składać z minimum 6 znaków.
-                </para>
-            </section>
-
-            <section id="system_elements.user.new.password_confirmation">
-                <title>Pole tekstowe: "Potwierdź hasło" </title>
-                <para >
-                    Potwierdzenie hasła jest wyagane, by ograniczyć pomyłki.
-                </para>
-            </section>
-
-
-
 
         </section>
 
+        <section id="system_elements.session">
+            <title >
+                Dostęp do serwisu
+            </title>
 
-        <section id="system_elements.login">
-            <title >Logowanie</title>
-            <section id="system_elements.login.remember_me">
-                <title>Pole wyboru: "Zapamiętaj mnie" </title>
-                <para >
-                Zaznaczenie opcji "Zapamiętaj mnie" sprawi, że system będzie Cię pamiętał nawet jak zamkniesz przeglądarkę
+            <section id="system_elements.session.login">
+
+                <title >Logowanie</title>
+
+                <section id="system_elements.session.login.login">
+                    <title>Pole: "Login" </title>
+                    <para >
+                        Aby się zalogować podaj login, jakiego użyłeś przy tworzeniu
+                        konta użytkownika. Użyty login oraz hasło, zostało do Ciebie
+                        wysłane na adres e-mail, który podałeś przy rejestracji.
+                    </para>
+                </section>
+
+                <section id="system_elements.session.login.password">
+                    <title>Pole: "Hasło" </title>
+                    <para >
+                        Aby się zalogować podaj hasło, jakie wprowadziłeś przy tworzeniu
+                        konta użytkownika. Użyty login oraz hasło, zostało do Ciebie
+                        wysłane na adres e-mail, który podałeś przy rejestracji.
+                    </para>
+                </section>
+
+                <section id="system_elements.session.login.remember_me">
+                    <title>Pole wyboru: "Zapamiętaj mnie" </title>
+                    <para >
+                        Zaznaczenie opcji "Zapamiętaj mnie" sprawi, że system będzie Cię pamiętał nawet jak zamkniesz przeglądarkę
+                    </para>
+                </section>
+
+            </section>
+
+        </section>
+
+        <section id="system_elements.categories">
+            <title>
+                Zarządzanie kategoriami
+            </title>
+            
+            <section id="system_elements.categories.basic_accounts">
+                <title>
+                    Konta podstawowe
+                </title>
+                <para>
+
+                    Wszystkie twoje kategorie, które posiadasz lub będziesz posiadać
+                    są w naszym systemie zgrupowane w pięć podstawowych kategorii. Są to:
+
+                    <itemizedlist>
+                        <listitem>
+                            Zasoby - Oznaczają rzeczy, które posiadasz.
+                        </listitem>
+                        <listitem>
+                            Zobowiązania - Oznaczają zobowiązania wobec Ciebie, lub Twoje
+                            zobowiązania wobec innych osób lub instytucji. Kategoria ta
+                            przechowuję zatem zarówno długi jak i wierzytelności.
+                        </listitem>
+                        <listitem>
+                            Przychody - Przychody zwiększają wartość (salda) twoich
+                            pozostałych kategorii.
+                        </listitem>
+                        <listitem>
+                            Wydatki - Zmniejszają wartość twoich kategorii.
+                        </listitem>
+                        <listitem>
+                            Bilanse otwarcia - Przechowują informację o tym jakie
+                            były salda kategorii w momencie, kiedy zacząłeś korzystać
+                            z systemu.
+                        </listitem>
+                    </itemizedlist>
+
+                    Wszystko co wydarzyło się w świecie twoich finansów powinno
+                    dać się sklasyfikować do jednej z tych grup. I tak np.: pieniądze
+                    na twoim koncie bankowym to są zasoby, twoja wypłata z firmy to
+                    przychód, a koszt wczorajszego obiadu to wydatek.
+
                 </para>
+            </section>
+
+            <section id="system_elements.categories.double_entry">
+                <title>
+                    Zasada podwójnego księgowania
+                </title>
+                <para>
+                    Zasada ta mówi, że każdej zmianie dokonanej w jednej kategorii,
+                    musi odpowiadać przeciwstawna zmiana dokonana w innej kategorii.
+                    Zasada ta wymusza na nas zapisanie informacji o przepływie naszych
+                    środków finansowych. Zawsze wiemy skąd i dokąd przeszły pieniądze.
+                    Przykładowo jeśli dostajesz pieniądze z firmy przelewem na konto bankowe
+                    będzie temu odpowiadać jeden zapis w kategorii Przychody:Moja-Firma
+                    i drugi zapis w kategorii Zasoby:Moje-konto-bankowe. Oba zapisy zostaną
+                    stworzone w ramach jednej transakcji. Więcej nt. transakcji możesz przeczytać
+                    w odpowiedniej części niniejszej pomocy.
+                </para>
+                
+                <para>
+                    Nazwa "podwójne księgowanie" czy też "reguła podwójnego zapisu" może
+                    być nieco myląca, gdyż jedna transakcja może dotyczyć większej
+                    ilość kont jednocześnie. Np. w sytuacji gdy jedne zakupy chciałbyś rodzielić
+                    między kilka różnych kategorii jak Wydatki:Jedzenie, Wydatki:Ubrania itp.
+                    Termin ten jednak jest historycznie bardzo zakorzeniony i raczej się
+                    to już nie zmieni.
+                </para>
+                
+                <para>
+                    http://pl.wikipedia.org/wiki/Regu%C5%82a_podw%C3%B3jnego_zapisu
+                </para>
+            </section>
+
+            <section id="system_elements.categories.new">
+                <title>
+                    Podkategorie - Tworzenie nowych kategorii.
+                </title>
+
+                <para>
+                    W zależności od swoich potrzeb możesz skorzystać z gotowych
+                    schematów dodawania kategorii lub użyć własnej wyobraźni i
+                    dodać takie, których nie przewidzieliśmy, lub które chcesz
+                    by znalazły się w innym miejscu w hierarchi.
+                </para>
+
+                <para>
+                    Jeśli jakaś kategoria jest podkategorią innej to oznacza to tylko, że
+                    stanowi jej uszczegółowienie. Im bardziej szczegółowo chcesz
+                    oglądać swoje sprawozdania tym bardziej zagłębione kategorie
+                    musisz utworzyć. Różne osoby potrzebują różnych danych i mają różne
+                    wymagania. Stwórz kategorie do takiego poziomu, do którego jest Ci to
+                    potrzebne. Pamiętaj, że im bardziej szczegółową strukturę utworzysz
+                    tym więcej czasu będziesz musiał spędzić rozdzielając zapisy pomiędzy
+                    większą liczbę możliwych do wybrania kategorii. Przykładowa, bardzo
+                    rozbudowana struktura kategorii mogłaby wyglądać następująco:
+                    <programlisting>
+|-- Zasoby
+|   |-- Fundusze
+|   |   |-- Fundusze zrównoważone
+|   |   |-- Fundusze obligacji
+|   |   |-- Fundusze akcji
+|   |   |-- Fundusze stabilnego wzrostu
+|   |   |-- Fundusze pieniężne
+|   |   |-- Fundusze zagraniczne
+|   |
+|   |-- Konta bankowe
+|   |   |-- Rachunki bieżące
+|   |   |-- Konta oszczędnościowe
+|   |
+|   |-- Gotówka
+|   |   |-- Portfel
+|   |   |-- 'Skarpeta'
+|   |
+|   |-- Konta wirtualne
+|   |   |-- Paypal
+|   |
+|   |-- Lokaty
+|
+|-- Wydatki
+|   |-- Opłaty bankowe
+|   |-- Samochód
+|   |   |-- Naprawy i części
+|   |   |-- Kosmetyka
+|   |   |-- Opłaty stałe
+|   |   |-- Wyposażenie
+|   |   |-- Paliwo
+|   |   |-- Parking
+|   |
+|   |-- Dobroczynność
+|   |-- Ubrania
+|   |   |-- Czyszczenie
+|   |   |-- Naprawa
+|   |   |-- Konserwacja
+|   |
+|   |-- Kultura i rozrywka
+|   |   |-- Koncerty
+|   |   |-- Kino
+|   |   |-- Teatr i opera
+|   |   |-- Sport
+|   |   |-- Wypoczynek
+|   |   |-- Podróże i noclegi
+|   |   |-- Imprezy i wydarzenia
+|   |   |-- Gry
+|   |   |-- Książki
+|   |   |-- Prasa
+|   |   |-- Muzyka
+|   |
+|   |-- Podarunki
+|   |-- Jedzenie
+|   |   |-- Art. spożywcze
+|   |   |   |-- Owoce
+|   |   |   |-- Warzywa
+|   |   |   |-- Mięso
+|   |   |   |-- Nabiał
+|   |   |   |   |-- Sery
+|   |   |   |   |-- Mleko
+|   |   |   |   |-- Jogurty
+|   |   |   |
+|   |   |   |-- Napoje
+|   |   |   |   |-- Woda
+|   |   |   |   |-- Gazowane
+|   |   |   |   |-- Soki
+|   |   |   |   |-- Kawa i herbata
+|   |   |   |   |-- Alkohol
+|   |   |   |   |   |-- Piwo
+|   |   |   |   |   |-- Wino
+|   |   |   |   |   |-- Wódka
+|   |   |   |   |   |-- Whisky
+|   |   |   |   |
+|   |   |   |
+|   |   |
+|   |   |-- Słodycze i przekąski
+|   |   |-- Fast food
+|   |   |-- Bary mleczne
+|   |   |-- Bary wegetariańskie
+|   |   |-- Restauracja, kawiarnia, pub
+|   |
+|   |-- Transport
+|   |   |-- Przejazdy pociągiem
+|   |   |-- Przeloty
+|   |   |-- Komunikacja wodna
+|   |   |-- Komunikacja autobusowa
+|   |   |-- Komunikacja miejska
+|   |   |-- Taxi
+|   |   |-- Samochód
+|   |   |   |-- Paliwo
+|   |   |   |-- Parking
+|   |   |
+|   |
+|   |-- Komputer
+|   |   |-- Części
+|   |   |-- Akcesoria
+|   |   |-- Oprogramowanie
+|   |   |-- Gry
+|   |   |-- Naprawy
+|   |
+|   |-- Edukacja
+|   |   |-- Czesne
+|   |   |-- Materiały naukowe
+|   |
+|   |-- Zdrowie
+|   |   |-- Leki
+|   |   |-- Profilaktyka
+|   |   |-- Lekarz
+|   |
+|   |-- Hobby
+|   |-- Usługi online
+|   |   |-- Hosting
+|   |   |-- Domeny
+|   |
+|   |-- Higiena osobista
+|   |-- Elektronika
+|   |   |-- AGD
+|   |   |-- RTV
+|   |
+|   |-- Dom i ogród
+|   |   |-- Środki czystości
+|   |   |-- AGD
+|   |   |-- RTV
+|   |   |-- Meble
+|   |   |-- Akcesoria
+|   |   |-- Ogród
+|   |   |-- Czynsz
+|   |   |-- Woda
+|   |   |-- Prąd
+|   |   |-- Gaz
+|   |
+|   |-- Opłaty
+|   |   |-- Telewizja
+|   |   |-- Internet
+|   |   |-- Czynsz
+|   |   |-- Woda
+|   |   |-- Prąd
+|   |   |-- Gaz
+|   |   |-- Ogrzewanie
+|   |   |-- Telefon
+|   |   |   |-- Abonament
+|   |   |   |-- Doładowania
+|   |   |
+|   |   |-- Alimenty
+|   |
+|   |-- Grzywny
+|   |-- Ubezpieczenie
+|   |   |-- Zdrowotne
+|   |   |-- Na życie
+|   |   |-- Samochód
+|   |   |-- Mieszkanie
+|   |   |-- Podróżne
+|   |   |-- Odpowiedzialnośc cywilna
+|   |   |-- NNW
+|   |
+|   |-- Podatki
+|   |-- Konkursy i loterie
+|   |-- Usługi
+|   |-- Składki członkowskie
+|   |-- Używki
+|   |   |-- Papierosy
+|   |   |-- Alkohol
+|   |
+|   |-- Zagubione
+|   |-- Umorzone długi
+|
+|-- Przychody
+|   |-- Zyski z inwestycji
+|   |-- Wynagrodzenie
+|   |-- Premia
+|   |-- Darowizny i spadki
+|   |-- Wygrane
+|   |-- Otrzymane prezenty
+|
+|-- Zobowiązania
+|   |-- Karta kredytowa
+|   |-- Urząd Skarbowy
+|   |-- Rodzina
+|   |-- Przyjaciele
+|   |-- Znajomi
+
+                    </programlisting>
+                    
+                </para>
+                
+                <section id="system_elements.categories.new.name">
+                    <title>
+                        Nazwa
+                    </title>
+                    <para>
+                        Nazwa pod jaką kategoria będzie widoczna we wszystkich miejscach w systemie.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.description">
+                    <title>
+                        Opis
+                    </title>
+                    <para>
+                        Opis, który będzie się pokazywał na stronie kategorii.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.parent">
+                    <title>
+                        Kategoria nadrzędna
+                    </title>
+                    <para>
+                        Kategoria nadrzędna dla nowo tworzonej kategorii.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.opening_balance">
+                    <title>
+                        Bilans otwarcia
+                    </title>
+                    <para>
+                        Wpisanie wartości dla bilansu otwarcia spowoduje, że taką
+                        wartość będzie mieć na początku saldo kategorii. Przykładowo:
+                        Jeśli aktualnie masz w portfelu 30 zł i tworzysz kategorię
+                        "Portfel" albo "Gotówka" będącą podkategorią zasobów, możesz
+                        tutaj wpisać tą wartość.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.bank_account_number">
+                    <title>
+                        Numer konta bankowego.
+                    </title>
+                    <para>
+                        Wpisz tutaj numer konta bankowego jeśli dana kategoria
+                        reprezentuje jakieś konto, lub gdy chcesz by transakcje
+                        importowane z banku domyślnie wskazywały na to konto,
+                        jeśli były ono dokonane względem konta bankowego o podanym
+                        numerze.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.system_category">
+                    <title>
+                        Kategoria systemowa
+                    </title>
+                    <para>
+                        Jeśli wybierzesz tutaj kategorię systemową, która jest
+                        najbardziej podobna do twojej kategorii, system będzie w stanie
+                        Ci lepiej podpowiadać kategorię, do których chcesz dokonać transakcji
+                        na podstawie wprowadzonego opisu. Jeśli nie ma kategorii systemowej
+                        odpowiedno szczegółowej, wybierz taką mniej szczegółową.
+                        Jeśli np. tworzysz kategorię Wydatki:Jedzenie:Owoce:Cytrusowe możesz
+                        wybrać kategorię systemową Wydatki:Jedzenie:Art. spożywcze:Owoce, która
+                        najlepiej oddaje podobieństwo między tymi kategoriami, których ty używasz,
+                        a tymi, które są polecane w systemie.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.loan_category">
+                    <title>
+                        Reprezentuje dłużnika lub wierzyciela?
+                    </title>
+                    <para>
+                        Jeśli tworzysz kategorie będącą podkategorią "Zobowiązań", wtedy
+                        możesz ustawić, że reprezentuje ona dłużnika lub wierzyciela.
+                        Będzie to oznaczać tylko tyle, że jeśli jest Ci dłużna lub
+                        ty jesteś jej dłużny pojawi się ona na liście po wybraniu
+                        z menu opcji "Dłużnicy" lub "Wierzyciele". Jeśli nie zaznaczysz
+                        tej opcji dana kategoria nie będzie wyświetlana na tych listach.
+                    </para>
+
+                    <para>
+                        Ta opcja ma na celu wskazanie przez Ciebie Zobowiązań i Wierzytelności,
+                        na które chcesz mieć szybki podgląd. Zwykle będziesz ją używał w stosunku
+                        do osób, z którymi się kontaktujesz elektronicznie w celu wysłania im
+                        przypomnienia o zadłużeniu u Ciebie lub osób, które Tobie często przypominają
+                        o jakiś zobowiązaniach np. współlokatorzy bądź współpracownicy.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.email">
+                    <title>
+                        E-mail
+                    </title>
+                    <para>
+                        Jeśli wybierzesz opcję wysłania przypomnień do swoich dłużników wtedy zostanie
+                        ono doręczone pod podany adres e-mail.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.bankinfo">
+                    <title>
+                        Informacje do przelewu.
+                    </title>
+                    <para>
+                        Jeśli wybierzesz z menu opcję "Wierzytelności" zobaczysz
+                        tą informację przy każdym ze swoich wierzycieli. Możesz wtedy
+                        użyć jej do zrobienia przelewu w banku i od razu oznaczyć dług,
+                        jako spłacony.
+                    </para>
+                </section>
+
+                <section id="system_elements.categories.new.save">
+                    <title>
+                        Utwórz
+                    </title>
+                    <para>
+                        Spowoduje utworzenie nowej kategorii zgodnie z wypełnionymi przez Ciebie danymi.
+                    </para>
+                </section>
+
+            </section>
+
+            <section id="system_elements.categories.edit">
+                <title>
+                    Edycja kategorii
+                </title>
+                <para>
+                    Tutaj możesz wyedytować wcześniej wprowadzone dane odnośnie
+                    jakiejś kategorii.
+                </para>
+                <section id="system_elements.categories.edit.parent">
+                    <title>
+                    Kategoria nadrzędna
+                    </title>
+                    <para>
+                        Możesz przenieść kategorię, żeby była dzieckiem innej
+                        kategorii, która jest tego samego typu i nie jest potomkiem
+                        aktualnie edytowanej kategorii.
+                    </para>
+                </section>
+                <section id="system_elements.categories.edit.save">
+                    <title>
+                    Zapisz zmiany
+                    </title>
+                    <para>
+                        Spowoduje zapisanie wprowadzonych w formularzu zmian.
+                    </para>
+                </section>
+            </section>
+
+            <section id="system_elements.categories.index">
+                <title>
+                    Twoje kategorie
+                </title>
+                <para>
+                    Możesz tutaj obejrzeć wszystkie swoje kategorie wraz z ich saldem
+                    na dzień dzisiejszy.
+                </para>
+
+                <section id="system_elements.categories.index.saldo">
+                    <title>
+                        Saldo
+                    </title>
+                    <para>
+                        Wyświetla saldo na dzień dzisiejszy uwzględniając tylko
+                        te elmenty transakcji, które miały wybraną daną kategorię.
+                        Wartość wyświetlanych danych zależy wybranego
+                        algorytmu przeliczania walut w ustawieniach użytkownika.
+                    </para>
+
+                </section>
+
+                <section id="system_elements.categories.index.subsaldo">
+                    <title>
+                        Saldo z podkategoriami.
+                    </title>
+                    <para>
+                        Wyświetla saldo na dzień dzisiejszy uwzględniając tylko
+                        te elmenty transakcji, które miały wybraną daną kategorię lub
+                        jej podkategorię. Wartość wyświetlanych danych zależy wybranego
+                        algorytmu przeliczania walut w ustawieniach użytkownika.
+                    </para>
+
+                </section>
+
+                <section id="system_elements.categories.index.actions">
+                    <title>
+                        Akcje.
+                    </title>
+                    <para>
+                        Możesz wykonać różne akcje na kategoriach:
+                        <itemizedlist>
+                            <listitem>
+                                    Dodać podkategorię
+                            </listitem>
+                            <listitem>
+                                    Przejść do edycji kategorii.
+                            </listitem>
+                            <listitem>
+                                    Usunąć kategorię. - Usunięcie kategorii powoduje
+                                    w pierwszej kolejności przeniesienie wszystkich elementów
+                                    transakcji, które należały do tej kategorii do kategorii
+                                    nadrzędnej. Wszystkie podkategorie usuwanej kategorii nie są
+                                    usuwane, lecz stają się dziećmi nadkategorii. Dopiero wówczas
+                                    usuwana jest wybrana kategoria. Uwaga: ten proces może być
+                                    długotrwały jeśli usuwana kategoria posiada wiele elementów
+                                    transakcji lub wiele podkategorii.
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+
+                </section>
+
             </section>
         </section>
     </section>
+
     <section id="faq">
         <title>Faq</title>
 

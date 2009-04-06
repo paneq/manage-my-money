@@ -1,16 +1,25 @@
 <h1>Logowanie</h1>
 
 <% form_tag session_path, :class=>'style2'  do -%>
-<p><%= label_tag 'login', 'Login' %>
-<%= text_field_tag 'login', @login %></p>
+  <p>
+    <%= label_tag 'login', 'Login' %>
+    <%= text_field_tag 'login', @login %>
+    <%= help_tag 'system_elements.session.login.login' %>
+  </p>
 
-<p><%= label_tag 'password', 'Hasło' %>
-<%= password_field_tag 'password', nil %></p>
+  <p>
+    <%= label_tag 'password', 'Hasło' %>
+    <%= password_field_tag 'password', nil %>
+    <%= help_tag 'system_elements.session.login.password' %>
+  </p>
 
 
-<p><%= check_box_tag 'remember_me', '1', @remember_me %> <%= label_tag 'remember_me', 'Zapamiętaj mnie', :class => 'inline' %><%= help_tag 'system_elements.login.remember_me' %><br />
-</p>
+  <p>
+    <%= check_box_tag 'remember_me', '1', @remember_me %>
+    <%= label_tag 'remember_me', 'Zapamiętaj mnie', :class => 'inline' %>
+    <%= help_tag 'system_elements.session.login.remember_me' %><br />
+  </p>
 
 
-<p><%= submit_tag 'Zaloguj' %></p>
+  <p><%= submit_tag 'Zaloguj' %></p>
 <% end -%>

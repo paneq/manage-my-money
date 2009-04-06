@@ -1,4 +1,4 @@
-<h1>Edycja kategorii</h1>
+<h1>Edycja kategorii <%= help_tag('system_elements.categories.edit') -%></h1>
 <div id="category-edit">
   <% form_for :category, @category, :url => category_path(@category), :html => {:method => :put, :class=>'style2'} do |form| %>
 
@@ -7,24 +7,36 @@
     <p id="name">
       <%= form.label :name, 'Nazwa'%>
       <%= form.text_field :name %>
+      <%= help_tag('system_elements.categories.new.name') -%>
     </p>
 
     <p id="description">
       <%= form.label :description, 'Opis'%>
       <%= form.text_field :description %>
+      <%= help_tag('system_elements.categories.new.description') -%>
     </p>
 
     <% if !@category.is_top? %>
       <p id="parent">
         <%= form.label :parent, 'Kategoria nadrzędna', :id => 'parent'%>
         <%= select_tag 'category[parent]',  options_for_select(nested_set_options(@top, @category) { |i| i.name }, @parent.id), :id => 'parent-select'%>
+        <%= help_tag('system_elements.categories.edit.parent') -%>
       </p>
     <% end %>
 
     <p id="system_category">
       <%= form.label :system_category, 'Kategoria systemowa'%>
       <%= collection_select :category, :system_category_id, @system_categories, :id, :name_with_indentation, {:include_blank => 'Brak'}, :id => 'system-category-select' %>
+      <%= help_tag('system_elements.categories.new.system_category') -%>
     </p>
+
+    <% if !@category.is_top? %>
+      <p id="bank_account_number">
+        <%= form.label :bank_account_number, 'Numer konta bankowego'%>
+        <%= form.text_field :bank_account_number %>
+        <%= help_tag('system_elements.categories.new.bank_account_number') -%>
+      </p>
+    <% end %>
 
     <% if @category.can_become_loan_category? %>
       <fieldset style="margin-top: 1em">
@@ -34,21 +46,19 @@
           <p id="is_loan">
             <%= form.check_box :loan_category %>
             <%= form.label :loan_category, 'Czy dana kategoria reprezentuje dłużnika lub wierzyciela?', :class => 'inline'%>
+            <%= help_tag('system_elements.categories.new.loan_category') -%>
           </p>
 
           <p id="email">
             <%= form.label :email, 'E-mail'%>
             <%= form.text_field :email %>
-          </p>
-
-          <p id="bank_account_number">
-            <%= form.label :bank_account_number, 'Numer konta bankowego'%>
-            <%= form.text_field :bank_account_number %>
+            <%= help_tag('system_elements.categories.new.email') -%>
           </p>
 
           <p id="bankinfo">
             <%= form.label :bankinfo, 'Informacje do przelewu'%>
             <%= form.text_area :bankinfo , :rows => '6' %>
+            <%= help_tag('system_elements.categories.new.bankinfo') -%>
           </p>
 
         </p>
@@ -77,9 +87,10 @@
       </div>
       &nbsp;
     </div>
-    
+
     <p id="update">
       <%= form.submit "Zapisz zmiany" %>
+      <%= help_tag('system_elements.categories.edit.save') -%>
     </p>
 
   <% end %>
