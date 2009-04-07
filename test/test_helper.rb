@@ -455,7 +455,7 @@ class ActiveSupport::TestCase
     if $selenium
       @selenium = $selenium
     else
-      @selenium = Selenium::SeleniumDriver.new("127.0.0.1", 4444, "*custom /usr/lib/firefox-3.0.7/firefox -p Selenium", "http://127.0.0.1:7000/", 10000);
+      @selenium = Selenium::SeleniumDriver.new("127.0.0.1", 4444, "*custom /usr/lib/firefox-3.0.8/firefox -p Selenium", "http://127.0.0.1:7000/", 10000);
       @selenium.start
     end
     
