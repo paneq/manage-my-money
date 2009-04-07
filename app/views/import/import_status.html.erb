@@ -2,8 +2,8 @@
 
 <% if @error %>
   <div id="parsing-error" style="margin:20px; font-size: 120%">
-    <p>Wystąpił błąd podczas analizowania podanego pliku: <b><%= @file_name %></b> </p>
-    <p>Treść błędu: <b><%= @error %></b></p>
+    <p>Wystąpił błąd podczas analizowania podanego pliku: <b><%= h @file_name %></b> </p>
+    <p>Treść błędu: <b><%= h @error %></b></p>
     <p>Sprawdź czy plik jest prawidłowy i spróbuj jeszcze raz. <br />
     Jeśli problem będzie się powtarzał, napisz do nas.</p>
     <p>
@@ -24,7 +24,7 @@ oraz połączono <%= @result[:categories][:merged] %> kategorii.</p>
       <ul id="category-error">
       <% @result[:categories][:errors].each do |err| %>
         <li>
-        <%= err %>
+        <%= h err %>
         </li>
       <% end %>
       </ul>
@@ -41,7 +41,7 @@ oraz połączono <%= @result[:categories][:merged] %> kategorii.</p>
       <ul id="transfer-error">
       <% @result[:transfers][:errors].each do |err| %>
         <li>
-        <%= err %>
+        <%= h err %>
         </li>
       <% end %>
       </ul>

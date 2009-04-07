@@ -18,11 +18,11 @@
     <% for fin_goal in @finished_goals %>
 
       <tr class="<%= cycle('', 'alt', :name => 'alt_style_td')%>">
-        <th scope="row" class="spec"><%=fin_goal.description%></th>
-        <td><%=fin_goal.category.name%></td>
-        <td><%=fin_goal.value_description%></td>
-        <td><span class="<%= (fin_goal.positive? ? "goal-positive":"goal-negative") %>"><%=fin_goal.actual_value_with_unit%></span></td>
-        <td><%=fin_goal.period_description%></td>
+        <th scope="row" class="spec"><%= h fin_goal.description%></th>
+        <td><%= h fin_goal.category.name%></td>
+        <td><%= h fin_goal.value_description%></td>
+        <td><span class="<%= (fin_goal.positive? ? "goal-positive":"goal-negative") %>"><%= h fin_goal.actual_value_with_unit%></span></td>
+        <td><%= h fin_goal.period_description%></td>
         <td>
           <%if fin_goal.is_cyclic %>
             <%= link_to 'Historia', :action => 'history_index', :id => fin_goal.id %>
@@ -40,11 +40,11 @@
 
     <% for goal in @actual_goals %>
       <tr class="<%= cycle('', 'alt', :name => 'alt_style_td')%>">
-        <th scope="row" class="spec"><%=goal.description%></th>
-        <td><%=goal.category.name%></td>
-        <td><%=goal.value_description%></td>
-        <td><span class="<%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%=goal.actual_value_with_unit%></span></td>
-        <td><%=goal.period_description%></td>
+        <th scope="row" class="spec"><%= h goal.description%></th>
+        <td><%= h goal.category.name%></td>
+        <td><%= h goal.value_description%></td>
+        <td><span class="<%= (goal.positive? ? "goal-positive":"goal-negative") %>"><%= h goal.actual_value_with_unit%></span></td>
+        <td><%= h goal.period_description%></td>
         <td>
           <%if goal.is_cyclic %>
             <%= link_to 'Historia', :action => 'history_index', :id => goal.id %>
