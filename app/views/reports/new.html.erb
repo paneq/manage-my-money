@@ -1,16 +1,17 @@
 <h1>Dodawanie nowego raportu</h1>
 
-<%= error_messages_for :report %>
+<div class="margin-left">
 
-Wybierz typ raportu: <br/>
-
+<p>
+Wybierz typ raportu:
+<p/>
 <%  [[@share_report, 'Raport udzialu podkategorii w kategorii (wykres)'],
      [@value_report, 'Raport pokazujacy wartosc kategorii w czasie (wykres)'],
      [@flow_report, 'Raport przeplywu srodkow (tekst)']].each do |report, desc| %>
   <%= radio_button_tag :report_type, report.type_str, @report.type_str == report.type_str, {:onclick => control_visibility_of_report_forms(report) } -%> <%= desc -%> <br/>
 <%  end %>
 
-<br/>
+</div>
 
 <div id="new-report-form">
 <%  [@share_report, @value_report, @flow_report].each do |report| %>
@@ -18,4 +19,5 @@ Wybierz typ raportu: <br/>
 <%  end %>
 </div>
 
-<%= link_to 'Anuluj', reports_url %>
+<%= link_to '<< Anuluj', reports_url, :class => 'margin-left' %>
+
