@@ -56,58 +56,95 @@
             <section id="system_elements.user.edit">
                 <title >Ustawienia konta</title>
                 <para >
-                    []
+                    Ekran 'Ustawienia konta' umożliwia zmianę danych podanych podczas rejestracji (poza loginem) oraz różnych opcji dotyczących przeliczania i wyświetlania.
+                    Dodatkowo istnieje możliwość usunięcia konta i wszelkich wprowadzonych do systemu danych.
                 </para>
 
                 <section id="system_elements.user.edit.account">
                     <title>Konto użytkownika</title>
                     <para >
-                        []
+                        Sekcja 'Konto użytkownika' umożliwia zmianę adresu email oraz hasła. Hasło musi być powtórzone dwa razy, poza tym obowiązują te same wymagania co przy rejestracji.
                     </para>
                 </section>
 
                 <section id="system_elements.user.edit.settings">
                     <title>Ustawienia systemu</title>
                     <para >
-                        []
+                        Sekcja 'Ustawienia systemu' pozwala na zmianę sposobu wyświetlania transferów czy też zmianę domyślej waluty.
                     </para>
                 </section>
 
                 <section id="system_elements.user.edit.set_transaction_amount_limit">
                     <title>Ograniczenie ilości wyświetlanych transakcji</title>
                     <para >
-                        []
+                        Ta opcja pozwala dostosować ilość domyślnie pokazywanych transferów w widoku kategorii.
+                        Do wyboru są cztery opcje:
+                        <itemizedlist>
+                            <listitem>
+                        Pokazuj określoną liczbę transakcji - wybranie tej opcji powoduje pokazanie dodatkowego pola umożliwiającego podanie liczby transakcji do wyświetlenia.
+                            </listitem>
+                            <listitem>
+                        Pokazuj transakcje z określonej liczby tygodni - wybranie tej opcji powoduje pokazanie dodatkowego pola umożliwiającego podanie liczby ostatnich tygodni z których zostaną wyświetlone transfery.
+                            </listitem>
+                            <listitem>
+                        Pokazuj transakcje z aktualnego miesiąca
+                            </listitem>
+                            <listitem>
+                        Pokazuj transakcje z aktualnego i poprzedniego miesiąca
+                            </listitem>
+                        </itemizedlist>
                     </para>
                 </section>
                 <section id="system_elements.user.edit.set_default_currency">
                     <title>Domyślna waluta</title>
                     <para >
-                        []
+                        Opcja pozwala wybrać domyślną walutę, używaną m.in. do obliczania salda kategorii w przypadku wybrania opcji przeliczania salda na jedną walutę.
                     </para>
                 </section>
                 <section id="system_elements.user.edit.set_include_transactions_from_subcategories">
                     <title>W kategoriach pokazuj transakcje z podkategorii</title>
                     <para >
-                        []
+                        Jeśli opcja zostanie zaznaczona, w widoku kategorii (oprócz transferów dotyczących bezpośrednio danej kategorii) zostaną wyświetlone transfery z wszystkich podkategorii.
                     </para>
                 </section>
                 <section id="system_elements.user.edit.set_invert_saldo_for_income">
                     <title>Odwróć wartość salda dla kategorii typu "Przychody"</title>
                     <para >
-                        []
+                        Zaznaczenie tej opcji spowoduje wyświetlanie salda we wszystkich kategoriach będących podkategorią Przychodów ze zmienionym znakiem. Ułatwia to np. porównywanie salda przychodów i wydatków na wykresach.
                     </para>
                 </section>
                 <section id="system_elements.user.edit.set_balance_calculating_algorithms">
                     <title>Algorytm przeliczania walut</title>
                     <para >
-                        []
+                        Umożliwia wybór jednego z pięciu sposobów pokazywania i przeliczania salda:
+                        <itemizedlist>
+                            <listitem>
+                        Pokazuj wartość salda dla wszystkich użytych walut - wybranie tej opcji powoduje pokazywanie salda bez przeliczania na domyślną walutę.
+                                <para>Pozostałe opcje powodują przeliczenie salda na domyślną walutę, dlatego wymagane są dla nich wprowadzone kursy między walutami.</para>
+                            </listitem>
+                            <listitem>
+                        Przelicz na domyślną walutę po kursie nabliższym aktualnej daty
+                            </listitem>
+                            <listitem>
+                        Przelicz na domyślną walutę po kursie najbliższym daty transakcji
+                            </listitem>
+                            <listitem>
+                        Przelicz na domyślną walutę po kursie najbliższym aktualnej daty ale tylko dla transakcji, które nie mają powiązanych ze sobą kursów
+                            </listitem>
+                            <listitem>
+                        Przelicz na domyślną walutę po kursie najbliższym daty transakcji ale tylko dla transakcji, które nie mają powiązanych ze sobą kursów 
+                            </listitem>
+                        </itemizedlist>
                     </para>
                 </section>
 
                 <section id="system_elements.user.edit.destroy">
                     <title>Usuwanie konta</title>
                     <para >
-                        []
+                        Umożliwia całkowite usunięcie konta z wszystkimi wprowadzonymi danymi (kategorie, transfery, raporty, itp).
+                        Dla bezpieczeństwa wymagane jest podanie hasła do systemu.
+                        Operacja usuwania może trwać nawet kilka minut, jeśli w systemie znajduję się dużo danych.
+                        Po zakończeniu usuwania użytkownik zostaje wylogowany i przekierowany na główną stronę serwisu.
                     </para>
                 </section>
 
@@ -659,15 +696,27 @@
             <title>
                 Raporty
             </title>
-            <para>
-                [Module description]
-            </para>
+            <!--<para>
+                Raporty umożliwiają wiele... TODO
+            </para> -->
             <section id="system_elements.reports.index">
                 <title>
                     Lista raportów
                 </title>
                 <para>
-                    Lista raportów zawiera raporty.
+                    Lista raportów zawiera wszystkie aktualnie dostępne w sytemie raporty oraz umożliwia przejście do ekranu tworzenia nowego raportu.
+                    Raporty pogrupowane są w dwie grupy:
+                    <itemizedlist>
+                        <listitem>
+                                    Raporty standardowe
+                        </listitem>
+                        <listitem>
+                                    Twoje raporty
+                        </listitem>
+                    </itemizedlist>
+                    W zależności od typu można na raporcie wykonać jedną z akcji: kopiuj, edycja, usuń, a kliknięcie w nazwę powoduje wyświetlenie samego raportu.
+
+
                 </para>
 
                 <section id="system_elements.reports.index.standard_reports">
@@ -675,7 +724,8 @@
                     Raporty standardowe
                     </title>
                     <para>
-                        [Field description]
+                        Lista grupuje raporty dostępne w systemie dla każdego użytkownika, są one nieedytowalne i nieusuwalne.
+                        Każdy raport standardowy można skopiować do raportów użytkownika używając opcji 'Kopiuj do moich raportow'. Dzięki temu można wprowadzać zmiany w jego ustawieniach, jeśli oryginalne okazały się niewystarczające.
                     </para>
                 </section>
 
@@ -684,7 +734,8 @@
                     Moje raporty
                     </title>
                     <para>
-                        [Field description]
+                        Lista zawiera wszystkie stworzone przez użytkownika raporty, lub raporty skopiowane z raportów standardowych.
+                        Każdy z raportów użytkownika można edytować lub usunąć.
                     </para>
                 </section>
 
@@ -693,7 +744,7 @@
                     Nowy raport
                     </title>
                     <para>
-                        [Field description]
+                        Powoduje przejście do ekranu tworzenia nowego raportu.
                     </para>
                 </section>
 
@@ -703,15 +754,26 @@
                 <title>
                     Nowy raport
                 </title>
-                <para>
+               <!-- <para>
                     [Action description]
-                </para>
+                </para> -->
                 <section id="system_elements.reports.new.report_type">
                     <title>
                         Wybierz typ raportu
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia wybór jednego z trzech podstawowych typów raportów:
+                        <itemizedlist>
+                            <listitem>
+                                    Raport udzialu podkategorii w kategorii - pozwala obejrzeć w postaci wykresu kołowego lub słupkowego jaki jest stosunek salda podkategorii wybranej kategorii do niej samej
+                            </listitem>
+                            <listitem>
+                                    Raport pokazujacy wartosc kategorii w czasie - pozwala obejrzeć w postaci wykresu słupkowego lub liniowego wartośc salda wybranych kategorii w różnych okresach
+                            </listitem>
+                            <listitem>
+                                    Raport przeplywu srodkow - w sposób tabelaryczny przedstawia przypływ środków z i do wybranych kategorii.
+                            </listitem>
+                        </itemizedlist>
                     </para>
                 </section>
                 <section id="system_elements.reports.new.relative_period">
@@ -719,7 +781,9 @@
                         Ustaw czas zawsze względem aktualnej daty 
                     </title>
                     <para>
-                        [Field description]
+                        Zaznaczenie opcji powoduje, że wybrany okres, dla którego ma byc obliczony raport, będzie zawsze
+                        ustalany na podstawie aktualnej daty (przed wyświetleniem raportu), niezaleznie od wartości pól 'Data początkowa' i 'Data końcowa'.
+                        Funkcjonalność ta wymaga wybrania okresu innego niż 'Wybrane z menu'.
                     </para>
                 </section>
 
@@ -728,7 +792,12 @@
                         Zagłębienie
                     </title>
                     <para>
-                        [Field description]
+                        Pozwala określić w przedziale od 1 do 6 jak głebokie podkategorie będą brane pod uwagę przy obliczaniu raportu.
+                        Jeśli kategoria znajduje się głebiej niż wynosi wartośc tego ustawienia jej saldo zostanie obliczone razem z najblizszą jej nadkategorią uwzględnioną na raporcie.
+                        Istnieje też możliwość nieograniczania zagłębienia kategorii dzięki opcji 'Maksymalne'
+                    </para>
+                    <para>
+                        Opcja dotyczy tylko raportów udziału.
                     </para>
                 </section>
 
@@ -737,7 +806,12 @@
                         Maksymalna ilość wyników
                     </title>
                     <para>
-                        [Field description]
+                        Pozwala określić ile największych wartości zostanie pokazanych na raporcie. Np jeśli opcja ta ma wartośc 2 a wybrano do raportu kategorię 'Jedzenie', która posiada cztery podkategorie 'Zdrowe', 'Niezdrowe', 'Picie', 'Restauracja'
+                        To wyświetlone zostaną dwie kategorie z największym saldem (np, 'Zdrowe', 'Restauracja'), saldo pozostałych dwóch podkategorii zostaną zsumowane i wyświetlone jako 'Pozostałe'.
+
+                    </para>
+                    <para>
+                        Opcja dotyczy tylko raportów udziału.
                     </para>
                 </section>
 
@@ -746,7 +820,10 @@
                         Kategoria
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia wybór jednej kategorii dla której sporządzony będzie raport.
+                    </para>
+                    <para>
+                        Opcja dotyczy tylko raportów udziału.
                     </para>
                 </section>
 
@@ -755,7 +832,32 @@
                         Przedziały czasu
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia podzielenie wybranego okresu na podokresy:
+                        <itemizedlist>
+                            <listitem>
+                                    Dzień
+                            </listitem>
+                            <listitem>
+                                    Tydzień
+                            </listitem>
+                            <listitem>
+                                    Miesiąc
+                            </listitem>
+                            <listitem>
+                                    Kwartał
+                            </listitem>
+                            <listitem>
+                                    Rok
+                            </listitem>
+                        </itemizedlist>
+
+                        Wartośc salda wybranych kategorii zostanie obliczona dla każdego okresu osobno i pokazana na raporcie.
+                        Wybranie opcji 'Bez podziału' powoduje obliczenie tylko jednej wartości dla każdej kategorii.
+
+
+                    </para>
+                    <para>
+                        Opcja dotyczy tylko raportów wartości.
                     </para>
                 </section>
 
@@ -764,7 +866,30 @@
                         Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia wybranie jednej lub więcej kategorii uwzględnionych na raporcie.
+
+                        W przypadku raportów 'wartości' dostępne są cztery mozliwości włączenia kategorii do raporu:
+
+                        <itemizedlist>
+                            <listitem>
+                                    Kategoria - na wykresie będzie uwzględnione saldo kategorii bez podkategorii
+                            </listitem>
+                            <listitem>
+                                    Kategoria (+ podkategorie) - na wykresie będzie uwzględnione saldo kategorii i podkategorii
+                            </listitem>
+                            <listitem>
+                                    Kategoria i podkategorie osobno - kategoria będzie uwzględniona na wykresie dwa razy, z uwzględnieniem podkategorii i bez
+                            </listitem>
+                            <listitem>
+                                    Nie wybrana - kategoria nie będzie uwzględniona na raporcie
+                            </listitem>
+                        </itemizedlist>
+
+                        W przypadku raportu przepływu dana kategoria może być tylko wybrana lub nie.
+
+                    </para>
+                    <para>
+                        Opcja dotyczy tylko raportów wartości i przepływu.
                     </para>
                 </section>
 
@@ -777,22 +902,23 @@
             <title>
                 Planowanie
             </title>
-            <para>
+            <!--<para>
                 [Module description]
-            </para>
+            </para> -->
             <section id="system_elements.goals.index">
                 <title>
                     Twoje cele
                 </title>
                 <para>
-                    [Action description]
+                    Lista zawiera stworzone przez użytkownika cele i umożlia porównanie zakładanej wartości z wartością aktualną.
+                    Dodatkowo umożliwia przejście do edycji danego planu, usunięcie lub zakończnie go.
                 </para>
                 <section id="system_elements.goals.index.finished">
                     <title>
                         Zakończone plany
                     </title>
                     <para>
-                        [Field description]
+                        W tej grupie znajdują się wszystkie plany, których data końca jest wcześniejsza niż dzisiejsza lub plany zakończone przedwcześnie przez użytkownika.
                     </para>
                 </section>
                 <section id="system_elements.goals.index.actual">
@@ -800,7 +926,7 @@
                         Aktualne plany
                     </title>
                     <para>
-                        [Field description]
+                        Lista zawiera aktualne plany użytkownika.
                     </para>
                 </section>
                 <section id="system_elements.goals.index.actual_value">
@@ -808,7 +934,18 @@
                         Aktualna wartość
                     </title>
                     <para>
-                        [Field description]
+                        Znajduje się tu aktualna wartość wykonania planu wraz z jej jednostką. Wartośc jest oznaczana kolorem:
+                        <itemizedlist>
+                            <listitem>
+                                    Czerwony - oznacza przekroczenie wartości zakładanej w przypadku planu 'nie więcej niż', lub nie osiągnięcie jej w przypadku planu typu 'co najmniej'
+                            </listitem>
+                            <listitem>
+                                    Zielony -  oznacza nie przekroczenie wartości zakładanej w przypadku planu 'nie więcej niż', lub osiągnięcie jej w przypadku planu typu 'co najmniej'
+                            </listitem>
+                        </itemizedlist>
+
+                        W przypadku planu określonego jako procent z nadkategorii obliczona wartość może nie mieć sensu, jeśli w danej nadkategorii znajdują się jednoczesnie podkategorie o saldzie ujemnym i dodatnim. Należy wziąć to pod uwage przy ustalaniu typu planu.
+
                     </para>
                 </section>
                 <section id="system_elements.goals.index.actions">
@@ -816,7 +953,22 @@
                         Akcje
                     </title>
                     <para>
-                        [Field description]
+                        Możliwe są cztery operacje
+                        <itemizedlist>
+                            <listitem>
+                                    Edytuj - przejście do edycji planu
+                            </listitem>
+                            <listitem>
+                                    Usuń - usunięcie planu
+                            </listitem>
+                            <listitem>
+                                    Zakończ - przeniesienie planu do 'Zakończonych planów'
+                            </listitem>
+                            <listitem>
+                                    Historia - pokazanie historii wykonania planu w przeszłości (dotyczy tylko planów cyklicznych)
+                            </listitem>
+
+                        </itemizedlist>
                     </para>
                 </section>
             </section>
@@ -824,15 +976,15 @@
                 <title>
                     Nowy cel
                 </title>
-                <para>
+                <!--<para>
                     [Action description]
-                </para>
+                </para>-->
                 <section id="system_elements.goals.new.category">
                     <title>
                         Kategoria
                     </title>
                     <para>
-                        [Field description]
+                        Kategoria, dla której będzie przypisany plan. Każda kategoria może mieć wiele przypisanych planów.
                     </para>
                 </section>
                 <section id="system_elements.goals.new.include_subcategories">
@@ -840,7 +992,7 @@
                         Dotyczy podkategorii
                     </title>
                     <para>
-                        [Field description]
+                        Jeśli zaznaczone, przy obliczaniu stanu wykonania planu będą uwzględnione salda podkategorii wybranej kategorii.
                     </para>
                 </section>
                 <section id="system_elements.goals.new.goal_spec">
@@ -848,7 +1000,10 @@
                         Mój cel to osiągnąć
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia dokładne zdefiniowanie celu do osiągnięcia:
+
+                        maksymalizację/minimalizację wyniku, jego wartość oraz jednostkę, którą może być wartość bezwzględna w walucie lub procent wartości salda (gdzie 100% to kategoria nadrzędna względem wybranej)
+
                     </para>
                 </section>
                 <section id="system_elements.goals.new.is_cyclic">
@@ -856,30 +1011,23 @@
                         Powtarzaj plan w następnych okresach
                     </title>
                     <para>
-                        [Field description]
+                        Zaznaczenie tej opcji powoduje, że kiedy skończy się okres wybrany dla danego planu system automatycznie utworzy kolejny plan o identycznych parametrach, ale na kolejny okres (na podstawie typu okresu).
+                        Dla planów utworzonych w ten sposób można śledzić historię wykonania, wyierając na liście planów opcje 'Historia'.
+
+                        Funkcjonalność ta wymaga wybrania okresu innego niż 'Wybrane z menu'.
+
                     </para>
                 </section>
             </section>
-
-            <section id="system_elements.goals.edit">
-                <title>
-                    Nowy cel
-                </title>
-                <para>
-                    [Action description]
-                </para>
-            </section>
-
-
         </section>
 
         <section id="system_elements.import">
             <title>
                 Import
             </title>
-            <para>
+           <!-- <para>
                 [Module description]
-            </para>
+            </para> -->
             <section id="system_elements.import.banks">
                 <title>
                     Z banków
@@ -895,7 +1043,12 @@
                     Z programu gnucash
                 </title>
                 <para>
-                    [Action description]
+                    Umożliwia import, tzn. skopiowanie danych o kategoriach, transakcjach do systemu z pliku wskazanego przez użytkownika, a pochodzącego z programu do zarządzania domowym budżetem (Gnucash).
+                    Import danych może trwać nawet do kilku minut jeśli plik zawiera wiele transakcji.
+                    Po zaimportowaniu wyświetla się podsumowanie przedstawiające liczbę zaimportowanych kategorii i transferów oraz ewentualne błędy, które wystąpiły podczas importowania.
+                </para>
+                <para>
+                    Podczas importowania zostaną zignorowane transakcje wielowalutowe (w obecnej wersji system nie potrafi importować takich transakcji)
                 </para>
 
             </section>
@@ -908,22 +1061,22 @@
             <title>
                 Inne elementy
             </title>
-            <para>
+            <!--<para>
                 [Module description]
-            </para>
+            </para>-->
             <section id="system_elements.other.date">
                 <title>
                     Daty
                 </title>
-                <para>
+                <!--<para>
                     [Action description]
-                </para>
+                </para>-->
                 <section id="system_elements.other.date.period">
                     <title>
                         Grupa pól: Wybierz okres
                     </title>
                     <para>
-                        [Field description]
+                        Umożliwia wybranie okresu, wśród zdefiniowanych okresów, lub podanie dokładnego okresu (opcja: 'Wybrane z menu')
                     </para>
                 </section>
             </section>
