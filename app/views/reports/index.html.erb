@@ -1,18 +1,18 @@
-<h1>Raporty</h1>
+<h1>Raporty <%= help_tag('system_elements.reports.index') -%></h1>
   <% light_shadow()do %>
 <table class ="nice-table long" id="report_index">
-  <tr><th colspan="2" id="std_reports_header">Raporty standardowe</th></tr>
+  <tr><th colspan="2" id="std_reports_header">Raporty standardowe<%= help_tag('system_elements.reports.index.standard_reports') -%></th></tr>
 <%  @system_reports.each do |report| %>
   <tr id="standard_report_<%= report.id %>"><td style="width:65%"><b><%= link_to h(report.name), report_url(report, :virtual=>true), obj_hash_id('show-report-virtual', report) %></b></td><td> <%= link_to "Kopiuj do moich raportow", url_for(:controller => 'reports', :action => 'copy_report', :id => report.id), obj_hash_id('copy-report', report) %></td></tr>
 <% end %>
 
 
-  <tr><th colspan="2" id="user_reports_header">Moje raporty</th></tr>
+  <tr><th colspan="2" id="user_reports_header">Moje raporty<%= help_tag('system_elements.reports.index.user_reports') -%></th></tr>
 <%  @user_reports.each do |report| %>
   <tr id="user_report_<%= report.id %>"><td style="width:65%"><%= link_to h(report.name), report_url(report), obj_hash_id('show-report', report) %> </td> <td> <%= link_to "Edytuj", edit_report_url(report), obj_hash_id('edit-report', report) %> | <%= link_to "Usun", report_path(report), {:method => :delete}.merge(obj_hash_id('delete', report)) %></td></tr>
 <% end %>
 </table>
-<b><%= link_to "Nowy raport", new_report_url, :style=>'font-size:1.2em; margin: 2px', :id => 'new_report' %> </b>
+<b><%= link_to "Nowy raport", new_report_url, :style=>'font-size:1.2em; margin: 2px', :id => 'new_report' %></b><%= help_tag('system_elements.reports.index.new') -%>
 
 <% end %>
 

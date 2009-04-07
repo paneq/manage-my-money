@@ -594,6 +594,99 @@
 
             </section>
         </section>
+
+        <section id="system_elements.reports">
+            <title>
+                Raporty
+            </title>
+            <para>
+                [Module description]
+            </para>
+            <section id="system_elements.reports.index">
+                <title>
+                    Lista raportów
+                </title>
+                <para>
+                    Lista raportów zawiera raporty.
+                </para>
+
+                <section id="system_elements.reports.index.standard_reports">
+                    <title>
+                    Raporty standardowe
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.index.user_reports">
+                    <title>
+                    Moje raporty
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.index.new">
+                    <title>
+                    Nowy raport
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+
+            </section>
+            <section id="system_elements.module.action">
+                <title>
+                    [Action name]
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.module.action.field">
+                    <title>
+                        [Field name]
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+            </section>
+        </section>
+
+
+
+        <!-- Module help template -->
+        <!--
+        <section id="system_elements.module">
+            <title>
+                [Module name]
+            </title>
+            <para>
+                [Module description]
+            </para>
+            <section id="system_elements.module.action">
+                <title>
+                    [Action name]
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.module.action.field">
+                    <title>
+                        [Field name]
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+            </section>
+        </section>
+        -->
+
     </section>
 
     <section id="faq">
