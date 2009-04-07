@@ -53,6 +53,66 @@
                 </section>
             </section>
 
+            <section id="system_elements.user.edit">
+                <title >Ustawienia konta</title>
+                <para >
+                    []
+                </para>
+
+                <section id="system_elements.user.edit.account">
+                    <title>Konto użytkownika</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+
+                <section id="system_elements.user.edit.settings">
+                    <title>Ustawienia systemu</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+
+                <section id="system_elements.user.edit.set_transaction_amount_limit">
+                    <title>Ograniczenie ilości wyświetlanych transakcji</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+                <section id="system_elements.user.edit.set_default_currency">
+                    <title>Domyślna waluta</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+                <section id="system_elements.user.edit.set_include_transactions_from_subcategories">
+                    <title>W kategoriach pokazuj transakcje z podkategorii</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+                <section id="system_elements.user.edit.set_invert_saldo_for_income">
+                    <title>Odwróć wartość salda dla kategorii typu "Przychody"</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+                <section id="system_elements.user.edit.set_balance_calculating_algorithms">
+                    <title>Algorytm przeliczania walut</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+
+                <section id="system_elements.user.edit.destroy">
+                    <title>Usuwanie konta</title>
+                    <para >
+                        []
+                    </para>
+                </section>
+
+            </section>
+
         </section>
 
         <section id="system_elements.session">
@@ -639,16 +699,228 @@
 
 
             </section>
-            <section id="system_elements.module.action">
+            <section id="system_elements.reports.new">
                 <title>
-                    [Action name]
+                    Nowy raport
                 </title>
                 <para>
                     [Action description]
                 </para>
-                <section id="system_elements.module.action.field">
+                <section id="system_elements.reports.new.report_type">
                     <title>
-                        [Field name]
+                        Wybierz typ raportu
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.reports.new.relative_period">
+                    <title>
+                        Ustaw czas zawsze względem aktualnej daty 
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.new.depth">
+                    <title>
+                        Zagłębienie
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.new.max_categories_count">
+                    <title>
+                        Maksymalna ilość wyników
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.new.category">
+                    <title>
+                        Kategoria
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.new.period_division">
+                    <title>
+                        Przedziały czasu
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+                <section id="system_elements.reports.new.categories_options">
+                    <title>
+                        Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+
+
+            </section>
+        </section>
+
+
+        <section id="system_elements.goals">
+            <title>
+                Planowanie
+            </title>
+            <para>
+                [Module description]
+            </para>
+            <section id="system_elements.goals.index">
+                <title>
+                    Twoje cele
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.goals.index.finished">
+                    <title>
+                        Zakończone plany
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.index.actual">
+                    <title>
+                        Aktualne plany
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.index.actual_value">
+                    <title>
+                        Aktualna wartość
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.index.actions">
+                    <title>
+                        Akcje
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+            </section>
+            <section id="system_elements.goals.new">
+                <title>
+                    Nowy cel
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.goals.new.category">
+                    <title>
+                        Kategoria
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.new.include_subcategories">
+                    <title>
+                        Dotyczy podkategorii
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.new.goal_spec">
+                    <title>
+                        Mój cel to osiągnąć
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+                <section id="system_elements.goals.new.is_cyclic">
+                    <title>
+                        Powtarzaj plan w następnych okresach
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+            </section>
+
+            <section id="system_elements.goals.edit">
+                <title>
+                    Nowy cel
+                </title>
+                <para>
+                    [Action description]
+                </para>
+            </section>
+
+
+        </section>
+
+        <section id="system_elements.import">
+            <title>
+                Import
+            </title>
+            <para>
+                [Module description]
+            </para>
+            <section id="system_elements.import.banks">
+                <title>
+                    Z banków
+                </title>
+                <para>
+                    [Action description]
+                </para>
+
+            </section>
+
+            <section id="system_elements.import.gnucash">
+                <title>
+                    Z programu gnucash
+                </title>
+                <para>
+                    [Action description]
+                </para>
+
+            </section>
+
+        </section>
+
+
+
+        <section id="system_elements.other">
+            <title>
+                Inne elementy
+            </title>
+            <para>
+                [Module description]
+            </para>
+            <section id="system_elements.other.date">
+                <title>
+                    Daty
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.other.date.period">
+                    <title>
+                        Grupa pól: Wybierz okres
                     </title>
                     <para>
                         [Field description]

@@ -1,14 +1,14 @@
 <div id="share_report_options" <%= 'style="display:none"' unless @report.share_report? %> > 
 <%  form_for report, :html=>{:class => 'style2'} do |form|%>
 <%= render :partial => 'common_fields', :locals => {:form => form,  :report_type => 'ShareReport', :report => report}  %>
+<p><%= form.label :category, 'Kategoria:' %><%= form.select :category_id, @current_user.categories.with_level.map { |cat| [cat.name_with_indentation , cat.id]} %><%= help_tag('system_elements.reports.new.category') -%></p>
 <p><%= form.label :report_view_type, "Wygląd raportu: " %><%= form.enum_select :report_view_type, :values => [:pie, :bar] %></p>
 <% depth_list = SequencedHash.new
   (1..6).each {|n| depth_list[n.to_s] = n}
   depth_list['Maksymalne'] = -1
 %>
-<p><%= form.label :depth, 'Zagłębienie:' %><%= form.select :depth, depth_list  %></p>
-<p><%= form.label :max_categories_values_count, 'Maksymalna ilość wyników:' %><%= form.text_field :max_categories_values_count  %></p>
-<p><%= form.label :category, 'Kategoria:' %><%= form.select :category_id, @current_user.categories.with_level.map { |cat| [cat.name_with_indentation , cat.id]} %></p>
+<p><%= form.label :depth, 'Zagłębienie:' %><%= form.select :depth, depth_list  %><%= help_tag('system_elements.reports.new.depth') -%></p>
+<p><%= form.label :max_categories_values_count, 'Maksymalna ilość wyników:' %><%= form.text_field :max_categories_values_count  %><%= help_tag('system_elements.reports.new.max_categories_count') -%></p>
 <br/>
 <br/>
 <%= form.submit 'Zapisz'%>

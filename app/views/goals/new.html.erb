@@ -1,5 +1,5 @@
-<h1>Nowy cel</h1>
+<h1>Nowy cel<%= help_tag('system_elements.goals.new') -%></h1>
 
 <%= render :partial => 'fields', :locals => {:goal => @goal} %>
 
-<%= link_to 'Wszystkie cele', goals_path %>
+<%= link_to '<< Wszystkie cele', goals_path, :class => 'margin-left' %>

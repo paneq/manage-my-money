@@ -1,11 +1,11 @@
-<h1>Import historii transakcji</h1>
+<h1>Import historii transakcji<%= help_tag('system_elements.import') -%></h1>
 
 <div >
 
   <% form_tag('/import/parse_bank', :multipart => true, :class => 'style2') do  %>
 
     <fieldset >
-      <legend>Import z banków</legend>
+      <legend>Import z banków<%= help_tag('system_elements.import.banks') -%></legend>
 
       <p>
         <label for="category_id" style="width:100%"> Wybierz kategorię do której chcesz zaimportować transfery</label>
@@ -23,7 +23,7 @@
 
   <% form_tag('/import/parse_gnucash', :multipart => true, :class => 'style2') do  %>
     <fieldset style="margin-top: 1em">
-      <legend>Import z GnuCash</legend>
+      <legend>Import z GnuCash<%= help_tag('system_elements.import.gnucash') -%></legend>
 
       <p>
         <label for="file" style="width:100%">Wybierz plik XML do wysłania</label> <%= file_field_tag "file", :class => 'inline'  %><br/>

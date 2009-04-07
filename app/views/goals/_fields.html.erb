@@ -1,12 +1,10 @@
 <% form_for(@goal, :html => {:class=>'style2'}) do |form| %>
-  <%= form.error_messages %>
-
-
+  <%= form.error_messages :message => nil %>
   <p><%= form.label :description, 'Nazwa: ' %><%= form.text_field :description  %></p>
-  <p><%= form.label :category, 'Dotyczy kategorii' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %></p>
-  <p><%= form.check_box :include_subcategories %><%= form.label 'include_subcategories', 'Dotyczy podkategorii ', :class => 'inline' %></p>
+  <p><%= form.label :category, 'Dotyczy kategorii' %><%= form.select :category_id, @current_user.categories.map { |cat| [cat.name_with_indentation , cat.id]} %><%= help_tag('system_elements.goals.new.category') -%></p>
+  <p><%= form.check_box :include_subcategories %><%= form.label 'include_subcategories', 'Dotyczy podkategorii ', :class => 'inline' %><%= help_tag('system_elements.goals.new.include_subcategories') -%></p>
   <fieldset>
-  <legend>Mój cel to osiągnąć</legend>
+  <legend>Mój cel to osiągnąć<%= help_tag('system_elements.goals.new.goal_spec') -%></legend>
   <p>
   <%= form.enum_select :goal_completion_condition, :html=>{:class => 'inline'} %>
   <%= form.text_field :value, :size => 5, :html=>{:class => 'inline'}  %>
@@ -20,7 +18,7 @@
   <legend>W okresie</legend>
 <%= date_period_fields("goal_day", @goal.period_start || Date.today, @goal.period_end || Date.today, @goal.period_type || 'selected', [:present, :future]) %>
 <br/>
-<p><%= form.check_box :is_cyclic %><%= form.label :is_cyclic, 'Powtarzaj plan w następnych okresach?', :class => 'inline' %>
+<p><%= form.check_box :is_cyclic %><%= form.label :is_cyclic, 'Powtarzaj plan w następnych okresach?', :class => 'inline' %><%= help_tag('system_elements.goals.new.is_cyclic') -%>
 </p>
 </fieldset>
 
