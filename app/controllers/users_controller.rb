@@ -62,12 +62,19 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if self.current_user.destroy
-      flash[:notice]  = "Twoje konto i wszystkie dane zostały usunięte"
-      redirect_to logout_path
+    user = User.authenticate(self.current_user.login, params[:password])
+    unless user
+      flash[:notice]  = "Hasło niepoprawne"
+      prepare_arrays_for_view
+      render :action => 'edit'
     else
-      flash[:notice]  = "Nie udało się usunąć konta, skontaktuj się z administratorem"
-      redirect_to('/')
+      if self.current_user.destroy
+        flash[:notice]  = "Twoje konto i wszystkie dane zostały usunięte"
+        redirect_to logout_path
+      else
+        flash[:notice]  = "Nie udało się usunąć konta, skontaktuj się z administratorem"
+        redirect_to('/')
+      end
     end
   end
 

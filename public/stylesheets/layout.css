@@ -808,6 +808,10 @@ div.auto_complete ul strong.highlight {
     margin-left: 20px;
 }
 
+.margin-right {
+    margin-right: 20px;
+}
+
 #container{
     padding-bottom: 10px;
 }

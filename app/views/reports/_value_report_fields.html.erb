@@ -3,7 +3,7 @@
 <%= render :partial => 'common_fields', :locals => {:form => form, :report_type => 'ValueReport', :report => report}  %>
 
 
-<p><%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %></p>
+<p><%= form.label :period_division, "Przedziały czasu: " %><%= form.enum_select :period_division %><%= help_tag('system_elements.reports.new.period_division') -%></p>
 <p><%= form.label :report_view_type, "Wyglad raportu: " %><%= form.enum_select :report_view_type, :values => [:bar, :linear] %></p>
 
 <br />
@@ -17,7 +17,7 @@
 
 <div id="categories-options">
   <fieldset style="margin-top: 1em" class="width73" >
-  <legend>Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania</legend>
+  <legend>Wybierz kategorie uwzględnione na raporcie i zakres ich pokazywania<%= help_tag('system_elements.reports.new.categories_options') -%></legend>
   <div class="scrollbar">
   <table id="category-tree" class="nice-table width long">
     <% collection = sort_category_report_options((@value_report || @report).category_report_options)#.sort{|a,b| a.category.cached_level <=> b.category.cached_level} %>

@@ -1,4 +1,4 @@
-<h1>Twoje plany</h1>
+<h1>Twoje plany <%= link_to '[Dodaj]', new_goal_path %><%= help_tag('system_elements.goals.index') -%></h1>
 
 <% light_shadow() do %>
   <table summary="Cele" class="nice-table">
@@ -6,14 +6,14 @@
       <th scope="col" class="nobg">Nazwa</th>
       <th scope="col">Dla kategorii</th>
       <th scope="col">Zakładana wartość</th>
-      <th scope="col">Aktualna wartość</th>
+      <th scope="col">Aktualna wartość<%= help_tag('system_elements.goals.index.actual_value') -%></th>
       <th scope="col">Na okres</th>
-      <th scope="col" colspan="4">Akcje</th>
+      <th scope="col" colspan="4">Akcje<%= help_tag('system_elements.goals.index.actions') -%></th>
     </tr>
 
 
     <tr>
-    <th scope="row" class="in-header" colspan="9"><%=finished_goals_header_text%></th></tr>
+    <th scope="row" class="in-header" colspan="9"><%=finished_goals_header_text%><%= help_tag('system_elements.goals.index.finished') -%></th></tr>
 
     <% for fin_goal in @finished_goals %>
 
@@ -34,7 +34,7 @@
 
 
     <tr>
-    <th scope="row" class="in-header nice-table" colspan="9"><%=actual_goals_header_text%></th></tr>
+    <th scope="row" class="in-header nice-table" colspan="9"><%=actual_goals_header_text%><%= help_tag('system_elements.goals.index.actual') -%></th></tr>
 
 
 
@@ -58,8 +58,3 @@
     <% end %>
   </table>
 <% end %>
-<br />
-
-<%= link_to 'Nowy plan', new_goal_path %>
-
-

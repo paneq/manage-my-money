@@ -61,8 +61,6 @@ module ApplicationHelper
 
 
 
-  # TODO: Using  result += may be a bad solution. At least it is not ellegant
-  # Is there another, better way to do it? Like using erb Templates ?
   def date_period_fields(name, start_day = Date.today, end_day = Date.today, selected = 'SELECTED', periods = nil)
 
     name_id = name.gsub(/_/, '-')
@@ -74,7 +72,7 @@ module ApplicationHelper
 
     result = ''
     result << <<-HTML
-      <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:</label>
+      <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:#{help_tag('system_elements.other.date.period')}</label>
     HTML
 
     result << select_tag(select_name, options_from_collection_for_select(select_periods, :first, :second, selected))

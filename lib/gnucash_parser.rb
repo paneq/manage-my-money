@@ -192,7 +192,7 @@ class GnucashParser
         end
 
         if multi_currency_transfer
-          result[:errors] << ["#{t.day} #{t.description}: transakcje wielowalutowe nie są obsługiwane"]
+          result[:errors] << ["#{t.day} #{t.description}: transakcje wielowalutowe nie są obsługiwane podczas importu"]
           next
         end
         

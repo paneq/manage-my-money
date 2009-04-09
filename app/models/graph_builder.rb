@@ -156,7 +156,7 @@ class GraphBuilder
     charts = {}
     pure_values = {}
     values_in_currencies.each do |cur, values|
-      title = "Raport '#{report.name}' udziału podkategorii w kategorii #{report.category.name} w okresie #{report.period_start} do #{report.period_end}<br/>dla waluty #{cur.long_symbol}"
+      title = "Raport '#{report.name}' udziału podkategorii w kategorii #{report.category.name} w okresie #{report.period_start} do #{report.period_end} dla waluty #{cur.long_symbol}"
       chart = OpenFlashChart::OpenFlashChart.new
       chart.bg_colour = 0xffffff
 

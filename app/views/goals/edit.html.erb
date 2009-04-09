@@ -1,5 +1,5 @@
-<h1>Edytowanie celu</h1>
+<h1>Edytowanie celu<%= help_tag('system_elements.goals.edit') -%></h1>
 
 <%= render :partial => 'fields', :locals => {:goal => @goal} %>
 
-<%= link_to 'Powrót', goals_path %>
+<%= link_to '<< Wszystkie cele', goals_path, :class => 'margin-left' %>
