@@ -315,8 +315,8 @@ class Category < ActiveRecord::Base
     end
   end
 
+  # maybe using ActiveSupport::Callbacks would work and be a better solution, maybe somehow...
   alias_method :original_destroy, :destroy
-
   def destroy
     #this could not be done with before_destroy because all children are destroyed first and then before_destroy is exectued
     # in other words before_destroy is exectued before destroying object but after destroying child objects...

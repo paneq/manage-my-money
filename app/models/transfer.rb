@@ -26,6 +26,7 @@ class Transfer < ActiveRecord::Base
   belongs_to :user
 
   has_many :currencies, :through => :transfer_items
+  has_many :categories, :through => :transfer_items
   has_many :conversions, :dependent => :destroy
   has_many :exchanges, :through => :conversions
 
@@ -56,6 +57,8 @@ class Transfer < ActiveRecord::Base
   
   validates_presence_of :day
   validates_presence_of :user
+  validates_user_id [:transfer_items, :category], [:conversions, :exchange]
+  validates_user_id [:transfer_items, :currency], :allow_nil => true
 
   define_index do
     #fields
