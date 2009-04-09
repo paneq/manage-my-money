@@ -117,7 +117,7 @@ class CurrencyTest < ActiveSupport::TestCase
     assert Currency.used_by(@rupert).include?(@euro)
     assert_equal [], Currency.used_by(@jarek)
 
-    transfers << save_simple_transfer(:user => @jarek, :currency => @euro)
+    transfers << save_simple_transfer(:user => @jarek, :currency => @euro, :income => @jarek.income, :outcome => @jarek.asset)
 
     assert Currency.used_by(@rupert).include?(@zloty)
     assert Currency.used_by(@rupert).include?(@euro)

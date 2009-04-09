@@ -527,7 +527,7 @@ class CategoryTest < ActiveSupport::TestCase
     category1 = @jarek.categories.top.of_type(:INCOME).first
     category2 = @jarek.categories.find_by_name "child1"
 
-    save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
+    save_simple_transfer(:user => @jarek, :income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 100)
 
     #prosty przykład - jeden przepływ jedna wartosć
     categories = [category1]
@@ -543,7 +543,7 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal 0, flow_values[:out].size
 
 
-    save_simple_transfer(:income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 44)
+    save_simple_transfer(:user => @jarek, :income => category1, :outcome => category2, :day => 1.day.ago, :currency => @zloty, :value => 44)
 
     categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
@@ -558,7 +558,7 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal 0, flow_values[:out].size
     
 
-    save_simple_transfer(:income => category2, :outcome => category1, :day => 1.day.ago, :currency => @zloty, :value => 33)
+    save_simple_transfer(:user => @jarek, :income => category2, :outcome => category1, :day => 1.day.ago, :currency => @zloty, :value => 33)
 
     categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
@@ -569,7 +569,7 @@ class CategoryTest < ActiveSupport::TestCase
 
 
     category3 = @jarek.categories.find_by_name "child2"
-    save_simple_transfer(:income => category1, :outcome => category3, :day => 1.day.ago, :currency => @zloty, :value => 66)
+    save_simple_transfer(:user => @jarek, :income => category1, :outcome => category3, :day => 1.day.ago, :currency => @zloty, :value => 66)
     categories = [category1]
     flow_values = Category.calculate_flow_values(categories, 1.year.ago.to_date, 1.year.from_now.to_date)
     assert_equal 2, flow_values[:in].size
@@ -773,9 +773,9 @@ class CategoryTest < ActiveSupport::TestCase
     rupert_girlfriend.save!
 
 
-    save_simple_transfer(:user => @jarek, :description => 'shoes', :income => jarek_expense)
+    save_simple_transfer(:user => @jarek, :description => 'shoes', :income => jarek_expense, :outcome => @jarek.asset)
     save_simple_transfer(:user => @rupert, :description => 'clothes', :income => rupert_expense)
-    save_simple_transfer(:user => @jarek, :description => 'danone', :income => jarek_yoghurt)
+    save_simple_transfer(:user => @jarek, :description => 'danone', :income => jarek_yoghurt, :outcome => @jarek.asset)
     save_simple_transfer(:user => @rupert, :description => 'wine', :income => rupert_alcohol)
     save_simple_transfer(:user => @rupert, :description => 'Lend for buying some wine', :income => rupert_girlfriend)
 

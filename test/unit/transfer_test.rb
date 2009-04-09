@@ -105,7 +105,8 @@ class TransferTest < ActiveSupport::TestCase
         :left_currency => @euro,
         :right_currency => @rupert.default_currency,
         :left_to_right => 4,
-        :right_to_left => 1
+        :right_to_left => 1,
+        :user => @rupert
       ))
     assert transfer.valid?
   end
@@ -121,9 +122,11 @@ class TransferTest < ActiveSupport::TestCase
         :left_currency => @euro,
         :right_currency => @rupert.default_currency,
         :left_to_right => 2,
-        :right_to_left => 1
+        :right_to_left => 1,
+        :user => @rupert
       ))
     assert !transfer.valid?
+    assert transfer.errors.on(:base)
   end
 
 
@@ -140,7 +143,8 @@ class TransferTest < ActiveSupport::TestCase
         :left_currency => @euro,
         :right_currency => @rupert.default_currency,
         :left_to_right => 1,
-        :right_to_left => 1
+        :right_to_left => 1,
+        :user => @rupert
       ))
     assert transfer.save
 

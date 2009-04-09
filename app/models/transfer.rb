@@ -57,8 +57,16 @@ class Transfer < ActiveRecord::Base
   
   validates_presence_of :day
   validates_presence_of :user
-  validates_user_id [:transfer_items, :category], [:conversions, :exchange]
-  validates_user_id [:transfer_items, :currency], :allow_nil => true
+  
+  validates_user_id(
+    [:transfer_items, :category],
+    [:conversions, :exchange])
+
+  validates_user_id(
+    [:transfer_items, :currency],
+    [:conversions, :exchange, :left_currency],
+    [:conversions, :exchange, :right_currency],
+    :allow_nil => true)
 
   define_index do
     #fields
