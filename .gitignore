@@ -16,4 +16,5 @@ db/sphinx/**/*.spi
 db/sphinx/**/*.spm
 db/sphinx/**/*.spp
 db/sphinx/**/*.spl
+vendor/plugins/validates_equality/test/debug.log
 *~
