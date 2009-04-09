@@ -1,16 +1,19 @@
 <tr id="transfer-item-<%=transfer_item_details.id-%>" class="<%= cycle('', 'alt') %>" >
 
-  <td class="padding-10-both" style="width: 130px;">
-    <a style=""><%= transfer_item_details.category.name -%>
-    </a>
+  <td class="padding-10-both" style="">
+    <%= transfer_item_details.description.blank? ? "<i>Brak opisu</i>" : h(transfer_item_details.description) -%>
   </td>
 
-  <td class="padding-10-both" style="">
-    <%= transfer_item_details.description -%>
+  <td class="padding-10-both" style="width: 200px;">
+    <%= link_to h(transfer_item_details.category.name), category_path(transfer_item_details.category) %>
   </td>
 
   <td class="padding-10-both number" style="width: 100px;">
-    <%= "#{transfer_item_details.value.to_s} #{transfer_item_details.currency.symbol}" -%>
+    <%= "#{transfer_item_details.value.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value > 0 -%>
   </td>
-  
+
+  <td class="padding-10-both number" style="width: 100px;">
+    <%= "#{transfer_item_details.value.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value < 0 -%>
+  </td>
+
 </tr>

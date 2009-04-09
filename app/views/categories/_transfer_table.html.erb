@@ -1,114 +1,95 @@
-<% current_category ||= nil #We do not know if this variable is given through :locals %>
 <% include_subcategories ||= nil #We do not know if this variable is given through :locals %>
-<% mode ||= :category %>
 
 <% light_shadow do %>
   <table id="transfers-table" class="nice-table long" style="border-collapse: collapse; border: solid 1px #AAD3DB">
     <tr>
-      <th width="100">
+      <th width="70">
         Data
       </th>
-      <th width="%">
-        Opis
+
+      <th>
+        Opis transferu
       </th>
-      <% if mode == :category %>
-        <th width="130">
-          Kategoria <br />
-          docelowa
-        </th>
-        <th width="75">
-          Wartość
-        </th>
-        <th width="75">
-          Saldo
-        </th>
-      <% end %>
+
+      <th>
+        Opis elementu
+      </th>
+
+      <th width="130">
+        Kategoria <br />
+        docelowa
+      </th>
+
+      <th width="75">
+        Przychód
+      </th>
+
+      <th width="75">
+        Rozchód
+      </th>
+
+      <th width="75">
+        Saldo
+      </th>
+
       <th width="20">
       </th>
     </tr>
 
-    <% # Start day
-  %>
     <tr class="<%= cycle('', 'alt') -%>" >
-      <td class="transfer-table-border">
-        <b><%= @start_day.to_date if @start_day %></b>
-      </td>
-      <td colspan="5">
+      <td class="transfer-table-border" colspan="8">
+        <b>
+          <%= @start_day.to_date if @start_day %>
+        </b>
       </td>
     </tr>
 
-    <% # List of transfers
-  %>
-    <% @transfers.each do |transfer_data| %>
-      <% transfer_data.merge!(:current_category => current_category) unless current_category.nil? %>
-      <% transfer_data.merge!(:include_subcategories => include_subcategories) unless include_subcategories.nil? %>
-      <% transfer_data.merge!(:mode => mode) %>
-      <%= render :partial => 'categories/transfer' , :locals=> transfer_data %>
+    <% @transfers.each_pair do |key, transfer_data| %>
+      <%= render :partial => 'categories/transfer' , :locals=> {:array => transfer_data, :include_subcategories => include_subcategories} %>
     <% end %>
 
-    <% # End day
-  %>
-    <tr class="<%= cycle('', 'alt') -%>" >
-      <td class="transfer-table-border">
+    <tr>
+      <td class="transfer-table-border" colspan="8">
         <b><%= @end_day.to_date if @start_day %></b>
-      </td>
-      <td colspan="5">
       </td>
     </tr>
 
     <% # Show saldo for perdio only when watching transfers for one category
   %>
-    <% if @value_between %>
-      <tr class="<%= cycle('line-even', 'line-odd') %>" >
-        <td colspan="4" class="value-for-time">
-          <b>Zmiana wartości kategorii w podanym okresie czasu:</b> &nbsp;&nbsp;
-          <% @value_between.each do |currency, value| %>
-            <span>
-              <%= "#{value} #{currency.symbol}" -%> <b>|</b>
-            </span>
-          <% end %>
+
+    <tr>
+
+      <td colspan="6" class="value-for-time" >
+        <b>Zmiana wartości kategorii: </b>
+      </td>
+
+      <td class="transfer-table-border number" colspan="2">
+        <%= print_saldo(@value_between, @current_user) %>
+      </td>
+
+    </tr>
+
+    <% if @end_day.to_date < Date.today %>
+      <tr>
+        <td class="dots middle transfer-table-border" >
+          .<br />
+          .<br />
+          .<br />
         </td>
-        <td colspan="2" />
+        <td colspan="5">
+        </td>
       </tr>
     <% end %>
 
-    <% # Show current saldo only when watching transfers for one category
-  %>
-    <% if @value %>
+    <tr>
+      <td class="transfer-table-border value-for-time" colspan="6">
+        <b>Aktualnie</b>
+      </td>
 
-      <% # Show dots if currently watching transfers from period that does not last until today
-    %>
-      <% if @end_day.to_date < Date.today %>
-        <tr class="<%= cycle('line-even', 'line-odd') %>" >
-          <td class="dots middle transfer-table-border" >
-            .<br />
-            .<br />
-            .<br />
-          </td>
-          <td colspan="5">
-          </td>
-        </tr>
-      <% end %>
+      <td class="transfer-table-border number" colspan="2">
+        <%= print_saldo(@value, @current_user) %>
+      </td>
+    </tr>
 
-      <% # Show current saldo
-    %>
-      <tr class="<%= cycle('line-even', 'line-odd') %>" >
-        <td class="transfer-table-border" >
-          <b>Aktualnie</b>
-        </td>
-        <td colspan="3" class="transfer-table-border" >
-        </td>
-        <td class="number transfer-table-border">
-          <% @value.each do |currency, value| %>
-            <div>
-              <b><%= "#{value} #{currency.symbol}" -%></b>
-            </div>
-          <% end %>
-        </td>
-        <td class="transfer-table-border">
-        </td>
-      </tr>
-
-    <% end %>
   </table>
 <% end %>

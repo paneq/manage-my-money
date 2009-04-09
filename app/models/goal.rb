@@ -99,7 +99,7 @@ class Goal < ActiveRecord::Base
     if goal_type == :percent
       category.percent_of_parent_category(period_start, period_end, include_subcategories)
     else
-      money = category.saldo_for_period_new(period_start, period_end, :show_all_currencies, include_subcategories)
+      money = category.saldo_for_period(period_start, period_end, :show_all_currencies, include_subcategories)
       money.value(currency)
     end
   end

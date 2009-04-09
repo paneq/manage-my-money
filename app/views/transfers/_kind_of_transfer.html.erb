@@ -1,7 +1,6 @@
 <% all = [['quick', 'Szybki'],['full', 'Pelny'],['search','Wyszukaj']] %>
-<% current_category ||= nil %>
 <% autocomplete_transfer_description ||= false %>
-<% all.shift if current_category.nil? %>
+<% all.shift if @category.nil? %>
 <% show = all.first %>
 
 <% options = shadow_options do |opt| %>
@@ -14,22 +13,21 @@
   <% tab_container(:transfer) do %>
 
     <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
-    <% if current_category %>
+    <% if @category %>
       <div id="show-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
-        <%= render :partial => 'transfers/quick_transfer', :locals => { :current_category => current_category } %>
+        <%= render :partial => 'transfers/quick_transfer' %>
       </div>
     <% end %>
 
     <div id="show-transfer-full" <%= style_display_if { show.first == 'full'} %> >
       <%= render :partial => 'transfers/form',
         :locals => {
-        :current_category => current_category ,
         :transfer => transfer,
       }  %>
     </div>
 
     <div id="show-transfer-search" <%= style_display_if { show.first == 'search'} %> >
-      <%= render :partial => 'transfers/search_transfers', :locals => { :current_category => current_category } %>
+      <%= render :partial => 'transfers/search_transfers' %>
     </div>
 
   <% end %>

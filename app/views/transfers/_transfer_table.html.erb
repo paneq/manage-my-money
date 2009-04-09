@@ -1,0 +1,35 @@
+<% light_shadow do %>
+  <table id="transfers-table" class="nice-table long" style="border-collapse: collapse; border: solid 1px #AAD3DB">
+    <tr>
+      <th width="80">
+        Data
+      </th>
+      <th>
+        Opis
+      </th>
+      <th width="20">
+      </th>
+    </tr>
+
+    <tr>
+      <td class="transfer-table-border" colspan="3">
+        <b>
+          <%= @start_day.to_date if @start_day %>
+        </b>
+      </td>
+    </tr>
+
+    <% @transfers.each do |transfer| %>
+      <%= render :partial => 'transfers/transfer' , :object => transfer %>
+    <% end %>
+
+    <tr >
+      <td class="transfer-table-border" colspan="3">
+        <b>
+          <%= @end_day.to_date if @start_day %>
+        </b>
+      </td>
+    </tr>
+
+  </table>
+<% end %>

@@ -1,18 +1,11 @@
 <% id = transfer_details.id %>
-<% columns_count = 3 %>
-<% current_category_id ||= nil %>
-<% include_subcategories ||= nil %>
-<% options = {:current_category => current_category_id, :include_subcategories => include_subcategories} %>
+<% options = {:current_category => @category, :include_subcategories => @include_subcategories} %>
 
-<table id="<%= "transfer-details-id-#{id}" -%>" class="nice-table">
-  <tr>
-    <td colspan="<%=columns_count-%>" id="flash-notice-<%=id-%>" >
-    </td>
-  </tr>
+<table id="<%= "transfer-details-id-#{id}" -%>" class="nice-table long" style="margin: 0px; padding: 0px;">
 
-  <% [:income, :outcome].each do |type| %>
+  <% [:outcome, :income].each do |type| %>
     <tr class="line-income-outcome" >
-      <th colspan="<%=columns_count-%>" class="in-header" style="background-color: #EBAB63;">
+      <th colspan="4" class="in-header" style="background-color: #EBAB63;">
         <%= I18n.t type, :scope => [:types] %>
       </th>
     </tr>
@@ -20,21 +13,24 @@
   <% end %>
 
   <tr class="line-income-outcome" >
-    <td colspan="<%=columns_count-%>">
-      <span class="what-to-do" >
-        <%= link_to_function('Ukryj szczegóły') do |page|
-          page["transfer-details-id-#{id}"].remove
-          page["show-details-button-#{id}"].show
-        end %>
-      </span>
-      |
-      <span class="what-to-do" >
-        <%= link_to_remote "Edytuj transfer", :url => {:action => :edit, :controller => :transfers, :id => id}.merge(options), :method => :get %>
-      </span>
-      |
-      <span>
-        <%= link_to_remote "Usuń", :url => {:action => :destroy, :controller => :transfers, :id => id}.merge(options), :method => :delete %>
-      </span>
+    <th colspan="4" class="in-header" style="background-color: #EBAB63;">
+      Akcje
+    </th>
+  </tr>
+
+  <tr class="line-income-outcome" >
+    <td colspan="4">
+      <%= link_to_function('Ukryj szczegóły') do |page|
+        page["transfer-details-id-#{id}"].remove
+        page["show-details-button-#{id}"].show
+      end %> |
+      <%= link_to_remote "Edytuj transfer", :url => {:action => :edit, :controller => :transfers, :id => id}.merge(options), :method => :get %> |
+      <%= link_to_remote "Usuń", :url => {:action => :destroy, :controller => :transfers, :id => id}.merge(options), :method => :delete %>
     </td>
+  </tr>
+
+  <tr class="line-income-outcome" >
+    <th colspan="4" class="in-header" style="background-color: #EBAB63;">
+    </th>
   </tr>
 </table>

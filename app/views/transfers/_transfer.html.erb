@@ -1,0 +1,18 @@
+<tr class="item-line <%= cycle('', 'alt') %>" >
+
+  <td class="day transfer-table-border"> <%= transfer.day -%> </td>
+  <td class="description transfer-table-border"> <%= h transfer.description -%> </td>
+
+  <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer.id -%>">
+    <span id="show-details-button-<%= transfer.id -%>">
+      <%= link_to_remote show_img(), {:url => transfer_path(:id => transfer), :method => :get} %>
+    </span>
+  </td>
+
+</tr>
+
+<tr>
+  <td colspan="3" id="transfer-in-category-<%= transfer.id -%>" style="padding: 0px; background-color: #DBDEDE;">
+    
+  </td>
+</tr>

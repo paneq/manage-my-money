@@ -1,6 +1,3 @@
-<% current_category ||= nil %>
-<% include_subcategories ||= nil %>
-
 <% controller ||= :transfers %>
 <% array = [transfer] %>
 <% if controller != :transfers %>
@@ -28,8 +25,8 @@
   <% end %>
 
   <%= hidden_field_tag :form_id, form_id %>
-  <%= hidden_field_tag :include_subcategories, include_subcategories if include_subcategories %>
-  <%= hidden_field_tag :current_category, current_category.id if current_category %>
+  <%= hidden_field_tag :include_subcategories, @include_subcategories if @include_subcategories %>
+  <%= hidden_field_tag :current_category, @category.id if @category %>
   <%= form.hidden_field :import_guid %>
 
   <div id="<%= form_id -%>errors">

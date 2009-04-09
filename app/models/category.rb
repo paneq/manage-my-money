@@ -267,7 +267,36 @@ class Category < ActiveRecord::Base
     self.opening_balance_currency= Currency.find_by_id(currency_id)
   end
 
+  def system_category_id=(sys_category_id)
+    unless sys_category_id.blank?
+      self.system_category=(SystemCategory.find(sys_category_id))
+    else
+      self.system_category= nil
+    end
+  end
 
+
+  def system_category_id
+    unless self.system_category.nil?
+      self.system_category.id
+    else
+      nil
+    end
+  end
+
+
+  def system_category=(sys_category)
+    if sys_category.nil?
+      self.system_category_ids=[]
+    else
+      self.system_category_ids= sys_category.self_and_ancestors.map{|a|a.id}
+    end
+  end
+
+
+  def system_category
+    self.system_categories.max_by(&:cached_level)
+  end
 
   def after_create
     if @opening_balance && @opening_balance_currency
@@ -368,89 +397,34 @@ class Category < ActiveRecord::Base
     return transfers
   end
 
-  
-  def saldo_new(algorithm=:default, with_subcategories = false)
-    Category.compute(algorithm, self.user, self, with_subcategories, nil)[self]
-  end
+  def self.autocomplete(text, user = nil)
 
-  
-  def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
-    Category.compute(algorithm, self.user, self, with_subcategories, day)[self]
-  end
-
-
-  def saldo_for_period_new(start_day, end_day, algorithm=:default, with_subcategories = false)
-    Category.compute(algorithm, self.user, self, with_subcategories, Range.new(start_day, end_day))[self]
-  end
-
-  
-  def saldo_for_period_with_subcategories(start_day, end_day, algorithm=:default)
-    Category.compute(algorithm, self.user, self, true, Range.new(start_day, end_day))[self]
-  end
-
-
-  def current_saldo(algorithm=:default)
-    saldo_at_end_of_day(Date.today, algorithm)
-  end
-
-
-  # Returns array of hashes{:transfer => tr, :money => Money object, :saldo => Money object}
-  def transfers_with_saldo_for_period_new(start_day, end_day, with_subcategories = false)
-    categories = get_categories_id(with_subcategories)
-    transfers = Transfer.send(:with_exclusive_scope) do
-      Transfer.find(
-        :all,
-        :select =>      'transfers.id, min(transfers.day) as mday, sum(transfer_items.value) as value_for_currency, transfer_items.currency_id as currency_id',
-        :joins =>       'INNER JOIN transfer_items on transfer_items.transfer_id = transfers.id',
-        :group =>       'transfers.id, transfer_items.currency_id',
-        :conditions =>  ['transfer_items.category_id IN (?) AND transfers.day >= ? AND transfers.day <= ?', categories, start_day, end_day],
-        :order =>       'mday, transfers.id, transfer_items.currency_id')
-    end
-    transfers_full = Transfer.find(:all, :conditions => ['id IN (?)', transfers.map{|t| t.id}])
-    array = []
-    attributes = %w(value_for_currency currency_id)
-    transfers.each do |t|
-      new = transfers_full.find{|f| f.id == t.id}
-      clonned = new.clone
-      clonned.id = new.id
-      attributes.each do |atr|
-        clonned.write_attribute(atr, t.read_attribute(atr))
-      end
-      array << clonned
-    end
-    transfers = array
-
-    list = []
-    last_transfer = nil
-    currencies = {}
-    for t in transfers do
-
-      value = t.read_attribute('value_for_currency').to_f.round(2)
-
-      if self.user.invert_saldo_for_income && self.category_type == :INCOME
-        value = -value
-      end
-
-      cur_id = t.read_attribute('currency_id')
-      currencies[cur_id] ||= Currency.find(cur_id)
-      currency = currencies[cur_id]
-
-      if last_transfer.nil? || last_transfer.id != t.id
-        list << {:transfer => t, :money => Money.new()}
-      end
-      list.last[:money].add!(value, currency)
-      last_transfer = t
-    end
-    
-    saldo = saldo_at_end_of_day(start_day - 1.day, :show_all_currencies, with_subcategories)
-    for t in list do
-      saldo.add!(t[:money])
-      t[:saldo] = saldo.clone
+    with_exclusive_scope do
+      found = find(:all,
+        :select => 'categories.id, count(*) as number', #, system_categories.parent_id
+        :joins => '
+        JOIN categories_system_categories   AS my_csc             ON    categories.id                 =   my_csc.category_id
+        JOIN categories_system_categories   AS other_csc          ON    my_csc.system_category_id     =   other_csc.system_category_id
+        JOIN categories                     AS other_categories   ON    other_csc.category_id         =   other_categories.id
+        JOIN transfer_items                                       ON    other_categories.id           =   transfer_items.category_id',
+        :conditions => ['other_categories.user_id != ? AND
+          categories.user_id = ? AND
+          transfer_items.id IN (?) AND
+          my_csc.system_category_id =
+          (SELECT MAX(inner_csc.system_category_id)
+          FROM categories_system_categories as inner_csc
+          WHERE inner_csc.category_id = categories.id)',
+          user.id,
+          user.id,
+          TransferItem.search_for_ids(text)],
+        :group => 'categories.id',
+        :order => 'number DESC',
+        :limit => 5
+      )
+      Category.find(:all, :conditions => {:id => found.map(&:id)})
     end
 
-    return list;
   end
-
 
   # Oblicza udzial wartosci podkategorii w kategorii
   #
@@ -515,7 +489,7 @@ class Category < ActiveRecord::Base
       :joins =>
         'INNER JOIN transfer_items ti2 on ti2.transfer_id = t.id
                        INNER JOIN categories on ti2.category_id = categories.id',
-                       
+
       :group =>       'categories.id,
                        ti2.currency_id,
                        ti2.value >= 0',
@@ -563,8 +537,8 @@ class Category < ActiveRecord::Base
 
     #TODO stop if top category
 
-    parent_value = self.parent.saldo_for_period_new(period_start, period_end, :default, true)
-    self_value = self.saldo_for_period_new(period_start, period_end, :default, include_subcategories)
+    parent_value = self.parent.saldo_for_period(period_start, period_end, :default, true)
+    self_value = self.saldo_for_period(period_start, period_end, :default, include_subcategories)
 
 
     currency = self.user.default_currency
@@ -581,67 +555,89 @@ class Category < ActiveRecord::Base
 
   end
 
-  def system_category_id=(sys_category_id)
-    unless sys_category_id.blank?
-      self.system_category=(SystemCategory.find(sys_category_id))
-    else
-      self.system_category= nil
-    end
+
+  # Returns money
+  def saldo(algorithm=:default, with_subcategories = false)
+    Category.compute(algorithm, self.user, self, with_subcategories, nil)[self]
   end
 
 
-  def system_category_id
-    unless self.system_category.nil?
-      self.system_category.id
-    else
-      nil
-    end
+  # Returns money
+  def saldo_at_end_of_day(day, algorithm=:default, with_subcategories = false)
+    Category.compute(algorithm, self.user, self, with_subcategories, day)[self]
   end
 
 
-  def system_category=(sys_category)
-    if sys_category.nil?
-      self.system_category_ids=[]
-    else
-      self.system_category_ids= sys_category.self_and_ancestors.map{|a|a.id}
-    end
+  # Returns money
+  def saldo_for_period(start_day, end_day, algorithm=:default, with_subcategories = false)
+    Category.compute(algorithm, self.user, self, with_subcategories, Range.new(start_day, end_day))[self]
+  end
+
+  # Returns money
+  def current_saldo(algorithm=:default)
+    saldo_at_end_of_day(Date.today, algorithm)
   end
 
 
-  def system_category
-    self.system_categories.max_by(&:cached_level)
-  end
+  # TODO: Returns ...
+  def transfers_with_saldo(algorithm, with_subcategories, range_or_number)
+    sql = transfers_with_saldo_sql(algorithm, with_subcategories, range_or_number)
 
-  def self.autocomplete(text, user = nil)
-
-    with_exclusive_scope do
-      found = find(:all,
-        :select => 'categories.id, count(*) as number', #, system_categories.parent_id
-        :joins => '
-        JOIN categories_system_categories   AS my_csc             ON    categories.id                 =   my_csc.category_id
-        JOIN categories_system_categories   AS other_csc          ON    my_csc.system_category_id     =   other_csc.system_category_id
-        JOIN categories                     AS other_categories   ON    other_csc.category_id         =   other_categories.id
-        JOIN transfer_items                                       ON    other_categories.id           =   transfer_items.category_id',
-        :conditions => ['other_categories.user_id != ? AND
-          categories.user_id = ? AND
-          transfer_items.id IN (?) AND
-          my_csc.system_category_id =
-          (SELECT MAX(inner_csc.system_category_id)
-          FROM categories_system_categories as inner_csc
-          WHERE inner_csc.category_id = categories.id)',
-          user.id,
-          user.id,
-          TransferItem.search_for_ids(text)],
-        :group => 'categories.id',
-        :order => 'number DESC',
-        :limit => 5
-      )
-      Category.find(:all, :conditions => {:id => found.map(&:id)})
+    quick_curr = {}
+    Currency.for_user(user).each do |cur|
+      quick_curr[cur.id.to_s] = cur
     end
 
+    compute_saldo = case range_or_number
+    when Range then self.saldo_at_end_of_day(range_or_number.end, algorithm, with_subcategories)
+    when Fixnum then self.saldo(algorithm, with_subcategories)
+    end
+    
+
+    result = Category.connection.execute(sql)
+    result = result.map do |row|
+      HashWithIndifferentAccess.new(row.to_hash)
+    end
+
+    saldo = compute_saldo.clone
+    prev = Money.new
+    result.reverse_each do |row|
+      row[:money] = Money.new quick_curr[row[:computed_currency]], Kernel.BigDecimal(row[:computed_value])
+      row[:saldo] = saldo.sub!(prev).clone
+      prev = row[:money]
+    end
+
+    result = result.group_by{|row| row[:transfers_id]}
+    return result, compute_saldo - (saldo - prev) # saldo is saldo after first transaction on the list, # (saldo - prev) is saldo after last hidden transaction
   end
 
-  ## 
+
+  def transfers_with_saldo_sql(algorithm, with_subcategories, range_or_number)
+    categories = get_categories_id(with_subcategories)
+    user = self.user
+    algorithm = user.multi_currency_balance_calculating_algorithm if algorithm == :default
+
+    sql = Category.build_top_select()
+    sql << Category.build_select()
+    sql << Category.build_computed_currency(algorithm, user)
+    sql << Category.build_computed_case(algorithm, user) << " AS computed_value,"
+    sql << Category.build_number
+    sql << Category.build_opposite_id
+    sql << "FROM categories"
+    sql << Category.build_transfer_items_join(false)
+    sql << Category.build_transfers_join
+    sql << Category.build_exchanges_join(algorithm, user)
+    sql << Category.build_conversion_join(algorithm, user)
+    sql << Category.build_inner_where(user, categories, range_or_number)
+    sql << Category.build_order()
+    sql << Category.build_limit_and_offset(user, categories, range_or_number)
+    sql << ") as subq"
+    sql << Category.build_categories_join
+    sql
+  end
+
+
+  ##
   # if array_or_range_or_date_or_nil is an array ex.: [[date1, date2], [date3, date4], ..] or [date1..date2, date3..date4 ...]
   #  result looks like this:
   #  {
@@ -650,7 +646,7 @@ class Category < ActiveRecord::Base
   #       date_table_or_range_2 => money_obj
   #       },
   #  category_obj_2 => {
-  #       date_table_or_range_1 => money_obj, 
+  #       date_table_or_range_1 => money_obj,
   #       date_table_or_range_2 => money_obj
   #       }
   #  }
@@ -662,6 +658,14 @@ class Category < ActiveRecord::Base
   #  category_obj_2 => money_obj
   # }
 
+  # array_or_range_or_date_or_nil can be:
+  # array of two element arrays of dates -> will group results by those periods, will look for transfers with day between first.first and last.last day in array
+  # array of date ranges -> will group results by those periods, will look for transfers with day between first.start and last.end day in array
+  # range -> will not group result, will look for transfers with day between range.start and range.end
+  # date -> will not group result, will look for transfers with day <= date
+  # array of transfers.id -> will not group result, will look for transfers with id in array
+  #
+  # include -> calculate includes transfers for subcategories
   def self.compute(algorithm, user, categories, include, array_or_range_or_date_or_nil = nil)
     categories = [categories] if categories.is_a?(Category)
     sql = compute_sql(algorithm, user, categories, include, array_or_range_or_date_or_nil)
@@ -724,7 +728,7 @@ class Category < ActiveRecord::Base
     SQL
     sql << build_my_group(array_or_range_or_date_or_nil)
     sql << build_computed_currency(algorithm, user)
-    sql << build_computed_value(algorithm, user)
+    sql << build_sum(algorithm, user)
     sql << "FROM categories"
     sql << build_subcategories_join if include
     sql << build_transfer_items_join(include)
@@ -739,9 +743,86 @@ class Category < ActiveRecord::Base
   #======================
   private
 
+
+  def self.build_top_select()
+    "SELECT subq.*, categories.name as categories_name FROM ("
+  end
+
+  def self.build_select()
+    "
+SELECT
+ transfers.day as transfers_day,
+ transfers.id as transfers_id,
+ transfers.description as transfers_description,
+ transfer_items.description as transfer_items_description,
+    "
+  end
+
+  def self.build_number()
+    "
+(SELECT
+   count(*)
+  FROM transfer_items as ti2
+  WHERE
+    transfer_items.transfer_id = ti2.transfer_id
+    AND
+    transfer_items.id != ti2.id
+    AND
+    sign(transfer_items.value) != sign(ti2.value)
+  ) as number,
+    "
+  end
+
+
+  def self.build_opposite_id()
+    "
+ (SELECT
+   min(category_id)
+  FROM transfer_items as ti2
+  WHERE
+    transfer_items.transfer_id = ti2.transfer_id
+    AND
+    transfer_items.id != ti2.id
+    AND
+    sign(transfer_items.value) != sign(ti2.value)
+  ) as opposite_id
+    "
+  end
+
+
+  def self.build_inner_where(user, categories_id, range_or_number)
+    where = "WHERE categories.user_id = #{user.id} AND categories.id IN (#{categories_id.join(', ')}) AND transfers.user_id = #{user.id} "
+    where << "AND transfers.day >= '#{range_or_number.begin}' AND transfers.day <= '#{range_or_number.end}' " if range_or_number.is_a?(Range)
+    where
+  end
+
+
+  def self.build_order()
+    "ORDER BY transfers.day, transfers.id, transfer_items.id"
+  end
+
+
+  def self.build_limit_and_offset(user, categories_id, range_or_number)
+    return " LIMIT #{range_or_number} OFFSET #{user.transfer_items.count(:conditions => {:category_id => categories_id}) - range_or_number}" if range_or_number.is_a?(Fixnum)
+    return ""
+  end
+
+
+  def self.build_categories_join
+    "
+LEFT JOIN
+ categories
+ON
+ number = 1 AND
+ opposite_id = categories.id;
+    "
+  end
+
+
   def self.build_my_group(param)
     return case param
     when Array then
+      return "0 as my_group,\n" if param.first.is_a?(Fixnum) || param.first.is_a?(Bignum) # array of transfers.id to look for. In other words: array of integers
 
       sql_case="CASE\n"
       param.each_with_index do |range_or_array, index|
@@ -770,8 +851,8 @@ class Category < ActiveRecord::Base
   end
 
 
-  def self.build_computed_value(algorithm, user)
-    case_text = case algorithm
+  def self.build_computed_case(algorithm, user)
+    return case algorithm
     when :show_all_currencies then
       if user.invert_saldo_for_income
         "CASE
@@ -784,7 +865,7 @@ END"
     when :calculate_with_newest_exchanges, :calculate_with_exchanges_closest_to_transaction
       value = user.invert_saldo_for_income ? "transfer_items.value * (-1) " : "transfer_items.value"
       currency_id = user.default_currency_id
-      "CASE 
+      "CASE
           WHEN categories.category_type_int != #{Category.CATEGORY_TYPES[:INCOME]} THEN
             transfer_items.value
           ELSE
@@ -824,8 +905,13 @@ END"
     else
       raise 'unimplemented yet'
     end
-    return "sum(#{case_text}) as computed_value\n"
+    
     #TODO: write test to check out that all alghoritms are implemented here...
+  end
+
+
+  def self.build_sum(algorithm, user)
+    return "sum(#{build_computed_case(algorithm, user)}) as computed_value\n"
   end
 
 
@@ -935,29 +1021,35 @@ LEFT JOIN exchanges as ex2 ON
 
   def self.build_where(user, categories, array_or_range_or_date_or_nil)
     sql = "WHERE categories.user_id = #{user.id} AND \n"
+    sql << "transfers.user_id = #{user.id} AND \n"
     sql << "categories.id IN ( #{ categories.map(&:id).join(', ') } )"
     sql << " AND \n" unless array_or_range_or_date_or_nil.nil?
     case array_or_range_or_date_or_nil
     when Array then
 
-      first_obj = array_or_range_or_date_or_nil.first
-      case first_obj
-      when Array
-        sql << "transfers.day >= '#{first_obj[0].to_date.to_s}' "
-      when Range
-        sql << "transfers.day >= '#{first_obj.begin.to_date.to_s}' "
+      if array_or_range_or_date_or_nil.first.is_a?(Fixnum) || array_or_range_or_date_or_nil.first.is_a?(Bignum) # array of transfers.id to look for. In other words: array of integers
+        sql << "transfers.id IN ( #{array_or_range_or_date_or_nil.join(", ")} )\n"
+      else
+
+        first_obj = array_or_range_or_date_or_nil.first
+        case first_obj
+        when Array
+          sql << "transfers.day >= '#{first_obj[0].to_date.to_s}' "
+        when Range
+          sql << "transfers.day >= '#{first_obj.begin.to_date.to_s}' "
+        end
+
+        sql << "AND "
+
+        last_obj = array_or_range_or_date_or_nil.last
+        case last_obj
+        when Array
+          sql << "transfers.day <= '#{last_obj[1].to_date.to_s}' \n"
+        when Range
+          sql << "transfers.day <= '#{last_obj.end.to_date.to_s}' \n"
+        end
+
       end
-
-      sql << "AND "
-
-      last_obj = array_or_range_or_date_or_nil.last
-      case last_obj
-      when Array
-        sql << "transfers.day <= '#{last_obj[1].to_date.to_s}' \n"
-      when Range
-        sql << "transfers.day <= '#{last_obj.end.to_date.to_s}' \n"
-      end
-
     when Range then
       sql << "transfers.day >= '#{array_or_range_or_date_or_nil.begin.to_date.to_s}' AND "
       sql << "transfers.day <= '#{array_or_range_or_date_or_nil.end.to_date.to_s}' \n"
@@ -984,11 +1076,8 @@ ORDER BY
   
 
   def get_categories_id(with_subcategories)
-    categories_to_sum = [self]
-    if with_subcategories
-      categories_to_sum += descendants
-    end
-    categories_to_sum.map! {|cat| cat.id}
+    categories_to_sum = with_subcategories ? self_and_descendants : [self]
+    categories_to_sum.map {|cat| cat.id}
   end
 
 
@@ -996,14 +1085,14 @@ ORDER BY
   def calculate_share_values(depth, period_start, period_end)
     result = []
     if self.leaf? || depth == 0
-      result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period_with_subcategories(period_start, period_end)}
+      result << {:category => self, :without_subcategories => false, :value => self.saldo_for_period(period_start, period_end, :default, true)}
     elsif depth == :all
-      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period(period_start, period_end)}
       self.children.each do |sub_category|
         result += sub_category.calculate_share_values(depth, period_start, period_end)
       end
     elsif depth > 0
-      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period_new(period_start, period_end)}
+      result << {:category => self, :without_subcategories => true, :value => self.saldo_for_period(period_start, period_end)}
       self.children.each do |sub_category|
         result += sub_category.calculate_share_values(depth-1, period_start, period_end)
       end

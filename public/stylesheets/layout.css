@@ -757,27 +757,36 @@ ul.submenu3 a:hover {
 }
 
 div.auto_complete {
-    width: 350px;
-    background: #fff ;
+  background: #fff;
+  position:absolute;
 }
+
+
 div.auto_complete ul {
-    border:1px solid #888 ;
-    margin:0;
-    padding:0;
-    width:100%;
-    list-style-type:none;
+  border:1px solid #888 ;
+  margin:0;
+  padding:0;
+  width:100%;
+  list-style-type:none;
 }
+
+
 div.auto_complete ul li {
-    margin:0;
-    padding:3px;
+  margin:0;
+  padding:3px;
+  list-style-type:none;
+  display:block;
+  cursor:pointer;
 }
+
 div.auto_complete ul li.selected {
-    background-color: #ffb ;
+  background-color: #ffb ;
 }
+
 div.auto_complete ul strong.highlight {
-    color: #800 ;
-    margin:0;
-    padding:0;
+  color: #800 ;
+  margin:0;
+  padding:0;
 }
 
 

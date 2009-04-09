@@ -11,7 +11,7 @@
         <% else %>
           <div style="float: left;">
             <% light_shadow(:bottom, :class=>'tab-container inactive-tab') do %>
-              <a href="#" onclick="Element.show('<%= show_name + '-' + element.to_s %>'); Element.hide('<%= show_name + '-' + active.to_s %>'); Element.show('<%= menu_name + '-' + element.to_s %>'); Element.hide('<%= menu_name + '-' + active.to_s %>');">
+              <a style="cursor: pointer;" onclick="Element.show('<%= show_name + '-' + element.to_s %>'); Element.hide('<%= show_name + '-' + active.to_s %>'); Element.show('<%= menu_name + '-' + element.to_s %>'); Element.hide('<%= menu_name + '-' + active.to_s %>');">
                 <%= text.to_s %>
               </a>
             <% end %>

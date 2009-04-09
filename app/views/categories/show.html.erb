@@ -1,21 +1,21 @@
 <div>
   <h1><%= h @category.name %> <a style="font-size:5px"><%= link_to '[Edycja]', edit_category_path(@category), obj_hash_id('edit-cat', @category)%></a></h1>
-  
+
   <% unless @category.description.blank? %>
     <p class="margin-left"><b>Opis:</b> <%= h @category.description %>
     </p>
   <% end %>
   <div id="transfer-table-div">
-	  <% unless @transfers.empty? %>
-	    <%= render :partial => 'transfer_table', :locals => { :current_category => @category} %>
-	  <% else %>
-	      <b>TODO: podaj ten okres. W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>
-	  <% end %>
+    <% unless @transfers.empty? %>
+      <%= render :partial => 'transfer_table' %>
+    <% else %>
+      <b>TODO: podaj ten okres. W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>
+    <% end %>
   </div>
   <br />
-  
+
   <div id="bottom-menu">
-    <%= render :partial => 'transfers/kind_of_transfer', :locals => { :current_category => @category, :transfer => @transfer, :autocomplete_transfer_description => true }  %>
+    <%= render :partial => 'transfers/kind_of_transfer', :locals => { :transfer => @transfer }  %>
   </div>
 
 </div>

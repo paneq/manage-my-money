@@ -122,21 +122,25 @@ class TransfersControllerTest < ActionController::TestCase
 
   def test_search
     times = [:LAST_3_MONTHS, :LAST_4_WEEKS, :LAST_7_DAYS, :THIS_DAY] #from oldest to newest
+    times.shift
+    times.shift
     transfers = []
 
     #create one transfer per one time period listed in times array
     times.each do |time|
       t = Transfer.new(:day=> Date.calculate(time).begin, :user => @rupert, :description=> time.to_s)
-      t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :income, :category => @rupert.categories.first, :currency => @rupert.visible_currencies.first)
-      t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :outcome, :category => @rupert.categories.second, :currency => @rupert.visible_currencies.first)
+      t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :income, :category => @rupert.categories.first, :currency => @euro)
+      t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :outcome, :category => @rupert.categories.second, :currency => @euro)
       t.save!
       transfers << t
     end
     
     times.each_with_index do |time, index|
+      @controller = TransfersController.new # why the fuck do i have to write this line ?
+      log_rupert
       xhr :post, :search, :transfer_day_period => time.to_s
       assert_response :success
-      assert_transfer_table transfers[index..transfers.size]
+      assert_transfer_table transfers[index..transfers.size], :way => :xhr
     end
 
     today = Date.today
@@ -153,50 +157,52 @@ class TransfersControllerTest < ActionController::TestCase
   def test_quick_transfer
     today = Date.today
     transfers = []
-    @asset = @rupert.categories.top.of_type(:ASSET).first
+    @asset = @rupert.asset
     save_simple_transfer(:description => 'future', :day => today.end_of_month.tomorrow, :income => @asset)
-    transfers << save_simple_transfer(:description => 'this_month', :day => today, :income => @asset)
+    transfers << save_simple_transfer(:description => 'this_month', :day => today, :income => @asset, :outcome => @asset)
     save_simple_transfer(:description => 'past', :day => today.beginning_of_month.yesterday, :income => @asset)
 
     xhr :post, :quick_transfer,
       :current_category => @asset.id.to_s,
       :data => {
-      'description' => 'test',
+      'description' => 'send test',
       'day(1i)' => today.year.to_s,
       'day(2i)' => today.month.to_s,
       'day(3i)' => today.day.to_s,
       'category_id' => @asset.id.to_s,
       'currency_id' => @rupert.default_currency.id.to_s,
       'value' => '123.45',
-      'from_category_id' => @rupert.categories.top.of_type(:INCOME).first.id.to_s,
+      'from_category_id' => @rupert.income.id.to_s,
     }
+    transfers << @rupert.transfers(true).find_by_description('send test')
     assert_response :success
-    transfers << @rupert.transfers(true).find_by_description('test')
-    assert_transfer_table transfers
+    assert_transfer_table transfers, :category => @asset
   end
 
 
   private
 
   #checks if transfer table contains all transfers given as first paramters and if they are in proper order
-  def assert_transfer_table(transfers, options = {:way => :xhr})
+  def assert_transfer_table(transfers, options = {})
+    options = {:way => :xhr, :category => nil}.merge(options)
     method = options[:way] == :xhr ? 'assert_select_rjs' : 'assert_select'
     params = options[:way] == :xhr ? [:replace_html, 'transfer-table-div'] : 'div#transfer-table-div'
 
     send(method, *params) do
+      unless options[:category]
+        assert_select 'tr[class^=item-line]', transfers.size #check that all elements occures
 
-      assert_select 'tr[id^=transfer-in-category-line]', transfers.size #check that all elements occures
-
-      transfers.each_with_index do |transfer, index|
-        assert_select "[id=transfer-in-category-#{transfer.id}]"
-
-        [[1, :day], [2, :description]].each do |nr, method|
-          #checks if elements has proper content
-          assert_select "tr#transfer-in-category-line-#{transfer.id} td:nth-child(#{nr})", Regexp.new(transfer.send(method).to_s)
+        transfers.each_with_index do |transfer, index|
+          # checks if transfers was rendered in valid order by checking its description
+          assert_select "table#transfers-table tr:nth-child(#{index*2 + 1 + 2})" do
+            assert_select "td[class^=day]", Regexp.new(transfer.day.to_s)
+            assert_select "td[class^=description]", Regexp.new(transfer.description.to_s)
+          end
         end
 
-        # checks if transfers was rendered in valid order by checking its description
-        assert_select "table#transfers-table tr:nth-child(#{index*2 + 1 + 2})", Regexp.new(transfer.description) # index*2 becuase there are 2 tr per each transfer. + 1 becuase assert counts childes from 1 not from 0. +2 becuase of first 2 rows.
+      else
+        size = transfers.map(&:transfer_items).flatten.select{|ti| ti.category_id == options[:category].id}.size
+        assert_select 'tr[class^=item-line]', size
       end
     end
 

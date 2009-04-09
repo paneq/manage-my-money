@@ -13,13 +13,13 @@ class CategoriesController < HistoryController
 
   def show
     create_empty_transfer
+    set_default_variables
     set_variables_for_rendering_transfer_table
   end
 
 
   def search
     @range = get_period_range('transfer_day')
-    @include_subcategories = !!params[:include_subcategories]
     respond_to do |format|
       format.html {}
       format.js {render_transfer_table}
@@ -118,6 +118,20 @@ class CategoriesController < HistoryController
     redirect_to :action => :index , :controller => :categories
   end
 
+  def set_default_variables
+    case @current_user.transaction_amount_limit_type
+    when :transaction_count then
+      @number = @current_user.transaction_amount_limit_value
+    when :week_count then
+      @range = Range.new( (@current_user.transaction_amount_limit_value - 1).weeks.ago.to_date.beginning_of_week, Date.today.end_of_week )
+    when :this_month then
+      @range = Date.calculate(:THIS_MONTH)
+    when :this_and_last_month then
+      @range = Range.new Date.calculate_start(:LAST_MONTH), Date.calculate_end(:THIS_MONTH)
+    else
+      raise 'Unkown type of user transaction limit'
+    end
+  end
 
   def format_openinig_balance
     if params[:category][:opening_balance]

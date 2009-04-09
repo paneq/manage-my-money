@@ -11,8 +11,8 @@ class CategoryTest < ActiveSupport::TestCase
   
   def test_zero_saldo_at_start
     @rupert.categories.each do |category|
-      assert category.saldo_new.is_empty?, "Category should have saldo = 0 at the begining"
-      assert_equal 0, category.saldo_new.currencies.size, "At the beggining saldo does not contains any currency"
+      assert category.saldo.is_empty?, "Category should have saldo = 0 at the begining"
+      assert_equal 0, category.saldo.currencies.size, "At the beggining saldo does not contains any currency"
     end
   end
 
@@ -23,25 +23,25 @@ class CategoryTest < ActiveSupport::TestCase
     
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
     
-    assert_equal(100, income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
-    assert_equal(-100, outcome_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(100, income_category.saldo.value(@zloty), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(-100, outcome_category.saldo.value(@zloty), "Saldo should change of the same value as transfer item for given category")
     
-    assert income_category.saldo_new.currencies.include?(@zloty)
-    assert outcome_category.saldo_new.currencies.include?(@zloty)
+    assert income_category.saldo.currencies.include?(@zloty)
+    assert outcome_category.saldo.currencies.include?(@zloty)
     
-    assert_equal 1, income_category.saldo_new.currencies.size
-    assert_equal 1, outcome_category.saldo_new.currencies.size
+    assert_equal 1, income_category.saldo.currencies.size
+    assert_equal 1, outcome_category.saldo.currencies.size
     
     income_category = @rupert.categories[1]
     outcome_category = @rupert.categories[2]
     
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 1.day.from_now, :currency => @zloty, :value => 200)
     
-    assert_equal(-100 + 200, income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
-    assert_equal(-200, outcome_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(-100 + 200, income_category.saldo.value(@zloty), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(-200, outcome_category.saldo.value(@zloty), "Saldo should change of the same value as transfer item for given category")
     
-    assert_equal 1, income_category.saldo_new.currencies.size
-    assert_equal 1, outcome_category.saldo_new.currencies.size
+    assert_equal 1, income_category.saldo.currencies.size
+    assert_equal 1, outcome_category.saldo.currencies.size
   end
 
 
@@ -53,12 +53,12 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:income => income_category, :outcome => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
     save_simple_transfer(:income => outcome_income_category, :outcome => outcome_category, :day => 1.day.from_now, :currency => @euro, :value => 200)
     
-    assert_equal(-100, outcome_income_category.saldo_new.value(@zloty), "Saldo should change of the same value as transfer item for given category")
-    assert_equal(200, outcome_income_category.saldo_new.value(@euro), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(-100, outcome_income_category.saldo.value(@zloty), "Saldo should change of the same value as transfer item for given category")
+    assert_equal(200, outcome_income_category.saldo.value(@euro), "Saldo should change of the same value as transfer item for given category")
     
-    assert_equal 2, outcome_income_category.saldo_new.currencies.size
-    assert outcome_income_category.saldo_new.currencies.include?(@zloty)
-    assert outcome_income_category.saldo_new.currencies.include?(@euro)
+    assert_equal 2, outcome_income_category.saldo.currencies.size
+    assert outcome_income_category.saldo.currencies.include?(@zloty)
+    assert outcome_income_category.saldo.currencies.include?(@euro)
   end
 
 
@@ -68,15 +68,15 @@ class CategoryTest < ActiveSupport::TestCase
 
     save_simple_transfer(:income => income_category, :outcome => outcome_income_category, :day => 1.day.ago, :currency => @zloty, :value => 100)
 
-    assert_equal(100, income_category.saldo_new.value(@zloty))
+    assert_equal(100, income_category.saldo.value(@zloty))
     @rupert.invert_saldo_for_income = true
     @rupert.save!
     income_category = @rupert.income
-    assert_equal(-100, income_category.saldo_new.value(@zloty))
+    assert_equal(-100, income_category.saldo.value(@zloty))
     @rupert.invert_saldo_for_income = false
     @rupert.save!
     income_category = @rupert.income
-    assert_equal(100, income_category.saldo_new.value(@zloty))
+    assert_equal(100, income_category.saldo.value(@zloty))
 
   end
   
@@ -120,15 +120,15 @@ class CategoryTest < ActiveSupport::TestCase
       start_day = number.days.ago.to_date;
       end_day = Date.today
       
-      assert_equal value*(number+1), income_category.saldo_for_period_new(start_day, end_day).value(@zloty)
-      assert_equal 1, income_category.saldo_for_period_new(start_day, end_day).currencies.size
+      assert_equal value*(number+1), income_category.saldo_for_period(start_day, end_day).value(@zloty)
+      assert_equal 1, income_category.saldo_for_period(start_day, end_day).currencies.size
 
-      assert_equal 100, income_category.saldo_for_period_new(start_day, start_day).value(@zloty)
-      assert_equal 1, income_category.saldo_for_period_new(start_day, start_day).currencies.size
+      assert_equal 100, income_category.saldo_for_period(start_day, start_day).value(@zloty)
+      assert_equal 1, income_category.saldo_for_period(start_day, start_day).currencies.size
     end
 
-    assert income_category.saldo_for_period_new(100.days.ago, 5.days.ago).is_empty?
-    assert income_category.saldo_for_period_new(1.days.from_now, 100.days.from_now).is_empty?
+    assert income_category.saldo_for_period(100.days.ago, 5.days.ago).is_empty?
+    assert income_category.saldo_for_period(1.days.from_now, 100.days.from_now).is_empty?
 
   end
 
@@ -162,7 +162,7 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 2.days.ago.to_date, :currency => @euro, :value => value)
 
     @rupert.exchanges(true)
-    saldo = income_category.saldo_for_period_new(6.days.ago.to_date, 2.days.ago.to_date)
+    saldo = income_category.saldo_for_period(6.days.ago.to_date, 2.days.ago.to_date)
 
     assert_equal 1, saldo.currencies.size
     assert_equal value + first_exchange_rate*value + second_exchange_rate*value, saldo.value(@zloty)
@@ -200,7 +200,7 @@ class CategoryTest < ActiveSupport::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
     
-    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
+    saldo = income_category.saldo_for_period(20.days.ago.to_date, 1.days.ago.to_date)
 
     assert_equal 1, saldo.currencies.size
     assert_equal value + 2*first_exchange_rate*value, saldo.value(@zloty)
@@ -246,7 +246,7 @@ class CategoryTest < ActiveSupport::TestCase
     @rupert.exchanges.create!(:left_currency => @zloty, :right_currency =>@euro, :left_to_right => 1.0 / first_exchange_rate , :right_to_left => first_exchange_rate , :day => 1.days.ago.to_date)
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => 1.days.ago.to_date, :currency => @euro, :value => value)
 
-    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, 1.days.ago.to_date)
+    saldo = income_category.saldo_for_period(20.days.ago.to_date, 1.days.ago.to_date)
 
     assert_equal 1, saldo.currencies.size
     assert_equal value + 2*first_exchange_rate*value + second_exchange_rate*value, saldo.value(@zloty)
@@ -305,7 +305,7 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:income => income_category, :outcome => outcome_category, :day => Date.today, :currency => @zloty, :value => value)
 
     @rupert.exchanges(true)
-    saldo = income_category.saldo_for_period_new(20.days.ago.to_date, Date.yesterday)
+    saldo = income_category.saldo_for_period(20.days.ago.to_date, Date.yesterday)
 
     assert_equal 1, saldo.currencies.size
     assert_equal( (1 + first_exchange_rate + 2*second_exchange_rate + third_exchange_rate)*value , saldo.value(@zloty) )
@@ -321,58 +321,8 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
 
-  def test_transfers_with_saldo_for_period
-    income = @rupert.categories[1]
-    outcome = @rupert.categories[2]
-    value = 100;
-
-    zloty_bonus = 000
-    euro_bonus = 00
-
-    save_simple_transfer(:income => income, :outcome => outcome, :day => 10.day.ago.to_date, :currency => @zloty, :value => zloty_bonus)
-    save_simple_transfer(:income => income, :outcome => outcome, :day => 10.day.ago.to_date, :currency => @euro, :value => euro_bonus)
-
-    5.downto(1) do |number|
-      t = Transfer.new(:user => @rupert)
-      t.day = number.days.ago.to_date
-      t.description = ''
-
-      number.times do
-        t.transfer_items << TransferItem.new(:category => income, :currency => @zloty, :description => '', :value => value)
-        t.transfer_items << TransferItem.new(:category => income, :currency => @euro, :description => '', :value => value)
-      end
-      t.transfer_items << TransferItem.new(:category => outcome, :currency => @zloty, :description => '', :value => -1*value*number)
-      t.transfer_items << TransferItem.new(:category => outcome, :currency => @euro, :description => '', :value => -1*value*number)
-      
-      t.conversions.build(:exchange => Exchange.new(:left_currency => @zloty, :right_currency => @euro, :left_to_right => 0.25, :right_to_left => 4))
-
-      t.save!
-    end
-
-    5.downto(1) do |number|
-      result = income.transfers_with_saldo_for_period_new(5.days.ago.to_date, number.days.ago.to_date)
-      assert_equal 6 - number, result.size
-      saldo = Money.new()
-      5.downto(number) do |item_number|
-        item = result[5-item_number]
-
-        #test money
-        assert_equal item_number*value, item[:money].value(@zloty)
-        assert_equal item_number*value, item[:money].value(@euro)
-        assert_equal 2, item[:money].currencies.size
-
-        saldo.add!(item[:money])
-
-        #test saldo
-        assert_equal saldo.value(@zloty) + zloty_bonus, item[:saldo].value(@zloty)
-        assert_equal saldo.value(@euro) + euro_bonus, item[:saldo].value(@euro)
-        assert_equal 2, item[:saldo].currencies.size
-      end
-    end
-
-    assert income.transfers_with_saldo_for_period_new(6.days.ago.to_date, 6.days.ago.to_date).empty?
-    assert income.transfers_with_saldo_for_period_new(1.day.from_now.to_date, 1.day.from_now.to_date).empty?
-
+  def test_transfers_with_saldo
+    #TODO: Write this test!
   end
 
 
@@ -409,7 +359,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   def test_save_with_balance
     category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty)
-    saldo = category.saldo_new(:default, false)
+    saldo = category.saldo(:default, false)
     assert_equal 123.4, saldo.value
     assert_equal @zloty, saldo.currency
 
@@ -418,7 +368,7 @@ class CategoryTest < ActiveSupport::TestCase
     @rupert.invert_saldo_for_income = false
     @rupert.save!
     category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty, :parent => @rupert.income)
-    saldo = category.saldo_new(:default, false)
+    saldo = category.saldo(:default, false)
     assert_equal 123.4, saldo.value
     assert_equal @zloty, saldo.currency
 
@@ -426,7 +376,7 @@ class CategoryTest < ActiveSupport::TestCase
     @rupert.invert_saldo_for_income = true
     @rupert.save!
     category = save_category(:opening_balance => 123.4, :opening_balance_currency => @zloty, :parent => @rupert.income)
-    saldo = category.saldo_new(:default, false)
+    saldo = category.saldo(:default, false)
     assert_equal 123.4, saldo.value
     assert_equal @zloty, saldo.currency
   end
@@ -514,7 +464,7 @@ class CategoryTest < ActiveSupport::TestCase
     save_simple_transfer(:income => parent, :outcome => category, :day => Time.now.to_date, :currency => @zloty, :value => 100)
     category.destroy
     assert_equal 2, parent.transfer_items.count
-    assert_equal 0, parent.saldo_new.value(@zloty)
+    assert_equal 0, parent.saldo.value(@zloty)
   end
 
 
@@ -1053,6 +1003,7 @@ END as my_group,
     assert_equal sql, Category.send(:build_my_group, Range.new('2008-01-01'.to_date, '2008-01-31'.to_date))
     assert_equal sql, Category.send(:build_my_group, '2008-01-31'.to_date)
     assert_equal sql, Category.send(:build_my_group, nil)
+    assert_equal sql, Category.send(:build_my_group, [1,2,3,4,5])
   end
 
 
@@ -1060,6 +1011,7 @@ END as my_group,
     category = @rupert.asset
     sql="
     WHERE categories.user_id = #{@rupert.id} AND
+    transfers.user_id = #{@rupert.id} AND
     categories.id IN ( #{category.id} ) AND
     transfers.day >= '2008-01-01' AND transfers.day <= '2008-05-31'
     "
@@ -1074,6 +1026,7 @@ END as my_group,
 
     sql="
     WHERE categories.user_id = #{@rupert.id} AND
+    transfers.user_id = #{@rupert.id} AND
     categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} ) AND
     transfers.day >= '2008-02-01' AND transfers.day <= '2008-06-30'
     "
@@ -1082,6 +1035,7 @@ END as my_group,
 
     sql="
     WHERE categories.user_id = #{@rupert.id} AND
+    transfers.user_id = #{@rupert.id} AND
     categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} ) AND
     transfers.day <= '2008-12-31'
     "
@@ -1091,9 +1045,17 @@ END as my_group,
 
     sql="
     WHERE categories.user_id = #{@rupert.id} AND
+    transfers.user_id = #{@rupert.id} AND
     categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} )"
 
     assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, nil).unified_sql
+
+    sql="
+    WHERE categories.user_id = #{@rupert.id} AND
+    transfers.user_id = #{@rupert.id} AND
+    categories.id IN ( #{@rupert.categories.map(&:id).join(', ')} ) AND
+    transfers.id IN ( 1, 2, 3, 4 )"
+    assert_equal sql.unified_sql, Category.send(:build_where, @rupert, @rupert.categories, [1,2,3,4]).unified_sql
   end
 
   test "Delete associated goals on destroy" do

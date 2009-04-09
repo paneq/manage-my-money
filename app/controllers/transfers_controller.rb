@@ -7,22 +7,17 @@ class TransfersController < HistoryController
   before_filter :find_currencies_for_user
   before_filter :find_newest_exchanges, :only => [:index, :edit, :create, :update, :destroy]
   before_filter :check_perm_for_transfer , :only => [:show_details, :hide_details, :show , :edit_with_items, :destroy]
+  before_filter :set_current_category
 
 
   def index
     create_empty_transfer
-    @transfers = self.current_user.newest_transfers.map{|t| {:transfer => t} }
+    @transfers = @current_user.newest_transfers
   end
 
 
   def search
     @range = get_period_range('transfer_day')
-    @transfers = self.
-      current_user.
-      transfers.
-      find(:all, :order => 'day ASC, id ASC', :conditions => ['day >= ? AND day <= ?', @range.begin, @range.end] ).
-      map { |t| {:transfer => t} }
-      
     respond_to do |format|
       format.html {}
       format.js {render_transfer_table}
@@ -36,16 +31,16 @@ class TransfersController < HistoryController
     data = params['data'].to_hash
     @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
     @transfer.user = self.current_user
-    
-    ti1 = TransferItem.new(data.pass('description','category_id', 'currency_id', 'value'))
-    ti2 = TransferItem.new(data.pass('description', 'currency_id'))
-    ti2.value = -1* ti1.value
+    value = Kernel.BigDecimal(data['value'])
+    ti1 = @transfer.transfer_items.build(data.pass('description','category_id', 'currency_id'))
+    ti1.value = value
+    ti2 = @transfer.transfer_items.build(data.pass('description', 'currency_id'))
+    ti2.value = -1* value
     ti2.category = self.current_user.categories.find(data['from_category_id'])
-    @transfer.transfer_items << ti2 << ti1
     
     if @transfer.save
       render_transfer_table do |page|
-        page.replace_html 'show-transfer-quick', :partial=>'transfers/quick_transfer', :locals => { :current_category => @category }
+        page.replace_html 'show-transfer-quick', :partial=>'transfers/quick_transfer'
       end
     else
       # TODO: change it so there will be a notice that something went wrong
@@ -62,7 +57,6 @@ class TransfersController < HistoryController
 
   
   def edit
-    set_current_category
     @transfer = self.current_user.transfers.find_by_id(params[:id])
   end
 
@@ -81,8 +75,7 @@ class TransfersController < HistoryController
               page.insert_html :bottom,
                 "transfer-in-category-#{@transfer.id}",
                 :partial => 'transfer_details',
-                :object => @transfer,
-                :locals => {:current_category_id => params[:current_category], :include_subcategories => params[:include_subcategories]}
+                :object => @transfer
             end
           end
         end
@@ -102,7 +95,7 @@ class TransfersController < HistoryController
         format.js do
           render_transfer_table do |page| #FIXME: It would be cool to write page.render_transfer_table. that way we could move it into js.rjs files...
             create_empty_transfer
-            page.replace_html 'show-transfer-full', :partial=>'transfers/form', :locals => {:current_category => @category, :transfer => @transfer}
+            page.replace_html 'show-transfer-full', :partial=>'transfers/form', :locals => {:transfer => @transfer}
           end
         end
       end
@@ -127,15 +120,11 @@ class TransfersController < HistoryController
 
   
   def check_perm_for_transfer
-    @transfer = Transfer.find(params[:id])
-    if @transfer.user.id != self.current_user.id
-      flash[:notice] = 'You do not have permission to view this transfer!'
-      @transfer = nil
-      redirect_to :action => :index, :controller => :categories
-      return
-      #why doesn't it work ? There is no flash ?
-    end
+    @transfer = @current_user.transfers.find(params[:id])
+  rescue
+    flash[:notice] = 'You do not have permission to view this transfer!'
+    redirect_to :action => :index, :controller => :categories
+    return false
   end
-
 
 end

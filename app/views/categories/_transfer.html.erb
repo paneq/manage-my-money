@@ -1,55 +1,62 @@
-<% # transfer => 'contains real transfer with id, day, description itp', -%>
-<% # money => 'contains value of transfer as Money object', -%>
-<% # saldo => 'Saldo as Money object' -%>
-<% # current_category => 'Category to redraw on changes' -%>
-<% # include_subcategories => 'Redraw current_category with subcategories?' -%>
 
-<% current_category ||= nil %>
-<% include_subcategories ||= nil %>
-<% mode ||= nil %>
+<% klass = cycle('', 'alt') %>
+<% array.each_with_index do |transfer, index| %>
+  <tr class="item-line <%= klass %>" >
 
-<tr id="transfer-in-category-line-<%= transfer.id -%>" class="<%= cycle('', 'alt') %>" >
+    <% if index.zero? %>
 
-  <td class="transfer-table-border"> <%= transfer.day -%> </td>
-  <td class="transfer-table-border"> <%= h transfer.description -%> </td>
+      <td class="day transfer-table-border" rowspan="<%= array.size -%>" >
+        <%= transfer[:transfers_day] -%>
+      </td>
 
-  <% unless mode == :transfers %>
+      <td class="transfer_description transfer-table-border" rowspan="<%= array.size -%>" colspan="<%= (array.size==1 && transfer[:transfer_items_description].blank?) ? 2 : 1 -%>">
+        <%= h transfer[:transfers_description] -%>
+      </td>
+
+    <% end %>
+
+    <% unless array.size==1 && transfer[:transfer_items_description].blank? %>
+      <td class="item_description transfer-table-border">
+        <%= h transfer[:transfer_items_description] -%>
+      </td>
+    <% end %>
 
     <td class="transfer-table-border">
-      <i>Check details</i>
-    </td>
-
-    <td class="number transfer-table-border">
-      <% money.each do |currency, value| %>
-        <div>
-          <%= "#{value} #{currency.symbol}" -%>
-        </div>
+      <% if transfer[:categories_name].blank? %>
+        <i>Sprawdź szczegóły</i>
+      <% else %>
+        <%= link_to h(transfer[:categories_name]), category_path(:id => transfer[:opposite_id]) %>
       <% end %>
     </td>
 
     <td class="number transfer-table-border">
-      <% saldo.each do |currency, value| %>
-        <div>
-          <%= "#{value} #{currency.symbol}" -%>
-        </div>
-      <% end %>
+      <%= print_saldo(transfer[:money].positive, @current_user, false) -%>
     </td>
 
-  <% end %>
+    <td class="number transfer-table-border">
+      <%= print_saldo(transfer[:money].negative, @current_user, false) -%>
+    </td>
 
-  <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer.id -%>">
-    <span id="show-details-button-<%= transfer.id -%>">
-      <%= link_to_remote show_img(),
-        {:url => transfer_path(:id => transfer,
-          :current_category => current_category,
-          :include_subcategories => include_subcategories),
-        :method => :get
-        } %>
-    </span>
-  </td>
+    <td class="number transfer-table-border">
+      <%= print_saldo(transfer[:saldo], @current_user) -%>
+    </td>
 
-</tr>
+    <% if index.zero? %>
+
+      <td class="middle transfer-table-border" id="put-show-details-here-<%= transfer[:transfers_id] -%>" rowspan="<%= array.size -%>">
+        <%= link_to_remote show_img(),
+          {:url => transfer_path(:id => transfer[:transfers_id],
+            :current_category => @category,
+            :include_subcategories => @include_subcategories),
+          :method => :get }, :id => "show-details-button-" + transfer[:transfers_id] %>
+      </td>
+
+    <% end %>
+
+  </tr>
+
+<% end %>
 
 <tr>
-  <td colspan="<%= mode == :transfers ? 3 : 6 -%>" id="transfer-in-category-<%= transfer.id -%>" style="background-color: #DBDEDE;"/>
+  <td colspan="8" id="transfer-in-category-<%= transfer[:transfers_id] -%>" style="padding:0px; background-color: #DBDEDE;"/>
 </tr>

@@ -29,43 +29,47 @@ class HistoryController < ApplicationController
 
   def set_current_category
     @category ||= self.current_user.categories.find(params[:current_category]) if params[:current_category]
-    @include_subcategories = params[:include_subcategories] if params[:include_subcategories]
+    @include_subcategories ||= params[:include_subcategories] if params[:include_subcategories]
   end
 
 
   def set_start_end_days
     @start_day ||= @transfer.day.beginning_of_month if @transfer
     @end_day ||= @transfer.day.end_of_month if @transfer
+
     @start_day ||= @range.begin if @range
     @end_day ||= @range.end if @range
+
+    @range ||= Range.new(@start_day, @end_day)
   end
 
 
   def set_transfers_and_values
     if @category
       @include_subcategories = !!@include_subcategories
-      @transfers ||= @category.transfers_with_saldo_for_period_new(@start_day.to_date , @end_day.to_date, @include_subcategories)
-      @value_between ||= @category.saldo_for_period_new(@start_day.to_date, @end_day.to_date, :show_all_currencies, @include_subcategories)
-      @value ||= @category.saldo_at_end_of_day(Date.today.to_date, :show_all_currencies, @include_subcategories)
-      @mode ||= :category
+      range_or_number = @number || @range
+      unless @transfers
+        @transfers, @value_between = @category.transfers_with_saldo(:default, @include_subcategories, range_or_number)
+      end
+      @value ||= @category.saldo_at_end_of_day(Date.today, :default, @include_subcategories)
     else
-      @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC', :conditions => ['day >= ? AND day <= ?', @start_day, @end_day]).map{ |t| {:transfer => t} }
-      @mode ||= :transfers
+      @transfers ||= self.current_user.transfers.find(:all, :order => 'day ASC', :conditions => ['day >= ? AND day <= ?', @start_day, @end_day])
     end
   end
 
 
-  #Set (@transfer or (@start_day, @end_day)) AND (@category or params['current_category']), for proper work <br />
+  #Set (@transfer or (@start_day, @end_day) or @range) AND (@category or params['current_category']), for proper work <br />
   # Updates div with transfers <br />
   # If exists block is yield with page so you can update the page the way you like <br />
-  def render_transfer_table(&block)
+  def render_transfer_table
     set_variables_for_rendering_transfer_table
+    partial = if @category
+      'categories/transfer_table'
+    else
+      'transfers/transfer_table'
+    end
     render :update do |page|
-      page.replace_html 'transfer-table-div', :partial => 'categories/transfer_table', :locals => {
-        :current_category => @category,
-        :mode => @mode,
-        :include_subcategories => @include_subcategories
-      }
+      page.replace_html 'transfer-table-div', :partial => partial
       yield page if Kernel.block_given?
     end
   end
