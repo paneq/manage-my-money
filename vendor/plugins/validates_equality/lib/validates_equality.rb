@@ -9,36 +9,36 @@ module ValidatesEquality
 
     # Validates that the specified attribute(first paramter) is the same in all given assosciation
     #
-    # class Transfer < ActiveRecord::Base
-    #   validates_equality :user_id, :category
-    #   validates_equality :user_id, :transfer_items
-    #   validates_equality :user_id, [:transfer_items, :category]
-    #   validates_equality :user_id, [:transfer_items, :tags]
-    # end
+    #   class Transfer < ActiveRecord::Base
+    #     validates_equality :user_id, :category
+    #     validates_equality :user_id, :transfer_items
+    #     validates_equality :user_id, [:transfer_items, :category]
+    #     validates_equality :user_id, [:transfer_items, :tags]
+    #   end
     #
     # or
     #
-    # class Transfer < ActiveRecord::Base
-    #   validates_equality :user_id, :category, :transfer_items, [:transfer_items, :category], [:transfer_items, :tags]
-    # end
+    #   class Transfer < ActiveRecord::Base
+    #     validates_equality :user_id, :category, :transfer_items, [:transfer_items, :category], [:transfer_items, :tags]
+    #   end
     #
     # is the same as checking if
     #
-    # transfer.user_id == transfer.category.user_id
+    #   transfer.user_id == transfer.category.user_id
     #
-    # transfer.transfer_items.each do |ti|
-    #   transfer.user_id == ti.user_id
-    # end
-    # 
-    # transfer.transfer_items.each do |ti|
-    #   transfer.user_id == ti.category.user_id
-    # end
-    #
-    # transfer.transfer_items.each do |ti|
-    #   ti.tags.each do |tag|
-    #     transfer.user_id == tag.user_id
+    #   transfer.transfer_items.each do |ti|
+    #     transfer.user_id == ti.user_id
     #   end
-    # end
+    # 
+    #   transfer.transfer_items.each do |ti|
+    #     transfer.user_id == ti.category.user_id
+    #   end
+    #
+    #   transfer.transfer_items.each do |ti|
+    #     ti.tags.each do |tag|
+    #       transfer.user_id == tag.user_id
+    #     end
+    #   end
     #
     # If any of this condition is evaluated to false error on transfer.user_id attribute is added.
     #

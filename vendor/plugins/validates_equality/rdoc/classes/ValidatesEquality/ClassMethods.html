@@ -188,65 +188,42 @@
 Validates that the specified attribute(first paramter) is the same in all
 given assosciation
 </p>
-<p>
-class Transfer &lt; ActiveRecord::Base
-</p>
 <pre>
-  validates_equality :user_id, :category
-  validates_equality :user_id, :transfer_items
-  validates_equality :user_id, [:transfer_items, :category]
-  validates_equality :user_id, [:transfer_items, :tags]
-</pre>
-<p>
-end
-</p>
-<p>
-or
-</p>
-<p>
-class Transfer &lt; ActiveRecord::Base
-</p>
-<pre>
-  validates_equality :user_id, :category, :transfer_items, [:transfer_items, :category], [:transfer_items, :tags]
-</pre>
-<p>
-end
-</p>
-<p>
-is the same as checking if
-</p>
-<p>
-transfer.user_id == transfer.category.user_id
-</p>
-<p>
-transfer.transfer_items.each do |ti|
-</p>
-<pre>
-  transfer.user_id == ti.user_id
-</pre>
-<p>
-end
-</p>
-<p>
-transfer.transfer_items.each do |ti|
-</p>
-<pre>
-  transfer.user_id == ti.category.user_id
-</pre>
-<p>
-end
-</p>
-<p>
-transfer.transfer_items.each do |ti|
-</p>
-<pre>
-  ti.tags.each do |tag|
-    transfer.user_id == tag.user_id
+  class Transfer &lt; ActiveRecord::Base
+    validates_equality :user_id, :category
+    validates_equality :user_id, :transfer_items
+    validates_equality :user_id, [:transfer_items, :category]
+    validates_equality :user_id, [:transfer_items, :tags]
   end
 </pre>
 <p>
-end
+or
 </p>
+<pre>
+  class Transfer &lt; ActiveRecord::Base
+    validates_equality :user_id, :category, :transfer_items, [:transfer_items, :category], [:transfer_items, :tags]
+  end
+</pre>
+<p>
+is the same as checking if
+</p>
+<pre>
+  transfer.user_id == transfer.category.user_id
+
+  transfer.transfer_items.each do |ti|
+    transfer.user_id == ti.user_id
+  end
+
+  transfer.transfer_items.each do |ti|
+    transfer.user_id == ti.category.user_id
+  end
+
+  transfer.transfer_items.each do |ti|
+    ti.tags.each do |tag|
+      transfer.user_id == tag.user_id
+    end
+  end
+</pre>
 <p>
 If any of this condition is evaluated to false error on transfer.user_id
 attribute is added.
