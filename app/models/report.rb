@@ -33,6 +33,7 @@ class Report < ActiveRecord::Base
   validates_presence_of :period_start, :period_end, :if => :validate_period?
   validates_inclusion_of :period_type, :in => Report.PERIOD_TYPES.keys
   validates_presence_of :name
+  validates_presence_of :user
 
   attr_accessor :virtual
 

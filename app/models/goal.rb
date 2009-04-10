@@ -51,6 +51,7 @@ class Goal < ActiveRecord::Base
   validate :validate_goal_type_with_category
   validate :validate_period_type_with_is_cyclic
 
+  validates_user_id :category
 
   def goal_type_value
     goal_type == :value

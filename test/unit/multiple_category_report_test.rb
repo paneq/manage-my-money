@@ -12,6 +12,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r.report_view_type = :bar
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
+    r.user = @jarek
     assert r.save!
     assert_equal @jarek.categories.size, r.categories.size
     assert_equal @jarek.categories.size, r.category_report_options.size
@@ -26,6 +27,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
+    r.user = @jarek
     add_category_options @jarek, r
     assert !r.save
     assert r.errors.on(:period_type)
@@ -39,6 +41,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r.report_view_type = :linear
     r.name = "Testowy raport"
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.user = @jarek
     assert !r.save
     assert r.errors.on(:base)
     r.category_report_options = []
@@ -46,5 +49,20 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     assert r.errors.on(:base)
     assert_equal 1, r.errors.count
   end
+
+  test "should validate categories user" do
+    save_rupert
+    r = MultipleCategoryReport.new
+    add_category_options @rupert, r
+    r.report_view_type = :bar
+    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.name = "Testowy raport"
+    r.user = @jarek
+    assert !r.save
+    assert r.errors.on(:user_id)
+    assert_equal 5, r.errors.count
+  end
+
+
 
 end

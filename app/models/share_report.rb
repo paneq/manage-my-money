@@ -31,6 +31,9 @@ class ShareReport < Report
   validates_numericality_of  :max_categories_values_count, :only_integer => true, :greater_than_or_equal_to => 1
   validates_numericality_of  :depth, :only_integer => true, :greater_than_or_equal_to => -1, :less_than_or_equal_to => 6
 
+
+  validates_user_id :category
+
   def share_report?
     true
   end
