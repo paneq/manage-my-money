@@ -5,7 +5,7 @@ class ReportsController < ApplicationController
   before_filter :login_required
 
   def index
-    @user_reports = Report.find :all, :conditions => ["user_id = ? AND temporary = ?", self.current_user.id, false]
+    @user_reports = self.current_user.reports :conditions => [:temporary => false] #Report.find :all, :conditions => ["user_id = ? AND temporary = ?", self.current_user.id, false]
     @system_reports = Report.prepare_system_reports(self.current_user)
   end
 

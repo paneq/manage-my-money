@@ -44,6 +44,18 @@ class Goal < ActiveRecord::Base
     :period_start,
     :period_end
 
+  attr_accessible :description,
+                  :value,
+                  :category_id,
+                  :goal_type_and_currency,
+                  :period_type,
+                  :period_start,
+                  :period_end,
+                  :goal_completion_condition,
+                  :include_subcategories,
+                  :is_cyclic
+
+
   #  validates_presence_of :currency, :if => :goal_type_value
   validates_numericality_of :value
 
@@ -233,7 +245,7 @@ class Goal < ActiveRecord::Base
       order by period_end
     SQL
 
-   find_by_sql [sql, Date.today, user.id, Date.today, true, false, user.id ]
+    find_by_sql [sql, Date.today, user.id, Date.today, true, false, user.id ]
 
   end
 
