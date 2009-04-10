@@ -9,11 +9,11 @@
   </td>
 
   <td class="padding-10-both number" style="width: 100px;">
-    <%= "#{transfer_item_details.value.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value > 0 -%>
+    <%= "#{transfer_item_details.value.abs.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value > 0 -%>
   </td>
 
   <td class="padding-10-both number" style="width: 100px;">
-    <%= "#{transfer_item_details.value.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value < 0 -%>
+    <%= "#{transfer_item_details.value.abs.to_s} #{transfer_item_details.currency.long_symbol}" if transfer_item_details.value < 0 -%>
   </td>
 
 </tr>

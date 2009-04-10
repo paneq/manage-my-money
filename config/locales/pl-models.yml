@@ -2,6 +2,8 @@ pl:
   types:
     income: Przychód
     outcome: Rozchód
+    income_details: Dokąd
+    outcome_details: Skąd
   activerecord:
     errors:
       models:

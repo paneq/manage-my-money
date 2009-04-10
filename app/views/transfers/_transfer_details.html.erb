@@ -6,7 +6,7 @@
   <% [:outcome, :income].each do |type| %>
     <tr class="line-income-outcome" >
       <th colspan="4" class="in-header" style="background-color: #EBAB63;">
-        <%= I18n.t type, :scope => [:types] %>
+        <%= I18n.t type.to_s + '_details', :scope => [:types] %>
       </th>
     </tr>
     <%= render :partial => 'transfer_item_details' , :collection => transfer_details.transfer_items.of_type(type) %>

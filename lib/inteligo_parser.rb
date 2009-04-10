@@ -46,7 +46,7 @@ class InteligoParser < BankParser
 
       currency = find_or_create_currency(amount['curr'], warnings)
 
-      amount = amount.inner_text.to_f
+      amount = amount.inner_text.to_f #TODO: Consider using Kernel.Float or Kernel.BigDecimal
       item_type, other_item_type = amount > 0 ? types : types.reverse
 
       other_side = operation.xpath('other-side')
