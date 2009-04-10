@@ -31,7 +31,7 @@ class Money
   
   def value(currency=nil)
     currency = @hash.keys.first if currency.nil? && @hash.size == 1
-    return @hash[currency].to_f.round(2)
+    return @hash[currency]#.to_f.round(2)
   end
 
   
@@ -132,7 +132,7 @@ class Money
 
 
   def each
-    @hash.each_pair { |key, val|  yield key, val.to_f.round(2)}
+    @hash.each_pair { |key, val|  yield key, val} #val.to_f.round(2)
   end
 
 

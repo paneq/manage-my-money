@@ -30,14 +30,15 @@ class TransfersController < HistoryController
   def quick_transfer
     data = params['data'].to_hash
     @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
-    @transfer.user = self.current_user
     value = Kernel.BigDecimal(data['value'])
+    value *= -1 if @current_user.invert_saldo_for_income && @current_user.categories.find(data['category_id']).category_type == :INCOME
     ti1 = @transfer.transfer_items.build(data.pass('description','category_id', 'currency_id'))
     ti1.value = value
     ti2 = @transfer.transfer_items.build(data.pass('description', 'currency_id'))
     ti2.value = -1* value
     ti2.category = self.current_user.categories.find(data['from_category_id'])
-    
+
+    @transfer.user = self.current_user
     if @transfer.save
       render_transfer_table do |page|
         page.replace_html 'show-transfer-quick', :partial=>'transfers/quick_transfer'
