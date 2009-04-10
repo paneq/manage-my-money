@@ -166,7 +166,7 @@ class Transfer < ActiveRecord::Base
     pairs = valid_conversions.map {|conv| [conv.exchange.left_currency_id, conv.exchange.right_currency_id]}
     currencies.each do |currency_id|
       unless pairs.include?([default_id, currency_id]) || pairs.include?([currency_id, default_id])
-        errors.add_to_base("Brak wymaganego kursu wymiany między użytą walutą a walutą domyślną")
+        errors.add_to_base("Brak wymaganego kursu wymiany między użytą jednostką a jednostką domyślną")
         return false
       end
     end

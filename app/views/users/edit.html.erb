@@ -6,42 +6,68 @@
     <%= error_messages_for :current_user, :header_message => "Ustawienia nie zostały zapisane z powodu błedów" %>
 
     <fieldset style="margin-top: 1em">
-      <legend>Konto użytkownika<%= help_tag('system_elements.user.edit.account') -%></legend>
-      <p><%= f.label 'email' %><br/>
-      <%= f.text_field :email %></p>
+      <legend>
+        Konto użytkownika
+        <%= help_tag('system_elements.user.edit.account') -%>
+      </legend>
+      <p>
+        <%= f.label 'email' %><br/>
+        <%= f.text_field :email %>
+      </p>
 
-      <p><%= f.label 'password', 'Hasło: ' %><br/>
-      <%= f.password_field :password %></p>
+      <p>
+        <%= f.label 'password', 'Hasło: ' %><br/>
+        <%= f.password_field :password %>
+      </p>
 
-      <p><%= f.label 'password_confirmation', 'Potwiedź hasło: ' %><br/>
-      <%= f.password_field :password_confirmation %></p>
+      <p>
+        <%= f.label 'password_confirmation', 'Potwiedź hasło: ' %><br/>
+        <%= f.password_field :password_confirmation %>
+      </p>
 
     </fieldset>
 
     <fieldset style="margin-top: 1em">
       <legend>Ustawienia systemu<%= help_tag('system_elements.user.edit.settings') -%></legend>
-      <p><%= f.label 'transaction_amount_limit_type', 'Ograniczenie ilości wyświetlanych transakcji: ' %><br/>
+      <p>
+        <%= f.label 'transaction_amount_limit_type', 'Ograniczenie ilości wyświetlanych transakcji: ' %><br/>
         <%= f.enum_select :transaction_amount_limit_type, :html_options => {:onchange => 'show_or_hide_transaction_limit_value()'}%>
-        <%= f.text_field :transaction_amount_limit_value, :size => 5 %><%= help_tag('system_elements.user.edit.set_transaction_amount_limit') -%></p>
+        <%= f.text_field :transaction_amount_limit_value, :size => 5 %>
+        <%= help_tag('system_elements.user.edit.set_transaction_amount_limit') -%>
+      </p>
 
-        <%= javascript_tag("show_or_hide_transaction_limit_value()") %>
+      <%= javascript_tag("show_or_hide_transaction_limit_value()") %>
 
-      <p><%= f.label :default_currency, 'Domyślna waluta ' %><br/>
-      <%= f.select :default_currency_id, @currencies_for_select.map { |cur| [cur.long_symbol, cur.id]} %><%= help_tag('system_elements.user.edit.set_default_currency') -%></p>
+      <p>
+        <%= f.label :default_currency, 'Domyślna jednostka (waluta) ' %><br/>
+        <%= f.select :default_currency_id, @currencies_for_select.map { |cur| [cur.long_symbol, cur.id]} %>
+        <%= help_tag('system_elements.user.edit.set_default_currency') -%>
+      </p>
 
 
-      <p><%= f.label 'include_transactions_from_subcategories', 'W kategoriach pokazuj transakcje z podkategorii: ' %><br/>
-      <%= f.check_box :include_transactions_from_subcategories %><%= help_tag('system_elements.user.edit.set_include_transactions_from_subcategories') -%></p>
+      <p>
+        <%= f.label 'include_transactions_from_subcategories', 'W kategoriach pokazuj transakcje z podkategorii: ' %><br/>
+        <%= f.check_box :include_transactions_from_subcategories %>
+        <%= help_tag('system_elements.user.edit.set_include_transactions_from_subcategories') -%>
+      </p>
 
-      <p><%= f.label 'invert_saldo_for_income', 'Odwróć wartość salda dla kategorii typu "Przychody": ' %><br/>
-      <%= f.check_box :invert_saldo_for_income %><%= help_tag('system_elements.user.edit.set_invert_saldo_for_income') -%></p>
+      <p>
+        <%= f.label 'invert_saldo_for_income', 'Odwróć wartość salda dla kategorii typu "Przychody": ' %><br/>
+        <%= f.check_box :invert_saldo_for_income %>
+        <%= help_tag('system_elements.user.edit.set_invert_saldo_for_income') -%>
+      </p>
 
 
       <fieldset id='user_multi_currency_balance_calculating_algorithms'>
-        <legend>Algorytm przeliczania walut<%= help_tag('system_elements.user.edit.set_balance_calculating_algorithms') -%></legend>
+        <legend>
+          Algorytm przeliczania walut
+          <%= help_tag('system_elements.user.edit.set_balance_calculating_algorithms') -%>
+        </legend>
+
         <% @multi_currency_balance_calculating_algorithms.each do |option| -%>
           <%= f.radio_button :multi_currency_balance_calculating_algorithm, option -%> <%= get_desc_for_calculating_algorithm(option) -%> <br/>
         <% end -%>
+
       </fieldset>
 
     </fieldset>
@@ -50,10 +76,14 @@
 
   <% form_tag user_path(@current_user), :method => :delete do %>
     <fieldset id='user-destroy'>
-      <legend>Usuwanie konta<%= help_tag('system_elements.user.edit.destroy') -%></legend>
-        <%= label_tag 'password', 'Musisz podać swoje hasło aby usunąć konto' %>
-        <%= text_field_tag 'password' %>
-        <%= submit_tag 'Usuń konto i wszystkie wprowadzone dane' %>
+      <legend>
+        Usuwanie konta
+        <%= help_tag('system_elements.user.edit.destroy') -%>
+      </legend>
+      
+      <%= label_tag 'password', 'Musisz podać swoje hasło aby usunąć konto' %>
+      <%= text_field_tag 'password' %>
+      <%= submit_tag 'Usuń konto i wszystkie wprowadzone dane' %>
     </fieldset>
   <% end %>
 

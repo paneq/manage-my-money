@@ -160,6 +160,39 @@ class TransferTest < ActiveSupport::TestCase
   end
 
 
+  #security:
+
+  def test_errors_when_invalid_objects_owners
+    save_jarek
+    t = Transfer.new(:user => @rupert)
+    t.transfer_items.build(:category => @jarek.asset)
+    assert !t.valid?
+    assert t.errors.on(:user_id)
+
+    t = Transfer.new(:user => @rupert)
+    t.conversions.build(:exchange => Exchange.new(:user => @jarek))
+    assert !t.valid?
+    assert t.errors.on(:user_id)
+
+    cur = @jarek.currencies.create!(:all => 'NEW')
+
+    t = Transfer.new(:user => @rupert)
+    t.transfer_items.build(:currency => cur)
+    assert !t.valid?
+    assert t.errors.on(:user_id)
+
+    t = Transfer.new(:user => @rupert)
+    t.conversions.build(:exchange => Exchange.new(:user => @rupert, :left_currency => cur))
+    assert !t.valid?
+    assert t.errors.on(:user_id)
+
+    t = Transfer.new(:user => @rupert)
+    t.conversions.build(:exchange => Exchange.new(:user => @rupert, :right_currency => cur))
+    assert !t.valid?
+    assert t.errors.on(:user_id)
+  end
+
+
   private
 
 

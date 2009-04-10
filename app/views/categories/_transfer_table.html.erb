@@ -71,12 +71,14 @@
 
     <% if @end_day.to_date < Date.today %>
       <tr>
-        <td class="dots middle transfer-table-border" >
-          .<br />
-          .<br />
-          .<br />
+        <td class="dots middle transfer-table-border" style="font-size: 15px;">
+          <b>
+            .<br />
+            .<br />
+            .
+          </b>
         </td>
-        <td colspan="5">
+        <td colspan="7" >
         </td>
       </tr>
     <% end %>
@@ -87,7 +89,9 @@
       </td>
 
       <td class="transfer-table-border number" colspan="2">
-        <%= print_saldo(@value, @current_user) %>
+        <b>
+          <%= print_saldo(@value, @current_user) %>
+        </b>
       </td>
     </tr>
 
