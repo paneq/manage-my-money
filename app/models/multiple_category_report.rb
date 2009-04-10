@@ -30,6 +30,9 @@ class MultipleCategoryReport < Report
 
   validates_associated :category_report_options
 
+  validates_user_id([:category_report_options, :category])
+
+
   def has_at_least_one_category?
     unless category_report_options != nil && category_report_options.size > 0
       errors.add_to_base(:should_have_at_least_one_category)

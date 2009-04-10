@@ -274,6 +274,16 @@ class GoalTest < ActiveSupport::TestCase
   end
 
 
+  test "should validate category user" do
+    save_rupert
+    g = create_goal(true, @jarek)
+    g.category = @rupert.income
+    assert !g.save
+    assert g.errors.on(:user_id)
+  end
+
+
+
   #TODO
   #test_actual_value
   #test_finish

@@ -9,6 +9,7 @@ class FlowReportTest < ActiveSupport::TestCase
   test "Should create FlowReport" do
     r = FlowReport.new
     add_category_options @jarek, r
+    r.user = @jarek
     r.report_view_type = :text
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
@@ -21,6 +22,7 @@ class FlowReportTest < ActiveSupport::TestCase
     r.report_view_type = :linear
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
+    r.user = @jarek
     assert !r.save
     assert r.errors.on(:report_view_type)
     assert_equal 1, r.errors.count

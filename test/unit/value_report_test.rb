@@ -8,6 +8,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should create and save ValueReport" do
     r = ValueReport.new
+    r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :bar
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
@@ -17,6 +18,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should validate report_view_type" do
     r = ValueReport.new
+    r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :pie
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
@@ -28,6 +30,7 @@ class ValueReportTest < ActiveSupport::TestCase
 
   test "Should have many category options" do
     r = ValueReport.new
+    r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :bar
     r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])

@@ -7,7 +7,7 @@ module ValidatesEquality
 
   module ClassMethods
 
-    # Validates that the specified attribute(first paramter) is the same in all given assosciation
+    # Validates that the specified attribute(first paramter) is the same in all given assosciations
     #
     #   class Transfer < ActiveRecord::Base
     #     validates_equality :user_id, :category
@@ -43,7 +43,7 @@ module ValidatesEquality
     # If any of this condition is evaluated to false error on transfer.user_id attribute is added.
     #
     # Options:
-    # * <tt>:raise_nil_in_chain</tt> - If set to true exception is raise when any association in chain is nil
+    # * <tt>:raise_nil_in_chain</tt> - If set to true exception is raised when any association in chain is nil, default to false
     # * <tt>:on</tt> - Specifies when this validation is active (default is <tt>:save</tt>, other options <tt>:create</tt>, <tt>:update</tt>).
     # * <tt>:allow_nil</tt> - Skip validation if attribute value of last association is +nil+.
     # * <tt>:allow_blank</tt> - Skip validation if attribute value of last association is blank.
