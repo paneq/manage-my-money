@@ -37,6 +37,21 @@ class Report < ActiveRecord::Base
 
   attr_accessor :virtual
 
+  attr_accessible :period_type,
+                  :period_start,
+                  :period_end,
+                  :relative_period,
+                  :name,
+                  :category_id,
+                  :report_view_type,
+                  :depth,
+                  :max_categories_values_count,
+                  :period_division,
+                  :new_category_report_options,
+                  :existing_category_report_options
+
+
+
   #used for conditional validation
   def validate_period?
     !relative_period
