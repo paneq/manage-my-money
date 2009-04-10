@@ -121,6 +121,7 @@ class TransfersControllerTest < ActionController::TestCase
 
 
   def test_search
+    save_jarek
     times = [:LAST_3_MONTHS, :LAST_4_WEEKS, :LAST_7_DAYS, :THIS_DAY] #from oldest to newest
     times.shift
     times.shift
@@ -128,11 +129,13 @@ class TransfersControllerTest < ActionController::TestCase
 
     #create one transfer per one time period listed in times array
     times.each do |time|
-      t = Transfer.new(:day=> Date.calculate(time).begin, :user => @rupert, :description=> time.to_s)
+      day = Date.calculate(time).begin
+      t = Transfer.new(:day=> day, :user => @rupert, :description=> time.to_s)
       t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :income, :category => @rupert.categories.first, :currency => @euro)
       t.transfer_items << TransferItem.new(:description => 'empty', :value => 100, :transfer_item_type => :outcome, :category => @rupert.categories.second, :currency => @euro)
       t.save!
       transfers << t
+      save_simple_transfer(:user => @jarek, :income => @jarek.loan, :outcome => @jarek.asset, :day => day) #should not be found!
     end
     
     times.each_with_index do |time, index|
@@ -180,7 +183,31 @@ class TransfersControllerTest < ActionController::TestCase
   end
 
 
+  # security
+
+  def test_invisible_to_others
+    save_jarek
+    t = save_simple_transfer(:user => @jarek, :income => @jarek.expense, :outcome => @jarek.asset)
+
+    [[:show,:get], [:destroy, :delete], [:edit, :get], [:update, :put]].each do |action, method|
+      send(method, action, :id => t.id)
+      assert_redirected_to :action => :index, :controller => :transfers
+      assert_match("Brak uprawnień", flash[:notice])
+
+      xhr(method, action, :id => t.id)
+      assert @response.body.blank?
+    end
+    
+    assert_no_difference("@jarek.transfers.count") do
+      # TODO
+      # try_create(
+      #   :user_id => @jarek.id)
+    end
+  end
+
+
   private
+
 
   #checks if transfer table contains all transfers given as first paramters and if they are in proper order
   def assert_transfer_table(transfers, options = {})
@@ -208,6 +235,11 @@ class TransfersControllerTest < ActionController::TestCase
 
   end
 
-
+  def try_create(hash)
+    begin
+      xhr :post, :create, :transfer => hash
+    rescue
+    end
+  end
   
 end

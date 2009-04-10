@@ -11,7 +11,9 @@
 #
 
 class Transfer < ActiveRecord::Base
-  
+
+  attr_protected :user_id
+
   has_many :transfer_items, :dependent => :delete_all do
     def in_category(category)
       find :all, :conditions => ['category_id = ?', category.id]
@@ -171,7 +173,7 @@ class Transfer < ActiveRecord::Base
       end
     end
 
-    errors.add_to_base("Powtórzone kursy między walutami") if pairs.size != pairs.uniq.size
+    errors.add_to_base("Powtórzone kursy między jednostkami (walutami)") if pairs.size != pairs.uniq.size
 
     return true
   end

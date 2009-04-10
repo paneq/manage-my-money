@@ -6,7 +6,7 @@ class TransfersController < HistoryController
   before_filter :login_required
   before_filter :find_currencies_for_user
   before_filter :find_newest_exchanges, :only => [:index, :edit, :create, :update, :destroy]
-  before_filter :check_perm_for_transfer , :only => [:show_details, :hide_details, :show , :edit_with_items, :destroy]
+  before_filter :check_perm_for_transfer , :only => [:show , :edit, :update, :destroy]
   before_filter :set_current_category
 
 
@@ -25,18 +25,18 @@ class TransfersController < HistoryController
   end
 
 
-  # remote
-  # TODO: sprawdzenie czy kategorie i waluty naleza do usera
   def quick_transfer
-    data = params['data'].to_hash
+    data = params['data']
     @transfer = Transfer.new(data.pass('description', 'day(1i)', 'day(2i)','day(3i)'))
     value = Kernel.BigDecimal(data['value'])
     value *= -1 if @current_user.invert_saldo_for_income && @current_user.categories.find(data['category_id']).category_type == :INCOME
+
     ti1 = @transfer.transfer_items.build(data.pass('description','category_id', 'currency_id'))
     ti1.value = value
+
     ti2 = @transfer.transfer_items.build(data.pass('description', 'currency_id'))
-    ti2.value = -1* value
     ti2.category = self.current_user.categories.find(data['from_category_id'])
+    ti2.value = -1* value
 
     @transfer.user = self.current_user
     if @transfer.save
@@ -45,10 +45,7 @@ class TransfersController < HistoryController
       end
     else
       # TODO: change it so there will be a notice that something went wrong
-      where = 'quick-transfers'
-      render :update do |page|
-        page.insert_html :bottom , where , :partial => '' , :object => @transfer
-      end
+      render :nothing
     end
   end
 
@@ -58,12 +55,10 @@ class TransfersController < HistoryController
 
   
   def edit
-    @transfer = self.current_user.transfers.find_by_id(params[:id])
   end
 
 
   def update
-    @transfer = self.current_user.transfers.find_by_id(params[:id])
     @transfer.attributes = params[:transfer]
     if @transfer.save
       respond_to do |format|
@@ -71,16 +66,15 @@ class TransfersController < HistoryController
         format.js do
           render_transfer_table do |page|
             if @category && @category.transfers.find_by_id(@transfer.id)
-              #same code as show_details but i could not move it into method and i do not know why.
               page.hide "show-details-button-#{@transfer.id}"
               page.insert_html :bottom,
                 "transfer-in-category-#{@transfer.id}",
                 :partial => 'transfer_details',
                 :object => @transfer
             end
-          end
-        end
-      end
+          end #render
+        end # js
+      end # respond
     else
       show_transfer_errors()
     end
@@ -108,7 +102,7 @@ class TransfersController < HistoryController
 
   def destroy
     @transfer.destroy
-    flash[:notice] = 'Transfer został usunięty'
+    #flash[:notice] = 'Transfer został usunięty'
     respond_to do |format|
       format.html
       # Railscast: 043_ajax_with_rjs REFACTOR
@@ -123,8 +117,12 @@ class TransfersController < HistoryController
   def check_perm_for_transfer
     @transfer = @current_user.transfers.find(params[:id])
   rescue
-    flash[:notice] = 'You do not have permission to view this transfer!'
-    redirect_to :action => :index, :controller => :categories
+    if request.xhr?
+      render :nothing => true
+    else
+      flash[:notice] = 'Brak uprawnień!'
+      redirect_to transfers_path
+    end
     return false
   end
 

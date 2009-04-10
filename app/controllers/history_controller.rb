@@ -28,19 +28,21 @@ class HistoryController < ApplicationController
 
 
   def set_current_category
-    @category ||= self.current_user.categories.find(params[:current_category]) if params[:current_category]
+    @category ||= @current_user.categories.find(params[:current_category]) if params[:current_category]
     @include_subcategories ||= params[:include_subcategories] if params[:include_subcategories]
   end
 
 
   def set_start_end_days
-    @start_day ||= @transfer.day.beginning_of_month if @transfer
-    @end_day ||= @transfer.day.end_of_month if @transfer
+     if @transfer && !@transfer.new_record?
+       @start_day ||= @transfer.day.beginning_of_month
+       @end_day ||= @transfer.day.end_of_month
+     end
 
     @start_day ||= @range.begin if @range
     @end_day ||= @range.end if @range
 
-    @range ||= Range.new(@start_day, @end_day)
+    @range ||= Range.new(@start_day, @end_day) if @start_day && @end_day
   end
 
 

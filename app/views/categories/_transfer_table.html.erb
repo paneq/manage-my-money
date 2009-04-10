@@ -39,7 +39,7 @@
     <tr class="<%= cycle('', 'alt') -%>" >
       <td class="transfer-table-border" colspan="8">
         <b>
-          <%= @start_day.to_date if @start_day %>
+          <%= @start_day.to_s if @start_day %>
         </b>
       </td>
     </tr>
@@ -50,7 +50,7 @@
 
     <tr>
       <td class="transfer-table-border" colspan="8">
-        <b><%= @end_day.to_date if @start_day %></b>
+        <b><%= @end_day.to_s if @end_day %></b>
       </td>
     </tr>
 
@@ -69,7 +69,7 @@
 
     </tr>
 
-    <% if @end_day.to_date < Date.today %>
+    <% if @end_day && @end_day < Date.today %>
       <tr>
         <td class="dots middle transfer-table-border" style="font-size: 15px;">
           <b>
