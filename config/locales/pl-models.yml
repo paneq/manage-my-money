@@ -80,7 +80,7 @@ pl:
     models:
       user: Użytkownik
       report: Raport
-      transfer_items: Element transferu
+      transfer_item: Element transferu
       transfer: Transfer
       category: Kategoria
       currency: Waluta
@@ -92,6 +92,15 @@ pl:
       transfer:
         description: Opis
         transfer_items: Element transferu
+        transfer_items_value: Wartość elementu transakcji
+        transfer_items_category: Kategoria elementu transakcji
+        transfer_items_currency: Waluta elementu transakcji
+        transfer_items_import_guid: Identyfikator importu elementu transakcji
+        transfer_items_import_description: Opis elementu transakcji
+        conversions_exchange_left_to_right: Kurs wymiany lewej jednostki na prawą
+        conversions_exchange_right_to_left: Kurs wymiany prawej jednostki na lewą
+        conversions_exchange_right_currency: Prawa jednostka kursu wymiany
+        conversions_exchange_left_currency: Lewa jednostka kursu wymiany
       transfer_item:
         value: Wartość
       category:
