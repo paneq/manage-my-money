@@ -72,11 +72,12 @@ module ApplicationHelper
 
     result = ''
     result << <<-HTML
-      <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres:#{help_tag('system_elements.other.date.period')}</label>
+      <p id="#{name_id}-period"><label for="#{name_id}">Wybierz okres: </label>
     HTML
 
     result << select_tag(select_name, options_from_collection_for_select(select_periods, :first, :second, selected))
-
+    result << help_tag('system_elements.other.date.period')
+    
     result << get_date_field_start(name, start_day)
     result << get_date_field_end(name, end_day)
     result << <<-HTML
@@ -125,29 +126,21 @@ module ApplicationHelper
 
   def get_date_field_start(name, start_day = Date.today)
     begin_field_name = get_date_start_field_name(name)
-    result = <<-HTML
-      <p id="#{begin_field_name}"><label for="#{begin_field_name}">Data początkowa: </label>
-    HTML
-
-    result += select_date start_day, :prefix => "#{name}_start"
-
-    result += <<-HTML
-      </p>
-    HTML
+    html = "<p id='#{begin_field_name}'><label for='#{begin_field_name}'>Data początkowa: </label>"
+    html << select_date(start_day, :prefix => "#{name}_start")
+    html << help_tag('system_elements.other.date.start')
+    html << '</p>'
+    html
   end
 
 
   def get_date_field_end(name, end_day = Date.today)
     end_field_name = get_date_end_field_name(name)
-    result = <<-HTML
-      <p id="#{end_field_name}"><label for="#{end_field_name}">Data końcowa: </label>
-    HTML
-
-    result += select_date end_day, :prefix => "#{name}_end"
-
-    result += <<-HTML
-      </p>
-    HTML
+    html = "<p id='#{end_field_name}'><label for='#{end_field_name}'>Data końcowa: </label>"
+    html << select_date(end_day, :prefix => "#{name}_end")
+    html << help_tag('system_elements.other.date.end')
+    html << "</p>"
+    html
   end
 
 

@@ -1,5 +1,9 @@
-<% all = [['quick', 'Szybki'],['full', 'Pelny'],['search','Wyszukaj']] %>
-<% autocomplete_transfer_description ||= false %>
+<% all = [
+    ['quick', 'Szybki ' + help_tag('system_elements.transactions.new.quick') ],
+    ['full', 'Pełny ' + help_tag('system_elements.transactions.new.full') ],
+    ['search','Wyszukaj ' + help_tag('system_elements.transactions.search') ]
+  ]
+%>
 <% all.shift if @category.nil? %>
 <% show = all.first %>
 
@@ -12,7 +16,6 @@
 <% light_shadow({:class => 'long'}, {}, options) do %>
   <% tab_container(:transfer) do %>
 
-    <% # Quick transfer requires current_category so it is known which category it is created from or to so... %>
     <% if @category %>
       <div id="show-transfer-quick" <%= style_display_if { show.first == 'quick'} %> >
         <%= render :partial => 'transfers/quick_transfer' %>
@@ -20,10 +23,7 @@
     <% end %>
 
     <div id="show-transfer-full" <%= style_display_if { show.first == 'full'} %> >
-      <%= render :partial => 'transfers/form',
-        :locals => {
-        :transfer => transfer,
-      }  %>
+      <%= render :partial => 'transfers/form', :locals => { :transfer => @transfer }  %>
     </div>
 
     <div id="show-transfer-search" <%= style_display_if { show.first == 'search'} %> >

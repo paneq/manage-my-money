@@ -6,7 +6,7 @@
 
     Uwzględnij podkategorie &nbsp;&nbsp;<%= check_box_tag 'include_subcategories', true %>
     <%= hidden_field_tag :id, @category.id %>
-
+    <%= help_tag 'system_elements.transactions.search.include_subcategories' -%>
   <%  end %>
 
   <%= date_period_fields("transfer_day", (@start_day || Date.today), (@end_day || Date.today)) %>

@@ -692,6 +692,119 @@
             </section>
         </section>
 
+        <section id="system_elements.transactions">
+          <title>
+            Zarządzanie transakcjami
+          </title>
+          
+          <section id="system_elements.transactions.index">
+            <title>
+              Lista transakcji
+            </title>
+
+            <para>
+              List transakcji pokazuje ostatnie (w sensie daty, z którą zostały zapisane)
+              transakcje biorąc pod uwagę ustawienie 'ograniczenie ilości wyświetlanych transakcji'
+              (w ustawieniach twojego konta). Jeśli chcesz na tej zakładce widzieć większą lub mniejszą
+              liczbę transakcji, nie zapomnij ustawić tego ustawienia, najlepiej jak Ci pasuje.
+            </para>
+
+            <para>
+              Jeśli chcesz zobaczyć (a później np. wyedytować lub usunąć) transakcje, które nie są
+              widoczne, możesz ich poszukać korzystając z opcji na zakładce 'Wyszukaj'.
+            </para>
+
+            <para>
+              Możesz tutaj także na zakładce 'Pełny' dodać nowe transakcje. W tym miejscu nie można jednak
+              dodawać prostych transakcji. Ta opcja dostępna jest tylko przy przeglądaniu konkretnej
+              kategorii, gdzie wystarczy wskazać przeciwstawną kategorie transakcji oraz podać kwotę.
+            </para>
+            
+            <section id="system_elements.transactions.index.date">
+              <title>
+                Kolumna: Data
+              </title>
+              <para>
+                Data transakcji.
+              </para>
+            </section>
+
+            <section id="system_elements.transactions.index.description">
+              <title>
+                Kolumna: Opis
+              </title>
+              <para>
+                Opis dokonanej transakcji.
+              </para>
+            </section>
+          </section>
+
+          <section id="system_elements.transactions.new">
+            <title>
+              Dodawanie nowych transakcji
+            </title>
+
+            <para>
+            </para>
+
+            <section id="system_elements.transactions.new.quick">
+              <title>
+                Dodawanie prostych transakcji
+              </title>
+              
+              <para>
+                
+              </para>
+            </section>
+
+
+            <section id="system_elements.transactions.new.full">
+              <title>
+                Dodawanie nowych transakcji
+              </title>
+
+              <para>
+                
+              </para>
+            </section>
+            
+          </section>
+
+          <section id="system_elements.transactions.search">
+            <title>
+              Wyszukiwanie transakcji
+            </title>
+
+            <para>
+              Możesz wyszukiwać transakcje w zależności od tego na jaki dzień zostały one zapisane.
+              Jeśli jesteś w widoku konkretnej kategorii zostaną wyszukane tylko te transakcje, które
+              zmodyfikowały kategorię (lub też jej podkategorię, jeśli taka opcja została wybrana).
+              Przez pojęcie 'zmodyfikowała kategorię' rozumiemy:
+              transakcję zawierającą element transakcji, który ma wybraną daną kategorię.
+            </para>
+
+            <para>
+              Wyszukiwanie znajdzie transakcje o dacie znajdującej się pomiędzy datą początkową a
+              końcową (włącznie dla obu tych wartości).
+            </para>
+
+            <section id="system_elements.transactions.search.include_subcategories">
+              <title>
+                Uwzględnij podkategorie.
+              </title>
+
+              <para>
+                Zaznaczenie tej opcji spowoduje, że przy wyszukiwaniu uwzględnione zostaną także transakcje
+                modyfikujące podkategorie.
+                Wyświetlane saldo (oraz jego zmiana) także będzie uwzględniać transakcje w
+                podkategoriach.
+              </para>
+            </section>
+          </section>
+
+
+        </section>
+
         <section id="system_elements.reports">
             <title>
                 Raporty
@@ -1077,6 +1190,26 @@
                     </title>
                     <para>
                         Umożliwia wybranie okresu, wśród zdefiniowanych okresów, lub podanie dokładnego okresu (opcja: 'Wybrane z menu')
+                    </para>
+                </section>
+
+                <section id="system_elements.other.date.start">
+                    <title>
+                        Data początkowa
+                    </title>
+                    <para>
+                      We wszystkich operacjach wybrana data będzie liczona włącznie z wybranym dniem
+                      początkowym.
+                    </para>
+                </section>
+
+                <section id="system_elements.other.date.end">
+                    <title>
+                        Data końcowa
+                    </title>
+                    <para>
+                        We wszystkich operacjach wybrana data będzie liczona włącznie z wybranym dniem
+                        końcowym.
                     </para>
                 </section>
             </section>

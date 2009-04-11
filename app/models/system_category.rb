@@ -12,8 +12,6 @@
 #  updated_at        :datetime      
 #  description       :string(255)   
 #  category_type_int :integer       
-#  cached_level      :integer       
-#  name_with_path    :string(255)   
 #
 
 class SystemCategory < ActiveRecord::Base

@@ -1,15 +1,12 @@
-<div>
-  <h1>Lista transferów</h1>
-  <div id="transfer-table-div">
-    <% unless @transfers.to_a.empty? %>
-      <%= render :partial => 'transfers/transfer_table', :locals => {:mode => :transfers}%>
-    <% else %>
-      <b>TODO: podaj ten okres. W wybranym przez Ciebie okresie czasu nie zostały stworzone żadne transfery.</b>
-    <% end %>
-  </div>
-  <br />
+<h1>
+  Lista transferów
+  <%= help_tag 'system_elements.transactions.index' -%>
+</h1>
 
-  <div id="bottom-menu">
-    <%= render :partial => 'transfers/kind_of_transfer', :locals => { :transfer => @transfer, :autocomplete_transfer_description => true }  %>
-  </div>
+<div id="transfer-table-div">
+  <%= render :partial => 'transfers/transfer_table' %>
+</div>
+
+<div id="bottom-menu">
+  <%= render :partial => 'transfers/kind_of_transfer' %>
 </div>
