@@ -12,6 +12,7 @@ class CategoriesController < HistoryController
   LENGTH = (1..31).to_a
 
   def show
+    @include_subcategories = @current_user.include_transactions_from_subcategories
     create_empty_transfer
     set_default_variables
     set_variables_for_rendering_transfer_table
