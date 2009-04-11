@@ -1,5 +1,8 @@
 <div id="currencies-index">
-  <h1>Waluty</h1>
+  <h1>
+    Jednostki (waluty)
+    <%= help_tag('system_elements.currencies') %>
+  </h1>
 
   <% light_shadow do %>
     <table id="currencies-list" class ="nice-table long">
@@ -34,5 +37,11 @@
 
     </table>
   <% end %>
-  <%= link_to 'Dodaj nową walutę', new_currency_path, :id => 'add-cur' -%>
+  
+  <span class="margin-left">
+    <b>
+      <%= link_to 'Dodaj nową walutę', new_currency_path, :id => 'add-cur' -%>
+    </b>
+  </span>
+  
 </div>

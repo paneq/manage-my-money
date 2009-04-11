@@ -4,6 +4,8 @@
 # edit
 # update
 # destroy
+# create
+# show
 
 require 'test_helper'
 
@@ -55,7 +57,7 @@ class CurrenciesControllerTest < ActionController::TestCase
   end
 
   
-  def test_show_currency
+  def test_show_system_currency
     get :show, :id => @zloty.id
 
     assert_response :success
@@ -73,7 +75,7 @@ class CurrenciesControllerTest < ActionController::TestCase
   end
 
 
-  def test_show_non_system_currency
+  def test_show_my_currency
     id = save_currency(:user => @rupert).id
     get :show, :id => id
 
@@ -216,6 +218,7 @@ class CurrenciesControllerTest < ActionController::TestCase
     
     assert_response :redirect
     assert_redirected_to :action => :index
+    assert_match(/Usunięto/, flash[:notice])
     assert_nil Currency.find_by_id(currency.id)
   end
 
@@ -249,4 +252,61 @@ class CurrenciesControllerTest < ActionController::TestCase
     end
   end
 
+  
+  def test_update_my_currency_for_someone_or_system
+    save_jarek
+    assert_not_nil @jarek.id
+    currency = save_currency
+    post_data = {}
+    CURRENCY_FIELDS.each { |field| post_data[field] = 'CUR' }
+    [nil, @jarek.id].each do |user_id|
+      assert_no_difference('@rupert.currencies.count') do
+        post_data[:user_id]= user_id
+        put :update, :id => currency.id, :currency => post_data
+      end 
+    end
+  end
+
+  
+  def test_create_for_someone_or_system
+     save_jarek
+     assert_not_nil @jarek.id
+
+     assert_no_difference("@jarek.currencies.count") do
+       post_data = {}
+       CURRENCY_FIELDS.each do |field|
+         post_data[field] = 'CUR'
+       end
+       post_data[:user_id] = @jarek.id #trying to create someone currency
+       post :create, :currency => post_data
+
+       assert_response :redirect
+       assert_redirected_to :action => :index
+       assert_not_nil @rupert.currencies.find_by_symbol('CUR')
+     end
+
+     assert_no_difference("Currency.count(:conditions => {:user_id => nil})") do
+       post_data = {}
+       CURRENCY_FIELDS.each do |field|
+         post_data[field] = 'CHF'
+       end
+       post_data[:user_id] = nil #trying to create system currency
+       post :create, :currency => post_data
+       
+       assert_response :redirect
+       assert_redirected_to :action => :index
+       assert_not_nil @rupert.currencies.find_by_symbol('CHF')
+     end
+  end
+
+  
+  def test_show_someone_currency
+    save_jarek
+    currency = save_currency(:user => @jarek)
+    get :show, :id => currency.id
+
+    assert_response :redirect
+    assert_redirected_to :action => :index
+    assert_match(/Brak uprawnień/, flash[:notice])
+  end
 end

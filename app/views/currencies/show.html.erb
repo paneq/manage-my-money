@@ -1,5 +1,8 @@
-<div <%= obj_id('show-currency', @currency) -%> >
-  <h1>Podgląd waluty: <%= @currency.long_name -%> </h1>
+<h1>
+  Podgląd jednostki: <%= @currency.long_name -%>
+</h1>
+<div class="margin-left" <%= obj_id('show-currency', @currency) -%> >
+  
   <% for column in Currency.content_columns %>
     <p id="<%= column.name -%>" >
       <b><%= I18n.translate column.name, :scope => 'activerecord.attributes.currency' %>:</b> <%=h @currency.send(column.name) %>

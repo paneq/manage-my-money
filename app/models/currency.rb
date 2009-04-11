@@ -13,6 +13,8 @@
 
 class Currency < ActiveRecord::Base
 
+  attr_protected :user_id
+  
   named_scope :for_user_period, lambda { |user, start_day, end_day|
     { :conditions => ['((currencies.user_id = ? OR currencies.user_id IS NULL) AND transfers.user_id = ? AND transfers.day >= ? AND transfers.day <= ?)', user.id, user.id, start_day, end_day],
       :select => 'DISTINCT currencies.*',

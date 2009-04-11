@@ -1,4 +1,6 @@
-<h1>Nowa waluta</h1>
+<h1>
+  Nowa jednostka
+</h1>
 
 <% form_for @currency, :html=>{:class => 'style2'} do |f| %>
 
@@ -27,5 +29,6 @@
   <%= f.submit "Utwórz" %>
 
 <% end %>
-
-<%= link_to 'Lista walut', currencies_path, :id => 'currencies-list' %>
+<div class="margin-left">
+  <%= link_to '&lt;&lt; Lista walut', currencies_path, :id => 'currencies-list' %>
+</div>
