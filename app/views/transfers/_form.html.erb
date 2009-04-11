@@ -32,7 +32,10 @@
   <div id="<%= form_id -%>errors">
   </div>
 
-  <h3>Opis</h3>
+  <h3>
+    Opis
+    <%= help_tag('system_elements.transactions.new.full.description') %>
+  </h3>
   <%= form.text_area :description, :cols => 60, :rows => 4, :id => form_id + 'description' %>
   <div class="auto_complete" id="<%= form_id -%>description_auto_complete" >
   </div>
@@ -44,14 +47,20 @@
 
   <hr class="hr-line-100prc" />
 
-  <h3>Data</h3>
+  <h3>
+    Data
+    <%= help_tag('system_elements.transactions.new.full.date') %>
+  </h3>
   <%= form.date_select :day  %>
 
 
   <% items = transfer.transfer_items.group_by {|ti| ti.transfer_item_type} %>
   <% [:outcome, :income].each do |form_type| %>
     <div>
-      <h3><%= I18n.translate(form_type) -%></h3>
+      <h3>
+        <%= I18n.translate(form_type) -%>
+        <%= help_tag('system_elements.transactions.new.full.' + form_type.to_s) %>
+      </h3>
       <table id="<%= form_id + form_type.to_s -%>_items">
         <tr>
           <td>Opis</td>
@@ -73,7 +82,10 @@
 
   <% end %>
 
-  <h3><%= I18n.translate(:exchanges) -%></h3>
+  <h3>
+    <%= I18n.translate(:exchanges) -%>
+    <%= help_tag('system_elements.transactions.new.full.conversions') -%>
+  </h3>
   <div id="<%= form_id -%>conversions">
     <% form.fields_for :conversions do |con_form| %>
       <%= render :partial => 'conversions/conversion', :locals => {:f => con_form} %>

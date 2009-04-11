@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Pomoc do systemu Manage My Money</title><link rel="stylesheet" href="../stylesheets/help.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.3"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3896965"></a>Pomoc do systemu Manage My Money</h2></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#system_elements">Elementy systemu</a></span></dt><dd><dl><dt><span class="section"><a href="#system_elements.user">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Pomoc do systemu Manage My Money</title><link rel="stylesheet" href="../stylesheets/help.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.3"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3933278"></a>Pomoc do systemu Manage My Money</h2></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#system_elements">Elementy systemu</a></span></dt><dd><dl><dt><span class="section"><a href="#system_elements.user">
                 Konto u&#380;ytkownika
             </a></span></dt><dt><span class="section"><a href="#system_elements.session">
                 Dost&#281;p do serwisu
@@ -840,12 +840,146 @@
               
 
               <p>
-                
+                Z&#322;o&#380;one transakcje maj&#261; miejsce wtedy, gdy jednocze&#347;nie zmieniaj&#261; one warto&#347;&#263;
+                kilku kategorii np. kiedy jest wiele &#378;róde&#322; sk&#261;d przysz&#322;y pieni&#261;dze b&#261;d&#378; wiele
+                miejsc, do których zosta&#322;y one rozdysponowane.
               </p>
+
+              <p>
+                Rozwa&#380;my nast&#281;puj&#261;cy przyk&#322;ad. Podczas zakupów w markecie zabrak&#322;o Ci pieni&#281;dzy
+                i za cz&#281;&#347;&#263; zakupów zap&#322;aci&#322;e&#347; (zap&#322;aci&#322;a&#347;) swoimi a za cz&#281;&#347;&#263; po&#380;yczonymi pieni&#281;dzmi.
+                Jak mo&#380;emy zilustrowa&#263; tak&#261; sytuacj&#281; w systemie? Poprzez z&#322;o&#380;on&#261; transakcj&#281; z wieloma
+                elementami typu "rozchód" (sk&#261;d przysz&#322;y pieni&#261;dze) i wieloma elementami typu przychód (dok&#261;d posz&#322;y te pieni&#261;dze).
+              </p>
+            
+              <p>
+                Elementy typu rozchód (sk&#261;d):
+                </p><div class="itemizedlist"><ul type="disc"><li>
+                    Kategoria: "Zasoby:Konto Bankowe", Warto&#347;&#263;: "100 PLN"
+                  </li><li>
+                    Kategoria: "Zobowi&#261;zania:Dobry Przyjaciel", Warto&#347;&#263;: "20 PLN"
+                  </li></ul></div><p>
+              </p>
+            
+              <p>
+                Elementy typu przychód (dok&#261;d):
+                </p><div class="itemizedlist"><ul type="disc"><li>
+                    Kategoria: "Wydatki:Jedzenie", Warto&#347;&#263;: "60 PLN"
+                  </li><li>
+                    Kategoria: "Wydatki:Mieszkanie:Sprz&#261;tanie", Warto&#347;&#263;: "60 PLN"
+                  </li></ul></div><p>
+              </p>
+
+              <p>
+                W ten sposób zapisali&#347;my zdarzenie, w którym pieni&#261;dze z wielu miejsc przesuni&#281;te
+                zosta&#322;y do wielu innych miejsc jednocze&#347;nie. Takie sytuacje zdarzaj&#261; si&#281; wcale nie
+                rzadko. 
+              </p>
+
+
+              <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.transactions.new.full.description"></a>
+                  Opis transakcji
+                </h6></div></div></div>
+                
+                <p>
+                  Stanowi opis ca&#322;ej dokonanej transakcji
+                </p>
+              </div>
+
+              <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.transactions.new.full.date"></a>
+                  Data transakcji
+                </h6></div></div></div>
+                
+                <p>
+                  Data kiedy dokonana zosta&#322; transakcja.
+                </p>
+              </div>
+
+              <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.transactions.new.full.outcome"></a>
+                  Rozchód
+                </h6></div></div></div>
+                
+                <p>
+                  Groupuje elementy transakcji zawieraj&#261;ce kategorie, z których
+                  pochodz&#261; pieni&#261;dze.
+                </p>
+              </div>
+
+              <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.transactions.new.full.income"></a>
+                  Przychód
+                </h6></div></div></div>
+                
+                <p>
+                  Groupuje elementy transakcji zawieraj&#261;ce kategorie, do których
+                  przechodz&#261; pieni&#261;dze.
+                </p>
+              </div>
+
+              <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.transactions.new.full.conversions"></a>
+                  Kursy
+                </h6></div></div></div>
+                
+                
+                <p>
+                  W przypadku, gdy tworzysz transakcje, których elementy nie s&#261; w domy&#347;lnej
+                  walucie(jednostce) mo&#380;esz skorzyta&#263; z kursów. Je&#347;li wszystkie elementy transakcji s&#261;
+                  w tej samej walucie(jednostce) korzystanie z kursów nie jest koniecznie by stwierdzi&#263;,
+                  &#380;e transakcja si&#281; równowa&#380;y (w sumie z wszystkich kategorii wychodzi tyle samo
+                  pieni&#281;dzy co do nich przechodzi). Je&#347;li jednak w transakcji wyst&#281;puj&#261; conajmniej
+                  dwie ró&#380;ne waluty(jednostki) skorzystanie z kursów jest koniecznie.
+                </p>
+
+                <p>
+                  Dla ka&#380;dej niedomy&#347;lnej jednostki(waluty) pojawiaj&#261;cej si&#281; w transakcji musisz
+                  u&#380;y&#263; kursu pomi&#281;dzy t&#261; jednostk&#261;, a jednostk&#261; domy&#347;ln&#261; (zwykle PLN). Dzi&#281;ki temu
+                  mo&#380;na przeliczy&#263; warto&#347;&#263; ka&#380;dego elementu transakcji na jego warto&#347;&#263; w domy&#347;lnej
+                  jednostce a nast&#281;pnie sprawdzi&#263; czy suma warto&#347;ci elementów rozchodowych oraz
+                  przychodowych jest taka sama. Je&#347;li tak nie jest, to transakcja nie mo&#380;e zosta&#263;
+                  zapisana.
+                </p>
+
+                <p>
+                  Mo&#380;esz w transakcji u&#380;y&#263; ostatniego (w sensie daty) kursu jaki zdefiniowa&#322;e&#347; mi&#281;dzy
+                  ró&#380;nymi jednostkami lub doda&#263; nowy. Nowo dodawany kurs mo&#380;e zawiera&#263; dat&#281; (w takim
+                  wypadku zostanie otworzony kurs mi&#281;dzy dwoma jednostkami na odpowiedni dzie&#324;) lub
+                  jej nie zawiera&#263; (wtedy b&#281;dzie to kurs tylko dla tej transakcji, a nie na konkretny
+                  dzie&#324;). Kiedy edytujesz ju&#380; istniej&#261;c&#261; transakcj&#281; nie mo&#380;esz zmieni&#263; kursu, ale
+                  mo&#380;esz go usun&#261;&#263; i doda&#263; nowy lub wybra&#263; inny ju&#380; istniej&#261;cy. 
+                </p>
+
+                <p>
+                  Kiedy dodajesz lub wybierasz nowy kurs pierwsze rozwijane menu oznacza
+                  lew&#261; jednostk&#281; (walut&#281;) a drugie rozwijane menu oznacza praw&#261; jednostk&#281; (walut&#281;).
+                  Pierwsze pole tekstowe oznacza kurs zamiany waluty lewej na praw&#261;, a drugie pole
+                  oznacza kurs zamiany prawej waluty na lew&#261;. Niech np. lew&#261; walut&#261; b&#281;dzie z&#322;oty(PLN),
+                  a praw&#261; b&#281;dzie euro(EUR). W pierwszym polu tekstowym mo&#380;emy wtedy wpisa&#263; "0.25", gdy&#380;
+                  1 PLN = 0.25 EUR, natomiast w drugim polu mo&#380;emy wpisa&#263; "4", gdy&#380; 1 EUR = 4 PLN.
+                </p>
+              </div>
+              
             </div>
             
           </div>
 
+          <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="system_elements.transactions.categories_index"></a>
+              Lista transakcji w obr&#281;bie jednej kategorii
+            </h4></div></div></div>
+            
+
+            <p>
+              To okno pokazuje transakcje, których conajmniej jeden element
+              odnosi&#322; si&#281; do kategorii, w której si&#281; znajdujesz lub (je&#347;li ta opcja
+              jest w&#322;&#261;czona w ustawieniach) jej podkategorii. Mo&#380;esz tutaj zobaczy&#263;
+              jak ka&#380;dy z elementów zmieni&#322; saldo aktualnej kategorii oraz jak wszystkie
+              wylistowane elementy razem je zmieni&#322;y.
+            </p>
+            
+            <p>
+              W przypadku gdy przedstawiane s&#261; elementy z uwzgl&#281;dnieniem podkategorii
+              zarówno zmiana jak i aktualne saldo uwzgl&#281;dniaj&#261; tak&#380;e podkategorie.
+            </p>
+          </div>
+          
           <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="system_elements.transactions.search"></a>
               Wyszukiwanie transakcji
             </h4></div></div></div>
@@ -1260,11 +1394,11 @@
     <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faq"></a>Faq</h2></div></div></div>
         
 
-        <div class="qandaset"><dl><dt>1. <a href="#id3899235">Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</a></dt><dt>2. <a href="#id3899257">Inne pytanie</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%"><tbody>
-                <tr class="question"><td align="left" valign="top"><a name="id3899235"></a><a name="id3899239"></a><p><b>1.</b></p></td><td align="left" valign="top"><p>Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</p></td></tr>
+        <div class="qandaset"><dl><dt>1. <a href="#id3935779">Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</a></dt><dt>2. <a href="#id3935801">Inne pytanie</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%"><tbody>
+                <tr class="question"><td align="left" valign="top"><a name="id3935779"></a><a name="id3935782"></a><p><b>1.</b></p></td><td align="left" valign="top"><p>Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</p></td></tr>
                 <tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Sam nie wiem;)</p></td></tr>
             
-                <tr class="question"><td align="left" valign="top"><a name="id3899257"></a><a name="id3899260"></a><p><b>2.</b></p></td><td align="left" valign="top"><p>Inne pytanie</p></td></tr>
+                <tr class="question"><td align="left" valign="top"><a name="id3935801"></a><a name="id3935803"></a><p><b>2.</b></p></td><td align="left" valign="top"><p>Inne pytanie</p></td></tr>
                 <tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Inna odpowied&#378;</p></td></tr>
             </tbody></table></div>
 

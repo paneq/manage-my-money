@@ -863,12 +863,153 @@
               </title>
 
               <para>
-                
+                Złożone transakcje mają miejsce wtedy, gdy jednocześnie zmieniają one wartość
+                kilku kategorii np. kiedy jest wiele źródeł skąd przyszły pieniądze bądź wiele
+                miejsc, do których zostały one rozdysponowane.
               </para>
+
+              <para>
+                Rozważmy następujący przykład. Podczas zakupów w markecie zabrakło Ci pieniędzy
+                i za część zakupów zapłaciłeś (zapłaciłaś) swoimi a za część pożyczonymi pieniędzmi.
+                Jak możemy zilustrować taką sytuację w systemie? Poprzez złożoną transakcję z wieloma
+                elementami typu "rozchód" (skąd przyszły pieniądze) i wieloma elementami typu przychód (dokąd poszły te pieniądze).
+              </para>
+            
+              <para>
+                Elementy typu rozchód (skąd):
+                <itemizedlist>
+                  <listitem>
+                    Kategoria: "Zasoby:Konto Bankowe", Wartość: "100 PLN"
+                  </listitem>
+                  
+                  <listitem>
+                    Kategoria: "Zobowiązania:Dobry Przyjaciel", Wartość: "20 PLN"
+                  </listitem>
+                </itemizedlist>
+              </para>
+            
+              <para>
+                Elementy typu przychód (dokąd):
+                <itemizedlist>
+                  <listitem>
+                    Kategoria: "Wydatki:Jedzenie", Wartość: "60 PLN"
+                  </listitem>
+                  <listitem>
+                    Kategoria: "Wydatki:Mieszkanie:Sprzątanie", Wartość: "60 PLN"
+                  </listitem>
+                </itemizedlist>
+              </para>
+
+              <para>
+                W ten sposób zapisaliśmy zdarzenie, w którym pieniądze z wielu miejsc przesunięte
+                zostały do wielu innych miejsc jednocześnie. Takie sytuacje zdarzają się wcale nie
+                rzadko. 
+              </para>
+
+
+              <section id="system_elements.transactions.new.full.description">
+                <title>
+                  Opis transakcji
+                </title>
+                <para>
+                  Stanowi opis całej dokonanej transakcji
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.full.date">
+                <title>
+                  Data transakcji
+                </title>
+                <para>
+                  Data kiedy dokonana został transakcja.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.full.outcome">
+                <title>
+                  Rozchód
+                </title>
+                <para>
+                  Groupuje elementy transakcji zawierające kategorie, z których
+                  pochodzą pieniądze.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.full.income">
+                <title>
+                  Przychód
+                </title>
+                <para>
+                  Groupuje elementy transakcji zawierające kategorie, do których
+                  przechodzą pieniądze.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.full.conversions">
+                <title>
+                  Kursy
+                </title>
+                
+                <para>
+                  W przypadku, gdy tworzysz transakcje, których elementy nie są w domyślnej
+                  walucie(jednostce) możesz skorzytać z kursów. Jeśli wszystkie elementy transakcji są
+                  w tej samej walucie(jednostce) korzystanie z kursów nie jest koniecznie by stwierdzić,
+                  że transakcja się równoważy (w sumie z wszystkich kategorii wychodzi tyle samo
+                  pieniędzy co do nich przechodzi). Jeśli jednak w transakcji występują conajmniej
+                  dwie różne waluty(jednostki) skorzystanie z kursów jest koniecznie.
+                </para>
+
+                <para>
+                  Dla każdej niedomyślnej jednostki(waluty) pojawiającej się w transakcji musisz
+                  użyć kursu pomiędzy tą jednostką, a jednostką domyślną (zwykle PLN). Dzięki temu
+                  można przeliczyć wartość każdego elementu transakcji na jego wartość w domyślnej
+                  jednostce a następnie sprawdzić czy suma wartości elementów rozchodowych oraz
+                  przychodowych jest taka sama. Jeśli tak nie jest, to transakcja nie może zostać
+                  zapisana.
+                </para>
+
+                <para>
+                  Możesz w transakcji użyć ostatniego (w sensie daty) kursu jaki zdefiniowałeś między
+                  różnymi jednostkami lub dodać nowy. Nowo dodawany kurs może zawierać datę (w takim
+                  wypadku zostanie otworzony kurs między dwoma jednostkami na odpowiedni dzień) lub
+                  jej nie zawierać (wtedy będzie to kurs tylko dla tej transakcji, a nie na konkretny
+                  dzień). Kiedy edytujesz już istniejącą transakcję nie możesz zmienić kursu, ale
+                  możesz go usunąć i dodać nowy lub wybrać inny już istniejący. 
+                </para>
+
+                <para>
+                  Kiedy dodajesz lub wybierasz nowy kurs pierwsze rozwijane menu oznacza
+                  lewą jednostkę (walutę) a drugie rozwijane menu oznacza prawą jednostkę (walutę).
+                  Pierwsze pole tekstowe oznacza kurs zamiany waluty lewej na prawą, a drugie pole
+                  oznacza kurs zamiany prawej waluty na lewą. Niech np. lewą walutą będzie złoty(PLN),
+                  a prawą będzie euro(EUR). W pierwszym polu tekstowym możemy wtedy wpisać "0.25", gdyż
+                  1 PLN = 0.25 EUR, natomiast w drugim polu możemy wpisać "4", gdyż 1 EUR = 4 PLN.
+                </para>
+              </section>
+              
             </section>
             
           </section>
 
+          <section id="system_elements.transactions.categories_index">
+            <title>
+              Lista transakcji w obrębie jednej kategorii
+            </title>
+
+            <para>
+              To okno pokazuje transakcje, których conajmniej jeden element
+              odnosił się do kategorii, w której się znajdujesz lub (jeśli ta opcja
+              jest włączona w ustawieniach) jej podkategorii. Możesz tutaj zobaczyć
+              jak każdy z elementów zmienił saldo aktualnej kategorii oraz jak wszystkie
+              wylistowane elementy razem je zmieniły.
+            </para>
+            
+            <para>
+              W przypadku gdy przedstawiane są elementy z uwzględnieniem podkategorii
+              zarówno zmiana jak i aktualne saldo uwzględniają także podkategorie.
+            </para>
+          </section>
+          
           <section id="system_elements.transactions.search">
             <title>
               Wyszukiwanie transakcji

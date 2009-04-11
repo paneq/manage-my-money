@@ -60,7 +60,10 @@
     <tr>
 
       <td colspan="6" class="value-for-time" >
-        <b>Zmiana wartości kategorii: </b>
+        <b>
+          Zmiana wartości kategorii
+          <%= "(z podkategoriami)" if @include_subcategories %>
+        </b>
       </td>
 
       <td class="transfer-table-border number" colspan="2">
@@ -85,7 +88,10 @@
 
     <tr>
       <td class="transfer-table-border value-for-time" colspan="6">
-        <b>Aktualnie</b>
+        <b>
+          Aktualne saldo
+          <%= "(z podkategoriami)" if @include_subcategories %>
+        </b>
       </td>
 
       <td class="transfer-table-border number" colspan="2">
