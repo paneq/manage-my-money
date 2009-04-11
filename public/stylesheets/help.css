@@ -1,6 +1,7 @@
 body
 {
     font-family: Verdana, Helvetica, "Bitstream Vera Sans", sans-serif;
+    font-size: 15px;
     margin-left: auto;
     margin-right: auto;
     width:1000px;
@@ -101,6 +102,14 @@ h5
     font-size: 100%;
 }
 
+h6
+{
+    background-color: #7a99ae;
+    border: solid 1px black;
+    padding: 3px;
+    font-size: 80%;
+}
+
 div.section {
     margin-left: 10px;
 }
@@ -177,12 +186,6 @@ div.variablelist {
     border: solid 1px #606090;
     padding: 1px
 }
-
-
-p {
-    font-size: 15px;
-}
-
 
 p.c2 {
     color: #ffffff ;

@@ -749,18 +749,117 @@
 
             <section id="system_elements.transactions.new.quick">
               <title>
-                Dodawanie prostych transakcji
+                Dodawanie prostych(szybkich) transakcji
               </title>
               
               <para>
+                Kiedy jesteś w widoku konkretnej kategorii możesz dodać szybki transfer. Taka
+                transakcja niczym się nie różni od dodawania jej z poziomu zakładki "Pełny",
+                stworzonej do dodawania bardziej złożonych transakcji. Dodawanie transakcji
+                z poziomu zakładki "Szybki" zostało stworzone po to by można było jak najłatwiej
+                i jak najszybciej dodać najprostsze transakcje, czyli takie gdy pieniądze przechodzą
+                z dokładnie jednej kategorii do dokładnie drugiej kategorii i całość wymaga jednego
+                prostego opisu.
+              </para>
+
+              <para>
+                Jeśli przykładowo kupiłeś (kupiłaś) w osiedlowym sklepiku batonika za 2 zł w gotówce
+                z pewnością nie jest to nadzwyczaj skomplikowana transakcja i powinno się dać ją łatwo zapisać w systemie. Korzystając z opcji "szybkiego" transferu możesz to uczynić na dwa sposoby:
+                <itemizedlist>
+                  <listitem>
+                    Przejdź do swojej kategorii Zasoby:Gotówka. Na zakładce szybkiej transakcji wybierz
+                    kategorię "Wydatki:Jedzenie:Słodycze". Uzupełnij opis np.: "Batonik". Wprowadź
+                    wartość o jaką ma się zmienić saldo kategorii, w której się aktualnie znajdujesz.
+                    Skoro jesteś w kategorii "Gotówka" a baton kosztował 2 zł wprowadź "-2".
+                    Wybierz odpowiednią walutę "PLN", dzisiejszy dzień i kliknij zapisz.
+                  </listitem>
+
+                  <listitem>
+                    Tą samą transakcję możesz zapisać również, jeśli przejdziesz do kategorii
+                    "Wydatki:Jedzenie:Słodycze". Zamiast kwoty "-2" wpisz wtedy kwotę "2", gdyż tyle
+                    kosztował baton i o taką wartość powinno się zwiększyć saldo kategori, które mówi
+                    ile pieniędzy wydałeś (wydałaś) na słodycze. Oczywiście jako drugą kategorię wybierz
+                    "Zasoby:Gotówka", gdyż to właśnie stamtąd wzięły się pieniądze przeznaczone na
+                    kupionego batonika.
+                  </listitem>
+                </itemizedlist>
+                
+                Pamiętaj, że na zakładce szybkiego transferu słowo wartość zawsze oznacza:
+                "o ile powinno się zmienić saldo kategori, w której aktualnie jestem" po zapisaniu
+                aktualnie edytowanej transakcji. Podane w tym przykładzie kategorie są oczywiście
+                przykładowe.
                 
               </para>
+
+              <section id="system_elements.transactions.new.quick.category">
+                <title>
+                  Kategoria
+                </title>
+                <para>
+                  Przeciwna kategoria aktualnie tworzonej transakcji. Może oznaczać
+                  <itemizedlist>
+                    <listitem>
+                      kategorię, z której przyszły pieniądze do kategori,
+                      w której się aktualnie znajdujesz.
+                      W sytuacji, gdy wpisana wartość jest dodatnia.
+                    </listitem>
+                    <listitem>
+                      kategorię, do której przeszły pieniądze z kategorii,
+                      w której się aktualnie znajdujesz.
+                      W sytuacji, gdy wpisana wartość jest ujemna.
+                    </listitem>
+                  </itemizedlist>
+                  Uwaga: Jeśli aktualnie znajdujesz się w kategori typu "Przychód"
+                  i w ustawieniach użytkownika masz zaznaczoną opcję: "Obróc wartość salda, dla
+                  kategorii typu 'Przychody' " interpretacja jest odwrotna. Jeśli kwota jest dodatnia
+                  to znaczy, że pieniądze przejdą do wybranej kategorii, a jeśli kwota jest ujemna to
+                  znaczy, że pieniądze przyjdą z wybranej kategorii do tej, w której się znajdujesz.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.quick.description">
+                <title>
+                  Opis
+                </title>
+                <para>
+                  Opis nowo tworzonej transakcji.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.quick.value">
+                <title>
+                  Wartość
+                </title>
+                <para>
+                  Wartość o jaką zmieni się saldo kategori, w której się aktualnie znajdujesz.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.quick.date">
+                <title>
+                  Data transakcji
+                </title>
+                <para>
+                  Dzień, w którym nastąpiła zapisywana transakcja.
+                </para>
+              </section>
+
+              <section id="system_elements.transactions.new.quick.save">
+                <title>
+                  Zapisz
+                </title>
+                <para>
+                  Powoduje zapisanie transakcji o dwóch elementach. Jeden element
+                  ma wybraną kategorię, w której się aktualnie znajdujesz, a drugi
+                  element ma katogorię, którą wybrano z listy.
+                </para>
+              </section>
             </section>
 
 
             <section id="system_elements.transactions.new.full">
               <title>
-                Dodawanie nowych transakcji
+                Dodawanie złożonych(pełnych) transakcji
               </title>
 
               <para>

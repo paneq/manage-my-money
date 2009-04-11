@@ -3,22 +3,26 @@
   <p>
     <%= label_tag 'data[from_category_id]', 'Kategoria' %>
     <%= select_tag 'data[from_category_id]' , options_from_collection_for_select( @current_user.categories, 'id' , 'name' , nil) %>
+    <%= help_tag 'system_elements.transactions.new.quick.category' %>
   </p>
 
   <p>
     <%= label_tag 'data[description]', 'Opis' %>
     <%= text_field_tag 'data[description]','', { :size=>25 } %>
+    <%= help_tag 'system_elements.transactions.new.quick.description' %>
   </p>
 
   <p>
     <%= label_tag 'data[value]', 'Wartość' %>
     <%= text_field_tag 'data[value]','', { :size=>9 } %>
     <%= select 'data', 'currency_id', Currency.for_user(@current_user).collect {|c| [ c.long_symbol, c.id ] }, :selected => @current_user.default_currency.id %>
+    <%= help_tag 'system_elements.transactions.new.quick.value' %>
   </p>
 
   <p>
     <%= label_tag 'data[day]', 'Data transakcji' %>
     <%= date_select  :data, :day  %>
+    <%= help_tag 'system_elements.transactions.new.quick.date' %>
   </p>
 
   <%= hidden_field_tag  'data[category_id]', @category.id %>
@@ -27,5 +31,6 @@
   <p>
     <%= label_tag '', 'Akcje' %>
     <%= submit_tag 'Zapisz' %>
+    <%= help_tag 'system_elements.transactions.new.quick.save' %>
   </p>
 <% end %>
