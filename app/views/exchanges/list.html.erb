@@ -1,20 +1,27 @@
 <% c1_symbol = h @c1.long_symbol %>
 <% c2_symbol = h @c2.long_symbol %>
-<h1>Kursy wymiany dla walut <%= c1_symbol -%> oraz <%= c2_symbol -%></h1>
+<h1>
+  Kursy wymiany dla jednostek <%= c1_symbol -%> oraz <%= c2_symbol -%>
+  <%= help_tag('system_elements.exchanges.list') %>
+</h1>
 <div>
   <% light_shadow do %>
     <table id="exchanges-list" class="nice-table">
       <th>
         Dzień
+        <%= help_tag('system_elements.exchanges.list.day') %>
       </th>
       <th>
         1 <%= c1_symbol -%>
+        <%= help_tag('system_elements.exchanges.list.left_to_right') %>
       </th>
       <th>
         1 <%= c2_symbol -%>
+        <%= help_tag('system_elements.exchanges.list.right_to_left') %>
       </th>
       <th>
         Akcje
+        <%= help_tag('system_elements.exchanges.list.actions') %>
       </th>
       <% @exchanges.each do |e| %>
         <tr>

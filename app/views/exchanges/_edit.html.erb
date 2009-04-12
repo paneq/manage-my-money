@@ -2,31 +2,35 @@
 <% form_for @exchange, :html => {:class => 'style2'} do |f| %>
   <p>
     <label for="exchange_left_currency" class="inline">
-      Pierwsza waluta:
+      Pierwsza jednostka:
     </label>
     <%= f.select :left_currency, @currencies.map{|c| [c.long_symbol, c.id] }, :selected => @exchange.left_currency.id %>
+    <%= help_tag('system_elements.exchanges.fields.left_currency') %>
   </p>
 
   <p>
     <label for="exchange_right_currency" class="inline">
-      Druga waluta:
+      Druga jednostka:
     </label>
     <%= f.select :right_currency, @currencies.map{|c| [c.long_symbol, c.id]}, :selected => @exchange.right_currency.id %>
+    <%= help_tag('system_elements.exchanges.fields.right_currency') %>
   </p>
 
   <p>
     <label for="exchange_left_to_right" class="inline">
-      Kurs zamiany z pierwszej waluty na drugą:
+      Kurs zamiany z pierwszej jednostki na drugą:
     </label>
     <%= f.text_field :left_to_right, :size => 8 %>
+    <%= help_tag('system_elements.exchanges.fields.left_to_right') %>
   </p>
   
 
   <p>
     <label for="exchange_right_to_left" class="inline">
-      Kurs zamiany z drugiej waluty na pierwszą:
+      Kurs zamiany z drugiej jednostki na pierwszą:
     </label>
     <%= f.text_field :right_to_left, :size => 8 %>
+    <%= help_tag('system_elements.exchanges.fields.right_to_left') %>
   </p>
 
   <p>
@@ -34,6 +38,7 @@
       Kurs na dzień:
     </label>
     <%= f.date_select :day %>
+    <%= help_tag('system_elements.exchanges.fields.day') %>
   </p>
 
   <%= f.submit 'Zapisz kurs' %>

@@ -9,7 +9,7 @@
       <b>
         <%= I18n.translate column.name, :scope => 'activerecord.attributes.currency' %>:
       </b>
-      <%=h @currency.send(column.name) %>
+      <%= h @currency.send(column.name) %>
       <%= help_tag('system_elements.currencies.fields.' + column.name) %>
     </p>
   <% end %>
@@ -17,7 +17,7 @@
     <b>
       <%= I18n.translate :system, :scope => 'activerecord.attributes.currency' %>:
     </b>
-    <%=h @currency.user_id.nil? ? 'Tak' : 'Nie' %>
+    <%= h @currency.user_id.nil? ? 'Tak' : 'Nie' %>
     <%= help_tag('system_elements.currencies.fields.system') %>
   </p>
 

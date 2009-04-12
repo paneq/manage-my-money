@@ -1187,6 +1187,167 @@
           
         </section>
 
+        <section id="system_elements.exchanges">
+          <title>
+            Kursy między jednostkami (walutami)
+          </title>
+
+          <para>
+            Kursy w aplikacje występują z dwóch powodów:
+            <itemizedlist>
+              <listitem>
+                Są używane w transakcjach by przeliczyć wartość elementów, które
+                nie są w domyślnej jednostce właśnie na wartość w jednostce domyślnej. 
+              </listitem>
+              <listitem>
+                Do zapisywania jak w czasie zmienia się wartość walut, akcji, jednostek
+                funduszu inwestycyjnego lub posiadanych przez Ciebie przedmiotów materialnych.
+              </listitem>
+            </itemizedlist>
+          </para>
+
+          <section id="system_elements.exchanges.index">
+            <title>
+              Lista możliwych kursów wymiany.
+            </title>
+            <para>
+              Na tej stronie możesz przejść do kursów wymiany między dwoma
+              konkretnymi jednostkami oraz od razu utworzyć kurs.
+            </para>
+          </section>
+
+          <section id="system_elements.exchanges.list">
+            <title>
+              Lista kursów wymiany między dwoma jednostkami (walutami)
+            </title>
+
+            <para>
+              Strona zawiera listę ostatnich wartości kursów między dwoma
+              jednostkami. Możesz zobaczyć jak w poszczególne dni
+              przedstawiał się kurs zamiany jednej jednostki na drugą jednostkę.
+            </para>
+
+            <para>
+              Przykładowo jeśli tabela zawiera kolumny o nazwach "DZIEŃ", "1 PLN", "1 EUR", a komórki
+              w pierwszym wierszu mają następujące wartości: "2009-04-12", "0.25 EUR", "4 PLN", to
+              należy to rozumieć następująco:
+              <itemizedlist>
+                <listitem>
+                  Ostatni kurs zapisany na określony dzień między walutami EUR i PLN został
+                  przez Ciebie utworzony w dniu "2009-04-12".
+                </listitem>
+                <listitem>
+                  Kurs zamiany waluty PLN na EUR w dniu "2009-04-12" wynosił "0.25" EUR co oznacza,
+                  że w tym dniu 1 PLN = 0.25 EUR. Innymi słowy jedna złotówka miała wartość ćwierć
+                  euro.
+                </listitem>
+                <listitem>
+                  Kurs zamiany waluty EUR na PLN w dniu "2009-04-12" wynosił "4" PLN co oznacza,
+                  że w tym dniu 1 EUR = 4 PLN. Innymi słowy jedno euro było warte cztery złote.
+                </listitem>
+              </itemizedlist>
+            </para>
+
+            <section id="system_elements.exchanges.list.day">
+              <title>
+                Dzień
+              </title>
+              <para>
+                Dzień, na który został zapisany dany kurs między jednostkami.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.list.left_to_right">
+              <title>
+                Wartość kursu wymiany pierwszej jednostki na drugą.
+              </title>
+              <para>
+                Zakładając, że nagłówek kolumny ma tytuł np. "1 EUR", a wartość
+                w wierszu wynosi "4 PLN, oznacza to, że tego dnia jedno euro było warte
+                4 złote.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.list.right_to_left">
+              <title>
+                Wartość kursu wymiany drugiej jednostki na pierwszą.
+              </title>
+              <para>
+                Zakładając, że nagłówek kolumny ma tytuł np. "1 PLN", a wartość
+                w wierszu wynosi "0.25 EUR", oznacza to, że tego dnia jeden złoty był wart
+                ćwierć euro.
+              </para>
+            </section>
+            
+            <section id="system_elements.exchanges.list.actions">
+              <title>
+                Akcje
+              </title>
+              <para>
+                Możesz usunąć lub wyedytować wartość każdego stworzonego przez siebie kursu.
+              </para>
+            </section>
+          </section>
+
+          <section id="system_elements.exchanges.fields">
+            <title>
+              Atrybuty dla kursu wymiany.
+            </title>
+            <para>
+              Edytując kurs wymiany możesz mu zmienić pięć atrybutów.
+            </para>
+
+            <section id="system_elements.exchanges.fields.day">
+              <title>
+                Dzień
+              </title>
+              <para>
+                Dzień, na który ustalany jest kurs wymiany między
+                dwoma jednostkami.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.fields.left_currency">
+              <title>
+                Pierwsza jednostka
+              </title>
+              <para>
+                Pierwsza jednostka (waluta), którą obejmuje kurs.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.fields.right_currency">
+              <title>
+                Druga jednostka
+              </title>
+              <para>
+                Druga jednostka (waluta), którą obejmuje kurs.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.fields.left_to_right">
+              <title>
+                Wartość kursu wymiany pierwszej jednostki na drugą.
+              </title>
+              <para>
+                Zakładając, że pierwsza jednostka to np. waluta EUR a druga jednostka to waluta PLN, to
+                wpisanie wartości "4" kursu wymiany z pierwszej jednostki na drugą oznacza, że tego dnia jedno euro było warte cztery złote.
+              </para>
+            </section>
+
+            <section id="system_elements.exchanges.fields.right_to_left">
+              <title>
+                Wartość kursu wymiany drugiej jednostki na pierwszą.
+              </title>
+              <para>
+                Zakładając, że pierwsza jednostka to np. waluta EUR a druga jednostka to waluta PLN, to
+                wpisanie wartości "0.25" kursu wymiany z drugiej jednostki na pierwszą oznacza, że tego dnia jedna złotówka była warta ćwierć euro.
+              </para>
+            </section>
+            
+          </section>
+        </section>
+
         <section id="system_elements.reports">
             <title>
                 Raporty

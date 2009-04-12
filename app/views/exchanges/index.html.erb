@@ -1,9 +1,10 @@
 <h1>
-  Kursy wymiany walut
+  Kursy wymiany jednostek (walut)
+  <%= help_tag('system_elements.exchanges.index') %>
 </h1>
 
 <div id="currencies-pairs-list" class="margin-left">
-  Przejdź do kursów wymiany dla następujących walut:
+  Przejdź do kursów wymiany dla następujących jednostek:
   <ul>
     <% @pairs.each do |c1, c2| %>
       <li>
