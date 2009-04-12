@@ -68,4 +68,27 @@ class ExchangeTest < ActiveSupport::TestCase
     
   end
 
+  def test_can_create_exchange_for_system_currency
+    e = Exchange.new(:user => @rupert, :left_currency => @euro, :right_currency => @zloty)
+    e.valid?
+    assert_nil e.errors.on(:user_id)
+  end
+
+  
+  # security
+  def test_cannot_create_exchange_for_someone_currency
+    save_jarek
+    c1 = Currency.create!(:user => @jarek, :all => 'XYZ')
+    c2 = Currency.create!(:user => @jarek, :all => 'ZYX')
+    e = Exchange.new(:user => @rupert, :left_currency => c1, :right_currency => c2)
+    assert !e.valid?
+    assert !e.errors.on(:user_id).empty?
+  end
+
+  
+  def test_user_id_protected
+    e = Exchange.new(:user_id => @rupert.id)
+    assert_nil e.user
+  end
+
 end

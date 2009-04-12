@@ -13,6 +13,8 @@
 #
 
 class Exchange < ActiveRecord::Base
+  attr_protected :user_id
+  
   belongs_to :left_currency,
     :class_name => "Currency",
     :foreign_key => "left_currency_id"
@@ -44,6 +46,8 @@ class Exchange < ActiveRecord::Base
 
   validates_uniqueness_of :day, :scope => [:user_id, :left_currency_id, :right_currency_id], :allow_nil => true, :allow_blank => true
 
+  validates_user_id :left_currency, :right_currency, :allow_nil => true
+  
   def currencies
     return (left_currencies.to_a + right_currencies.to_a).uniq
   end

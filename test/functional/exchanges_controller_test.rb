@@ -8,9 +8,10 @@ class ExchangesControllerTest < ActionController::TestCase
   def setup
     prepare_currencies
     save_rupert
+    save_jarek
     log_rupert
-    @chf = Currency.new(:user => @rupert, :all => 'CHF')
-    @chf.save!
+    @chf = Currency.create!(:user => @rupert, :all => 'CHF')
+    @bad = Currency.create!(:user => @jarek, :all => 'BAD')
     @currencies << @chf
   end
 
@@ -23,10 +24,13 @@ class ExchangesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:pairs)
 
     assert_select 'div#currencies-pairs-list' do
+      #security: valid count checks also that other user currencies are not included
       assert_select 'li', :count => 6 # 3 + 2 + 1 possible exchanges between currencies
       @currencies.each do |currency|
         assert_select 'li', :text => Regexp.new(currency.long_symbol), :count => 3 # each currency can be exchanged to 3 other currencies
       end
+      #security:
+      assert_select 'li', :text => Regexp.new(@bad.long_symbol), :count => 0
     end
   end
 
@@ -240,6 +244,46 @@ class ExchangesControllerTest < ActionController::TestCase
     assert_redirected_to :action => 'list', :left_currency =>  e.left_currency.id, :right_currency => e.right_currency.id
   
     assert_nil Exchange.find_by_id(e.id)
+  end
+
+  def test_destroy_when_used_in_transaction
+    @request.env["HTTP_REFERER"] = "/exchanges"
+    t = make_simple_transfer
+    t.conversions.build(:exchange => make_exchange())
+    t.save!
+    
+    id = t.exchanges.first.id
+    post :destroy, :id => id
+    assert_response :redirect
+    assert_match(/Nie można/, flash[:notice])
+    
+    assert_not_nil Exchange.find_by_id(id)
+  end
+  
+  #security
+
+  def test_listing_someone_exchanges
+    @jarek_cur = Currency.create!(:user => @jarek, :all => 'XYZ')
+    [@zloty, @chf, @bad].each do |currency|
+      [[@jarek_cur, currency],[currency, @jarek_cur]].each do |c1, c2|
+        get :list, :left_currency => c1.id.to_s, :right_currency => c2.id.to_s
+        assert_response :redirect
+        assert_redirected_to :action => :index
+        assert_match(/Brak uprawnień/, flash[:notice])
+      end
+    end
+  end
+
+  
+  def test_change_someone_exchange
+    cur = Currency.create!(:user => @jarek, :all => 'XYZ')
+    e = save_exchange(:user => @jarek, :left_currency => cur, :right_currency => @bad)
+    [[:delete, :destroy], [:put, :update], [:get, :edit], [:get, :show]].each do |method, action|
+      send(method, action, :id => e.id)
+      assert_response :redirect
+      assert_redirected_to :action => :index
+      assert_match(/Brak uprawnień/, flash[:notice])
+    end
   end
 
   private

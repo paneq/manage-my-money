@@ -149,9 +149,10 @@ class CurrencyTest < ActiveSupport::TestCase
     assert Currency.exchanged_by(@rupert).include?(@zloty)
     assert Currency.exchanged_by(@rupert).include?(rupert_currency)
 
-    Exchange.new(:left_currency =>jarek_currency, :right_currency => @euro, :left_to_right => 1.0, :right_to_left => 1.0, :user => @rupert, :day => Date.yesterday).save!
+    Exchange.new(:left_currency =>jarek_currency, :right_currency => @euro, :left_to_right => 1.0, :right_to_left => 1.0, :user => @jarek, :day => Date.yesterday).save!
     
-    assert_equal [jarek_currency], Currency.exchanged_by(@jarek)
+    assert Currency.exchanged_by(@jarek).include?(jarek_currency)
+    assert Currency.exchanged_by(@jarek).include?(@euro)
     assert Currency.exchanged_by(@rupert).include?(@euro)
     assert Currency.exchanged_by(@rupert).include?(@zloty)
     assert Currency.exchanged_by(@rupert).include?(rupert_currency)
