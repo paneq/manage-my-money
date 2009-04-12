@@ -1051,8 +1051,140 @@
           </title>
 
           <para>
-            
+            Jednostki służą do zarządzania (jak sama nazwa wskazuje) jednostkami, którymi mierzymy
+            zasobność naszych portfeli :-). Głównie są to waluty, takie jak złotówki(PLN),
+            czy euro(EUR), jednak nie zawsze. Możesz chcieć dodać jednostkę zupełnie innego typu jak AKJ, która będzie oznaczać akcje jakiejś firmy lub FUN, która będzie oznaczać jednostki
+            funduszu. Korzystając z opcji zapisywania na różne dni kursów dla tych jednostek można
+            śledzić jak się zmienia ich wartość w czasie. Możesz nawet przypisać różnym posiadanym
+            przez Ciebie przedmiotom takim jak obraz czy dom odpowiednio jednostkę a następnie kurs, by
+            na prezentowanych w systemie wykresach lub tabelach w sposób całkowity oddać swoją sytuację
+            finansową.
           </para>
+
+          <section id="system_elements.currencies.index">
+            <title>
+              Lista jednostek
+            </title>
+            <para>
+              Prezentowana lista jednostek zawiera predefiniowane w systemie jednostki (3 waluty)
+              oraz, jednostki stworzone przez użytkownika, dla jego własnego użytku.
+            </para>
+
+            <section id="system_elements.currencies.index.actions">
+              <title>
+                Akcje
+              </title>
+              <para>
+                Na liście jednostek możesz przejść do następujących akcji:
+                <itemizedlist>
+                  <listitem>
+                    Pokaż - pokazuje atrybuty jednostki.
+                  </listitem>
+                  <listitem>
+                    Edytuj - umożliwia edycję atrybutów jednostki jeśli należy ona do
+                    użytkownika. Edycja jednostek systemowych jest niemożliwa.
+                  </listitem>
+                  <listitem>
+                    Usuń - umożliwia usunięcie jednostki, jeśli nie została ona użyta
+                    w żadnej transakcji i została stworzona przez użytkownika.
+                    Usuwanie jednostek systemowych jest niemożliwe.
+                  </listitem>
+                </itemizedlist>
+              </para>
+            </section>
+          </section>
+
+          <section id="system_elements.currencies.fields">
+            <title>
+              Atrybuty jednostek
+            </title>
+            <para>
+              Każda jednostka ma pięć określających ją atrybutów.
+            </para>
+
+            <section id="system_elements.currencies.fields.symbol">
+              <title>
+                Symbol
+              </title>
+              <para>
+                Krótki, zwyczajowy symbol jednostki (waluty).
+              </para>
+            </section>
+
+            <section id="system_elements.currencies.fields.long_symbol">
+              <title>
+                Długi symbol
+              </title>
+              <para>
+                Trzyliterowy symbol składający się ze dużych
+                znaków alfabetu łacińskiego np: USD, PLN, EUR.
+              </para>
+            </section>
+            
+            <section id="system_elements.currencies.fields.name">
+              <title>
+                Nazwa
+              </title>
+              <para>
+                Krótka, zwyczajowa nazwa jednostki (waluty).
+              </para>
+            </section>
+            
+            <section id="system_elements.currencies.fields.long_name">
+              <title>
+                Długa nazwa
+              </title>
+              <para>
+                Długa nazwa jednostki (waluty), która wystarczy do odróżnienia
+                jej spośród innych podobnie brzmiących np: dolar amerykański,
+                dolar australijski.
+              </para>
+            </section>
+
+            <section id="system_elements.currencies.fields.system">
+              <title>
+                Systemowa
+              </title>
+              <para>
+                Pole systemowa oznacza, że jednostka jest w systemie do użytku wszystkich
+                użytkowników. Brak tego oznaczenia informuje, że jednostka została stworzona
+                przez użytkownika. Brak możliwości edycji oraz usunięcia jednostki (waluty)
+                systemowej.
+              </para>
+            </section>
+          </section>
+
+          <section id="system_elements.currencies.new">
+            <title>
+              Nowa jednostka
+            </title>
+            <para>
+              Korzystając z tego formularza możesz utworzyć nową jednostkę
+              reprezentującą walutę, akcje firmy, jednostkę funduszu inwestycyjnego
+              lub przedmiot (np. obraz albo dom), względnie cokolwiek innego,
+              co Ci przyjdzie do głowy :-).
+            </para>
+          </section>
+
+          <section id="system_elements.currencies.edit">
+            <title>
+              Edycja jednostki
+            </title>
+            <para>
+              Korzystając z tego formularza możesz dokonać edycji
+              atrybutów stworzonej przez Ciebie wcześniej jednostki.
+            </para>
+          </section>
+
+          <section id="system_elements.currencies.show">
+            <title>
+              Podgląd jednostki
+            </title>
+            <para>
+              W tym widoku możesz zobaczyć wszystkie atrybuty jednostki.
+            </para>
+          </section>
+          
         </section>
 
         <section id="system_elements.reports">

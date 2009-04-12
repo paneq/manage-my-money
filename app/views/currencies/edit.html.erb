@@ -1,6 +1,7 @@
 
 <h1>
   Edycja waluty: <%= h @currency.long_name -%>
+  <%= help_tag('system_elements.currencies.edit') %>
 </h1>
 <% form_for @currency, :html=>{:class => 'style2'} do |f| %>
 
@@ -9,21 +10,25 @@
   <p id="symbol">
     <%= f.label :symbol, "Krótki symbol waluty np. '$'"%>
     <%= f.text_field :symbol, :size => 5  %>
+    <%= help_tag('system_elements.currencies.fields.symbol') %>
   </p>
 
   <p id="long_symbol">
     <%= f.label :long_symbol, "Długi symbol waluty np. 'USD'"%>
     <%= f.text_field :long_symbol, :size => 7  %>
+        <%= help_tag('system_elements.currencies.fields.long_symbol') %>
   </p>
 
   <p id="name">
     <%= f.label :name, "Krótka nazwa np. 'Dolar'"%>
     <%= f.text_field :name, :size => 12  %>
+    <%= help_tag('system_elements.currencies.fields.name') %>
   </p>
 
   <p id="long_name">
     <%= f.label :long_name, "Długa nazwa np. 'Dolar amerykański'"%>
     <%= f.text_field :long_name, :size => 20  %>
+    <%= help_tag('system_elements.currencies.fields.long_name') %>
   </p>
 
   <%= f.submit "Aktualizuj" %>

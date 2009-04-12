@@ -1,15 +1,24 @@
 <h1>
   Podgląd jednostki: <%= @currency.long_name -%>
+  <%= help_tag('system_elements.currencies.show') %>
 </h1>
 <div class="margin-left" <%= obj_id('show-currency', @currency) -%> >
   
   <% for column in Currency.content_columns %>
     <p id="<%= column.name -%>" >
-      <b><%= I18n.translate column.name, :scope => 'activerecord.attributes.currency' %>:</b> <%=h @currency.send(column.name) %>
+      <b>
+        <%= I18n.translate column.name, :scope => 'activerecord.attributes.currency' %>:
+      </b>
+      <%=h @currency.send(column.name) %>
+      <%= help_tag('system_elements.currencies.fields.' + column.name) %>
     </p>
   <% end %>
   <p <%= obj_id('system', @currency) -%> >
-    <b><%= I18n.translate :system, :scope => 'activerecord.attributes.currency' %>:</b> <%=h @currency.user_id.nil? ? 'Tak' : 'Nie' %>
+    <b>
+      <%= I18n.translate :system, :scope => 'activerecord.attributes.currency' %>:
+    </b>
+    <%=h @currency.user_id.nil? ? 'Tak' : 'Nie' %>
+    <%= help_tag('system_elements.currencies.fields.system') %>
   </p>
 
   <%= link_to 'Lista walut', currencies_path, :id => 'currencies-list' %> |
