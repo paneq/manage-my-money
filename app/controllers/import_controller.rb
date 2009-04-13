@@ -12,14 +12,17 @@ class ImportController < HistoryController
 
 
   def import
-    @category = self.current_user.categories.find_by_id(params[:category_id]) if params[:category_id]
-    @categories = self.current_user.categories
+    @categories = @current_user.categories
+    @category = @current_user.categories.find(params[:category_id]) if params[:category_id]
     @category ||= @categories.first
+  rescue
+    flash[:notice] = 'Brak uprawnień'
+    redirect_to :action => :import
   end
 
 
   def parse_bank
-    @category = self.current_user.categories.find(params[:category_id].to_i)
+    @category = @current_user.categories.find(params[:category_id])
 
     if (params[:file].blank?) || (!ACCEPTED_CONTENT_TYPES.include? params[:file].content_type.chomp)
       render_invalid_file_info
@@ -47,11 +50,12 @@ class ImportController < HistoryController
       return
     end
 
-
     render 'parse'
-    #CSV Mbanku => WIN-1250
-
+  rescue
+    flash[:notice] = 'Brak uprawnień'
+    redirect_to :action => :import
   end
+
 
   def parse_gnucash
     raise FileError.new if (params[:file].blank?) || (params[:file].content_type.chomp != 'text/xml')
@@ -68,11 +72,9 @@ class ImportController < HistoryController
   end
 
 
-
-
   def create
     @transfer = Transfer.new(params[:transfer])
-    @transfer.user = self.current_user
+    @transfer.user = @current_user
     if @transfer.save
       where = extract_form_errors_id()
       render :update do |page|
@@ -91,7 +93,7 @@ class ImportController < HistoryController
 
   def render_invalid_file_info(info = INVALID_FILE_WARNING)
     flash[:notice] = info
-    @categories = self.current_user.categories
+    @categories = @current_user.categories
     @category ||= @categories.first
     render :action => :import
   end

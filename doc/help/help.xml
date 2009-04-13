@@ -693,66 +693,66 @@
         </section>
 
         <section id="system_elements.transactions">
-          <title>
-            Zarządzanie transakcjami
-          </title>
-          
-          <section id="system_elements.transactions.index">
             <title>
-              Lista transakcji
+            Zarządzanie transakcjami
             </title>
+          
+            <section id="system_elements.transactions.index">
+                <title>
+              Lista transakcji
+                </title>
 
-            <para>
+                <para>
               List transakcji pokazuje ostatnie (w sensie daty, z którą zostały zapisane)
               transakcje biorąc pod uwagę ustawienie 'ograniczenie ilości wyświetlanych transakcji'
               (w ustawieniach twojego konta). Jeśli chcesz na tej zakładce widzieć większą lub mniejszą
               liczbę transakcji, nie zapomnij ustawić tego ustawienia, najlepiej jak Ci pasuje.
-            </para>
+                </para>
 
-            <para>
+                <para>
               Jeśli chcesz zobaczyć (a później np. wyedytować lub usunąć) transakcje, które nie są
               widoczne, możesz ich poszukać korzystając z opcji na zakładce 'Wyszukaj'.
-            </para>
+                </para>
 
-            <para>
+                <para>
               Możesz tutaj także na zakładce 'Pełny' dodać nowe transakcje. W tym miejscu nie można jednak
               dodawać prostych transakcji. Ta opcja dostępna jest tylko przy przeglądaniu konkretnej
               kategorii, gdzie wystarczy wskazać przeciwstawną kategorie transakcji oraz podać kwotę.
-            </para>
+                </para>
             
-            <section id="system_elements.transactions.index.date">
-              <title>
+                <section id="system_elements.transactions.index.date">
+                    <title>
                 Kolumna: Data
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Data transakcji.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.transactions.index.description">
-              <title>
+                <section id="system_elements.transactions.index.description">
+                    <title>
                 Kolumna: Opis
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Opis dokonanej transakcji.
-              </para>
+                    </para>
+                </section>
             </section>
-          </section>
 
-          <section id="system_elements.transactions.new">
-            <title>
+            <section id="system_elements.transactions.new">
+                <title>
               Dodawanie nowych transakcji
-            </title>
+                </title>
 
-            <para>
-            </para>
+                <para>
+                </para>
 
-            <section id="system_elements.transactions.new.quick">
-              <title>
+                <section id="system_elements.transactions.new.quick">
+                    <title>
                 Dodawanie prostych(szybkich) transakcji
-              </title>
+                    </title>
               
-              <para>
+                    <para>
                 Kiedy jesteś w widoku konkretnej kategorii możesz dodać szybki transfer. Taka
                 transakcja niczym się nie różni od dodawania jej z poziomu zakładki "Pełny",
                 stworzonej do dodawania bardziej złożonych transakcji. Dodawanie transakcji
@@ -760,297 +760,297 @@
                 i jak najszybciej dodać najprostsze transakcje, czyli takie gdy pieniądze przechodzą
                 z dokładnie jednej kategorii do dokładnie drugiej kategorii i całość wymaga jednego
                 prostego opisu.
-              </para>
+                    </para>
 
-              <para>
+                    <para>
                 Jeśli przykładowo kupiłeś (kupiłaś) w osiedlowym sklepiku batonika za 2 zł w gotówce
                 z pewnością nie jest to nadzwyczaj skomplikowana transakcja i powinno się dać ją łatwo zapisać w systemie. Korzystając z opcji "szybkiego" transferu możesz to uczynić na dwa sposoby:
-                <itemizedlist>
-                  <listitem>
+                        <itemizedlist>
+                            <listitem>
                     Przejdź do swojej kategorii Zasoby:Gotówka. Na zakładce szybkiej transakcji wybierz
                     kategorię "Wydatki:Jedzenie:Słodycze". Uzupełnij opis np.: "Batonik". Wprowadź
                     wartość o jaką ma się zmienić saldo kategorii, w której się aktualnie znajdujesz.
                     Skoro jesteś w kategorii "Gotówka" a baton kosztował 2 zł wprowadź "-2".
                     Wybierz odpowiednią walutę "PLN", dzisiejszy dzień i kliknij zapisz.
-                  </listitem>
+                            </listitem>
 
-                  <listitem>
+                            <listitem>
                     Tą samą transakcję możesz zapisać również, jeśli przejdziesz do kategorii
                     "Wydatki:Jedzenie:Słodycze". Zamiast kwoty "-2" wpisz wtedy kwotę "2", gdyż tyle
                     kosztował baton i o taką wartość powinno się zwiększyć saldo kategori, które mówi
                     ile pieniędzy wydałeś (wydałaś) na słodycze. Oczywiście jako drugą kategorię wybierz
                     "Zasoby:Gotówka", gdyż to właśnie stamtąd wzięły się pieniądze przeznaczone na
                     kupionego batonika.
-                  </listitem>
-                </itemizedlist>
+                            </listitem>
+                        </itemizedlist>
                 
                 Pamiętaj, że na zakładce szybkiego transferu słowo wartość zawsze oznacza:
                 "o ile powinno się zmienić saldo kategori, w której aktualnie jestem" po zapisaniu
                 aktualnie edytowanej transakcji. Podane w tym przykładzie kategorie są oczywiście
                 przykładowe.
                 
-              </para>
+                    </para>
 
-              <section id="system_elements.transactions.new.quick.category">
-                <title>
+                    <section id="system_elements.transactions.new.quick.category">
+                        <title>
                   Kategoria
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Przeciwna kategoria aktualnie tworzonej transakcji. Może oznaczać
-                  <itemizedlist>
-                    <listitem>
+                            <itemizedlist>
+                                <listitem>
                       kategorię, z której przyszły pieniądze do kategori,
                       w której się aktualnie znajdujesz.
                       W sytuacji, gdy wpisana wartość jest dodatnia.
-                    </listitem>
-                    <listitem>
+                                </listitem>
+                                <listitem>
                       kategorię, do której przeszły pieniądze z kategorii,
                       w której się aktualnie znajdujesz.
                       W sytuacji, gdy wpisana wartość jest ujemna.
-                    </listitem>
-                  </itemizedlist>
+                                </listitem>
+                            </itemizedlist>
                   Uwaga: Jeśli aktualnie znajdujesz się w kategori typu "Przychód"
                   i w ustawieniach użytkownika masz zaznaczoną opcję: "Obróc wartość salda, dla
                   kategorii typu 'Przychody' " interpretacja jest odwrotna. Jeśli kwota jest dodatnia
                   to znaczy, że pieniądze przejdą do wybranej kategorii, a jeśli kwota jest ujemna to
                   znaczy, że pieniądze przyjdą z wybranej kategorii do tej, w której się znajdujesz.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.quick.description">
-                <title>
+                    <section id="system_elements.transactions.new.quick.description">
+                        <title>
                   Opis
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Opis nowo tworzonej transakcji.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.quick.value">
-                <title>
+                    <section id="system_elements.transactions.new.quick.value">
+                        <title>
                   Wartość
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Wartość o jaką zmieni się saldo kategori, w której się aktualnie znajdujesz.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.quick.date">
-                <title>
+                    <section id="system_elements.transactions.new.quick.date">
+                        <title>
                   Data transakcji
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Dzień, w którym nastąpiła zapisywana transakcja.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.quick.save">
-                <title>
+                    <section id="system_elements.transactions.new.quick.save">
+                        <title>
                   Zapisz
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Powoduje zapisanie transakcji o dwóch elementach. Jeden element
                   ma wybraną kategorię, w której się aktualnie znajdujesz, a drugi
                   element ma katogorię, którą wybrano z listy.
-                </para>
-              </section>
-            </section>
+                        </para>
+                    </section>
+                </section>
 
 
-            <section id="system_elements.transactions.new.full">
-              <title>
+                <section id="system_elements.transactions.new.full">
+                    <title>
                 Dodawanie złożonych(pełnych) transakcji
-              </title>
+                    </title>
 
-              <para>
+                    <para>
                 Złożone transakcje mają miejsce wtedy, gdy jednocześnie zmieniają one wartość
                 kilku kategorii np. kiedy jest wiele źródeł skąd przyszły pieniądze bądź wiele
                 miejsc, do których zostały one rozdysponowane.
-              </para>
+                    </para>
 
-              <para>
+                    <para>
                 Rozważmy następujący przykład. Podczas zakupów w markecie zabrakło Ci pieniędzy
                 i za część zakupów zapłaciłeś (zapłaciłaś) swoimi a za część pożyczonymi pieniędzmi.
                 Jak możemy zilustrować taką sytuację w systemie? Poprzez złożoną transakcję z wieloma
                 elementami typu "rozchód" (skąd przyszły pieniądze) i wieloma elementami typu przychód (dokąd poszły te pieniądze).
-              </para>
+                    </para>
             
-              <para>
+                    <para>
                 Elementy typu rozchód (skąd):
-                <itemizedlist>
-                  <listitem>
+                        <itemizedlist>
+                            <listitem>
                     Kategoria: "Zasoby:Konto Bankowe", Wartość: "100 PLN"
-                  </listitem>
+                            </listitem>
                   
-                  <listitem>
+                            <listitem>
                     Kategoria: "Zobowiązania:Dobry Przyjaciel", Wartość: "20 PLN"
-                  </listitem>
-                </itemizedlist>
-              </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
             
-              <para>
+                    <para>
                 Elementy typu przychód (dokąd):
-                <itemizedlist>
-                  <listitem>
+                        <itemizedlist>
+                            <listitem>
                     Kategoria: "Wydatki:Jedzenie", Wartość: "60 PLN"
-                  </listitem>
-                  <listitem>
+                            </listitem>
+                            <listitem>
                     Kategoria: "Wydatki:Mieszkanie:Sprzątanie", Wartość: "60 PLN"
-                  </listitem>
-                </itemizedlist>
-              </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
 
-              <para>
+                    <para>
                 W ten sposób zapisaliśmy zdarzenie, w którym pieniądze z wielu miejsc przesunięte
                 zostały do wielu innych miejsc jednocześnie. Takie sytuacje zdarzają się wcale nie
                 rzadko. 
-              </para>
+                    </para>
 
 
-              <section id="system_elements.transactions.new.full.description">
-                <title>
+                    <section id="system_elements.transactions.new.full.description">
+                        <title>
                   Opis transakcji
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Stanowi opis całej dokonanej transakcji
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.full.date">
-                <title>
+                    <section id="system_elements.transactions.new.full.date">
+                        <title>
                   Data transakcji
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Data kiedy dokonana został transakcja.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.full.outcome">
-                <title>
+                    <section id="system_elements.transactions.new.full.outcome">
+                        <title>
                   Rozchód
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Groupuje elementy transakcji zawierające kategorie, z których
                   pochodzą pieniądze.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.full.income">
-                <title>
+                    <section id="system_elements.transactions.new.full.income">
+                        <title>
                   Przychód
-                </title>
-                <para>
+                        </title>
+                        <para>
                   Groupuje elementy transakcji zawierające kategorie, do których
                   przechodzą pieniądze.
-                </para>
-              </section>
+                        </para>
+                    </section>
 
-              <section id="system_elements.transactions.new.full.conversions">
-                <title>
+                    <section id="system_elements.transactions.new.full.conversions">
+                        <title>
                   Kursy
-                </title>
+                        </title>
                 
-                <para>
+                        <para>
                   W przypadku, gdy tworzysz transakcje, których elementy nie są w domyślnej
                   walucie(jednostce) możesz skorzytać z kursów. Jeśli wszystkie elementy transakcji są
                   w tej samej walucie(jednostce) korzystanie z kursów nie jest koniecznie by stwierdzić,
                   że transakcja się równoważy (w sumie z wszystkich kategorii wychodzi tyle samo
                   pieniędzy co do nich przechodzi). Jeśli jednak w transakcji występują conajmniej
                   dwie różne waluty(jednostki) skorzystanie z kursów jest koniecznie.
-                </para>
+                        </para>
 
-                <para>
+                        <para>
                   Dla każdej niedomyślnej jednostki(waluty) pojawiającej się w transakcji musisz
                   użyć kursu pomiędzy tą jednostką, a jednostką domyślną (zwykle PLN). Dzięki temu
                   można przeliczyć wartość każdego elementu transakcji na jego wartość w domyślnej
                   jednostce a następnie sprawdzić czy suma wartości elementów rozchodowych oraz
                   przychodowych jest taka sama. Jeśli tak nie jest, to transakcja nie może zostać
                   zapisana.
-                </para>
+                        </para>
 
-                <para>
+                        <para>
                   Możesz w transakcji użyć ostatniego (w sensie daty) kursu jaki zdefiniowałeś między
                   różnymi jednostkami lub dodać nowy. Nowo dodawany kurs może zawierać datę (w takim
                   wypadku zostanie otworzony kurs między dwoma jednostkami na odpowiedni dzień) lub
                   jej nie zawierać (wtedy będzie to kurs tylko dla tej transakcji, a nie na konkretny
                   dzień). Kiedy edytujesz już istniejącą transakcję nie możesz zmienić kursu, ale
                   możesz go usunąć i dodać nowy lub wybrać inny już istniejący. 
-                </para>
+                        </para>
 
-                <para>
+                        <para>
                   Kiedy dodajesz lub wybierasz nowy kurs pierwsze rozwijane menu oznacza
                   lewą jednostkę (walutę) a drugie rozwijane menu oznacza prawą jednostkę (walutę).
                   Pierwsze pole tekstowe oznacza kurs zamiany waluty lewej na prawą, a drugie pole
                   oznacza kurs zamiany prawej waluty na lewą. Niech np. lewą walutą będzie złoty(PLN),
                   a prawą będzie euro(EUR). W pierwszym polu tekstowym możemy wtedy wpisać "0.25", gdyż
                   1 PLN = 0.25 EUR, natomiast w drugim polu możemy wpisać "4", gdyż 1 EUR = 4 PLN.
-                </para>
-              </section>
+                        </para>
+                    </section>
               
-            </section>
+                </section>
             
-          </section>
+            </section>
 
-          <section id="system_elements.transactions.categories_index">
-            <title>
+            <section id="system_elements.transactions.categories_index">
+                <title>
               Lista transakcji w obrębie jednej kategorii
-            </title>
+                </title>
 
-            <para>
+                <para>
               To okno pokazuje transakcje, których conajmniej jeden element
               odnosił się do kategorii, w której się znajdujesz lub (jeśli ta opcja
               jest włączona w ustawieniach) jej podkategorii. Możesz tutaj zobaczyć
               jak każdy z elementów zmienił saldo aktualnej kategorii oraz jak wszystkie
               wylistowane elementy razem je zmieniły.
-            </para>
+                </para>
             
-            <para>
+                <para>
               W przypadku gdy przedstawiane są elementy z uwzględnieniem podkategorii
               zarówno zmiana jak i aktualne saldo uwzględniają także podkategorie.
-            </para>
-          </section>
+                </para>
+            </section>
           
-          <section id="system_elements.transactions.search">
-            <title>
+            <section id="system_elements.transactions.search">
+                <title>
               Wyszukiwanie transakcji
-            </title>
+                </title>
 
-            <para>
+                <para>
               Możesz wyszukiwać transakcje w zależności od tego na jaki dzień zostały one zapisane.
               Jeśli jesteś w widoku konkretnej kategorii zostaną wyszukane tylko te transakcje, które
               zmodyfikowały kategorię (lub też jej podkategorię, jeśli taka opcja została wybrana).
               Przez pojęcie 'zmodyfikowała kategorię' rozumiemy:
               transakcję zawierającą element transakcji, który ma wybraną daną kategorię.
-            </para>
+                </para>
 
-            <para>
+                <para>
               Wyszukiwanie znajdzie transakcje o dacie znajdującej się pomiędzy datą początkową a
               końcową (włącznie dla obu tych wartości).
-            </para>
+                </para>
 
-            <section id="system_elements.transactions.search.include_subcategories">
-              <title>
+                <section id="system_elements.transactions.search.include_subcategories">
+                    <title>
                 Uwzględnij podkategorie.
-              </title>
+                    </title>
 
-              <para>
+                    <para>
                 Zaznaczenie tej opcji spowoduje, że przy wyszukiwaniu uwzględnione zostaną także transakcje
                 modyfikujące podkategorie.
                 Wyświetlane saldo (oraz jego zmiana) także będzie uwzględniać transakcje w
                 podkategoriach.
-              </para>
+                    </para>
+                </section>
             </section>
-          </section>
 
 
         </section>
 
         <section id="system_elements.currencies">
-          <title>
+            <title>
               Jednostki (waluty)
-          </title>
+            </title>
 
-          <para>
+            <para>
             Jednostki służą do zarządzania (jak sama nazwa wskazuje) jednostkami, którymi mierzymy
             zasobność naszych portfeli :-). Głównie są to waluty, takie jak złotówki(PLN),
             czy euro(EUR), jednak nie zawsze. Możesz chcieć dodać jednostkę zupełnie innego typu jak AKJ, która będzie oznaczać akcje jakiejś firmy lub FUN, która będzie oznaczać jednostki
@@ -1059,293 +1059,293 @@
             przez Ciebie przedmiotom takim jak obraz czy dom odpowiednio jednostkę a następnie kurs, by
             na prezentowanych w systemie wykresach lub tabelach w sposób całkowity oddać swoją sytuację
             finansową.
-          </para>
-
-          <section id="system_elements.currencies.index">
-            <title>
-              Lista jednostek
-            </title>
-            <para>
-              Prezentowana lista jednostek zawiera predefiniowane w systemie jednostki (3 waluty)
-              oraz, jednostki stworzone przez użytkownika, dla jego własnego użytku.
             </para>
 
-            <section id="system_elements.currencies.index.actions">
-              <title>
+            <section id="system_elements.currencies.index">
+                <title>
+              Lista jednostek
+                </title>
+                <para>
+              Prezentowana lista jednostek zawiera predefiniowane w systemie jednostki (3 waluty)
+              oraz, jednostki stworzone przez użytkownika, dla jego własnego użytku.
+                </para>
+
+                <section id="system_elements.currencies.index.actions">
+                    <title>
                 Akcje
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Na liście jednostek możesz przejść do następujących akcji:
-                <itemizedlist>
-                  <listitem>
+                        <itemizedlist>
+                            <listitem>
                     Pokaż - pokazuje atrybuty jednostki.
-                  </listitem>
-                  <listitem>
+                            </listitem>
+                            <listitem>
                     Edytuj - umożliwia edycję atrybutów jednostki jeśli należy ona do
                     użytkownika. Edycja jednostek systemowych jest niemożliwa.
-                  </listitem>
-                  <listitem>
+                            </listitem>
+                            <listitem>
                     Usuń - umożliwia usunięcie jednostki, jeśli nie została ona użyta
                     w żadnej transakcji i została stworzona przez użytkownika.
                     Usuwanie jednostek systemowych jest niemożliwe.
-                  </listitem>
-                </itemizedlist>
-              </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </section>
             </section>
-          </section>
 
-          <section id="system_elements.currencies.fields">
-            <title>
+            <section id="system_elements.currencies.fields">
+                <title>
               Atrybuty jednostek
-            </title>
-            <para>
+                </title>
+                <para>
               Każda jednostka ma pięć określających ją atrybutów.
-            </para>
+                </para>
 
-            <section id="system_elements.currencies.fields.symbol">
-              <title>
+                <section id="system_elements.currencies.fields.symbol">
+                    <title>
                 Symbol
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Krótki, zwyczajowy symbol jednostki (waluty).
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.currencies.fields.long_symbol">
-              <title>
+                <section id="system_elements.currencies.fields.long_symbol">
+                    <title>
                 Długi symbol
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Trzyliterowy symbol składający się ze dużych
                 znaków alfabetu łacińskiego np: USD, PLN, EUR.
-              </para>
-            </section>
+                    </para>
+                </section>
             
-            <section id="system_elements.currencies.fields.name">
-              <title>
+                <section id="system_elements.currencies.fields.name">
+                    <title>
                 Nazwa
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Krótka, zwyczajowa nazwa jednostki (waluty).
-              </para>
-            </section>
+                    </para>
+                </section>
             
-            <section id="system_elements.currencies.fields.long_name">
-              <title>
+                <section id="system_elements.currencies.fields.long_name">
+                    <title>
                 Długa nazwa
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Długa nazwa jednostki (waluty), która wystarczy do odróżnienia
                 jej spośród innych podobnie brzmiących np: dolar amerykański,
                 dolar australijski.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.currencies.fields.system">
-              <title>
+                <section id="system_elements.currencies.fields.system">
+                    <title>
                 Systemowa
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Pole systemowa oznacza, że jednostka jest w systemie do użytku wszystkich
                 użytkowników. Brak tego oznaczenia informuje, że jednostka została stworzona
                 przez użytkownika. Brak możliwości edycji oraz usunięcia jednostki (waluty)
                 systemowej.
-              </para>
+                    </para>
+                </section>
             </section>
-          </section>
 
-          <section id="system_elements.currencies.new">
-            <title>
+            <section id="system_elements.currencies.new">
+                <title>
               Nowa jednostka
-            </title>
-            <para>
+                </title>
+                <para>
               Korzystając z tego formularza możesz utworzyć nową jednostkę
               reprezentującą walutę, akcje firmy, jednostkę funduszu inwestycyjnego
               lub przedmiot (np. obraz albo dom), względnie cokolwiek innego,
               co Ci przyjdzie do głowy :-).
-            </para>
-          </section>
+                </para>
+            </section>
 
-          <section id="system_elements.currencies.edit">
-            <title>
+            <section id="system_elements.currencies.edit">
+                <title>
               Edycja jednostki
-            </title>
-            <para>
+                </title>
+                <para>
               Korzystając z tego formularza możesz dokonać edycji
               atrybutów stworzonej przez Ciebie wcześniej jednostki.
-            </para>
-          </section>
+                </para>
+            </section>
 
-          <section id="system_elements.currencies.show">
-            <title>
+            <section id="system_elements.currencies.show">
+                <title>
               Podgląd jednostki
-            </title>
-            <para>
+                </title>
+                <para>
               W tym widoku możesz zobaczyć wszystkie atrybuty jednostki.
-            </para>
-          </section>
+                </para>
+            </section>
           
         </section>
 
         <section id="system_elements.exchanges">
-          <title>
+            <title>
             Kursy między jednostkami (walutami)
-          </title>
+            </title>
 
-          <para>
+            <para>
             Kursy w aplikacje występują z dwóch powodów:
-            <itemizedlist>
-              <listitem>
+                <itemizedlist>
+                    <listitem>
                 Są używane w transakcjach by przeliczyć wartość elementów, które
                 nie są w domyślnej jednostce właśnie na wartość w jednostce domyślnej. 
-              </listitem>
-              <listitem>
+                    </listitem>
+                    <listitem>
                 Do zapisywania jak w czasie zmienia się wartość walut, akcji, jednostek
                 funduszu inwestycyjnego lub posiadanych przez Ciebie przedmiotów materialnych.
-              </listitem>
-            </itemizedlist>
-          </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
 
-          <section id="system_elements.exchanges.index">
-            <title>
+            <section id="system_elements.exchanges.index">
+                <title>
               Lista możliwych kursów wymiany.
-            </title>
-            <para>
+                </title>
+                <para>
               Na tej stronie możesz przejść do kursów wymiany między dwoma
               konkretnymi jednostkami oraz od razu utworzyć kurs.
-            </para>
-          </section>
+                </para>
+            </section>
 
-          <section id="system_elements.exchanges.list">
-            <title>
+            <section id="system_elements.exchanges.list">
+                <title>
               Lista kursów wymiany między dwoma jednostkami (walutami)
-            </title>
+                </title>
 
-            <para>
+                <para>
               Strona zawiera listę ostatnich wartości kursów między dwoma
               jednostkami. Możesz zobaczyć jak w poszczególne dni
               przedstawiał się kurs zamiany jednej jednostki na drugą jednostkę.
-            </para>
+                </para>
 
-            <para>
+                <para>
               Przykładowo jeśli tabela zawiera kolumny o nazwach "DZIEŃ", "1 PLN", "1 EUR", a komórki
               w pierwszym wierszu mają następujące wartości: "2009-04-12", "0.25 EUR", "4 PLN", to
               należy to rozumieć następująco:
-              <itemizedlist>
-                <listitem>
+                    <itemizedlist>
+                        <listitem>
                   Ostatni kurs zapisany na określony dzień między walutami EUR i PLN został
                   przez Ciebie utworzony w dniu "2009-04-12".
-                </listitem>
-                <listitem>
+                        </listitem>
+                        <listitem>
                   Kurs zamiany waluty PLN na EUR w dniu "2009-04-12" wynosił "0.25" EUR co oznacza,
                   że w tym dniu 1 PLN = 0.25 EUR. Innymi słowy jedna złotówka miała wartość ćwierć
                   euro.
-                </listitem>
-                <listitem>
+                        </listitem>
+                        <listitem>
                   Kurs zamiany waluty EUR na PLN w dniu "2009-04-12" wynosił "4" PLN co oznacza,
                   że w tym dniu 1 EUR = 4 PLN. Innymi słowy jedno euro było warte cztery złote.
-                </listitem>
-              </itemizedlist>
-            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
 
-            <section id="system_elements.exchanges.list.day">
-              <title>
+                <section id="system_elements.exchanges.list.day">
+                    <title>
                 Dzień
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Dzień, na który został zapisany dany kurs między jednostkami.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.list.left_to_right">
-              <title>
+                <section id="system_elements.exchanges.list.left_to_right">
+                    <title>
                 Wartość kursu wymiany pierwszej jednostki na drugą.
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Zakładając, że nagłówek kolumny ma tytuł np. "1 EUR", a wartość
                 w wierszu wynosi "4 PLN, oznacza to, że tego dnia jedno euro było warte
                 4 złote.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.list.right_to_left">
-              <title>
+                <section id="system_elements.exchanges.list.right_to_left">
+                    <title>
                 Wartość kursu wymiany drugiej jednostki na pierwszą.
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Zakładając, że nagłówek kolumny ma tytuł np. "1 PLN", a wartość
                 w wierszu wynosi "0.25 EUR", oznacza to, że tego dnia jeden złoty był wart
                 ćwierć euro.
-              </para>
-            </section>
+                    </para>
+                </section>
             
-            <section id="system_elements.exchanges.list.actions">
-              <title>
+                <section id="system_elements.exchanges.list.actions">
+                    <title>
                 Akcje
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Możesz usunąć lub wyedytować wartość każdego stworzonego przez siebie kursu.
-              </para>
+                    </para>
+                </section>
             </section>
-          </section>
 
-          <section id="system_elements.exchanges.fields">
-            <title>
+            <section id="system_elements.exchanges.fields">
+                <title>
               Atrybuty dla kursu wymiany.
-            </title>
-            <para>
+                </title>
+                <para>
               Edytując kurs wymiany możesz mu zmienić pięć atrybutów.
-            </para>
+                </para>
 
-            <section id="system_elements.exchanges.fields.day">
-              <title>
+                <section id="system_elements.exchanges.fields.day">
+                    <title>
                 Dzień
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Dzień, na który ustalany jest kurs wymiany między
                 dwoma jednostkami.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.fields.left_currency">
-              <title>
+                <section id="system_elements.exchanges.fields.left_currency">
+                    <title>
                 Pierwsza jednostka
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Pierwsza jednostka (waluta), którą obejmuje kurs.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.fields.right_currency">
-              <title>
+                <section id="system_elements.exchanges.fields.right_currency">
+                    <title>
                 Druga jednostka
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Druga jednostka (waluta), którą obejmuje kurs.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.fields.left_to_right">
-              <title>
+                <section id="system_elements.exchanges.fields.left_to_right">
+                    <title>
                 Wartość kursu wymiany pierwszej jednostki na drugą.
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Zakładając, że pierwsza jednostka to np. waluta EUR a druga jednostka to waluta PLN, to
                 wpisanie wartości "4" kursu wymiany z pierwszej jednostki na drugą oznacza, że tego dnia jedno euro było warte cztery złote.
-              </para>
-            </section>
+                    </para>
+                </section>
 
-            <section id="system_elements.exchanges.fields.right_to_left">
-              <title>
+                <section id="system_elements.exchanges.fields.right_to_left">
+                    <title>
                 Wartość kursu wymiany drugiej jednostki na pierwszą.
-              </title>
-              <para>
+                    </title>
+                    <para>
                 Zakładając, że pierwsza jednostka to np. waluta EUR a druga jednostka to waluta PLN, to
                 wpisanie wartości "0.25" kursu wymiany z drugiej jednostki na pierwszą oznacza, że tego dnia jedna złotówka była warta ćwierć euro.
-              </para>
-            </section>
+                    </para>
+                </section>
             
-          </section>
+            </section>
         </section>
 
         <section id="system_elements.reports">
@@ -1681,17 +1681,154 @@
             <title>
                 Import
             </title>
-           <!-- <para>
-                [Module description]
-            </para> -->
+
+            <para>
+                Import z banków służy do łatwego zarządzania transakcjami, które
+                są związane z kategoriami oznaczającymi jakieś twoje konta bankowe.
+                Najczęście w ramach takiego importu zapiszesz w systemie dane
+                związane z operacjami karta debetową lub kredytową. Jest to bardzo
+                wygodny sposób by prosto i szybko śledzić oraz odpowiednio zapisywać
+                wszelkie zmiany na kontach bankowych.
+            </para>
+
+            <para>
+                Jeśli posiadasz jakąś kategorię, która reprezentuje konto bankowe
+                lub kartę kredytową nie zapomnij jej ustawić numeru konta bankowego w odpowiednim
+                polu na karcie edycji kategorii. Dzięki temu importując transakcje
+                dla jakiejś kategorii (poprzez przesłanie do serwisu pliku z wyciągiem
+                dla danego konta, które jest reprezentowane przez tą kategorię)
+                system będzie w stanie automatycznie rozpoznać kategorię, do jakich
+                zapewne chciałbyś zapisać element transakcji, na podstawie numerów
+                kont bankowych, pomiędzy którymi została zrealizowana transakcja
+                bankowa, wymieniona w przesłanym do systemu pliku.
+            </para>
+
+            <para>
+                Dobrym pomysłem jest również ustawienie w kategoriach reprezentujących
+                twoich znajomych (często dłużników lub wierzycieli) numerów ich kont
+                bankowych. Dzięki temu importując transakcje z konta bankowego
+                wszelkie przelewy jakie dokonałeś na ich konta (np. rachunki za prąd
+                lub czynsz) będą od razu miały przyporządkowane odpowiednie kategorie
+                i będzie można je od razu zapisać, bez uprzedniej edycji.
+            </para>
+
             <section id="system_elements.import.banks">
                 <title>
-                    Z banków
+                    Import z banków
                 </title>
+
                 <para>
-                    [Action description]
+                    Aktualnie system wspiera importowanie transakcji z dwóch banków:
+                    Inteligo oraz mBank. W rozdziałach poniżej możesz znaleźć informacje
+                    jak pobrać ze swojego banku odpowiedni plik i użyć go do stworzenia
+                    transakcji w naszym systemie.
                 </para>
 
+                <para>
+                    Po wysłaniu pliku do systemu transakcje nie zostaną od razu
+                    automatycznie zaimportowane lecz zostaną, Ci wpierw zaprezentowane
+                    i będziesz mógł (mogła) dokonać odpowiedniej edycji i korekty
+                    przed zapisaniem.
+                </para>
+
+                <para>
+                    System nie przechowuje wysłanych do niego plików. Są one jedynie
+                    używane by zaprezentować Ci listę transakcji, które możesz chcieć
+                    zaimportować.
+                </para>
+
+                <section id="system_elements.import.banks.inteligo">
+                    <title>
+                        Import z Inteligo
+                    </title>
+
+                    <para>
+                        System akceptuje tylko pliki z wyciągami z konta utworzone
+                        w systemie internetowy do obsługi kont Inteligo. Pliki te
+                        muszą być w formacie xml i posiadać takie rozszerzenie plików.
+                    </para>
+
+                    <para>
+                        Aby uzyskać taki plik należy wykonać następujące czynności:
+                        <itemizedlist>
+                            <listitem>
+                                Przejdź na stronę serwisu banku Inteligo:
+                                https://secure.inteligo.com.pl/
+                            </listitem>
+
+                            <listitem>
+                                Zaloguj się korzystając ze swojego identyfikatora
+                                oraz hasła.
+                            </listitem>
+
+                            <listitem>
+                                Zostaniesz przeniesiony na stronę przedstawiającą
+                                "Stan twoich rachunków". Kliknij na saldo rachunku,
+                                którego transakcje chcesz zaimportować.
+                            </listitem>
+
+                            <listitem>
+                                Zostaniesz przeniesiony na stronę przedstawiającą
+                                "Historię rachunku". Wybierz odpowiedni rachunek,
+                                przedział czasu oraz kwót, które chcesz zaimportować
+                                do systemu. Możesz przyjąć różne strategie:  Importować
+                                transakcję co tydzień, co dwa tygodnie, co miesiąc, co jakiś
+                                czas- jak Ci wygodnie. Jeśli w wybranym przedziale czasu
+                                znajdzie się transakcja, którą już kiedyś zapisano w systemie,
+                                system na następnym ekranie pokaże odpowiednią informację, że
+                                taka transakcja najprawdopodbniej znajduje się już w systemie.
+                                Nie musisz więc pamiętać jaki szeroki był ostatni okres, za który
+                                importowałeś (importowałaś) transakcje z danego rachunku bankowego.
+                                Zawsze możesz wybrać szerszy okres i na następnym ekranie pominąć
+                                transakcje, które już kiedyś zapisałeś (zapisałaś). Po wybraniu
+                                odpowiednich wartości wciśnij przycisk "Filtruj".
+                            </listitem>
+
+                            <listitem>
+                                Z miejsca opisanego jako "Eksport danych do pliku" wybierz:
+                                "Plik w formacie XML" oraz wciśnij "Pobierz". Zapisz plik na dysku.
+                            </listitem>
+                            
+                            <listitem>
+                                Przejdź do naszego serwisu i wybierz z menu "Import".
+                            </listitem>
+                            
+                            <listitem>
+                                W okienku "Import z banków" wybierz kategorię, która reprezentuje
+                                racuhnek bankowy, z którego przed chwilą pobrałeś (pobrałaś) plik XML.
+                                Poniżej wybierz dopiero co pobrany plik.
+                                Kliknij "Wciśnij plik".
+                            </listitem>
+                            
+                            <listitem>
+                                Jeśli podano prawidłowy plik, system odczyta zawarte w nim dane
+                                a następnie zaprezentuje Ci transakcje, które były zapisane w pliku.
+                                Klikając na pokaż/ukryj możesz poruszać się między poszczególnymi
+                                transakcjami, edytować je wg. potrzeb a następnie dla każdej z nich
+                                wybrać opcję "Zapisz".
+                            </listitem>
+
+                        </itemizedlist>
+                    </para>
+                </section>
+
+                <section id="system_elements.import.banks.mbank">
+                    <title>
+                        Z mBanku
+                    </title>
+                    <para>
+
+                    </para>
+                </section>
+
+                <section id="system_elements.import.banks.parsed">
+                    <title>
+                        Lista transakcji możliwych do zaimportowania z wysłanego pliku.
+                    </title>
+                    <para>
+
+                    </para>
+                </section>
             </section>
 
             <section id="system_elements.import.gnucash">
@@ -1699,12 +1836,15 @@
                     Z programu gnucash
                 </title>
                 <para>
-                    Umożliwia import, tzn. skopiowanie danych o kategoriach, transakcjach do systemu z pliku wskazanego przez użytkownika, a pochodzącego z programu do zarządzania domowym budżetem (Gnucash).
+                    Umożliwia import, tzn. skopiowanie danych o kategoriach, transakcjach do systemu z pliku wskazanego przez użytkownika,
+                    a pochodzącego z programu do zarządzania domowym budżetem (Gnucash).
                     Import danych może trwać nawet do kilku minut jeśli plik zawiera wiele transakcji.
-                    Po zaimportowaniu wyświetla się podsumowanie przedstawiające liczbę zaimportowanych kategorii i transferów oraz ewentualne błędy, które wystąpiły podczas importowania.
+                    Po zaimportowaniu wyświetla się podsumowanie przedstawiające liczbę zaimportowanych
+                    kategorii i transferów oraz ewentualne błędy, które wystąpiły podczas importowania.
                 </para>
                 <para>
-                    Podczas importowania zostaną zignorowane transakcje wielowalutowe (w obecnej wersji system nie potrafi importować takich transakcji)
+                    Podczas importowania zostaną zignorowane transakcje wielowalutowe (wielojednostkowe)
+                    (w obecnej wersji system nie potrafi importować takich transakcji).
                 </para>
 
             </section>
