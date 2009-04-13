@@ -7,9 +7,17 @@
 <% light_shadow do %>
   <table class="nice-table long">
     <tr>
-      <th>Dzień</th>
-      <th>Opis</th>
-      <th>Akcja</th>
+      <th style="width: 70px;">
+        Dzień
+        <%= help_tag 'system_elements.import.banks.parsed.day' %>
+      </th>
+      <th>
+        Opis
+        <%= help_tag 'system_elements.import.banks.parsed.description' %>
+      </th>
+      <th>
+        Akcja
+      </th>
     </tr>
     <% @result.each_with_index do |result, index| %>
       <% style_class = cycle('', 'alt') %>

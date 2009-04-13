@@ -1737,6 +1737,10 @@
                     zaimportować.
                 </para>
 
+                <para>
+                    System nigdy nie poprosi Cię o twoje hasło do banku!
+                </para>
+
                 <section id="system_elements.import.banks.inteligo">
                     <title>
                         Import z Inteligo
@@ -1825,15 +1829,95 @@
                     <title>
                         Lista transakcji możliwych do zaimportowania z wysłanego pliku.
                     </title>
-                    <para>
 
+                    <para>
+                        Strona zawiera listę transakcji, które zostały przesłane w pliku. Dla każdej z nich
+                        po kliknięciu "Pokaż" można zobaczyć jej elementy, wyedytować je oraz zapisać, a następnie
+                        ukryć i przejść do edycji kolejnych transakcji klikając znów "Pokaż".
                     </para>
+
+                    <para>
+                        System stara się rozpoznawać transakcje, które już były zapisanie
+                        i ostrzegać użytkownika przed ponownym zapisywaniem już zapisanych
+                        danych. Odbywa się to na dwa sposoby:
+                        <itemizedlist>
+                            <listitem>
+                                Dla każdej transakcji, wysłanej w pliku na podstawie
+                                różnych zapisanych w niej danych tworzony jest jej
+                                identyfikator. Wraz z zapisaniem danej transakcji zapisywany
+                                jest jej identyfikator. Kiedy użytkownik wyśle plik zawierający
+                                tą transakcję raz jeszcze, na podstawie identyfikatora zostanie
+                                ustalone, że taka transakcja jest już zapisana i pojawi się
+                                ostrzeżenie, nawet jeśli przy pierwszym zapisie zmieniono
+                                oryginalny opis, jaki znajdował się w pliku (opis nadany przez bank),
+                                datę, kwotę lub dowolny inny element. Innymi słowy ta metoda dobrze
+                                sprawdza, czy w systemie podana transakcja nie została już wcześniej
+                                zaimportowana z użyciemie operacji "Import".
+                            </listitem>
+                            <listitem>
+                                Drugi sposób to sprawdzenie, czy w systemie nie ma
+                                już elementu transakcji od tej samej dacie, kwocie
+                                i walucie. Ta metoda całkiem nieźle sprawdza, czy
+                                dana transakcja nie została już wcześniej wprowadzona
+                                ręcznie, gdyż rzadko zdarza się, by w ciągu jednego
+                                dnia dwa razy została dokonana transakcja o tych
+                                samych kwotach. Do poprawnego działania wymaga jednak
+                                by użytkownik uzupełniał daty dniem, kiedy transakcja
+                                się odbyły a nie dniem, w którym je zapisał
+                                w systemie. Przykładowa sytuacja: mogliśmy zapłacić
+                                za produkt kartą i na ten dzień transakcja zostanie
+                                zapisana w banku, a w naszym systemie zanotować to
+                                tydzień później nie edytując daty transakcji
+                                (z lenistwa :-) ), wtedy przy importowaniu danych
+                                z banku nie zostanie wykryte, że dana transakcja już
+                                była zapisana (z powodu różnej daty) i nie pamiętawszy
+                                o tym, możemy ją zapisać dwukrotnie w systemie.
+                                Z tego powodu dobrze jest co jakiś czas sprawdzać,
+                                czy saldo naszej kategorii reprezentującej rachunek
+                                bankowy jest takie samo, jak saldo prezentowane
+                                przez bank i czy nie pomineliśmy lub zduplikowaliśmy
+                                jakiejś transakcji.
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+
+                    <section id="system_elements.import.banks.parsed.day">
+                        <title>
+                            Dzień transakcji.
+                        </title>
+
+                        <para>
+                            Dzień dokonania (lub zapisania przez bank) importowanej
+                            z pliku transakcji. Możesz zmienić dzień, na jaki
+                            chcesz by transakcja była zapisana podczas edycji
+                            transakcji, po kliknięciu "Pokaż".
+                        </para>
+                    </section>
+
+                    <section id="system_elements.import.banks.parsed.description">
+                        <title>
+                            Opis transakcji.
+                        </title>
+
+                        <para>
+                            Opis jaki importowanej z pliku transakcji nadał bank.
+                            Jeśli transakcje są importowane z mBanku i kategoria
+                            dla elementu transakcji została rozpoznana na podstawie
+                            numeru konta bankowego zapisanego na samym końcu opisu,
+                            wtedy nie pokazujemy tego numeru konta w opsie.
+                            Jeśli nie rozpoznano z jaką kategorią należy połączyć
+                            transakcję, wtedy ten numer zostaje na końcu opisu.
+                            Możesz zmienić opis, na taki jaki uważasz za właściwy
+                            podczas edycji transakcji, po kliknięciu "Pokaż".
+                        </para>
+                    </section>
+
                 </section>
             </section>
 
             <section id="system_elements.import.gnucash">
                 <title>
-                    Z programu gnucash
+                    Import z programu gnucash
                 </title>
                 <para>
                     Umożliwia import, tzn. skopiowanie danych o kategoriach, transakcjach do systemu z pliku wskazanego przez użytkownika,

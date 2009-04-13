@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Pomoc do systemu Manage My Money</title><link rel="stylesheet" href="../stylesheets/help.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.3"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3892541"></a>Pomoc do systemu Manage My Money</h2></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#system_elements">Elementy systemu</a></span></dt><dd><dl><dt><span class="section"><a href="#system_elements.user">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Pomoc do systemu Manage My Money</title><link rel="stylesheet" href="../stylesheets/help.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.3"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id3655834"></a>Pomoc do systemu Manage My Money</h2></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#system_elements">Elementy systemu</a></span></dt><dd><dl><dt><span class="section"><a href="#system_elements.user">
                 Konto u&#380;ytkownika
             </a></span></dt><dt><span class="section"><a href="#system_elements.session">
                 Dost&#281;p do serwisu
@@ -1665,6 +1665,10 @@
                     zaimportowa&#263;.
                 </p>
 
+                <p>
+                    System nigdy nie poprosi Ci&#281; o twoje has&#322;o do banku!
+                </p>
+
                 <div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="system_elements.import.banks.inteligo"></a>
                         Import z Inteligo
                     </h5></div></div></div>
@@ -1736,14 +1740,91 @@
                         Lista transakcji mo&#380;liwych do zaimportowania z wys&#322;anego pliku.
                     </h5></div></div></div>
                     
-                    <p>
 
+                    <p>
+                        Strona zawiera list&#281; transakcji, które zosta&#322;y przes&#322;ane w pliku. Dla ka&#380;dej z nich
+                        po klikni&#281;ciu "Poka&#380;" mo&#380;na zobaczy&#263; jej elementy, wyedytowa&#263; je oraz zapisa&#263;, a nast&#281;pnie
+                        ukry&#263; i przej&#347;&#263; do edycji kolejnych transakcji klikaj&#261;c znów "Poka&#380;".
                     </p>
+
+                    <p>
+                        System stara si&#281; rozpoznawa&#263; transakcje, które ju&#380; by&#322;y zapisanie
+                        i ostrzega&#263; u&#380;ytkownika przed ponownym zapisywaniem ju&#380; zapisanych
+                        danych. Odbywa si&#281; to na dwa sposoby:
+                        </p><div class="itemizedlist"><ul type="disc"><li>
+                                Dla ka&#380;dej transakcji, wys&#322;anej w pliku na podstawie
+                                ró&#380;nych zapisanych w niej danych tworzony jest jej
+                                identyfikator. Wraz z zapisaniem danej transakcji zapisywany
+                                jest jej identyfikator. Kiedy u&#380;ytkownik wy&#347;le plik zawieraj&#261;cy
+                                t&#261; transakcj&#281; raz jeszcze, na podstawie identyfikatora zostanie
+                                ustalone, &#380;e taka transakcja jest ju&#380; zapisana i pojawi si&#281;
+                                ostrze&#380;enie, nawet je&#347;li przy pierwszym zapisie zmieniono
+                                oryginalny opis, jaki znajdowa&#322; si&#281; w pliku (opis nadany przez bank),
+                                dat&#281;, kwot&#281; lub dowolny inny element. Innymi s&#322;owy ta metoda dobrze
+                                sprawdza, czy w systemie podana transakcja nie zosta&#322;a ju&#380; wcze&#347;niej
+                                zaimportowana z u&#380;yciemie operacji "Import".
+                            </li><li>
+                                Drugi sposób to sprawdzenie, czy w systemie nie ma
+                                ju&#380; elementu transakcji od tej samej dacie, kwocie
+                                i walucie. Ta metoda ca&#322;kiem nie&#378;le sprawdza, czy
+                                dana transakcja nie zosta&#322;a ju&#380; wcze&#347;niej wprowadzona
+                                r&#281;cznie, gdy&#380; rzadko zdarza si&#281;, by w ci&#261;gu jednego
+                                dnia dwa razy zosta&#322;a dokonana transakcja o tych
+                                samych kwotach. Do poprawnego dzia&#322;ania wymaga jednak
+                                by u&#380;ytkownik uzupe&#322;nia&#322; daty dniem, kiedy transakcja
+                                si&#281; odby&#322;y a nie dniem, w którym je zapisa&#322;
+                                w systemie. Przyk&#322;adowa sytuacja: mogli&#347;my zap&#322;aci&#263;
+                                za produkt kart&#261; i na ten dzie&#324; transakcja zostanie
+                                zapisana w banku, a w naszym systemie zanotowa&#263; to
+                                tydzie&#324; pó&#378;niej nie edytuj&#261;c daty transakcji
+                                (z lenistwa :-) ), wtedy przy importowaniu danych
+                                z banku nie zostanie wykryte, &#380;e dana transakcja ju&#380;
+                                by&#322;a zapisana (z powodu ró&#380;nej daty) i nie pami&#281;tawszy
+                                o tym, mo&#380;emy j&#261; zapisa&#263; dwukrotnie w systemie.
+                                Z tego powodu dobrze jest co jaki&#347; czas sprawdza&#263;,
+                                czy saldo naszej kategorii reprezentuj&#261;cej rachunek
+                                bankowy jest takie samo, jak saldo prezentowane
+                                przez bank i czy nie pomineli&#347;my lub zduplikowali&#347;my
+                                jakiej&#347; transakcji.
+                            </li></ul></div><p>
+                    </p>
+
+                    <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.import.banks.parsed.day"></a>
+                            Dzie&#324; transakcji.
+                        </h6></div></div></div>
+                        
+
+                        <p>
+                            Dzie&#324; dokonania (lub zapisania przez bank) importowanej
+                            z pliku transakcji. Mo&#380;esz zmieni&#263; dzie&#324;, na jaki
+                            chcesz by transakcja by&#322;a zapisana podczas edycji
+                            transakcji, po klikni&#281;ciu "Poka&#380;".
+                        </p>
+                    </div>
+
+                    <div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="system_elements.import.banks.parsed.description"></a>
+                            Opis transakcji.
+                        </h6></div></div></div>
+                        
+
+                        <p>
+                            Opis jaki importowanej z pliku transakcji nada&#322; bank.
+                            Je&#347;li transakcje s&#261; importowane z mBanku i kategoria
+                            dla elementu transakcji zosta&#322;a rozpoznana na podstawie
+                            numeru konta bankowego zapisanego na samym ko&#324;cu opisu,
+                            wtedy nie pokazujemy tego numeru konta w opsie.
+                            Je&#347;li nie rozpoznano z jak&#261; kategori&#261; nale&#380;y po&#322;&#261;czy&#263;
+                            transakcj&#281;, wtedy ten numer zostaje na ko&#324;cu opisu.
+                            Mo&#380;esz zmieni&#263; opis, na taki jaki uwa&#380;asz za w&#322;a&#347;ciwy
+                            podczas edycji transakcji, po klikni&#281;ciu "Poka&#380;".
+                        </p>
+                    </div>
+
                 </div>
             </div>
 
             <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="system_elements.import.gnucash"></a>
-                    Z programu gnucash
+                    Import z programu gnucash
                 </h4></div></div></div>
                 
                 <p>
@@ -1815,11 +1896,11 @@
     <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faq"></a>Faq</h2></div></div></div>
         
 
-        <div class="qandaset"><dl><dt>1. <a href="#id3895818">Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</a></dt><dt>2. <a href="#id3895839">Inne pytanie</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%"><tbody>
-                <tr class="question"><td align="left" valign="top"><a name="id3895818"></a><a name="id3895820"></a><p><b>1.</b></p></td><td align="left" valign="top"><p>Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</p></td></tr>
+        <div class="qandaset"><dl><dt>1. <a href="#id3659244">Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</a></dt><dt>2. <a href="#id3659265">Inne pytanie</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%"><tbody>
+                <tr class="question"><td align="left" valign="top"><a name="id3659244"></a><a name="id3659246"></a><p><b>1.</b></p></td><td align="left" valign="top"><p>Zarz&#261;dzanie bud&#380;etem osobistym - po co to komu?</p></td></tr>
                 <tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Sam nie wiem;)</p></td></tr>
             
-                <tr class="question"><td align="left" valign="top"><a name="id3895839"></a><a name="id3895842"></a><p><b>2.</b></p></td><td align="left" valign="top"><p>Inne pytanie</p></td></tr>
+                <tr class="question"><td align="left" valign="top"><a name="id3659265"></a><a name="id3659268"></a><p><b>2.</b></p></td><td align="left" valign="top"><p>Inne pytanie</p></td></tr>
                 <tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Inna odpowied&#378;</p></td></tr>
             </tbody></table></div>
 
