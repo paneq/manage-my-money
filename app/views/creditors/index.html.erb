@@ -1,13 +1,31 @@
-<h1>Lista wierzycieli</h1>
+<h1>
+  Lista wierzycieli
+  <%= help_tag('system_elements.loans.creditors.index') %>
+</h1>
 
 <% light_shadow do %>
   <table style="width: 100%" class="nice-table long">
     <tr>
-      <th>Wierzyciel</th>
-      <th>Informacje bankowe</th>
-      <th>Kwota</th>
-      <th>Lista transakcji</th>
-      <th>Zapłacono</th>
+      <th>
+        Wierzyciel
+        <%= help_tag('system_elements.loans.creditors.index.category') %>
+      </th>
+      <th>
+        Informacje bankowe
+        <%= help_tag('system_elements.loans.creditors.index.bankinfo') %>
+      </th>
+      <th>
+        Kwota
+        <%= help_tag('system_elements.loans.creditors.index.saldo') %>
+      </th>
+      <th>
+        Lista transakcji
+        <%= help_tag('system_elements.loans.creditors.index.list') %>
+      </th>
+      <th>
+        Zapłacono
+        <%= help_tag('system_elements.loans.creditors.index.pay') %>
+      </th>
     </tr>
     <% @creditors.each do |info| %>
       <% loan = info[:loan] %>
@@ -64,5 +82,14 @@
         </td>
       </tr>
     <% end %>
+
+    <% if @creditors.empty? %>
+      <tr>
+        <td colspan="6">
+          Lista jest pusta :-)
+        </td>
+      </tr>
+    <% end %>
+
   </table>
 <% end %>

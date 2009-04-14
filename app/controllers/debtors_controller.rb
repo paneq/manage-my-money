@@ -26,7 +26,7 @@ class DebtorsController < LoansController
         DebtorMailer.deliver_remind(self.current_user, info, params[:text], @currencies)
         @sent << info[:loan]
       rescue Exception => e
-        @errors << "Nie udało się wysłać wiadomości na adres: #{info[:loan].email}" unless ENV['RAILS_ENV'] == 'development'
+        @errors << "Nie udało się wysłać wiadomości na adres: #{info[:loan].email}"
         raise e if ENV['RAILS_ENV'] == 'development'
       end
     end

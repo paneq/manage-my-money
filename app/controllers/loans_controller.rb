@@ -19,7 +19,7 @@ class LoansController < ApplicationController
 
     @people_loans = @current_user.categories.people_loans
     @people_loans.each do |loan|
-      saldo = loan.current_saldo(:default)
+      saldo = loan.current_saldo(:show_all_currencies)
       next if saldo.empty?
       credit = Money.new - saldo.negative
       debet = saldo.positive

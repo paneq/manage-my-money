@@ -375,7 +375,7 @@ class Category < ActiveRecord::Base
 
 
   def recent_unbalanced
-    saldo = self.current_saldo(:default)
+    saldo = self.current_saldo(:show_all_currencies)
     twenty = self.transfers.find(:all, :limit => 20, :order => 'transfers.day DESC, transfers.id DESC', :include => :transfer_items)
     transfers = []
     number = 0

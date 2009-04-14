@@ -1935,7 +1935,209 @@
 
         </section>
 
+        <section id="system_elements.loans">
+            <title>
+                Dłużnicy i wierzyciele
+            </title>
 
+            <para>
+                Jeśli jesteś osobą studiującą to z pewnością bardzo często
+                pożyczasz komuś lub od kogoś pieniądze i wiesz jak trudno
+                jest być na bieżąco z wszelkimi rozliczeniami.
+            </para>
+
+            <para>
+                Na szczęscie w naszym systemie możesz bardzo łatwo i szybko
+                zobaczyć listę wierzycieli (osób, u których masz dług) jak i
+                dłużników (czylie osób, które mają dług u Ciebie).
+                W poniższych rozdziałach możesz przeczytać jakie jeszcze
+                ciekawe możliwości na Ciebie czekają w programie.
+            </para>
+
+            <section id="system_elements.loans.creditors">
+                <title>
+                    Wierzyciele
+                </title>
+
+                <para>
+                    Wierzyciele, to osóby, u których jesteś zadłużony
+                    (zadłużona).
+                </para>
+
+                <section id="system_elements.loans.creditors.index">
+                    <title>
+                        Lista wierzycieli
+                    </title>
+
+                    <para>
+                        Lista wierzycieli przedstawia listę kategorii będących
+                        podkategorią "Zobowiązań", które mają w swoich ustawieniach
+                        włączoną opcję "Dłużnik / Wierzyciel" i których saldo w
+                        jakiejś jednostce (walucie) jest ujemne.
+                    </para>
+
+                    <para>
+                        Spróbujmy opisać jak może dojść do takiej sytuacji
+                        i co możemy wtedy uczynić:
+                        <itemizedlist>
+                            <listitem>
+                                Jednen z Twoich znajomych dajmy na to
+                                "Leszek" często pożycza Ci pieniądze.
+                                Tworzysz w związku z tym kategorię "Leszek",
+                                której nadkategorią są "Zobowiązania". Ponieważ
+                                chciałbyś (chciałabyś) by ta osoba pojawiała
+                                się na liście twoich dłużników lub wierzycieli,
+                                kiedy zaistnieje jakieś zobowiązanie między
+                                wami, podczas tworzenia kategorii "Leszek"
+                                zaznaczasz pole "Dłużnik / Wierzyciel" oraz
+                                wypełniasz dane Leszka.
+                            </listitem>
+
+                            <listitem>
+                                Nadszedł ten dzień, kiedy po raz kolejny w
+                                sklepiku zabrakło Ci pieniędzy na obiad, więc
+                                pożyczasz je bez wachania od znajdującego się
+                                obok Leszka.
+                            </listitem>
+
+                            <listitem>
+                                Tego samego dnia wieczorem wprowadzasz transakcję
+                                do systemu, która przenosi 10 PLN z kategorii
+                                Zobowiązania:Leszek do kategorii Zasoby:Gotówka
+                                w wyniku czego kategoria Leszek ma saldo -10 PLN,
+                                co oznacza, że twój dług u Leszka wynosi 10 PLN.
+                            </listitem>
+
+                            <listitem>
+                                Pewnego dnia dostajesz wypłatę i postanawiasz,
+                                że to dobry moment by oddać wszystkim pieniądze.
+                                Przechodzisz na listę wierzycieli w systemie
+                                i widzisz, że
+                                twoje zadłużenie u Leszka wynosi 10 PLN oraz
+                                możesz obejrzeć, na liście transakcji, które
+                                doprowadziły do takiej sytuacji, że to z powodu
+                                pieniędzy pożyczonych na obiad.
+                            </listitem>
+
+                            <listitem>
+                                Korzystając z wiadomości zawartych w kolumnie
+                                "Informacje bankowe" dokonujesz w swoim banku
+                                przez Internet przelewu na konto Leszka.
+                            </listitem>
+
+                            <listitem>
+                                W kolumnie "Zapłacono" wybierasz kategorię
+                                Zasoby:Konto-bankowe i klikasz na przycisk
+                                "Spłać". W tym momencie zostanie utwrzona
+                                transakcja, która przeniesie 10 PLN z kategorii
+                                oznaczającej twoje konto bankowe do kategorii
+                                oznaczającej Leszka, gdzie saldo znów zacznie
+                                być równe 0, co oznacza, że nie macie wobec
+                                siebie żadnych zobowiązań.
+                            </listitem>
+
+                            <listitem>
+                                Uradowany tym nagłym i niespodziewanym przypływem
+                                gotówki Leszek (który zawsze musiał się długo
+                                dopraszać o zwrot pieniędzy dzwoni do Ciebie
+                                i umawiacie się na piwo, gdzie okazuje się,
+                                że zapomniałaś (zapomniałeś) wziąć portfela
+                                i pożyczasz od niego kolejną dychę...
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+
+                    <para>
+                        Lista wierzycieli nie bierze pod uwagę ustawienia,
+                        które mówi w jaki sposób ma być liczone saldo.
+                        Jest one zawsze liczone i pokazywane w wielu jednostkach
+                        (walutach).
+                    </para>
+
+                    <section id="system_elements.loans.creditors.index.category">
+                        <title>
+                            Wierzyciel
+                        </title>
+                        <para>
+                            Nazwa kategorii reprezentującej wierzyciela.
+                            Kategoria pojawiła się tutaj ponieważ, jej saldo
+                            w pewnej jednostce jest mniejsze od zera oraz gdyż
+                            ma zaznaczoną opcję "Dłużnik / Wierzyciel", która
+                            oznacza właśnie, że ma się przy takich zestawieniach
+                            pojawiać.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.creditors.index.bankinfo">
+                        <title>
+                            Informacje bankowe
+                        </title>
+                        <para>
+                            Kolumna zawiera informacje bankowe, podane dla
+                            danej kategorii w jej ustawieniach. Informacje bankowe,
+                            służą do tego by można było będąc na tej liście
+                            dokonać w prosty sposób przelewu, do osoby u której
+                            jesteśmy zadłużeni, korzystając właśnie z danych
+                            w tej kolumnie.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.creditors.index.saldo">
+                        <title>
+                            Kwota
+                        </title>
+                        <para>
+                            Kwota przedstawia bezwzględną wartość twojego zadłużenia
+                            wobec wierzyciela we wszystkich walutach, których saldo
+                            jest mniejsze niż 0.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.creditors.index.list">
+                        <title>
+                            Lista transakcji
+                        </title>
+                        <para>
+                            Korzystając z przycisku "Pokaż / Ukryj" możesz
+                            sterować widocznością listy zawierającej ostatnie
+                            transakcje jakie doprowadziły do twojego zadłużenia.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.creditors.index.pay">
+                        <title>
+                            Zapłacono
+                        </title>
+                        <para>
+                            W tym miejscu możesz zdefiniować kategorię, z
+                            której spłacono dług i wybrać "Zapisz". Spowoduje
+                            to utworzenie transakcji z odpowiednimi elementami, które
+                            doprowadzą do tego, że saldo jednostek(walut), w których
+                            jesteś zadłużony będzie na kategorii wierzyciela równe 0.
+                        </para>
+                    </section>
+
+                </section>
+
+            </section>
+
+            <section id="system_elements.loans.debtors">
+                <title>
+                    Dłużnicy
+                </title>
+                <para>
+                    [Action description]
+                </para>
+                <section id="system_elements.module.action.field">
+                    <title>
+                        [Field name]
+                    </title>
+                    <para>
+                        [Field description]
+                    </para>
+                </section>
+            </section>
+        </section>
 
         <section id="system_elements.other">
             <title>
