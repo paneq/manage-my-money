@@ -1,7 +1,12 @@
 <div id="bottom-sidebar">
 
   <% cache("#{@current_user.id}-quick-categories") do %>
-    <p><b>Szybki dostęp:</b></p>
+    <p>
+      <%= help_tag('system_elements.other.quick_access') %>
+      <b>
+        Szybki dostęp:
+      </b>
+    </p>
     <form>
       <input onkeyup="var ul = document.getElementById('categories-sidebar');
         var lis = ul.getElementsByTagName('a');

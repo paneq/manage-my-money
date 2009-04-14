@@ -2438,6 +2438,23 @@
             <!--<para>
                 [Module description]
             </para>-->
+
+            <section id="system_elements.other.quick_access">
+                <title>
+                    Szybki dostęp
+                </title>
+                <para>
+                    Szybki dostęp pozwala filtrować kategorie po
+                    ich nazwie. Wpisz conajmniej 3 litery stanowiące
+                    nazwę jakiejś kategorii by zobaczyć tylko nazwy tych
+                    kategorii, które zawierają podane znaki.
+                    Możesz kliknąć na nazwę kategorii by przenieść się do jej widoku.
+                    W niektórych przeglądarkach możesz użyć klawisza TAB by
+                    przeskoczyć do nazwy pierwszej i następnych kategorii a następnie
+                    użyć ENTER by przejść pod podany link.
+                </para>
+            </section>
+
             <section id="system_elements.other.date">
                 <title>
                     Daty
