@@ -8,7 +8,71 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
+--
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: -
+--
+
+CREATE PROCEDURAL LANGUAGE plpgsql;
+
+
 SET search_path = public, pg_catalog;
+
+--
+-- Name: crc32(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION crc32(word text) RETURNS bigint
+    AS $$
+          DECLARE tmp bigint;
+          DECLARE i int;
+          DECLARE j int;
+          DECLARE word_array bytea;
+          BEGIN
+            i = 0;
+            tmp = 4294967295;
+            word_array = decode(replace(word, E'\\', E'\\\\'), 'escape');
+            LOOP
+              tmp = (tmp # get_byte(word_array, i))::bigint;
+              i = i + 1;
+              j = 0;
+              LOOP
+                tmp = ((tmp >> 1) # (3988292384 * (tmp & 1)))::bigint;
+                j = j + 1;
+                IF j >= 8 THEN
+                  EXIT;
+                END IF;
+              END LOOP;
+              IF i >= char_length(word) THEN
+                EXIT;
+              END IF;
+            END LOOP;
+            return (tmp # 4294967295);
+          END
+        $$
+    LANGUAGE plpgsql IMMUTABLE STRICT;
+
+
+--
+-- Name: array_accum(anyelement); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE array_accum(anyelement) (
+    SFUNC = array_append,
+    STYPE = anyarray,
+    INITCOND = '{}'
+);
+
+
+--
+-- Name: sum(text); Type: AGGREGATE; Schema: public; Owner: -
+--
+
+CREATE AGGREGATE sum(text) (
+    SFUNC = textcat,
+    STYPE = text,
+    INITCOND = ''
+);
+
 
 SET default_tablespace = '';
 
@@ -88,7 +152,6 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -131,7 +194,6 @@ CREATE TABLE category_report_options (
 --
 
 CREATE SEQUENCE category_report_options_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -163,7 +225,6 @@ CREATE TABLE conversions (
 --
 
 CREATE SEQUENCE conversions_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -229,7 +290,6 @@ CREATE TABLE exchanges (
 --
 
 CREATE SEQUENCE exchanges_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -273,7 +333,6 @@ CREATE TABLE goals (
 --
 
 CREATE SEQUENCE goals_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -299,7 +358,6 @@ CREATE TABLE reports (
     period_start date,
     period_end date,
     report_view_type_int integer NOT NULL,
-    is_predefined boolean DEFAULT false NOT NULL,
     user_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -317,7 +375,6 @@ CREATE TABLE reports (
 --
 
 CREATE SEQUENCE reports_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -395,7 +452,6 @@ CREATE TABLE system_categories (
 --
 
 CREATE SEQUENCE system_categories_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -429,7 +485,6 @@ CREATE TABLE transfer_items (
 --
 
 CREATE SEQUENCE transfer_items_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -461,7 +516,6 @@ CREATE TABLE transfers (
 --
 
 CREATE SEQUENCE transfers_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -506,7 +560,6 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -737,6 +790,13 @@ CREATE INDEX index_categories_on_rgt ON categories USING btree (rgt);
 
 
 --
+-- Name: index_categories_system_categories_on_category_id_and_system_ca; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_categories_system_categories_on_category_id_and_system_ca ON categories_system_categories USING btree (category_id, system_category_id);
+
+
+--
 -- Name: index_category_report_options_on_report_id_and_category_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -825,6 +885,13 @@ CREATE INDEX index_sessions_on_session_id ON sessions USING btree (session_id);
 --
 
 CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
+
+
+--
+-- Name: index_system_categories_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_system_categories_on_id ON system_categories USING btree (id);
 
 
 --
@@ -984,3 +1051,5 @@ INSERT INTO schema_migrations (version) VALUES ('20090330153852');
 INSERT INTO schema_migrations (version) VALUES ('20090330164910');
 
 INSERT INTO schema_migrations (version) VALUES ('20090404090543');
+
+INSERT INTO schema_migrations (version) VALUES ('20090414090944');
