@@ -452,6 +452,7 @@ CREATE TABLE system_categories (
 --
 
 CREATE SEQUENCE system_categories_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -472,7 +473,7 @@ ALTER SEQUENCE system_categories_id_seq OWNED BY system_categories.id;
 CREATE TABLE transfer_items (
     id integer NOT NULL,
     description text NOT NULL,
-    value numeric(12,2) NOT NULL,
+    value numeric(8,2) NOT NULL,
     transfer_id integer NOT NULL,
     category_id integer NOT NULL,
     currency_id integer DEFAULT 3 NOT NULL,
@@ -1037,6 +1038,8 @@ INSERT INTO schema_migrations (version) VALUES ('20090311194649');
 INSERT INTO schema_migrations (version) VALUES ('20090313212009');
 
 INSERT INTO schema_migrations (version) VALUES ('20090320113507');
+
+INSERT INTO schema_migrations (version) VALUES ('20090323092622');
 
 INSERT INTO schema_migrations (version) VALUES ('20090320114536');
 
