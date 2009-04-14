@@ -2126,15 +2126,166 @@
                     Dłużnicy
                 </title>
                 <para>
-                    [Action description]
+                    Dłużnicy, to osóby, które są u Ciebie zadłużone.
                 </para>
-                <section id="system_elements.module.action.field">
+                <section id="system_elements.loans.debtors.index">
                     <title>
-                        [Field name]
+                        Lista dłużników
                     </title>
+
                     <para>
-                        [Field description]
+                        Lista dłużników przedstawia listę kategorii będących
+                        podkategorią "Zobowiązań", które mają w swoich ustawieniach
+                        włączoną opcję "Dłużnik / Wierzyciel" i których saldo w
+                        jakiejś jednostce (walucie) jest dodatnie.
                     </para>
+
+                    <para>
+                        Spróbujmy opisać jak może dojść do takiej sytuacji
+                        i co możemy wtedy uczynić:
+                        <itemizedlist>
+                            <listitem>
+                                Jednen z Twoich znajomych dajmy na to
+                                "Leszek" często pożycza od Ciebie pieniądze.
+                                Tworzysz w związku z tym kategorię "Leszek",
+                                której nadkategorią są "Zobowiązania". Ponieważ
+                                chciałbyś (chciałabyś) by ta osoba pojawiała
+                                się na liście twoich dłużników lub wierzycieli,
+                                kiedy zaistnieje jakieś zobowiązanie między
+                                wami, podczas tworzenia kategorii "Leszek"
+                                zaznaczasz pole "Dłużnik / Wierzyciel" oraz
+                                wypełniasz dane Leszka.
+                            </listitem>
+
+                            <listitem>
+                                Nadszedł ten dzień, kiedy po raz kolejny w
+                                sklepiku zabrakło Leszkowi pieniędzy na obiad, więc
+                                pożyczasz je swojemu przyjacielowy bez wachania.
+                            </listitem>
+
+                            <listitem>
+                                Tego samego dnia wieczorem wprowadzasz transakcję
+                                do systemu, która przenosi 10 PLN z kategorii
+                                Zasoby:Gotówka do kategorii Zobowiązania:Leszek
+                                w wyniku czego kategoria Leszek ma saldo 10 PLN,
+                                co oznacza, że dług Leszka u Ciebie wynosi 10 PLN.
+                            </listitem>
+
+                            <listitem>
+                                Po długim parotygodniowym oczekiwaniu, kiedy
+                                zaczyna Ci brakować gotówki postanawiasz się
+                                upomnieć o nią u wszystkich swoich dłużników.
+                                Przechodzisz do listy dłużników i do każdego
+                                z nich wysyłasz przypomnienie e-mailowe, z prośbą
+                                o zwrot pieniędzy.
+                            </listitem>
+
+                            <listitem>
+                                Pewnego dnia Leszek dostaje wypłatę i postanawia,
+                                że to dobry moment by oddać wszystkim pieniądze.
+                                Niestety nie pamięta komu i ile był dłużny. W tym
+                                momencie dostaje od Ciebie wiadomość e-mail, która
+                                informuje go o jego zadłużeniu i nawet zawiera listę
+                                transakcji, które doprowadziły do tego, że jest Ci
+                                winny pieniądze. Leszek przegląda listę i przypomina
+                                sobie, że faktycznie jakiś czas temu pożyczał
+                                od Ciebie na obiad. Loguje się do twojego banku
+                                i przelewa Ci odpowiednią kwotę na twoje
+                                konto.
+                            </listitem>
+
+                            <listitem>
+                                Uradowany tym nagłym i niespodziewanym przypływem
+                                gotówki (zawsze trzeba było się długo
+                                dopraszać, o zwrot pieniędzy u Leszka) dzwonisz do niego
+                                i umawiacie się na piwo, gdzie okazuje się,
+                                że Leszek zapomniał wziąć portfela więc
+                                pożyczasz mu kolejną dychę...
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+
+                    <para>
+                        Lista dłużników nie bierze pod uwagę ustawienia,
+                        które mówi w jaki sposób ma być liczone saldo.
+                        Jest one zawsze liczone i pokazywane w wielu jednostkach
+                        (walutach).
+                    </para>
+
+                    <section id="system_elements.loans.debtors.index.category">
+                        <title>
+                            Dłużnik
+                        </title>
+                        <para>
+                            Nazwa kategorii reprezentującej dłużnika.
+                            Kategoria pojawiła się tutaj ponieważ, jej saldo
+                            w pewnej jednostce (walucie) jest mniejsze od zera oraz gdyż
+                            ma zaznaczoną opcję "Dłużnik / Wierzyciel", która
+                            oznacza właśnie, że ma się przy takich zestawieniach
+                            pojawiać.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.debtors.index.email">
+                        <title>
+                            E-mail
+                        </title>
+                        <para>
+                            Adres e-mail dłużnika. Pod ten adres zostanie wysłana
+                            wiadomość z przypomnieniem o zadłużeniu u Ciebie oraz
+                            podaną przez Ciebie wiadomością. Możesz zmienić
+                            adres e-mail w ustawieniach kategorii.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.debtors.index.saldo">
+                        <title>
+                            Kwota
+                        </title>
+                        <para>
+                            Kwota przedstawia bezwzględną wartość zadłużenia dłużnika
+                            wobec Ciebie we wszystkich walutach, których saldo
+                            jest większe niż 0.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.debtors.index.remind">
+                        <title>
+                            Wyślij przypomnienie
+                        </title>
+                        <para>
+                            Zaznaczają i odznaczając tą opcję możesz decydować,
+                            do kogo wysłać przypomnienie o zadłużeniu.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.debtors.index.list">
+                        <title>
+                            Dołącz listę transakcji.
+                        </title>
+                        <para>
+                            Zaznaczenie tej opcji powoduje, że w wysyłanych
+                            przypomnieniach znajdzie się lista opisów elementów
+                            transakcji wraz z opisami całych transakcji, które
+                            edytowały kategorię reprezentującą
+                            dłużnika. Dołączone zostan najwyżej 20 ostatnich elementów
+                            od czasu gdy poprzednim razem saldo było równe 0.
+                        </para>
+                    </section>
+
+                    <section id="system_elements.loans.debtors.index.send">
+                        <title>
+                            Wyślij przypomnienia
+                        </title>
+                        <para>
+                            Wyśle do wybranych osób przypomnienia o ich zadłużeniu,
+                            gdzie będzie znajdować się twoja wiadomość oraz
+                            aktualne saldo kategorii reprezentującej dłużnika.
+                            Jeśli wybrałeś opcję "Dołącz listę transakcji" wiadmość
+                            będzie zawierać dodatkowo listę.
+                        </para>
+                    </section>
+
                 </section>
             </section>
         </section>

@@ -1,12 +1,15 @@
 module FileSiteKeys
-  ATTRIBUTES = [:session_key,
+  ATTRIBUTES = [
+    :session_key,
     :session_secret,
     :memcached_port,
     :memcached_key,
     :rest_auth_site_key,
     :rest_auth_digest_stretches,
     :app_domain,
-    :app_name]
+    :app_name,
+    :app_email
+    ]
   
   ATTRIBUTES.freeze
 

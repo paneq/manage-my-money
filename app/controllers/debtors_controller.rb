@@ -23,7 +23,7 @@ class DebtorsController < LoansController
     @sent = []
     @debtors.each do |info|
       begin
-        DebtorMailer.deliver_remind(self.current_user, info, params[:text], @currencies)
+        DebtorMailer.deliver_remind(@current_user, info, params[:text], @currencies)
         @sent << info[:loan]
       rescue Exception => e
         @errors << "Nie udało się wysłać wiadomości na adres: #{info[:loan].email}"

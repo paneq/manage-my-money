@@ -19,11 +19,13 @@ end
 
 Rails::Initializer.run do |config|
   config.apply_file_keys
+  #FIXME: Make it DRY:
   REST_AUTH_SITE_KEY = config.rest_auth_site_key
   REST_AUTH_DIGEST_STRETCHES = config.rest_auth_digest_stretches
   MEMCACHED_PORT = config.memcached_port
   APP_DOMAIN = config.app_domain
   APP_NAME = config.app_name
+  APP_EMAIL = config.app_email
   
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers

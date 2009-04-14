@@ -1,4 +1,7 @@
-<h1>Lista dłużników</h1>
+<h1>
+  Lista dłużników
+  <%= help_tag('system_elements.loans.debtors.index') %>
+</h1>
 
 <% form_tag '/debtors/remind' do -%>
 
@@ -7,11 +10,28 @@
       <table class="nice-table long">
         <tr>
 
-          <th>Dłużnik</th>
-          <th>E-mail</th>
-          <th>Kwota</th>
-          <th>Wyślij przypomnienie</th>
-          <th>Dołącz listę transakcji</th>
+          <th>
+            Dłużnik
+            <%= help_tag('system_elements.loans.debtors.index.category') %>
+          </th>
+          <th>
+            E-mail
+            <%= help_tag('system_elements.loans.debtors.index.email') %>
+          </th>
+          <th>
+            Kwota
+            <%= help_tag('system_elements.loans.debtors.index.saldo') %>
+          </th>
+          <th>
+            Wyślij<br />
+            przypomnienie
+            <%= help_tag('system_elements.loans.debtors.index.remind') %>
+          </th>
+          <th>
+            Dołącz listę<br />
+            transakcji
+            <%= help_tag('system_elements.loans.debtors.index.list') %>
+          </th>
 
         </tr>
         <% @debtors.each do |info| %>
@@ -75,6 +95,7 @@
 
     <div>
       <%= submit_tag 'Wyślij przypomnienia' %>
+      <%= help_tag('system_elements.loans.debtors.index.send') %>
     </div>
   </div>
 <% end -%>

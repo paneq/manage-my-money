@@ -7,6 +7,7 @@ development:
     rest_auth_digest_stretches: 1
     app_domain: localhost:3000
     app_name: Manage My Money
+    app_email: example@example.org
 
 test:
     session_key: 3m_session_test
@@ -17,6 +18,7 @@ test:
     rest_auth_digest_stretches: 1
     app_domain: example.org
     app_name: Manage My Money
+    app_email: example@example.org
 
 selenium:
     session_key: 3m_session_selenium
@@ -27,6 +29,7 @@ selenium:
     rest_auth_digest_stretches: 1
     app_domain: localhost:7000
     app_name: Manage My Money
+    app_email: example@example.org
 
 production:
     #read environment.rb
@@ -40,3 +43,4 @@ production:
     rest_auth_digest_stretches: 10
     app_domain: example.org
     app_name: Manage My Money
+    app_email: example@example.org
