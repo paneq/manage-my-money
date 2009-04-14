@@ -11,6 +11,70 @@
     <info>
         <title>Pomoc do systemu Manage My Money</title>
     </info>
+
+    <section>
+        <title>Wstęp</title>
+
+        <section>
+            <title>
+                O systemie
+            </title>
+            <para >
+                Manage my money to internetowy system do zarządzania budżetem osobistym.
+                Główne możliwe aktywności w systemie to wprowadzanie danych dotyczących przepływu środków (notowania przychodów, wydatków, długów) oraz późniejsze analizowanie tych danych.
+            </para>
+
+            <para>
+                W szczególności system Manage My Money pozwala na:
+                <itemizedlist>
+                    <listitem>
+                        zapisywanie transakcji stosując zasadę podwójnego zapisu
+                    </listitem>
+                    <listitem>
+                        tworzenie dowolnie szczegółowej struktury kategorii
+                    </listitem>
+                    <listitem>
+                        tworzenie transakcji wielowalutowych
+                    </listitem>
+                    <listitem>
+                        wyszukiwanie wprowadzonych transakcji w dowolnym okresie
+                    </listitem>
+                    <listitem>
+                        analizowanie wprowadzonych danych na wykresach
+                    </listitem>
+                    <listitem>
+                        przyspieszenie wprowadzania danych stosując podpowiadanie podczas pisania
+                    </listitem>
+                    <listitem>
+                        importowanie transakcji z banków i programu Gnucash
+                    </listitem>
+                    <listitem>
+                        planowanie przepływu środków
+                    </listitem>
+                     <listitem>
+                        wygodne zarządzanie dłużnikami i wierzycielami
+                    </listitem>
+                </itemizedlist>
+
+                W dalszej częsci pomocy opisane zostaną wszystkie funkcjonalności systemu.
+
+            </para>
+        </section>
+
+        <section>
+            <title>
+                Uzyskiwanie pomocy
+            </title>
+            <para >
+                 Do prawie każdego szczegółu systemu dostępna jest pomoc kontekstowa on-line dostępna po kliknięciu 
+                 ikony ze znakiem zapytania, znajdującej się przy interesującym nas elemencie. Pomoc można też przeglądać
+                 od początku do końca przy pomocy odnośnika umieszczonego w stopce systemu. Istnieje również wersja pomocy w formacie PDF.
+            </para>
+        </section>
+    </section>
+
+
+
     <section id="system_elements">
         <title >Elementy systemu</title>
 
@@ -1352,9 +1416,10 @@
             <title>
                 Raporty
             </title>
-            <!--<para>
-                Raporty umożliwiają wiele... TODO
-            </para> -->
+            <para>
+                Moduł raportów pozwala analizować wprowadzone dane transakcyjne przy pomocy wykresów kołowych, słupkowych, liniowych lub zestawień tabelarycznych.
+                Do wybory jest kilka gotowych raportów, bardziej wymagający uzytkownicy mogą stworzyć własne raporty od podstaw.
+            </para>
             <section id="system_elements.reports.index">
                 <title>
                     Lista raportów
@@ -1558,9 +1623,20 @@
             <title>
                 Planowanie
             </title>
-            <!--<para>
-                [Module description]
-            </para> -->
+            <para>
+                Moduł planowania pozwala zapisywać i przeglądać w systemie cele jakie użytkownik chce osiągnąć w danej kategorii. Przykłady takiech celi, to:
+                <itemizedlist>
+                    <listitem>
+                            Do końca miesiąca chcę mieć conajmniej 1000 zł na koncie oszczędnościowym
+                    </listitem>
+                    <listitem>
+                            Moje zadłużenie nie może przekroczyć 500zł w tym roku.
+                    </listitem>
+                    <listitem>
+                            W tym i kolejnych tygodniach chcę wydać na niezdrowe jedzenie nie więcej niż 10% wszystkich wydatków na jedzenie.
+                    </listitem>
+                </itemizedlist>
+            </para>
             <section id="system_elements.goals.index">
                 <title>
                     Twoje cele
@@ -1632,9 +1708,9 @@
                 <title>
                     Nowy cel
                 </title>
-                <!--<para>
-                    [Action description]
-                </para>-->
+                <para>
+                    Ekran umożliwiający utworzenie nowego planu.
+                </para>
                 <section id="system_elements.goals.new.category">
                     <title>
                         Kategoria
@@ -1821,7 +1897,72 @@
                         Z mBanku
                     </title>
                     <para>
+                        System akceptuje tylko pliki z wyciągami z konta utworzone
+                        w systemie internetowym do obsługi kont mBank. Pliki te
+                        muszą być w formacie csv i posiadać takie rozszerzenie plików.
+                    </para>
 
+                    <para>
+                        Aby uzyskać taki plik należy wykonać następujące czynności:
+                        <itemizedlist>
+                            <listitem>
+                                Przejdź na stronę mBank
+                                https://www.mbank.com.pl/
+                            </listitem>
+
+                            <listitem>
+                                Zaloguj się korzystając ze swojego identyfikatora
+                                oraz hasła.
+                            </listitem>
+
+                            <listitem>
+                                Zostaniesz przeniesiony na stronę
+                                "Dostępne rachunki". Kliknij na nazwę rachunku,
+                                którego transakcje chcesz zaimportować.
+                            </listitem>
+
+                            <listitem>
+                                Zostaniesz przeniesiony na stronę przedstawiającą szczegóły rachunku,
+                                kliknij link 'Historia', następnie
+                                przedział czasu oraz kwot, które chcesz zaimportować
+                                do systemu. Możesz przyjąć różne strategie:  Importować
+                                transakcję co tydzień, co dwa tygodnie, co miesiąc, co jakiś
+                                czas- jak Ci wygodnie. Jeśli w wybranym przedziale czasu
+                                znajdzie się transakcja, którą już kiedyś zapisano w systemie,
+                                system na następnym ekranie pokaże odpowiednią informację, że
+                                taka transakcja najprawdopodbniej znajduje się już w systemie.
+                                Nie musisz więc pamiętać jaki szeroki był ostatni okres, za który
+                                importowałeś (importowałaś) transakcje z danego rachunku bankowego.
+                                Zawsze możesz wybrać szerszy okres i na następnym ekranie pominąć
+                                transakcje, które już kiedyś zapisałeś (zapisałaś).
+                                Zaznacz pole "Format danych" i wybierz format "CSV". 
+                                Po wybraniu odpowiednich wartości wciśnij przycisk "Zatwierdź".
+                            </listitem>
+
+                            <listitem>
+                                Pojawi się pytanie o to co zrobić z plikiem historii transakcji, powinieneś zapisać go na dysku.
+                            </listitem>
+
+                            <listitem>
+                                Przejdź do naszego serwisu i wybierz z menu "Import".
+                            </listitem>
+
+                            <listitem>
+                                W okienku "Import z banków" wybierz kategorię, która reprezentuje
+                                racuhnek bankowy, z którego przed chwilą pobrałeś (pobrałaś) plik CSV.
+                                Poniżej wybierz dopiero co pobrany plik.
+                                Kliknij "Wciśnij plik".
+                            </listitem>
+
+                            <listitem>
+                                Jeśli podano prawidłowy plik, system odczyta zawarte w nim dane
+                                a następnie zaprezentuje Ci transakcje, które były zapisane w pliku.
+                                Klikając na pokaż/ukryj możesz poruszać się między poszczególnymi
+                                transakcjami, edytować je wg. potrzeb a następnie dla każdej z nich
+                                wybrać opcję "Zapisz".
+                            </listitem>
+
+                        </itemizedlist>
                     </para>
                 </section>
 
@@ -2366,7 +2507,7 @@
         -->
 
     </section>
-
+<!--
     <section id="faq">
         <title>Faq</title>
 
@@ -2394,7 +2535,7 @@
 
     </section>
 
-
+-->
 </article>
 
        <!--     <anchor id="example.anchor.1"/> -->
