@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090404090543) do
+ActiveRecord::Schema.define(:version => 20090414090944) do
 
   create_table "bdrb_job_queues", :force => true do |t|
     t.binary   "args"
@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(:version => 20090404090543) do
     t.integer "category_id",        :null => false
     t.integer "system_category_id", :null => false
   end
+
+  add_index "categories_system_categories", ["category_id", "system_category_id"], :name => "index_categories_system_categories_on_category_id_and_system_ca"
 
   create_table "category_report_options", :force => true do |t|
     t.integer  "inclusion_type_int", :default => 0, :null => false
@@ -129,7 +131,6 @@ ActiveRecord::Schema.define(:version => 20090404090543) do
     t.date     "period_start"
     t.date     "period_end"
     t.integer  "report_view_type_int",                           :null => false
-    t.boolean  "is_predefined",               :default => false, :null => false
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -166,6 +167,8 @@ ActiveRecord::Schema.define(:version => 20090404090543) do
     t.integer  "cached_level"
     t.string   "name_with_path"
   end
+
+  add_index "system_categories", ["id"], :name => "index_system_categories_on_id", :unique => true
 
   create_table "transfer_items", :force => true do |t|
     t.text    "description",                                               :null => false

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20090404090543
+# Schema version: 20090414090944
 #
 # Table name: system_categories
 #
@@ -12,6 +12,8 @@
 #  updated_at        :datetime      
 #  description       :string(255)   
 #  category_type_int :integer       
+#  cached_level      :integer       
+#  name_with_path    :string(255)   
 #
 
 class SystemCategory < ActiveRecord::Base
