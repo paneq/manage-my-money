@@ -16,5 +16,8 @@
   <p><%= f.label :password_confirmation, 'Potwierdź hasło'  %>
   <%= f.password_field :password_confirmation %><%= help_tag 'system_elements.user.new.password_confirmation' %></p>
 
+
+  <p>Rejestrując się w serwisie potwierdzasz, że zapoznałeś się z <%= link_to "regulaminem", static_url(:action => "terms")%>
+  </p>
   <p><%= submit_tag 'Zarejestruj mnie' %></p>
 <% end -%>

@@ -1,6 +1,6 @@
 <div id="bottom-sidebar">
 
-  <% cache("#{@current_user.id}-quick-categories") do %>
+  <% cache("#{self.current_user.id}-quick-categories") do %>
     <p>
       <%= help_tag('system_elements.other.quick_access') %>
       <b>
@@ -28,7 +28,7 @@
     </form>
 
     <div id="categories-sidebar">
-      <%  @current_user.categories.each do |c| %>
+      <%  self.current_user.categories.each do |c| %>
         <%= link_to "#{c.name} <br />",
           category_path(c) ,
           obj_hash_id('category-in-menu', c).merge(

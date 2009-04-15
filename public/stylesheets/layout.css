@@ -829,3 +829,10 @@ div.auto_complete ul strong.highlight {
     vertical-align: top;
     text-decoration:none;
 }
+
+
+ul.terms li {
+   margin-bottom: 7px;
+}
+
+
