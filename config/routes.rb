@@ -88,6 +88,7 @@ ActionController::Routing::Routes.draw do |map|
   map.exchanges_list '/exchanges/:left_currency/:right_currency', :controller => 'exchanges', :action => 'list'
 
 
+  map.static '/static/:action', :controller => 'static'
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
