@@ -165,7 +165,7 @@ module ApplicationHelper
   def help_tag(a_id, title = 'Pomoc')
     result =  <<-HTML
 <span class="help" title="#{title}">
-  <a href="/help/help.html##{a_id}" target="_blank">
+  <a href="/help/help.html##{a_id}" target="_blank" tabindex="-1">
     <img alt="Pomoc" src="/images/icon_help.png" style="vertical-align: top;"/>
   </a>
 </span>
