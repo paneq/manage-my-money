@@ -1,7 +1,0 @@
-#!/bin/sh
-
-/home/rupert/apps/manage_my_money/current/script/process/spawner \
-  mongrel \
-  --environment=production \
-  --instances=4 \
-  --port=3037
