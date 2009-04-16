@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__) + "/../config/environment")
+#require File.join(File.dirname(__FILE__) + "/../config/environment")
 WORKER_ROOT = RAILS_ROOT + "/lib/workers"
 $LOAD_PATH.unshift(WORKER_ROOT)
 
