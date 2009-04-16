@@ -49,8 +49,9 @@
               <div id="bg" class="width">
                 <ul>
                   <li><a href="/help/help.html">Pomoc</a></li>
-                  <li><%= link_to("O nas", static_url(:action => "authors"))%></li>
-                  <li><%= link_to("Regulamin", static_url(:action => "terms"), :class => 'last')%></li>
+                  <li><%= link_to("Przewodnik", static_url(:action => :tutorial))%></li>
+                  <li><%= link_to("O nas", static_url(:action => :authors))%></li>
+                  <li><%= link_to("Regulamin", static_url(:action => :terms), :class => 'last')%></li>
                 </ul>
               </div>
             </div>
