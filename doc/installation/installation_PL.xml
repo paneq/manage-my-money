@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:m="http://www.w3.org/1998/Math/MathML"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:db="http://docbook.org/ns/docbook">
+    <info>
+        <title>Instalacja Manage My Money</title>
+        <subtitle></subtitle>
+        <author>
+            <personname>
+                <firstname>Robert</firstname>
+                <surname>Pankowecki</surname>
+            </personname>
+        </author>
+
+        <author>
+            <personname>
+                <firstname>Jarosław</firstname>
+                <surname>Plebański</surname>
+            </personname>
+        </author>
+
+        <pubdate>16 kwiecień 2009</pubdate>
+    </info>
+
+    <chapter>
+        <title>Wstęp</title>
+        <para>
+            <para>Manage my money to internetowy system do zarządzania budżetem osobistym, niniejszy dokument przedstawi instrukcję krok-po-kroku instalacji systemu. </para>
+           <!-- <para>Manage my money jest też aplikacją open-source, którą każdy może rozwijać – dlatego przedstawimy też sposoby współpracy przy jej rozwijaniu.</para>-->
+        </para>
+    </chapter>
+
+    <chapter>
+        <title>Instalacja</title>
+
+        <section>
+            <title>Sposoby instalacji </title>
+
+            <para>Istnieje bardzo dużo możliwych kombinacji w jakich może zostać wdrożona nasza aplikacja. Im więcej posiadasz doświadczenia z Ruby on Rails tym bardziej ten proces jest dla Ciebie oczywisty i tym więcej możliwości możesz sobie wyobrazić i pewnie dokładnie wiesz co należy zrobić aby system działal poprawnie. Tym samym niniejsza instrukcja nie jest skierowana do najbardziej doświadczonych osób, lecz raczej do początkujących, którzy chcieliby łatwo uzyskać działający system. </para>
+            <para>Zdecydowaliśmy się opisać instalację w trybie globalnym - użytkownik posiada system Ubuntu i prawa administracyjne do niego oraz pragnie zainstalować aplikację, tak by była dostępna dla wszystkich użytkowników. Jak największa część bibliotek zostanie zainstalowana globalnie, tak by mogła być w przyszłości współdzielona z innymi aplikacjami.  </para>
+            <para>Ponieważ dystrybucja Ubuntu pochodzi od Debiania doświadczeni użytkownicy powinni móc bez większych problemów skorzystać z niniejszej instrukcji także w tej dystrybucji.  </para>
+           
+
+        </section>
+
+        <section>
+            <title>Globalna instalacja aplikacji </title>
+            <section>
+                <title>Informacja</title>
+                <para>Przy wykonywaniu wszystkich poleceń, które zawierają jako
+			wartość parametru “production” możemy je zastąpić słowem “development”, 
+			jeśli chcemy by dane polecenie zostało wykonane w trybie i na bazie 
+			deweloperskiej zamiast produkcyjnej.
+                </para>
+            </section>
+            <section>
+                <title>Prerekwizyty</title>
+                <para>System Ubuntu 8.10, uprawnienia administratora i dostęp do internetu
+                </para>
+            </section>
+
+            <section>
+                <title>Wymagane pakiety i gemy</title>
+                <para>Do działania aplikacji wymagane są następujące pakiety (lub czasem wystarczą odpowiadające im binarki przekompilowane samodzielnie):
+                </para>
+
+                <para>ruby - Wymagany w wersji conajmniej 1.8.7 ale nie 1.9. Instalacja:
+                    <programlisting>
+sudo apt-get install ruby-full
+                    </programlisting>
+Wersja:
+                    <programlisting>
+rupert@puchatek:~$ ruby -v
+ruby 1.8.7 (2008-08-11 patchlevel 72) [i486-linux]
+                    </programlisting>
+                </para>
+
+                <para>rubygems - Wymagane w wersji conajmniej 1.3.1 Instalacja na podstawie https://help.ubuntu.com/community/RubyOnRails :
+                    <programlisting>wget http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz
+tar xzvf rubygems-1.3.1.tgz
+cd rubygems-1.3.1
+sudo ruby setup.rb
+sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
+sudo gem update --system
+cd ..
+                    </programlisting>
+                </para>
+
+                <para>rails - Wymagane w wersji 2.3.2 conajmniej. Instalacja:
+                    <programlisting>sudo gem install rails -v 2.3.2 --no-rdoc --no-ri</programlisting>
+                </para>
+
+
+                <para>Dodatkowe wymagane gemy wraz z pakietami niezbędnymi do ich zbudowania:
+                    <programlisting>sudo gem sources -a http://gems.github.com
+
+sudo gem install packet --no-rdoc --no-ri
+sudo gem install chronic --no-rdoc --no-ri
+
+sudo gem install collections --no-rdoc --no-ri
+
+sudo gem install mislav-will_paginate --no-rdoc --no-ri
+
+sudo apt-get install libxslt-dev libxslt-ruby
+sudo gem install nokogiri  --no-rdoc --no-ri
+
+sudo gem install fastercsv  --no-rdoc --no-ri
+
+# For stats only:
+sudo gem install flay  --no-rdoc --no-ri
+sudo gem install flog --no-rdoc --no-ri
+sudo gem install railroad --no-rdoc --no-ri
+sudo gem install reek --no-rdoc --no-ri
+sudo gem install roodi --no-rdoc --no-ri
+sudo gem install rspec-rails --no-rdoc --no-ri
+
+sudo gem install jscruggs-metric_fu --no-rdoc --no-ri
+sudo gem install mergulhao-rcov --no-rdoc --no-ri
+                    </programlisting>
+                </para>
+
+                <para>System cachowania danych: memcached
+                    <programlisting>sudo apt-get install memcached</programlisting>
+                </para>
+
+                <para>Sphinx (wymagany do działania funkcjonalności podpowiadania): Dokładna instrukcja instalacji:  http://www.sphinxsearch.com/docs/current.html#installation</para>
+
+
+            </section>
+
+            <section>
+                <title>System bazy danych</title>
+                <para>System Manage My Money został przystosowany do bazy danych postgreSQL w wersji 8.3.
+Instalacja:
+                    <programlisting>
+sudo apt-get install postgresql
+sudo apt-get install postgresql-client
+sudo apt-get install libpq-dev
+sudo gem install postgres
+                    </programlisting>
+Tworzenie wymaganych baz:
+                    <programlisting>
+sudo su postgres
+createdb money_development -E UTF8
+
+Analogicznie dla: money_test
+Analogicznie dla: money_selenium
+Analogicznie dla: money_production
+
+createuser test_3m -S -d -R -P
+
+exit
+                    </programlisting>
+                </para>
+            </section>
+
+            <section>
+                <title>Źródła aplikacji</title>
+                <para>Źródła stabilnych wersji aplikacji znajdują się pod ogólnodostepnym adresem: http://github.com/paneq/manage-my-money/downloads
+Na tej stronie należy wybrać paczkę w wybranym formacie (tgz lub zip) przy wersji 1.0. Zapisany plik rozpakować do folderu w którym chcemy zainstalować aplikację
+                </para>
+            </section>
+
+            <section>
+                <title>Konfiguracja</title>
+                <para>Z kodem aplikacji dystrybuowana jest przykładowa konfiguracja, aby jej użyć zmień nazwy wszystkich plików *_example (usuwając ten przyrostek) w config/ directory i ewentualnie wyedytuj ich zawartośc zgodnie z potrzebami.
+                </para>
+            </section>
+
+            <section>
+                <title>Uruchomienie migracji wszystkich baz danych</title>
+                <para>W konsoli (w katalogu aplikacji) wykonaj
+                    <programlisting>rake db:migrate:all</programlisting>
+                </para>
+            </section>
+
+            <section>
+                <title>Uruchomienie serwera memcached</title>
+                <para>W konsoli wykonaj
+                    <programlisting>memcached -p NUMER_PORTU</programlisting>
+                </para>
+            </section>
+
+            <section>
+                <title>Przygotowywanie sphinx</title>
+                <para>W celu wygenerowania konfiguracji dla indeksera wykonaj:
+                    <programlisting>rake thinking_sphinx:configure RAILS_ENV=production</programlisting>
+Aby utworzyć indeksy wykonaj:
+                    <programlisting>rake thinking_sphinx:index RAILS_ENV=production</programlisting>
+Aby uruchomić demona wyszukiwania wykonaj:
+                    <programlisting>rake thinking_sphinx:start RAILS_ENV=production</programlisting>
+                </para>
+            </section>
+
+            <section>
+                <title>Uruchomienie testów</title>
+                <para>Poprawne wykonanie wszystkich testów automatycznych jest warunkiem koniecznym poprawnego wdrożenia. Aby uruchomić testy w konsoli (w katalogu aplikacji) wykonaj:
+                    <programlisting>rake test</programlisting>
+                </para>
+            </section>
+
+            <section>
+                <title>Uruchamianie backgroundrb</title>
+                <para>W konsoli (w katalogu aplikacji) wykonaj:
+                    <programlisting>./script/backgroundrb start -e production</programlisting>
+                </para>
+            </section>
+
+
+            <section>
+                <title>Uruchomienie serwera aplikacji</title>
+                <para>W konsoli (w katalogu aplikacji) wykonaj:
+                    <programlisting>./script/server -e production</programlisting>
+Aplikacja dostepna jest pod adresem localhost:3000
+                </para>
+            </section>
+
+
+
+            <section>
+                <title>Dalsze możliwości wdrożenia</title>
+                <para>Opisany został tylko najprostszy sposób uruchomienia aplikacji. Jeśli chcesz w pełni profesjonalnie zarządzać swoim wdrożeniem zapraszamy do przeczytania przynajmniej następujących materiałów:</para>
+                <itemizedlist>
+
+                    <listitem>
+                        <para>Capistrano to narzędzie głównie dedykowane do automatyzacji procesu wdrażania aplikacji Ruby on Rails. Z jego pomocą możesz łatwo i szybko przegrywać w odpowiednie miejsce na swoim serwerze najnowsze wersje aplikacji, restartować serwery lub przeprowadzać migracje. Szczegóły na stronie: http://www.capify.org/getting-started/from-the-beginning/</para>
+                    </listitem>
+                    <listitem>
+                        <para>Aktualnie najprostszy sposób na profesjonalne wdrożenie produkcyjne to skorzystanie z modułu mod_passenger dla serwera Apache. Jest to proste, stabilne i zalecane rozwiązanie. Wszystkie niezbędne informacje a nawet wiele więcej możesz znaleźć w doskonałym poradniku: http://hackd.thrivesmarthq.com/how-to-setup-a-linux-server-for-ruby-on-rails-with-github-and-phusion-passenger</para>
+                    </listitem>
+                    <listitem>
+                        <para>Jeśli nie masz możliwości skorzystania z tej opcji, lub po prostu nie chcesz możesz też wykorzystać jako mongrel jako serwer aplikacji. Zajrzyj na: http://mongrel.rubyforge.org/</para>
+                    </listitem>
+                    <listitem>
+                        <para>Jeśli udało Ci się zdobyć tylu użytkowników, że jeden mongrel to za mało skorzystaj z całego klastra: http://mongrel.rubyforge.org/wiki/MongrelCluster</para>
+                    </listitem>
+                    <listitem>
+                        <para>Jeśli potrzebujesz jeszcze więcej to znaczy, że ta dokumentacja nie jest przeznaczona dla Ciebie. Z pewnością bardziej zaawansowane materiały nt. Ruby on Rails i jego skalowania oraz optymalizacji znajdziesz w Internecie. Z naszej strony możemy polecić: http://railslab.newrelic.com/scaling-rails</para>
+                    </listitem>
+                </itemizedlist>
+            </section>
+
+        </section>
+    </chapter>
+
+
+</book>
