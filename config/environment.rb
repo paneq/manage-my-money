@@ -118,4 +118,4 @@ Rails::Initializer.run do |config|
 
 end
 
-ExceptionNotifier.exception_recipients = %w(robert.pankowecki@gmail.com) if defined?(ExceptionNotifier)
+#ExceptionNotifier.exception_recipients = %w(your_mail@example.org) if defined?(ExceptionNotifier)

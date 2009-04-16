@@ -2,6 +2,7 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  #include ExceptionNotifiable
   include SslRequirement
   include AuthenticatedSystem
   # See ActionController::RequestForgeryProtection for details
