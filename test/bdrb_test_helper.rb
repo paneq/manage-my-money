@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__) + "/../config/environment")
 WORKER_ROOT = RAILS_ROOT + "/lib/workers"
 $LOAD_PATH.unshift(WORKER_ROOT)
 
@@ -31,7 +32,6 @@ module BackgrounDRb
   class WorkerDummyLogger
     %w(info debug fatal error warn).each do |x|
       define_method(x) do |log_data|
-        RAILS_DEFAULT_LOGGER.send( x, log_data)
       end
     end
   end
@@ -96,4 +96,3 @@ module BackgrounDRb
     end
   end
 end
-

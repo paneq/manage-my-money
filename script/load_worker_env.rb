@@ -22,4 +22,3 @@ if !(::Packet::WorkerRunner::WORKER_OPTIONS[:worker_env] == false)
   ActiveRecord::Base.allow_concurrency = true
 end
 require "backgroundrb_server"
-
