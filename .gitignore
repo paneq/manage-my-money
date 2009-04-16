@@ -3,6 +3,7 @@ log/*.log
 tmp/**/*
 nbproject
 config/backgroundrb.yml
+config/newrelic.yml
 config/database.yml
 config/deploy.rb
 config/mongrel_cluster.yml
@@ -18,4 +19,5 @@ db/sphinx/**/*.spm
 db/sphinx/**/*.spp
 db/sphinx/**/*.spl
 vendor/plugins/validates_equality/test/debug.log
+vendor/plugins/newrelic_rpm/
 *~
