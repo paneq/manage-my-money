@@ -6,11 +6,11 @@
   <head>
 
 
-    <title>Manage My Money</title>
+    <title><%= APP_NAME %></title>
 
     <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-    <meta name="author" content="3p group" />
-    <meta name="description" content="Manage My Money was designed to allow you easly and fastly notice the flow of your money" />
+    <meta name="author" content="Robert Pankowecki, Jarosław Plebański" />
+    <meta name="description" content="<%= APP_NAME %> was designed to allow you easly and fastly track the flow of your money" />
     <meta name="keywords" content="money, money managment, transfers" />
     <meta name="robots" content="index, follow, noarchive" />
     <meta name="googlebot" content="noarchive" />
@@ -33,7 +33,7 @@
 
           <div id="header" class="width">
             <% link_to("/", :id=>'main-page-link') do -%>
-              <img style="margin: 0px; padding: 0px;" src="/images/bg/header_3m.jpg" alt="Manage My Money Logo"/>
+              <img style="margin: 0px; padding: 0px;" src="/images/bg/header_3m.jpg" alt="<%= APP_NAME %> Logo"/>
             <% end %>
           </div>
 

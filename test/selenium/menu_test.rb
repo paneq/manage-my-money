@@ -73,7 +73,7 @@ begin
       }
     
       go_home
-      @selenium.click "//img[@alt='Manage My Money Logo']"
+      @selenium.click "//img[@alt='#{APP_NAME} Logo']"
       @selenium.wait_for_page_to_load "30000"
       selenium_assert {
         assert @selenium.is_text_present("Twoje kategorie")
