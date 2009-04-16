@@ -31,9 +31,7 @@ class ApplicationController < ActionController::Base
   def get_period(period, return_range = false)
     symbol = params[period + "_period"].to_sym
     range = if symbol == :SELECTED
-      start = params[period+'_start']
-      endt = params[period+'_end']
-      Range.new(Date.new(start[:year].to_i, start[:month].to_i, start[:day].to_i), Date.new(endt[:year].to_i, endt[:month].to_i, endt[:day].to_i) )
+      Range.new(from_hash(params[period+'_start']), from_hash(params[period+'_end']))
     else
       Date.calculate(symbol)
     end
@@ -48,6 +46,25 @@ class ApplicationController < ActionController::Base
 
   def get_period_range(period)
     get_period(period, true)
+  end
+
+
+  private
+
+  
+  # FIXME: To model && write tests
+  def from_hash(hash)
+    date = Date.today
+    begin
+      date = Date.new(hash[:year].to_i, hash[:month].to_i, hash[:day].to_i)
+    rescue
+      begin
+        date = Date.new(hash[:year].to_i, hash[:month].to_i, 1)
+        date = date.end_of_month
+      rescue
+      end
+    end
+    date
   end
 
 end
