@@ -193,6 +193,10 @@ table.shadow {
     margin: 0;
     padding: 0;
 
+    border: 0px solid white;
+    border-collapse: collapse;
+    
+
     border-top-style: none;
     border-bottom-style: none;
     border-left-style: none;
