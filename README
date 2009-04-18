@@ -27,7 +27,14 @@ configure and run it the way you would a normal Rails application.
 
 See the INSTALL file for more details.
 
+== Localization
 
+Application interface is written in Polish, if you need support for your language, 
+you can can make a fork of project and translate it.
+
+== Live demo
+
+We have deployed a live demo of our app, you can play with it at http://co-do-grosza.pl
 
 == Support
 
