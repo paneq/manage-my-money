@@ -1,3 +1,11 @@
+The application "Manage My Money" is distributed under the BSD license. This license 
+does not include any code found in the "vendors" directory. Those plugins 
+are each licensed individually and their licenses should be reviewed before 
+you use this application. Most plugins are licensed under the MIT or BSD
+license, but some may not be. If a plugin does not 
+have a license, due diligence should be taken to find the license on the 
+plugin's website.
+
 Copyright (c) 2009 Robert Pankowecki, Jarosław Plebański
 All rights reserved.
 
