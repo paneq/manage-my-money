@@ -83,11 +83,11 @@ class Exchange < ActiveRecord::Base
 
   def exchange(amount, currency)
     if left_currency == currency
-      return amount*right_to_left
+      return (amount*right_to_left).to_f.round(2)
     end
 
     if right_currency == currency
-      return amount*left_to_right
+      return (amount*left_to_right).to_f.round(2)
     end
 
     raise 'Wrong currency given'

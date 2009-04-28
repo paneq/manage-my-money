@@ -126,25 +126,45 @@ class GnucashParserTest < ActiveSupport::TestCase
   test "Parse file with multi currencies" do
     result = nil
     load_file 'gnucash_with_currencies' do |content|
-      assert_difference("@jarek.categories.count", +1) do
-        assert_difference("@jarek.transfers.count", +2) do
-          assert_difference("@jarek.transfer_items.count", +4) do
+      assert_difference("@jarek.categories.count", +2) do
+        assert_difference("@jarek.transfers.count", +3) do
+          assert_difference("@jarek.transfer_items.count", +6) do
             result = GnucashParser.parse(content, @jarek)
           end
         end
       end
     end
 
-    assert_equal 6, result[:categories][:in_file]
-    assert_equal 1, result[:categories][:added]
+    assert_equal 7, result[:categories][:in_file]
+    assert_equal 2, result[:categories][:added]
     assert_equal 5, result[:categories][:merged]
     assert_equal 0, result[:categories][:errors].size
 
     assert_equal 3, result[:transfers][:in_file]
-    assert_equal 2, result[:transfers][:added]
-    assert_equal 1, result[:transfers][:errors].size
+    assert_equal 3, result[:transfers][:added]
+    assert_equal 0, result[:transfers][:errors].size
 
-    assert_match(/transakcje wielowalutowe nie są obsługiwane/, result[:transfers][:errors].first.first)
+    transfer2 = @jarek.transfers.find_by_description 'Test currency transfer'
+    assert_not_nil transfer2
+    assert_equal 2, transfer2.transfer_items.size
+
+    exchange = transfer2.conversions.first.exchange
+    assert_not_nil exchange
+    assert_equal @jarek, exchange.user
+    assert_equal @zloty, exchange.left_currency
+    assert_equal 'BGN', exchange.right_currency.long_symbol
+    assert_equal 0.0988, exchange.left_to_right
+    assert_equal 10.1230, exchange.right_to_left
+
+    tranfer_item_21 = transfer2.transfer_items.find_by_description 'PLN TI'
+    assert_not_nil tranfer_item_21
+    assert_equal 101.23, tranfer_item_21.value
+    assert_equal @zloty, tranfer_item_21.currency
+
+    tranfer_item_22 = transfer2.transfer_items.find_by_description 'BGN TI'
+    assert_not_nil tranfer_item_22
+    assert_equal(-10, tranfer_item_22.value)
+    assert_equal 'BGN', tranfer_item_22.currency.long_symbol
 
 
 

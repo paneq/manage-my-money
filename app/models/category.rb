@@ -32,7 +32,7 @@ class Category < ActiveRecord::Base
 
   attr_accessor :opening_balance, :opening_balance_currency, :new_subcategories
 
-  attr_accessor :parent_guid #for importing, not saved in db
+  attr_accessor :parent_guid, :import_currency #for importing, not saved in db
 
   belongs_to :user
 

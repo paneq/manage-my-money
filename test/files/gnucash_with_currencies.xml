@@ -15,29 +15,36 @@
      xmlns:bgt="http://www.gnucash.org/XML/bgt"
      xmlns:recurrence="http://www.gnucash.org/XML/recurrence"
      xmlns:lot="http://www.gnucash.org/XML/lot"
-     xmlns:cust="http://www.gnucash.org/XML/cust"
      xmlns:job="http://www.gnucash.org/XML/job"
+     xmlns:invoice="http://www.gnucash.org/XML/invoice"
      xmlns:addr="http://www.gnucash.org/XML/addr"
-     xmlns:owner="http://www.gnucash.org/XML/owner"
-     xmlns:taxtable="http://www.gnucash.org/XML/taxtable"
-     xmlns:tte="http://www.gnucash.org/XML/tte"
-     xmlns:employee="http://www.gnucash.org/XML/employee"
-     xmlns:order="http://www.gnucash.org/XML/order"
+     xmlns:cust="http://www.gnucash.org/XML/cust"
      xmlns:billterm="http://www.gnucash.org/XML/billterm"
      xmlns:bt-days="http://www.gnucash.org/XML/bt-days"
      xmlns:bt-prox="http://www.gnucash.org/XML/bt-prox"
-     xmlns:invoice="http://www.gnucash.org/XML/invoice"
+     xmlns:taxtable="http://www.gnucash.org/XML/taxtable"
+     xmlns:tte="http://www.gnucash.org/XML/tte"
+     xmlns:order="http://www.gnucash.org/XML/order"
+     xmlns:employee="http://www.gnucash.org/XML/employee"
      xmlns:entry="http://www.gnucash.org/XML/entry"
+     xmlns:owner="http://www.gnucash.org/XML/owner"
      xmlns:vendor="http://www.gnucash.org/XML/vendor">
 <gnc:count-data cd:type="book">1</gnc:count-data>
 <gnc:book version="2.0.0">
 <book:id type="guid">70a267b98c1cd67d4489c3f4c51de856</book:id>
 <gnc:count-data cd:type="commodity">1</gnc:count-data>
-<gnc:count-data cd:type="account">7</gnc:count-data>
+<gnc:count-data cd:type="account">8</gnc:count-data>
 <gnc:count-data cd:type="transaction">3</gnc:count-data>
 <gnc:commodity version="2.0.0">
   <cmdty:space>ISO4217</cmdty:space>
   <cmdty:id>BGN</cmdty:id>
+  <cmdty:get_quotes/>
+  <cmdty:quote_source>currency</cmdty:quote_source>
+  <cmdty:quote_tz/>
+</gnc:commodity>
+<gnc:commodity version="2.0.0">
+  <cmdty:space>ISO4217</cmdty:space>
+  <cmdty:id>EUR</cmdty:id>
   <cmdty:get_quotes/>
   <cmdty:quote_source>currency</cmdty:quote_source>
   <cmdty:quote_tz/>
@@ -57,6 +64,22 @@
 </gnc:commodity>
 <gnc:pricedb version="1">
   <price>
+    <price:id type="guid">d42007800a03db53fc60e834b9812627</price:id>
+    <price:commodity>
+      <cmdty:space>ISO4217</cmdty:space>
+      <cmdty:id>BGN</cmdty:id>
+    </price:commodity>
+    <price:currency>
+      <cmdty:space>ISO4217</cmdty:space>
+      <cmdty:id>PLN</cmdty:id>
+    </price:currency>
+    <price:time>
+      <ts:date>2009-04-28 00:00:00 +0200</ts:date>
+    </price:time>
+    <price:source>user:xfer-dialog</price:source>
+    <price:value>10/1</price:value>
+  </price>
+  <price>
     <price:id type="guid">50353b58bbf586ecf533b15b80f2962f</price:id>
     <price:commodity>
       <cmdty:space>ISO4217</cmdty:space>
@@ -71,6 +94,22 @@
     </price:time>
     <price:source>user:xfer-dialog</price:source>
     <price:value>10/1</price:value>
+  </price>
+  <price>
+    <price:id type="guid">290a1f84adedfc5ad1f346a156deaf21</price:id>
+    <price:commodity>
+      <cmdty:space>ISO4217</cmdty:space>
+      <cmdty:id>EUR</cmdty:id>
+    </price:commodity>
+    <price:currency>
+      <cmdty:space>ISO4217</cmdty:space>
+      <cmdty:id>BGN</cmdty:id>
+    </price:currency>
+    <price:time>
+      <ts:date>2009-04-28 00:00:00 +0200</ts:date>
+    </price:time>
+    <price:source>user:xfer-dialog</price:source>
+    <price:value>1/1</price:value>
   </price>
   <price>
     <price:id type="guid">44984fe4f50c11a1b67dd05386e20fb7</price:id>
@@ -115,6 +154,17 @@
   <act:commodity>
     <cmdty:space>ISO4217</cmdty:space>
     <cmdty:id>BGN</cmdty:id>
+  </act:commodity>
+  <act:commodity-scu>100</act:commodity-scu>
+  <act:parent type="guid">3b174d481178f04b84933df9983a0f7a</act:parent>
+</gnc:account>
+<gnc:account version="2.0.0">
+  <act:name>other currency account</act:name>
+  <act:id type="guid">b993284b76a35a9e6ce41df583fe2462</act:id>
+  <act:type>ASSET</act:type>
+  <act:commodity>
+    <cmdty:space>ISO4217</cmdty:space>
+    <cmdty:id>EUR</cmdty:id>
   </act:commodity>
   <act:commodity-scu>100</act:commodity-scu>
   <act:parent type="guid">3b174d481178f04b84933df9983a0f7a</act:parent>
@@ -183,13 +233,15 @@
   <trn:splits>
     <trn:split>
       <split:id type="guid">bf79e884b39c227d4de52543c47bbe03</split:id>
+      <split:memo>PLN TI</split:memo>
       <split:reconciled-state>n</split:reconciled-state>
       <split:value>1000/100</split:value>
-      <split:quantity>10000/100</split:quantity>
+      <split:quantity>10123/100</split:quantity>
       <split:account type="guid">85485a00d6f50e55af7f618ad46024b9</split:account>
     </trn:split>
     <trn:split>
       <split:id type="guid">23573b02e2b6d23ca16bfb1181a0c56c</split:id>
+      <split:memo>BGN TI</split:memo>
       <split:reconciled-state>c</split:reconciled-state>
       <split:value>-1000/100</split:value>
       <split:quantity>-1000/100</split:quantity>

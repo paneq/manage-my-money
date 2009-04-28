@@ -36,7 +36,7 @@ class ImportControllerTest < ActionController::TestCase
     assert_select 'div#parsing-good'
 
     assert_select "ul#category-error li", :count => 1
-    assert_select "ul#transfer-error li", :count => 5
+    assert_select "ul#transfer-error li", :count => 4
    end
 
 

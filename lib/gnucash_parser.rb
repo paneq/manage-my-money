@@ -47,8 +47,8 @@ class GnucashParser
     def parse(content, user)
       doc = Nokogiri::XML(content)
       result = {}
-      result[:categories] = import_categories(user, doc)
-      result[:transfers] = import_transfers(user, doc)
+      result[:categories], imported_categories_hash = import_categories(user, doc)
+      result[:transfers] = import_transfers(user, doc, imported_categories_hash)
       result
     rescue GnuCashParseError
       raise
@@ -67,7 +67,6 @@ class GnucashParser
       top_categories = {}
       progress "\n==Parsing categories"
       doc.find('//gnc:account').each do |node|
-        #       logger.debug "Commodity: " + node.find('act:commodity/cmdty:id').inner_text
         c = Category.new
         c.import_guid = node.find('act:id').inner_text
         c.name = node.find('act:name').inner_text
@@ -76,6 +75,7 @@ class GnucashParser
         type = node.find('act:type').inner_text
         c.user = user
         c.imported = true
+        c.import_currency = node.find('act:commodity/cmdty:id').inner_text
 
         if !root_category && type == 'ROOT'
           root_category = c
@@ -104,10 +104,13 @@ class GnucashParser
               item.parent_guid = nil
             end
           elsif top_categories[category_type].size == 1
-            top_gc_guid = top_categories[category_type][0].import_guid
+            category_being_merged = top_categories[category_type].first
+            top_gc_guid = category_being_merged.import_guid
             top.import_guid = top_gc_guid
+            top.import_currency = category_being_merged.import_currency
+            top.name = category_being_merged.name
+            top.description = category_being_merged.description
             categories[top_gc_guid] = top
-            #mozna ewentualnie podmienic nazwe i opis
           end
         end
       end
@@ -147,18 +150,17 @@ class GnucashParser
       result[:added] = saved
       result[:merged] = merged
       progress "\n" + result.inspect + "\n"
-      return result
+      return result, categories
     end
 
 
-    def import_transfers(user, doc)
+    def import_transfers(user, doc, categories = {})
       result = {}
       transaction_count = doc.find('//gnc:count-data[@cd:type="transaction"]').inner_text.to_i
       saved = 0
       progress "\n==Parsing and saving transfers"
       result[:errors] = []
       doc.find('//gnc:transaction').each do |node|
-        multi_currency_transfer = false
         t = Transfer.new
         t.user = user
         t.import_guid = node.find('trn:id').inner_text
@@ -172,7 +174,7 @@ class GnucashParser
           ti = TransferItem.new
           ti.import_guid = split.find('split:id').inner_text
           category_guid = split.find('split:account').inner_text
-          ti.category = user.categories.find_by_import_guid(category_guid)
+          ti.category = categories[category_guid]# || user.categories.find_by_import_guid(category_guid)
           ti.description = split.find('split:memo').inner_text
           value_str = split.find('split:value').inner_text
           value = parse_value(value_str)
@@ -182,20 +184,26 @@ class GnucashParser
 
           if (value == quantity)
             ti.value = value
+            ti.currency = currency
           else
-            multi_currency_transfer = true
-            break
+            ti.value = quantity
+            foreign_currency = find_or_create_currency(ti.category.import_currency, user)
+            ti.currency = foreign_currency
+
+            t.conversions.build(:exchange => Exchange.new(
+                                  :left_currency => currency,
+                                  :right_currency => foreign_currency,
+                                  :left_to_right => (quantity/value).to_f.round(4),
+                                  :right_to_left => (value/quantity).to_f.round(4),
+                                  :user => user
+            ))
+          #FIXME: there will be validation problem if there exist more than one conversion between same currencies
           end
 
-          ti.currency = currency
+          
           t.transfer_items << ti
         end
 
-        if multi_currency_transfer
-          result[:errors] << ["#{t.day} #{t.description}: transakcje wielowalutowe nie są obsługiwane podczas importu"]
-          next
-        end
-        
         if t.save
           progress
           saved += 1
@@ -263,7 +271,7 @@ class GnucashParser
     def parse_value(value_str)
       value = nil
       if value_str =~ /(-?\d*)\/(\d*)/
-        value = $1.to_f / $2.to_f
+        value = ($1.to_f / $2.to_f).to_f.round(2)
       else
         progress "Problems parsing #{value_str} value"
       end
