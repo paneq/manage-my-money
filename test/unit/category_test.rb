@@ -2,12 +2,9 @@ require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
 
-  def setup
-    prepare_currencies
-    save_rupert
-    save_jarek
-  end
-  
+  setup :prepare_currencies
+  setup :save_rupert
+  setup :save_jarek
   
   def test_zero_saldo_at_start
     @rupert.categories.each do |category|
