@@ -7,11 +7,8 @@
 <% all.shift if @category.nil? %>
 <% show = all.first %>
 
-<% options = shadow_options do |opt| %>
-  <% opt[:top][:middle].call do %>
-    <%= tab all, :transfer %>
-  <% end %>
-<% end %>
+<% options = ShadowHelper::ShadowOptions.new %>
+<% options.top.middle.text = tab(all, :transfer) %>
 
 <% light_shadow({:class => 'long'}, {}, options) do %>
   <% tab_container(:transfer) do %>

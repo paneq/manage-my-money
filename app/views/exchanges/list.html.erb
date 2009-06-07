@@ -57,13 +57,9 @@
 
 
 
-
-  <% options = shadow_options do |opt| %>
-    <% opt[:top][:middle].call do %>
-      <%= tab [[:new, 'Nowy']], :exchange -%>
-    <% end %>
-  <% end %>
-
+  <% options = ShadowHelper::ShadowOptions.new %>
+  <% options.top.middle.text = tab([[:new, 'Nowy']], :exchange) %>
+  
 
   <% light_shadow({:class => 'long'}, {}, options) do %>
     <% tab_container(:exchange) do %>

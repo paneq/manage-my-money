@@ -192,7 +192,7 @@ class GraphBuilder
           OpenFlashChart::PieValue.new(val[:value].value(cur), get_label.call(val))
         end
         graph.tooltip = "#percent# <br> #label# <br> Wartość: #val##{cur.symbol} z #{sum}#{cur.symbol}"
-        if values.count > 15
+        if values.size > 15
           graph.set_no_labels()
         end
         graph.colours = COLORS

@@ -10,7 +10,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.user = @jarek
     assert r.save!
@@ -40,7 +40,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     r.report_view_type = :linear
     r.name = "Testowy raport"
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.user = @jarek
     assert !r.save
     assert r.errors.on(:base)
@@ -55,7 +55,7 @@ class MultipleCategoryReportTest < ActiveSupport::TestCase
     r = MultipleCategoryReport.new
     add_category_options @rupert, r
     r.report_view_type = :bar
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.user = @jarek
     assert !r.save

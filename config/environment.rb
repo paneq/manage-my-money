@@ -11,7 +11,6 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-
 Rails::Configuration.class_eval do
   include FileSiteKeys #defined in preinitializer
 end
@@ -113,7 +112,8 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     class Date
       include DateExtensions
-    end 
+    end
+
   end
 
 end

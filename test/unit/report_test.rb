@@ -10,7 +10,7 @@ class ReportTest < ActiveSupport::TestCase
     r = nil
     r = Report.new
     r.user = @jarek
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.report_view_type = :pie
     assert r.save
@@ -19,7 +19,7 @@ class ReportTest < ActiveSupport::TestCase
   test "Should create and save Report with period" do
     r = Report.new
     r.user = @jarek
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.report_view_type = :pie
     r.name = "Testowy raport"
     assert r.save
@@ -84,7 +84,7 @@ class ReportTest < ActiveSupport::TestCase
     #TODO find way to change Date.today value and test it!
     #    class Date
     #      def self.today
-    #        '06.01.2008'.to_date
+    #        '06-01-2008'.to_date
     #      end
     #    end
     #
@@ -94,8 +94,8 @@ class ReportTest < ActiveSupport::TestCase
     #    r.save!
     #
     #
-    #    assert_equal '01.01.2008'.to_date, r.period_start
-    #    assert_equal '31.01.2008'.to_date, r.period_end
+    #    assert_equal '01-01-2008'.to_date, r.period_start
+    #    assert_equal '31-01-2008'.to_date, r.period_end
 
 
 

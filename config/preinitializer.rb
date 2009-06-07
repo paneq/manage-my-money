@@ -49,3 +49,18 @@ ERR
     
   end
 end
+
+
+
+require File.join(File.dirname(__FILE__), '..', 'lib', 'array_extensions.rb')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'enumerable_extensions.rb')
+
+if RUBY_VERSION == "1.8.6"
+  class Array
+    include ArrayExtensions
+    include EnumerableExtensions #already includes Enumerable
+  end
+  module Enumerable
+    include EnumerableExtensions
+  end
+end

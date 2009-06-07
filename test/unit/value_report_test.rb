@@ -11,7 +11,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     assert r.save!
   end
@@ -21,7 +21,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :pie
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     assert !r.save
     assert r.errors.on(:report_view_type)
@@ -33,7 +33,7 @@ class ValueReportTest < ActiveSupport::TestCase
     r.user = @jarek
     add_category_options @jarek, r
     r.report_view_type = :bar
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.category_report_options.each do |option|
       option.inclusion_type = :both
@@ -58,7 +58,7 @@ class ValueReportTest < ActiveSupport::TestCase
   #    assert_equal Money.new, result.first.second
   #
   #
-  #    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+  #    result = category1.calculate_values(:category_and_subcategories, :day, '26-02-2008'.to_date, '27-02-2008'.to_date)
   #
   #    assert_equal 2, result.size
   #    assert_equal 2, result.first.size
@@ -68,9 +68,9 @@ class ValueReportTest < ActiveSupport::TestCase
   #    assert_equal :category_and_subcategories, result.second.first
   #    assert_equal Money.new, result.second.second
   #
-  #    save_simple_transfer(:income => category1, :outcome => category2, :day => '26.02.2008'.to_date, :currency => @zloty, :value => 123, :user => @jarek)
+  #    save_simple_transfer(:income => category1, :outcome => category2, :day => '26-02-2008'.to_date, :currency => @zloty, :value => 123, :user => @jarek)
   #
-  #    result = category1.calculate_values(:category_and_subcategories, :day, '26.02.2008'.to_date, '27.02.2008'.to_date)
+  #    result = category1.calculate_values(:category_and_subcategories, :day, '26-02-2008'.to_date, '27-02-2008'.to_date)
   #
   #    assert_equal 2, result.size
   #    assert_equal 2, result.first.size

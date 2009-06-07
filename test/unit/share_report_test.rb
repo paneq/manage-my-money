@@ -11,7 +11,7 @@ class ShareReportTest < ActiveSupport::TestCase
     r.user = @jarek
     r.category = @jarek.categories.first
     r.report_view_type = :pie
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.max_categories_values_count = 1
     r.name = "Testowy raport"
     assert r.save!
@@ -41,7 +41,7 @@ class ShareReportTest < ActiveSupport::TestCase
     r.user = @jarek
     r.category = @rupert.income
     r.report_view_type = :pie
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.max_categories_values_count = 1
     r.name = "Testowy raport"
     assert !r.save

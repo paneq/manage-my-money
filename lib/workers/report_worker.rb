@@ -16,7 +16,7 @@ class ReportWorker < BackgrounDRb::MetaWorker
         non_deleted_reports << r
       end
     end
-    if reports.count > 0
+    if reports.size > 0
       logger.info "Deleted #{deleted_reports} reports from #{reports.count}"
       logger.info "Problems deleting #{non_deleted_reports}" if deleted_reports < reports.count
     else

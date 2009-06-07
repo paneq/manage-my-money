@@ -1,6 +1,57 @@
 module ShadowHelper
+  class ShadowOptions < Hash
+    def initialize
+      self[:top] = ShadowLmr.new
+      self[:middle] = ShadowLmr.new
+      self[:bottom] = ShadowLmr.new
+    end
 
+    def top
+      self[:top]
+    end
 
+    def middle
+      self[:middle]
+    end
+
+    def bottom
+      self[:bottom]
+    end
+  end
+
+  class ShadowLmr < Hash
+    def initialize
+      self[:left] = ShadowText.new
+      self[:middle] = ShadowText.new
+      self[:right] = ShadowText.new
+    end
+
+    def left
+      self[:left]
+    end
+
+    def middle
+      self[:middle]
+    end
+
+    def right
+      self[:right]
+    end
+  end
+
+  class ShadowText < Hash
+    def initialize
+      self[:text] = String.new
+    end
+
+    def text
+      self[:text]
+    end
+
+    def text=(val)
+      self[:text]=val
+    end
+  end
   # Creates a table that includes elements created in block and
   # surrounds them with inner shadow
   #
@@ -75,39 +126,6 @@ module ShadowHelper
   # end
   def shadow(*args, &block)
     inner_or_outer_shadow(:outer, *args, &block)
-  end
-
-
-  #
-  # Helper for creating options for methods to create shadows.
-  # You can use it as last paramter in *shadow* methods
-  #
-  # in ERB template:
-  # <% opt = shadow_options do |opt| %>
-  # <%   opt[:top][:middle].call :style => 'height:100px;' do %>
-  #        <div>THIS TEXT WILL BE ON TOP MIDDLE SHADOW which will be 100px height</div>
-  # <%   end %>
-  # <% end %>
-  #
-  # opt => {:top => {:middle => {:style => 'height:100px;', :text => "<div>THIS TEXT WILL BE ON TOP MIDDLE SHADOW</div>" } } }
-  def shadow_options()
-    raise 'No block given' unless block_given?
-    output_hash = {}
-    call_hash = {}
-    [:top, :middle, :bottom]. each do |vertical|
-      call_hash[vertical] = {}
-      output_hash[vertical] = {}
-      [:left, :middle, :right]. each do |horizontal|
-        output_hash[vertical][horizontal] = {:text =>nil}
-        call_hash[vertical][horizontal] = Proc.new do |arg, &block|
-          output_hash[vertical][horizontal][:text] = capture(&block)
-          output_hash[vertical][horizontal].merge!(arg) if arg
-        end
-      end
-    end
-
-    yield call_hash 
-    output_hash
   end
 
   private

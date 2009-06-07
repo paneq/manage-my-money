@@ -16,7 +16,7 @@ class SystemCategoryTest < ActiveSupport::TestCase
     e.save!
     s.save!
 
-    assert_equal 2, SystemCategory.all.count
+    assert_equal 2, SystemCategory.count(:all)
 
     assert e.id, s.parent.id
 

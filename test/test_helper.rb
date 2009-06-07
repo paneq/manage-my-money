@@ -280,7 +280,7 @@ class ActiveSupport::TestCase
     r.user = user
     r.category = user.categories.first
     r.report_view_type = :pie
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.depth = 5
     r.max_categories_values_count = 6
     r.name = "Testowy raport"
@@ -294,7 +294,7 @@ class ActiveSupport::TestCase
     r.user = user
     add_category_options user, r
     r.report_view_type = :text
-    r.set_period(["10.01.2009".to_date, "17.01.2009".to_date, :LAST_WEEK])
+    r.set_period(["10-01-2009".to_date, "17-01-2009".to_date, :LAST_WEEK])
     r.name = "Testowy raport"
     r.save!
     r

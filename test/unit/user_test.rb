@@ -177,14 +177,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, @rupert.newest_transfers.to_a.count
+    assert_equal 10, @rupert.newest_transfers.to_a.size
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
     assert_equal Date.yesterday, @rupert.newest_transfers.map(&:day).min
 
     @rupert.transaction_amount_limit_value = 5
     @rupert.save!
     
-    assert_equal 5, @rupert.newest_transfers.to_a.count
+    assert_equal 5, @rupert.newest_transfers.to_a.size
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).min
 
@@ -201,14 +201,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal 10, @rupert.newest_transfers.to_a.count
+    assert_equal 10, @rupert.newest_transfers.to_a.size
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
     assert_equal 1.week.ago.to_date, @rupert.newest_transfers.map(&:day).min
 
     @rupert.transaction_amount_limit_value = 1
     @rupert.save!
 
-    assert_equal 5, @rupert.newest_transfers.to_a.count
+    assert_equal 5, @rupert.newest_transfers.to_a.size
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).max
     assert_equal Date.today, @rupert.newest_transfers.map(&:day).min
 
@@ -228,7 +228,7 @@ class UserTest < ActiveSupport::TestCase
       transfers << save_simple_transfer(:day => a_day, :user => @rupert)
     end
 
-    assert_equal Date.calculate(:THIS_MONTH).count, @rupert.newest_transfers.to_a.count
+    assert_equal Date.calculate(:THIS_MONTH).to_a.size, @rupert.newest_transfers.to_a.size
     assert_equal Date.today.end_of_month, @rupert.newest_transfers.map(&:day).max
     assert_equal Date.today.beginning_of_month, @rupert.newest_transfers.map(&:day).min
 
@@ -236,7 +236,7 @@ class UserTest < ActiveSupport::TestCase
     @rupert.transaction_amount_limit_value = nil
     @rupert.save!
 
-    assert_equal Date.calculate(:THIS_MONTH).count + Date.calculate(:LAST_MONTH).count, @rupert.newest_transfers.to_a.count
+    assert_equal Date.calculate(:THIS_MONTH).to_a.size + Date.calculate(:LAST_MONTH).to_a.size, @rupert.newest_transfers.to_a.size
     assert_equal Date.today.end_of_month, @rupert.newest_transfers.map(&:day).max
     assert_equal Date.today.last_month.beginning_of_month, @rupert.newest_transfers.map(&:day).min
   end
