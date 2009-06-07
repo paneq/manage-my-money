@@ -94,6 +94,9 @@ Rails::Initializer.run do |config|
   #parsinv csv files from mbank
   config.gem 'fastercsv', :version => '~> 1.4.0'
 
+  #sending mails from google.
+  config.gem 'ambethia-smtp-tls', :lib => 'smtp-tls', :version => '~> 1.1.2'
+
   # Required only for project development
   #  config.gem 'flay'
   #  config.gem 'flog'
