@@ -12,6 +12,7 @@ config/site_keys.yml
 config/sphinx.yml
 config/*.sphinx.conf
 config/backup_fu.yml
+config/schedule.rb
 config/initializers/hoptoad.rb
 db/sphinx/**/*.spa
 db/sphinx/**/*.spd

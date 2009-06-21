@@ -4,5 +4,6 @@ namespace :config do
     #FIXME: Make parameter for source pwd with default option
     puts `cp -v ../config/*.yml config/`
     puts `cp -v ../config/deploy.rb config/`
+    puts `cp -v ../config/schedule.rb config/`
   end
 end

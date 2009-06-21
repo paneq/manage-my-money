@@ -97,6 +97,9 @@ Rails::Initializer.run do |config|
   #sending mails from google.
   config.gem 'ambethia-smtp-tls', :lib => 'smtp-tls', :version => '~> 1.1.2'
 
+  #whenever for configuring cron tasks.
+  config.gem 'javan-whenever', :lib => false, :source => 'http://gems.github.com'
+
   # Required only for project development
   #  config.gem 'flay'
   #  config.gem 'flog'
