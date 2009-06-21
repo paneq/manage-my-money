@@ -11,6 +11,7 @@ config/selenium.yml
 config/site_keys.yml
 config/sphinx.yml
 config/*.sphinx.conf
+config/backup_fu.yml
 config/initializers/hoptoad.rb
 db/sphinx/**/*.spa
 db/sphinx/**/*.spd
@@ -22,4 +23,5 @@ db/sphinx/**/*.spl
 vendor/plugins/validates_equality/test/debug.log
 vendor/plugins/newrelic_rpm/
 vendor/plugins/hoptoad_notifier/
+vendor/plugins/backup_fu/
 *~
