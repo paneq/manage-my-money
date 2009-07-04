@@ -25,6 +25,8 @@ Rails::Initializer.run do |config|
   APP_DOMAIN = config.app_domain
   APP_NAME = config.app_name
   APP_EMAIL = config.app_email
+  SSL_REQUIRED = config.ssl_required == "true"
+  SSL_ALLOWED = config.ssl_allowed == "true"
   
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers

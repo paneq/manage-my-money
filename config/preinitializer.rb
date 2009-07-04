@@ -8,7 +8,9 @@ module FileSiteKeys
     :rest_auth_digest_stretches,
     :app_domain,
     :app_name,
-    :app_email
+    :app_email,
+    :ssl_allowed,
+    :ssl_required
     ]
   
   ATTRIBUTES.freeze

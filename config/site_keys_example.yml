@@ -8,6 +8,8 @@ development:
     app_domain: localhost:3000
     app_name: Manage My Money
     app_email: example@example.org
+    ssl_required: false
+    ssl_allowed: false
 
 test:
     session_key: 3m_session_test
@@ -19,6 +21,8 @@ test:
     app_domain: example.org
     app_name: Manage My Money
     app_email: example@example.org
+    ssl_required: false
+    ssl_allowed: false
 
 selenium:
     session_key: 3m_session_selenium
@@ -30,6 +34,8 @@ selenium:
     app_domain: localhost:7000
     app_name: Manage My Money
     app_email: example@example.org
+    ssl_required: false
+    ssl_allowed: false
 
 production:
     #read environment.rb
@@ -44,3 +50,5 @@ production:
     app_domain: example.org
     app_name: Manage My Money
     app_email: example@example.org
+    ssl_required: false
+    ssl_allowed: false

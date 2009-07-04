@@ -20,6 +20,14 @@ class ApplicationController < ActionController::Base
   
   protected
 
+  
+  def ssl_required?
+    SSL_REQUIRED
+  end
+
+  def ssl_allowed?
+    SSL_ALLOWED
+  end
 
   def extract_form_id
     params[:form_id]
